@@ -6,6 +6,21 @@
     tools:context="online.daing.onlinedating.MainActivity" >
 
     <RelativeLayout
+        android:id="@+id/parentListLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:elevation="8dp"
+        android:visibility="invisible" >
+
+        <com.devsmart.android.ui.HorizontalListView
+            android:id="@+id/parentListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -22,9 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="34dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="22dp"
             android:padding="10dip"
             app:radius="7dp" />
+
     </RelativeLayout>
 
     <LinearLayout

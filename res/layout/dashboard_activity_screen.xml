@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -25,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
             android:text="@string/my_touch_duration"
             android:textColor="@color/text_grey"
             android:textSize="20sp" />
@@ -34,6 +33,7 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:text="@string/ago_text"
             android:textColor="@color/text_orange"
             android:textSize="20sp" />
@@ -42,12 +42,14 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="10dp"
+        android:background="@drawable/circular_image"
+        android:padding="10dp" >
 
         <com.touchKin.touchkinapp.custom.RoundedImageView
             android:id="@+id/imageView1"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_centerInParent="true"
             android:src="@drawable/activity_bg" />
 
@@ -75,19 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView8"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="7dp"
             android:src="@drawable/abc_switch_track_mtrl_alpha" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView8"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="31dp"
-            android:text="yesterday"
-            android:textColor="@android:color/white"
-            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/textView2"
@@ -95,16 +86,26 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="1000"
             android:textColor="@android:color/white"
             android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:text="yesterday"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal" >
 
         <TextView

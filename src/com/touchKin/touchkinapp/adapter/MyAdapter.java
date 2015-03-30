@@ -44,6 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 		ImageView imageView;
 		ImageView profile;
 		TextView Name;
+		View view;
 
 		public ViewHolder(View itemView, int ViewType) { // Creating ViewHolder
 															// Constructor with
@@ -68,12 +69,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 				Holderid = 1; // setting holder id as 1 as the object being
 								// populated are of type item row
+				view = (View) itemView.findViewById(R.id.lineView);
 				itemView.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Toast.makeText(context, "HI", Toast.LENGTH_SHORT).show();
+						Toast.makeText(context, "HI", Toast.LENGTH_SHORT)
+								.show();
 					}
 				});
 			} else {

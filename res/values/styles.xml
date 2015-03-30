@@ -19,4 +19,8 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="TwoWayView">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
 </resources>

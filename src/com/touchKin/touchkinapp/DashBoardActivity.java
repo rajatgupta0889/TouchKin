@@ -1,6 +1,5 @@
 package com.touchKin.touchkinapp;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
@@ -9,12 +8,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
-import android.widget.Toast;
 
 import com.touchKin.touchkinapp.adapter.MyAdapter;
 import com.touchKin.touckinapp.R;
@@ -47,6 +45,7 @@ public class DashBoardActivity extends ActionBarActivity {
 		// lLayout = new MyLinearLayout(this);
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -57,39 +56,53 @@ public class DashBoardActivity extends ActionBarActivity {
 			}
 
 		});
+
 		Bundle b = new Bundle();
+		b.putString("key", "Fake");
+		mTabHost.addTab(
+				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
+				Fragment1.class, b);
+		
+		mTabHost.setCurrentTab(0);
+		
+		b = new Bundle();
 		b.putString("key", "DashBoard");
 		mTabHost.addTab(
 				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
 				Fragment1.class, b);
+		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
 		//
+		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
 		b = new Bundle();
 		b.putString("key", "Activity");
 		mTabHost.addTab(mTabHost.newTabSpec("Activity")
 				.setIndicator("Activity"), Fragment3.class, b);
+		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
 		b = new Bundle();
 		b.putString("key", "Settings");
 		mTabHost.addTab(mTabHost.newTabSpec("settings")
 				.setIndicator("Settings"), Fragment3.class, b);
+		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
 		b = new Bundle();
 		b.putString("key", "ER Plan");
 		mTabHost.addTab(mTabHost.newTabSpec("er Plan").setIndicator("ER Plan"),
 				Fragment2.class, b);
+		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
 		setSupportActionBar(toolbar);
-		toolbar.inflateMenu(R.menu.dash_board);
-		toolbar.setTitle("TouchKin");
-		toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-			@Override
-			public boolean onMenuItemClick(MenuItem arg0) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "HI", Toast.LENGTH_SHORT)
-						.show();
-				return true;
-			}
-		});
+		// toolbar.inflateMenu(R.menu.dash_board);
+		// toolbar.setTitle("TouchKin");
+		// toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		//
+		// @Override
+		// public boolean onMenuItemClick(MenuItem arg0) {
+		// // TODO Auto-generated method stub
+		// Toast.makeText(getApplicationContext(), "HI",
+		// Toast.LENGTH_SHORT).show();
+		// return true;
+		// }
+		// });
 		// toolbar.setOnMenuItemClickListener(new
 		// Toolbar.OnMenuItemClickListener() {
 		// @Override
@@ -171,20 +184,36 @@ public class DashBoardActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.parentName) {
-			return true;
-		}
+		// if (id == R.id.parentName) {
+		// return true;
+		// }
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void setTabColor(FragmentTabHost mTabHost) {
 		// TODO Auto-generated method stub
-		for (int i = 0; i < this.mTabHost.getTabWidget().getChildCount(); i++)
-			this.mTabHost.getTabWidget().getChildAt(i)
-					.setBackgroundColor(Color.WHITE); // unselected
-
-		this.mTabHost.getTabWidget().getChildAt(this.mTabHost.getCurrentTab())
-				.setBackgroundColor(Color.BLUE); // 2nd tab selected
+		for (int i = 0; i < this.mTabHost.getTabWidget().getChildCount(); i++) {
+			this.mTabHost
+					.getTabWidget()
+					.getChildAt(i)
+					.setBackgroundColor(getResources().getColor(R.color.tab_bg)); // unselected
+			// TextView tv = (TextView)
+			// this.mTabHost.getTabWidget().getChildAt(i)
+			// .findViewById(android.R.id.title);
+			// tv.setTextColor(Color.WHITE);
+		}
+		this.mTabHost
+				.getTabWidget()
+				.getChildAt(this.mTabHost.getCurrentTab())
+				.setBackgroundColor(
+						getResources().getColor(R.color.tab_selected)); // 2nd
+																		// tab
+																		// TextView
+																		// tv =
+																		// (TextView)
+																		// this.mTabHost.getTabWidget().findViewById(
+		// android.R.id.title);
+		// tv.setTextColor(Color.WHITE); // selected
 
 	}
 }

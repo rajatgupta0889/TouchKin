@@ -38,25 +38,79 @@ public class DashBoardActivityFragment extends Fragment {
 
 		final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		PieSlice slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.text_orange));
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slice.setValue(1);
 		slice.setTitle("first");
 		pg.addSlice(slice);
 		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.text_grey));
+		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slice.setValue(1);
 		pg.addSlice(slice);
 		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.text_orange));
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slice.setValue(1);
 		pg.addSlice(slice);
 		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.text_orange));
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.text_grey));
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slice.setValue(1);
 		pg.addSlice(slice);
-		slice.setValue(26);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_left));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_left));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slice.setValue(1);
+		pg.addSlice(slice);
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_left));
+		slice.setValue(15);
 		pg.addSlice(slice);
 		return view;
 	}
