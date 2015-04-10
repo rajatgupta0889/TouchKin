@@ -1,5 +1,7 @@
 package com.touchKin.touchkinapp;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
@@ -8,11 +10,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TabHost;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 
 import com.touchKin.touchkinapp.adapter.MyAdapter;
 import com.touchKin.touckinapp.R;
@@ -29,7 +36,7 @@ public class DashBoardActivity extends ActionBarActivity {
 	RecyclerView mRecyclerView; // Declaring RecyclerView
 	RecyclerView.Adapter mAdapter; // Declaring Adapter For Recycler View
 	RecyclerView.LayoutManager mLayoutManager; // Declaring Layout Manager as a
-												// linear layout manager
+	TextView mTitle;
 	DrawerLayout Drawer; // Declaring DrawerLayout
 
 	ActionBarDrawerToggle mDrawerToggle; // Declaring Action Bar Drawer Toggle
@@ -43,52 +50,8 @@ public class DashBoardActivity extends ActionBarActivity {
 		// mTabHost.setup(this, getSupportFragmentManager(),
 		// R.id.menu_settings);
 		// lLayout = new MyLinearLayout(this);
-		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
-		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
-
-			@Override
-			public void onTabChanged(String tabId) {
-				// TODO Auto-generated method stub
-				setTabColor(mTabHost);
-
-			}
-
-		});
-
-		Bundle b = new Bundle();
-		b.putString("key", "Fake");
-		mTabHost.addTab(
-				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
-				Fragment1.class, b);
-		
-		mTabHost.setCurrentTab(0);
-		
-		b = new Bundle();
-		b.putString("key", "DashBoard");
-		mTabHost.addTab(
-				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
-				Fragment1.class, b);
-		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
-		//
-		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
-		b = new Bundle();
-		b.putString("key", "Activity");
-		mTabHost.addTab(mTabHost.newTabSpec("Activity")
-				.setIndicator("Activity"), Fragment3.class, b);
-		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
-		b = new Bundle();
-		b.putString("key", "Settings");
-		mTabHost.addTab(mTabHost.newTabSpec("settings")
-				.setIndicator("Settings"), Fragment3.class, b);
-		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
-		b = new Bundle();
-		b.putString("key", "ER Plan");
-		mTabHost.addTab(mTabHost.newTabSpec("er Plan").setIndicator("ER Plan"),
-				Fragment2.class, b);
-		mTabHost.setBackgroundColor(getResources().getColor(R.color.tab_bg));
-		toolbar = (Toolbar) findViewById(R.id.tool_bar);
+		InitView();
 
 		setSupportActionBar(toolbar);
 		// toolbar.inflateMenu(R.menu.dash_board);
@@ -141,14 +104,15 @@ public class DashBoardActivity extends ActionBarActivity {
 		// Manager
 
 		Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout); // Drawer
+
 		// object
 		// Assigned
 		// to the
 		// view
-		mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, toolbar,
+		toolbar.setNavigationIcon(R.drawable.ic_drawer);
+		mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, null,
 				R.string.navigation_drawer_open,
 				R.string.navigation_drawer_close) {
-
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
@@ -166,9 +130,22 @@ public class DashBoardActivity extends ActionBarActivity {
 		}; // Drawer Toggle Object Made
 		Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the
 		// Drawer toggle
+		toolbar.setTitle("");
+		mDrawerToggle.setDrawerIndicatorEnabled(false);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// TODO Auto-generated method stub
+				Drawer.openDrawer(Gravity.LEFT);
+
+			}
+		});
+
 		mDrawerToggle.syncState(); // Finally we set the drawer toggle sync
 		// State
-
+		mTitle.setText("TouchKin");
 	}
 
 	@Override
@@ -215,5 +192,75 @@ public class DashBoardActivity extends ActionBarActivity {
 		// android.R.id.title);
 		// tv.setTextColor(Color.WHITE); // selected
 
+	}
+
+	private void InitView() {
+		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+		Bundle b = new Bundle();
+		b.putString("key", "Fake");
+		mTabHost.addTab(
+				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
+				Fragment1.class, b);
+
+		mTabHost.setCurrentTab(0);
+		Resources res = getResources();
+		b = new Bundle();
+		b.putString("key", "TouchKin");
+		mTabHost.addTab(
+				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
+						R.color.tab_bg, "Kinbook", R.drawable.kinbook_selector),
+				TouchKinBookFragment.class, b);
+
+		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
+		//
+
+		b = new Bundle();
+		b.putString("key", "Activity");
+		mTabHost.addTab(
+				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
+						R.color.tab_bg, "Activity",
+						R.drawable.activity_selector),
+				TouchKinBookFragment.class, b);
+
+		b = new Bundle();
+		b.putString("key", "Settings");
+		mTabHost.addTab(
+				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
+						R.color.tab_bg, "Settings",
+						R.drawable.settings_selector),
+				TouchKinBookFragment.class, b);
+
+		b = new Bundle();
+		b.putString("key", "ER Plan");
+		mTabHost.addTab(
+				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
+						R.color.tab_bg, "ER Plan", R.drawable.er_selector),
+				TouchKinBookFragment.class, b);
+
+		toolbar = (Toolbar) findViewById(R.id.tool_bar);
+		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			@Override
+			public void onTabChanged(String tabId) {
+				// TODO Auto-generated method stub
+				setTabColor(mTabHost);
+
+			}
+
+		});
+	}
+
+	private TabSpec setIndicator(Context ctx, TabSpec spec, int resid,
+			String string, int genresIcon) {
+		View v = LayoutInflater.from(ctx).inflate(R.layout.tab_item, null);
+		v.setBackgroundResource(resid);
+		TextView tv = (TextView) v.findViewById(R.id.txt_tabtxt);
+		ImageView img = (ImageView) v.findViewById(R.id.img_tabtxt);
+
+		tv.setText(string);
+		img.setBackgroundResource(genresIcon);
+
+		return spec.setIndicator(v);
 	}
 }

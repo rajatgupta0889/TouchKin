@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal" >
+
+    <com.touchKin.touchkinapp.custom.RoundedImageView
+        android:id="@+id/parentImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="5dp"
+        android:src="@drawable/mom" />
+
+    <TextView
+        android:id="@+id/parentNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="0.7"
+        android:text="TextView"
+        android:textColor="@color/text_orange" />
+
+    <CheckBox
+        android:id="@+id/isSelectedCB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/add_parent_checkbox"
+        android:button="@null"
+        android:text="" />
+
+</LinearLayout>

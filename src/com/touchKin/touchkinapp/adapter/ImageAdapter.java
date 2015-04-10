@@ -1,5 +1,7 @@
 package com.touchKin.touchkinapp.adapter;
 
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,17 +10,19 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 
 import com.touchKin.touchkinapp.custom.RoundedImageView;
+import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class ImageAdapter extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mLayoutInflater;
+	List<ParentListModel> parentList;
 	int[] mResources = { R.drawable.mom, R.drawable.activity_bg,
-			R.drawable.mom, R.drawable.mom, R.drawable.mom, R.drawable.mom,
-			R.drawable.mom };
+			R.drawable.mom, R.drawable.mom, R.drawable.mom };
 
-	public ImageAdapter(Context context) {
+	public ImageAdapter(Context context, List<ParentListModel> parentList) {
 		mContext = context;
+		this.parentList = parentList;
 		mLayoutInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -48,6 +52,10 @@ public class ImageAdapter extends BaseAdapter {
 		}
 		RoundedImageView imageView = (RoundedImageView) convertView
 				.findViewById(R.id.parentImage);
+		if (parentList.get(position).getIsSelected()) {
+			convertView.setBackgroundDrawable(mContext.getResources()
+					.getDrawable(R.drawable.circular_image_selected));
+		}
 		imageView.setImageResource(mResources[position]);
 
 		return convertView;

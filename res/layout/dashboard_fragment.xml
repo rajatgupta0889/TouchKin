@@ -10,10 +10,10 @@
         android:layout_width="fill_parent"
         android:layout_height="120dp"
         android:layout_alignParentTop="true"
-        android:elevation="8dp"
+        android:elevation="15dp"
         android:visibility="invisible" >
 
-        <com.devsmart.android.ui.HorizontalListView
+        <com.touchKin.touchkinapp.custom.HorizontalListView
             android:id="@+id/parentListView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -38,10 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="22dp"
+            android:layout_marginBottom="15dp"
             android:padding="10dip"
             app:radius="7dp" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -49,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -60,7 +59,7 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/sendTouch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -82,7 +81,7 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/getService"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"

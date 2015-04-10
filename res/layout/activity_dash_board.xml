@@ -20,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
-            android:background="#ffffff" />
+            android:background="#ffffff" >
+        </FrameLayout>
 
         <android.support.v4.app.FragmentTabHost
             android:id="@android:id/tabhost"

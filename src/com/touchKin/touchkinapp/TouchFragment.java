@@ -38,6 +38,7 @@ public class TouchFragment extends Fragment {
 		final Resources resources = getResources();
 		final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		PieSlice slice = new PieSlice();
+
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slice.setValue(1);
 		slice.setTitle("first");
@@ -111,6 +112,7 @@ public class TouchFragment extends Fragment {
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slice.setValue(15);
+
 		pg.addSlice(slice);
 
 		return view;

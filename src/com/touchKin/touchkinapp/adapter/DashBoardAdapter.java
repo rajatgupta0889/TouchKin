@@ -24,9 +24,9 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 		case 0: // Fragment # 0 - This will show FirstFragment
 			return TouchFragment.newInstance(0, "Touch");
 		case 1: // Fragment # 0 - This will show FirstFragment different title
-			return DashboardLocationFragment.newInstance(1, "Touch");
+			return DashboardLocationFragment.newInstance(1, "Location");
 		case 2: // Fragment # 1 - This will show SecondFragment
-			return DashBoardActivityFragment.newInstance(2, "Touch");
+			return DashBoardActivityFragment.newInstance(2, "Activity");
 		default:
 			return null;
 		}
