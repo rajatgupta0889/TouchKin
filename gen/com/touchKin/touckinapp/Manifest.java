@@ -9,6 +9,6 @@ package com.touchKin.touckinapp;
 
 public final class Manifest {
     public static final class permission {
-        public static final String C2D_MESSAGE="online.daing.olinedating.permission.C2D_MESSAGE";
+        public static final String MAPS_RECEIVE="com.example.googlemaps.permission.MAPS_RECEIVE";
     }
 }

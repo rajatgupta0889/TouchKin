@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -17,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -84,6 +87,16 @@ public class DashBoardActivity extends ActionBarActivity implements
 		InitView();
 
 		setSupportActionBar(toolbar);
+		SharedPreferences pref = getApplicationContext().getSharedPreferences(
+				"loginPref", 0);
+
+		Editor edit = pref.edit();
+		edit.putString("mobile", null);
+		edit.putString("otp", null);
+		edit.apply();
+		Log.d("mobile", "" + pref.getString("mobile", null));
+		Log.d("otp", "" + pref.getString("mobile", null));
+
 		// toolbar.inflateMenu(R.menu.dash_board);
 		// toolbar.setTitle("TouchKin");
 		// toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -286,9 +299,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 		b = new Bundle();
 		b.putString("key", "ER Plan");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("ER"),
-						R.color.tab_bg, "ER Plan", R.drawable.er),
-				TouchKinBookFragment.class, b);
+				setIndicator(this, mTabHost.newTabSpec("ER"), R.color.tab_bg,
+						"ER Plan", R.drawable.er), TouchKinBookFragment.class,
+				b);
 
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -366,7 +379,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 					@Override
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
-						//Log.d("Response Array", " " + responseArray);
+						// Log.d("Response Array", " " + responseArray);
 						for (int i = 0; i < responseArray.length(); i++) {
 							try {
 								JSONObject obj = responseArray.getJSONObject(i);

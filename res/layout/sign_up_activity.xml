@@ -14,6 +14,8 @@
 
     <TextView
         android:id="@+id/textView1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tool_bar"
@@ -25,6 +27,8 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
@@ -44,7 +48,7 @@
             android:id="@+id/spinner"
             android:layout_width="91dp"
             android:layout_height="45dp"
-            android:background="@drawable/spinner_focused_holo_light"
+            android:background="@drawable/spinner_background_holo_light"
             android:spinnerMode="dialog" />
 
         <EditText
@@ -60,21 +64,21 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/previousButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignBaseline="@+id/otp_Genrate_Button"
+        android:layout_alignBottom="@+id/otp_Genrate_Button"
+        android:layout_alignLeft="@+id/spiner_layout"
+        android:background="@drawable/previous_button" />
+
+    <Button
         android:id="@+id/otp_Genrate_Button"
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="32dp"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_marginBottom="31dp"
         android:background="@drawable/next_button" />
-
-    <Button
-        android:id="@+id/previousButton"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/previous_button" />
 
 </RelativeLayout>
