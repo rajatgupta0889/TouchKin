@@ -6,8 +6,13 @@
 
     <item
         android:id="@+id/parentName"
-        android:title="Mom V"
+        android:title=""
         app:icon="@drawable/ic_action_name"
         app:showAsAction="always|withText"/>
+    <item 
+        android:id="@+id/parentIcon"
+        android:icon="@drawable/ic_action_down"
+        android:title=""
+        app:showAsAction="always"/>
 
 </menu>

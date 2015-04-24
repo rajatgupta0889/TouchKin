@@ -4,21 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/white" >
 
-    <RelativeLayout
-        android:id="@+id/parentListLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentTop="true"
-        android:elevation="8dp"
-        android:visibility="invisible" >
-
-        <com.touchKin.touchkinapp.custom.HorizontalListView
-            android:id="@+id/parentListView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff" />
-    </RelativeLayout>
-
     <com.aphidmobile.flip.FlipViewController
         xmlns:flip="http://schemas.android.com/apk/res-auto"
         android:id="@+id/flipView"

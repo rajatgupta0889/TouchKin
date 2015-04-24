@@ -5,13 +5,24 @@ import java.util.List;
 public class TouchKinBookModel {
 
 	private String videoUrl, videoText, videoDate, videoDay, videoSenderImage,
-			videoSenderName, videoViewCount, userImage;
+			videoSenderName, videoViewCount, userImage, UserId,messageId;
+	
+	public String getMessageId() {
+		return messageId;
+	}
+
+
+
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
+
 	private List<TouchKinComments> touchKinComments;
 
 	public TouchKinBookModel(String videoUrl, String videoText,
 			String videoDate, String videoDay, String videoSenderImage,
 			String videoSenderName, String videoViewCount, String userImage,
-			List<TouchKinComments> touchKinComments) {
+			String userId, List<TouchKinComments> touchKinComments) {
 		super();
 		this.videoUrl = videoUrl;
 		this.videoText = videoText;
@@ -21,7 +32,22 @@ public class TouchKinBookModel {
 		this.videoSenderName = videoSenderName;
 		this.videoViewCount = videoViewCount;
 		this.userImage = userImage;
+		UserId = userId;
 		this.touchKinComments = touchKinComments;
+	}
+	
+	
+
+	public String getUserId() {
+		return UserId;
+	}
+
+	public void setUserId(String userId) {
+		UserId = userId;
+	}
+
+	public TouchKinBookModel() {
+
 	}
 
 	public String getVideoUrl() {

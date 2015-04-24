@@ -16,9 +16,10 @@ import com.touchKin.touckinapp.R;
 public class ImageAdapter extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mLayoutInflater;
+
 	List<ParentListModel> parentList;
-	int[] mResources = { R.drawable.mom, R.drawable.activity_bg,
-			R.drawable.mom, R.drawable.mom, R.drawable.mom };
+//	int[] mResources = { R.drawable.mom, R.drawable.activity_bg,
+//			R.drawable.mom, R.drawable.mom, R.drawable.mom };
 
 	public ImageAdapter(Context context, List<ParentListModel> parentList) {
 		mContext = context;
@@ -29,19 +30,19 @@ public class ImageAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return mResources.length;
+		return parentList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return null;
+		return parentList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 	@Override
@@ -55,8 +56,11 @@ public class ImageAdapter extends BaseAdapter {
 		if (parentList.get(position).getIsSelected()) {
 			convertView.setBackgroundDrawable(mContext.getResources()
 					.getDrawable(R.drawable.circular_image_selected));
+		} else {
+			convertView.setBackgroundDrawable(mContext.getResources()
+					.getDrawable(R.drawable.circular_image));
 		}
-		imageView.setImageResource(mResources[position]);
+		imageView.setImageResource(R.drawable.mom);
 
 		return convertView;
 	}

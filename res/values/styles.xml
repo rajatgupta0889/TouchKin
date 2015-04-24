@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -17,15 +17,18 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="windowActionBar">false</item>
+        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
     </style>
 
-    <style name="TwoWayView">
-        <item name="android:orientation">horizontal</item>
-    </style>
 
     <style name="PopupAnimation">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="MyActionButtonStyle" parent="AppBaseTheme">
+        <item name="android:minWidth">20dp</item>
+        <item name="android:paddingRight">0dp</item>
     </style>
 
 </resources>

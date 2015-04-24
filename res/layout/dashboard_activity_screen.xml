@@ -13,7 +13,7 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/parentNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_last_touch_text"
@@ -21,7 +21,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/ParentLocTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
@@ -46,12 +46,12 @@
         android:background="@drawable/circular_image"
         android:padding="10dp" >
 
-        <com.touchKin.touchkinapp.custom.RoundedImageView
+        <ImageView
             android:id="@+id/imageView1"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/activity_bg" />
+            android:src="@drawable/activity" />
 
         <com.echo.holographlibrary.PieGraph
             android:id="@+id/piegraph"
@@ -61,45 +61,35 @@
             app:pieInnerCircleRatio="220"
             app:pieSlicePadding="0dip" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView2"
-            android:layout_centerHorizontal="true"
-            android:text="Steps"
-            android:textColor="@android:color/white"
-            android:textSize="30sp" />
-
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView8"
+            android:layout_alignTop="@+id/imageView1"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp"
-            android:src="@drawable/abc_switch_track_mtrl_alpha" />
+            android:layout_marginTop="32dp"
+            android:src="@drawable/steps" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:text="10"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/textView1"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
-            android:text="1000"
-            android:textColor="@android:color/white"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView2"
-            android:layout_centerHorizontal="true"
-            android:text="yesterday"
-            android:textColor="@android:color/white"
-            android:textSize="25sp" />
+            android:text="Steps"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <LinearLayout

@@ -1,9 +1,9 @@
 package com.touchKin.touchkinapp.model;
 
-
 public class TouchKinComments {
 
-	String commentText, commentTime, commentDay, userName, userImageUrl;
+	String commentText, commentTime, commentDay, userName, userImageUrl,
+			userId;
 
 	public TouchKinComments(String commentText, String commentTime,
 			String commentDay, String userName, String userImageUrl) {
@@ -13,6 +13,18 @@ public class TouchKinComments {
 		this.commentDay = commentDay;
 		this.userName = userName;
 		this.userImageUrl = userImageUrl;
+	}
+
+	public TouchKinComments() {
+
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getCommentTime() {

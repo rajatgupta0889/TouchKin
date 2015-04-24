@@ -5,14 +5,28 @@ public class ParentListModel {
 	Boolean isSelected;
 	String parentName;
 	String parentId;
+	String parentUserId;
+
+	public ParentListModel() {
+		super();
+	}
 
 	public ParentListModel(String imageUrl, Boolean isSelected,
-			String parentName, String parentId) {
+			String parentName, String parentId, String parentUserId) {
 		super();
 		this.imageUrl = imageUrl;
 		this.isSelected = isSelected;
 		this.parentName = parentName;
 		this.parentId = parentId;
+		this.parentUserId = parentUserId;
+	}
+
+	public String getParentUserId() {
+		return parentUserId;
+	}
+
+	public void setParentUserId(String parentUserId) {
+		this.parentUserId = parentUserId;
 	}
 
 	public String getParentName() {

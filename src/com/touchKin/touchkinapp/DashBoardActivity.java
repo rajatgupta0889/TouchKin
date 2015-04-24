@@ -1,5 +1,12 @@
 package com.touchKin.touchkinapp;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -16,15 +23,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter;
+import com.touchKin.touchkinapp.custom.HorizontalListView;
+import com.touchKin.touchkinapp.model.AppController;
+import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class DashBoardActivity extends ActionBarActivity {
+public class DashBoardActivity extends ActionBarActivity implements
+		AnimationListener, OnItemClickListener {
 	private FragmentTabHost mTabHost;
 	String NAME = "Akash Bangad";
 	String EMAIL = "akash.bangad@android4devs.com";
@@ -38,8 +62,14 @@ public class DashBoardActivity extends ActionBarActivity {
 	RecyclerView.LayoutManager mLayoutManager; // Declaring Layout Manager as a
 	TextView mTitle;
 	DrawerLayout Drawer; // Declaring DrawerLayout
-
+	RelativeLayout parentRelativeLayout;
+	HorizontalListView listview;
+	Animation animSlideUp, animSlideDown;
+	List<ParentListModel> list;
+	private ParentListModel selectedParent;
 	ActionBarDrawerToggle mDrawerToggle; // Declaring Action Bar Drawer Toggle
+	private ImageAdapter imageAdapter;
+	private Menu menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,12 +176,29 @@ public class DashBoardActivity extends ActionBarActivity {
 		mDrawerToggle.syncState(); // Finally we set the drawer toggle sync
 		// State
 		mTitle.setText("TouchKin");
+
+		list = new ArrayList<ParentListModel>();
+		// getParentList();
+		// list.add(new ParentListModel("", true, "Mom", "1", "1"));
+		// list.add(new ParentListModel("", false, "Dad", "2", "2"));
+		// list.add(new ParentListModel("", false, "Uncle", "3", "3"));
+		// list.add(new ParentListModel("", false, "Aunt", "4", "4"));
+		// list.add(new ParentListModel("", false, "GM", "5", "5"));
+		getParentList();
+
+		listview.setOnItemClickListener(this);
+		animSlideUp.setAnimationListener(this);
+		animSlideDown.setAnimationListener(this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+		this.menu = menu;
+		if (selectedParent != null) {
+			setMenuTitle(selectedParent);
+		}
 		return true;
 	}
 
@@ -161,9 +208,16 @@ public class DashBoardActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		// if (id == R.id.parentName) {
-		// return true;
-		// }
+		if (id == R.id.parentName) {
+			// Not implemented here
+			toggleVissibility();
+			return true;
+		}
+		if (id == R.id.parentIcon) {
+			// Not implemented here
+			toggleVissibility();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -208,34 +262,32 @@ public class DashBoardActivity extends ActionBarActivity {
 		b = new Bundle();
 		b.putString("key", "TouchKin");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
-						R.color.tab_bg, "Kinbook", R.drawable.kinbook_selector),
+				setIndicator(this, mTabHost.newTabSpec("KinBook"),
+						R.color.tab_bg, "Kinbook", R.drawable.kinbook),
 				TouchKinBookFragment.class, b);
 
 		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
 		//
 
 		b = new Bundle();
-		b.putString("key", "Activity");
+		b.putString("key", "Messages");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
-						R.color.tab_bg, "Activity",
-						R.drawable.activity_selector),
-				TouchKinBookFragment.class, b);
+				setIndicator(this, mTabHost.newTabSpec("Message"),
+						R.color.tab_bg, "Messages", R.drawable.message),
+				MessagesFragment.class, b);
 
 		b = new Bundle();
 		b.putString("key", "Settings");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
-						R.color.tab_bg, "Settings",
-						R.drawable.settings_selector),
+				setIndicator(this, mTabHost.newTabSpec("Settings"),
+						R.color.tab_bg, "Settings", R.drawable.settings),
 				TouchKinBookFragment.class, b);
 
 		b = new Bundle();
 		b.putString("key", "ER Plan");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("TouchKin"),
-						R.color.tab_bg, "ER Plan", R.drawable.er_selector),
+				setIndicator(this, mTabHost.newTabSpec("ER"),
+						R.color.tab_bg, "ER Plan", R.drawable.er),
 				TouchKinBookFragment.class, b);
 
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -249,6 +301,12 @@ public class DashBoardActivity extends ActionBarActivity {
 			}
 
 		});
+
+		listview = (HorizontalListView) findViewById(R.id.parentListView);
+
+		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayout);
+		animSlideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+		animSlideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
 	}
 
 	private TabSpec setIndicator(Context ctx, TabSpec spec, int resid,
@@ -263,4 +321,126 @@ public class DashBoardActivity extends ActionBarActivity {
 
 		return spec.setIndicator(v);
 	}
+
+	private void toggleVissibility() {
+		// TODO Auto-generated method stub
+		if (parentRelativeLayout.getVisibility() == View.VISIBLE) {
+
+			parentRelativeLayout.setVisibility(View.VISIBLE);
+			parentRelativeLayout.startAnimation(animSlideUp);
+
+		} else {
+			parentRelativeLayout.setVisibility(View.VISIBLE);
+			parentRelativeLayout.startAnimation(animSlideDown);
+		}
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+		if (animation == animSlideDown) {
+			parentRelativeLayout.setVisibility(View.VISIBLE);
+		} else if (animation == animSlideUp) {
+			parentRelativeLayout.setVisibility(View.INVISIBLE);
+		}
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void getParentList() {
+
+		JsonArrayRequest req = new JsonArrayRequest(
+				"http://54.69.183.186:1340/kin/seniors",
+				new Listener<JSONArray>() {
+
+					@Override
+					public void onResponse(JSONArray responseArray) {
+						// TODO Auto-generated method stub
+						//Log.d("Response Array", " " + responseArray);
+						for (int i = 0; i < responseArray.length(); i++) {
+							try {
+								JSONObject obj = responseArray.getJSONObject(i);
+								ParentListModel item = new ParentListModel();
+
+								item.setParentId(obj.getString("id"));
+								item.setParentName(obj.getString("name"));
+								item.setParentUserId(obj.getJSONObject("user")
+										.getString("id"));
+								if (i == 0) {
+									item.setIsSelected(true);
+									selectedParent = item;
+								} else {
+									item.setIsSelected(false);
+								}
+								list.add(item);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						imageAdapter = new ImageAdapter(DashBoardActivity.this,
+								list);
+						if (list.size() > 0) {
+							selectedParent = list.get(0);
+							setMenuTitle(selectedParent);
+						}
+						listview.setAdapter(imageAdapter);
+
+					}
+
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(DashBoardActivity.this,
+								error.getMessage(), Toast.LENGTH_SHORT).show();
+
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		// TODO Auto-generated method stub
+
+		ParentListModel item = list.get(position);
+		for (ParentListModel data : list) {
+			if (data.equals(item)) {
+				data.setIsSelected(true);
+			} else {
+				data.setIsSelected(false);
+			}
+		}
+		setMenuTitle(item);
+		listview.setAdapter(imageAdapter);
+		toggleVissibility();
+		mTabHost.setCurrentTab(0);
+		selectedParent = item;
+
+	}
+
+	public void setMenuTitle(ParentListModel item) {
+		MenuItem parentMenu = menu.findItem(R.id.parentName);
+		parentMenu.setTitle(item.getParentName());
+	}
+
+	public ParentListModel getSelectedParent() {
+		return selectedParent;
+	}
+
 }

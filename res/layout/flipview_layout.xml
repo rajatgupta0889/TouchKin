@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#b3afaf"
     android:orientation="vertical" >
 
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="250dp" />
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
+
+    <Button
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+         android:layout_alignParentTop="true"
+         android:layout_marginTop="100dp"
+        android:background="@drawable/video_play" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/videoView" >
+        android:layout_below="@+id/videoView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/white" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,11 +53,8 @@
 
                 <com.touchKin.touchkinapp.custom.RoundedImageView
                     android:id="@+id/senderImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:src="@drawable/activity_bg" />
 
                 <TextView
@@ -59,9 +80,9 @@
                     android:id="@+id/videoSeenTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/videoSenderNameTextView"
                     android:layout_alignLeft="@+id/videoCommentTextView"
                     android:layout_alignTop="@+id/videoSenderNameTextView"
+                    android:layout_below="@+id/videoSenderNameTextView"
                     android:text="Seen by Mom" />
 
                 <TextView
@@ -71,18 +92,8 @@
                     android:layout_alignLeft="@+id/videoTimeTextView"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/videoDayTextView"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="5dp"
                     android:text="Mom, watch Mili and shaum playing with there freinds" />
-
-                <TextView
-                    android:id="@+id/videoSenderNameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/senderImage"
-                    android:layout_below="@+id/senderImage"
-                    android:layout_marginLeft="26dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Roy" />
 
                 <TextView
                     android:id="@+id/videoSeenCountTextView"
@@ -92,6 +103,16 @@
                     android:layout_alignBottom="@+id/videoSeenTextView"
                     android:layout_toRightOf="@+id/videoDayTextView"
                     android:text="(4 views)" />
+
+                <TextView
+                    android:id="@+id/videoSenderNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/senderImage"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Roy" />
             </RelativeLayout>
 
             <View
@@ -108,40 +129,46 @@
                 <EditText
                     android:id="@+id/commentEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/userImage"
-                    android:ems="10"
-                    android:hint="Add a coment" />
+                    android:hint="Add a coment"
+                    android:imeOptions="actionSend"
+                    android:inputType="textNoSuggestions"
+                    android:maxLines="3"
+                    android:scrollbars="vertical"
+                    android:verticalScrollbarPosition="right" />
 
                 <com.touchKin.touchkinapp.custom.RoundedImageView
                     android:id="@+id/userImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/activity_bg" />
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/commentCountTextView"
+            <View
+                android:id="@+id/view2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/darker_gray"
-                android:gravity="center_horizontal"
-                android:text="5 Replies" />
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/black" />
 
             <ListView
                 android:id="@+id/commentList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" >
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp" >
             </ListView>
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

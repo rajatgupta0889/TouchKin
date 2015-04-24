@@ -1,6 +1,5 @@
 package com.touchKin.touchkinapp.custom;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -25,7 +24,5 @@ public class Helper {
 		params.height = totalHeight
 				+ (myListView.getDividerHeight() * (myListAdapter.getCount() - 1));
 		myListView.setLayoutParams(params);
-		// print height of adapter on log
-		Log.i("height of listItem:", String.valueOf(totalHeight));
 	}
 }

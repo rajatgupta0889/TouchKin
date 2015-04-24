@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:elevation="7dp" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
@@ -15,18 +15,43 @@
             layout="@layout/toolbar" >
         </include>
 
+        <RelativeLayout
+            android:id="@+id/parentListLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:layout_below="@+id/tool_bar"
+            android:elevation="15dp"
+            android:visibility="invisible" >
+
+            <com.touchKin.touchkinapp.custom.HorizontalListView
+                android:id="@+id/parentListView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff" />
+
+            <com.touchKin.touchkinapp.custom.RoundedImageView
+                android:id="@+id/parentImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:layout_toRightOf="@+id/parentListView"
+                android:src="@drawable/activity_bg" />
+        </RelativeLayout>
+
         <FrameLayout
             android:id="@+id/realtabcontent"
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_above="@android:id/tabhost"
+            android:layout_below="@+id/tool_bar"
             android:background="#ffffff" >
         </FrameLayout>
 
         <android.support.v4.app.FragmentTabHost
             android:id="@android:id/tabhost"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -34,7 +59,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0" />
         </android.support.v4.app.FragmentTabHost>
-    </LinearLayout>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/RecyclerView"

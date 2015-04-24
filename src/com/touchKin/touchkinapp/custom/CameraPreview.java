@@ -3,8 +3,6 @@ package com.touchKin.touchkinapp.custom;
 import java.io.IOException;
 import java.util.List;
 
-import com.google.android.gms.internal.mc;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -19,7 +17,7 @@ import android.view.SurfaceView;
 public class CameraPreview extends SurfaceView implements
 		SurfaceHolder.Callback {
 	private SurfaceHolder mHolder;
-	@SuppressWarnings("deprecation")
+
 	private Camera mCamera;
 	private boolean cameraConfigured = false;
 	private Context mContext;
@@ -69,11 +67,9 @@ public class CameraPreview extends SurfaceView implements
 			return;
 		}
 		try {
+			mCamera = camera;
 			mCamera.stopPreview();
-		} catch (Exception e) {
-		}
-		setCamera(camera);
-		try {
+			setCamera(camera);
 			mCamera.setPreviewDisplay(mHolder);
 			mCamera.startPreview();
 			setCameraDisplayOrientation((Activity) mContext, cameraid, camera);
