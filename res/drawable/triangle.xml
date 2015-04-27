@@ -12,7 +12,7 @@
                     android:width="1dp"
                     android:color="@android:color/transparent" />
 
-                <solid android:color="@color/white" />
+                <solid android:color="@color/triangle" />
             </shape>
         </rotate>
     </item>
