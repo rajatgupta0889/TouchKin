@@ -8,8 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -19,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -87,17 +84,18 @@ public class DashBoardActivity extends ActionBarActivity implements
 		InitView();
 
 		setSupportActionBar(toolbar);
-		SharedPreferences pref = getApplicationContext().getSharedPreferences(
-				"loginPref", 0);
+		// SharedPreferences pref =
+		// getApplicationContext().getSharedPreferences(
+		// "loginPref", 0);
+		//
+		// Editor edit = pref.edit();
+		// edit.putString("mobile", null);
+		// edit.putString("otp", null);
+		// edit.apply();
+		// Log.d("mobile", "" + pref.getString("mobile", null));
+		// Log.d("otp", "" + pref.getString("mobile", null));
 
-		Editor edit = pref.edit();
-		edit.putString("mobile", null);
-		edit.putString("otp", null);
-		edit.apply();
-		Log.d("mobile", "" + pref.getString("mobile", null));
-		Log.d("otp", "" + pref.getString("mobile", null));
-
-		// toolbar.inflateMenu(R.menu.dash_board);
+		toolbar.inflateMenu(R.menu.toolbar_menu);
 		// toolbar.setTitle("TouchKin");
 		// toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 		//
@@ -109,17 +107,35 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// return true;
 		// }
 		// });
-		// toolbar.setOnMenuItemClickListener(new
-		// Toolbar.OnMenuItemClickListener() {
-		// @Override
-		// public boolean onMenuItemClick(MenuItem item) {
-		// // Handle the menu item
-		// Toast.makeText(getApplicationContext(), "HI", Toast.LENGTH_LONG)
-		// .show();
-		//
-		// return true;
-		// }
-		// });
+		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				// Handle the menu item
+				int id = item.getItemId();
+				Toast.makeText(getApplicationContext(), "HI" + id,
+						Toast.LENGTH_SHORT).show();
+				if (id == R.id.parentNameMenu) {
+					// Not implemented here
+					toggleVissibility();
+					return true;
+				}
+				if (id == R.id.parentIconMenu) {
+					// Not implemented here
+					toggleVissibility();
+					return true;
+				}
+				// switch (id) {
+				// case R.:
+				//
+				// break;
+				//
+				// default:
+				// break;
+				// }
+
+				return true;
+			}
+		});
 
 		// toolbar.in
 		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);// Assigning
@@ -221,12 +237,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.parentName) {
+		Toast.makeText(getApplicationContext(), "HI menu" + id,
+				Toast.LENGTH_SHORT).show();
+		if (id == R.id.parentNameMenu) {
 			// Not implemented here
 			toggleVissibility();
 			return true;
 		}
-		if (id == R.id.parentIcon) {
+		if (id == R.id.parentIconMenu) {
 			// Not implemented here
 			toggleVissibility();
 			return true;
@@ -317,7 +335,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 		listview = (HorizontalListView) findViewById(R.id.parentListView);
 
-		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayout);
+		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayoutDashboard);
 		animSlideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 		animSlideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
 	}
@@ -448,7 +466,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	public void setMenuTitle(ParentListModel item) {
-		MenuItem parentMenu = menu.findItem(R.id.parentName);
+		MenuItem parentMenu = menu.findItem(R.id.parentNameMenu);
 		parentMenu.setTitle(item.getParentName());
 	}
 

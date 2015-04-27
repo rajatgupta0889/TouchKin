@@ -3,10 +3,12 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">false</item>
-         <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
+        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
     </style>
- <style name="MyActionButtonStyle" parent="AppBaseTheme">
+
+    <style name="MyActionButtonStyle" parent="AppBaseTheme">
         <item name="android:minWidth">20dp</item>
-       <item name="android:padding">0dip</item>
+        <item name="android:padding">0dip</item>
     </style>
+
 </resources>

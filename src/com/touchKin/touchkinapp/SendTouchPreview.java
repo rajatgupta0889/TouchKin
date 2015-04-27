@@ -71,9 +71,7 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 	ImageView previewImage;
 	Bitmap bm;
 	VideoView videoPreview;
-	Button backButton, addParentButton, sendButton;
-	CheckBox keepPrivateCB;
-	ToolTipLayout tipContainer;
+	Button sendButton;
 	int type;
 	Uri previewFilePath;
 	Boolean keepPrivate = false;
@@ -85,7 +83,6 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.send_touch_preview);
 		init();
-		backButton.setOnClickListener(this);
 		Intent intent = getIntent();
 		if (intent != null) {
 			Bundle bundle = intent.getExtras();
@@ -116,17 +113,7 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 				}
 			}
 			sendButton.setOnClickListener(this);
-			keepPrivateCB
-					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-						@Override
-						public void onCheckedChanged(CompoundButton buttonView,
-								boolean isChecked) {
-							// TODO Auto-generated method stub
-							keepPrivate = isChecked;
-
-						}
-					});
 			// parentList.add(new ParentListModel("", true, "Mom", "1", "1"));
 			// parentList.add(new ParentListModel("", false, "Dad", "2", "2"));
 		}
@@ -135,12 +122,6 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 	private void init() {
 		previewImage = (ImageView) findViewById(R.id.imagePreview);
 		videoPreview = (VideoView) findViewById(R.id.videoPreview);
-		backButton = (Button) findViewById(R.id.back_button);
-		tipContainer = (ToolTipLayout) findViewById(R.id.tooltip_container);
-		addParentButton = (Button) findViewById(R.id.addParentButton);
-		addParentButton.setOnClickListener(this);
-		keepPrivateCB = (CheckBox) findViewById(R.id.keepProvateCB);
-		keepPrivateCB.setChecked(keepPrivate);
 		sendButton = (Button) findViewById(R.id.sendButton);
 		parentList = new ArrayList<ParentListModel>();
 	}
@@ -232,18 +213,15 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.back_button:
-			openDiscardDialog();
-			break;
+		// case R.id.back_button:
+		// openDiscardDialog();
+		// break;
 		case R.id.yesButton:
 			disCardVideo();
 			break;
-		case R.id.noButton:
-			dismiss();
-			break;
-		case R.id.addParentButton:
-			openAddParent();
-			break;
+		// case R.id.noButton:
+		// dismiss();
+		// break;
 		case R.id.sendButton:
 			sendMedia(type);
 			break;
@@ -253,46 +231,12 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 
 	}
 
-	private void openAddParent() {
-		// TODO Auto-generated method stub
-		// tipContainer.dismiss();
-		ToolTip t = new Builder(SendTouchPreview.this)
-				.anchor(addParentButton)
-				.gravity(Gravity.TOP)
-				// The location of the view in relation
-				.dismissOnTouch(true)
-				// to the anchor (LEFT, RIGHT, TOP,
-				.color(Color.WHITE)
-				// The color of the pointer arrow
-				.pointerSize(30)
-				// The size of the pointer
-				.contentView(
-						getLayoutInflater().inflate(
-								R.layout.add_parent_dialog_layout, null)) // The
-																			// actual
-																			// contents
-																			// of
-																			// the
-																			// ToolTip
-				.build();
 
-		LinearLayout customLayout = (LinearLayout) t.getView();
-		ListView list = (ListView) customLayout.findViewById(R.id.parentList);
 
-		View header = (View) getLayoutInflater().inflate(R.layout.header_view,
-				null);
-		SendTouchParentListAdapter adapter = new SendTouchParentListAdapter(
-				this, parentList);
-		list.addHeaderView(header);
-		list.setAdapter(adapter);
-
-		tipContainer.addTooltip(t);
-	}
-
-	private void dismiss() {
-		// TODO Auto-generated method stub
-		tipContainer.dismiss(true);
-	}
+	// private void dismiss() {
+	// // TODO Auto-generated method stub
+	// tipContainer.dismiss(true);
+	// }
 
 	private void disCardVideo() {
 		// TODO Auto-generated method stub
@@ -301,33 +245,33 @@ public class SendTouchPreview extends Activity implements OnClickListener {
 		finish();
 	}
 
-	private void openDiscardDialog() {
-		// TODO Auto-generated method stub
-		RelativeLayout customLayout = (RelativeLayout) getLayoutInflater()
-				.inflate(R.layout.discard_popup, null);
-		tipContainer = (ToolTipLayout) findViewById(R.id.tooltip_container);
-
-		// Create a content view however you'd like
-		// ...
-		TextView message = (TextView) customLayout.findViewById(R.id.message);
-		Button noButton = (Button) customLayout.findViewById(R.id.noButton);
-		Button yesButton = (Button) customLayout.findViewById(R.id.yesButton);
-		noButton.setOnClickListener(this);
-		yesButton.setOnClickListener(this);
-		message.setText("Discard this video and Go Back");
-		// Create a ToolTip using the Builder class
-		ToolTip t = new Builder(SendTouchPreview.this).anchor(backButton)
-				.gravity(Gravity.BOTTOM) // The location of the view in relation
-											// to the anchor (LEFT, RIGHT, TOP,
-											// BOTTOM)
-				.color(Color.WHITE) // The color of the pointer arrow
-				.pointerSize(30) // The size of the pointer
-				.contentView(customLayout) // The actual contents of the ToolTip
-				.dismissOnTouch(true).build();
-
-		tipContainer.addTooltip(t);
-
-	}
+//	private void openDiscardDialog() {
+//		// TODO Auto-generated method stub
+//		RelativeLayout customLayout = (RelativeLayout) getLayoutInflater()
+//				.inflate(R.layout.discard_popup, null);
+//		tipContainer = (ToolTipLayout) findViewById(R.id.tooltip_container);
+//
+//		// Create a content view however you'd like
+//		// ...
+//		TextView message = (TextView) customLayout.findViewById(R.id.message);
+//		Button noButton = (Button) customLayout.findViewById(R.id.noButton);
+//		Button yesButton = (Button) customLayout.findViewById(R.id.yesButton);
+//		noButton.setOnClickListener(this);
+//		yesButton.setOnClickListener(this);
+//		message.setText("Discard this video and Go Back");
+//		// Create a ToolTip using the Builder class
+//		ToolTip t = new Builder(SendTouchPreview.this).anchor(backButton)
+//				.gravity(Gravity.BOTTOM) // The location of the view in relation
+//											// to the anchor (LEFT, RIGHT, TOP,
+//											// BOTTOM)
+//				.color(Color.WHITE) // The color of the pointer arrow
+//				.pointerSize(30) // The size of the pointer
+//				.contentView(customLayout) // The actual contents of the ToolTip
+//				.dismissOnTouch(true).build();
+//
+//		tipContainer.addTooltip(t);
+//
+//	}
 
 	public void sendMedia(int type) {
 		new ImageUploadTask(this).execute();

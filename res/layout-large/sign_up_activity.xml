@@ -57,7 +57,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/edit_text_holo_light"
             android:ems="10"
-            android:layout_weight="1"
+            android:we="1"
             android:gravity="left"
             android:hint="Mobile Number"
             android:inputType="phone"
