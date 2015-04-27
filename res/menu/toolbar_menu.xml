@@ -5,12 +5,11 @@
     tools:context="com.touchKin.touckinapp.DashBoardActivity" >
 
     <item
-        android:id="@+id/parentName"
+        android:id="@+id/parentNameMenu"
         android:title=""
-        app:icon="@drawable/ic_action_name"
         app:showAsAction="always|withText"/>
-    <item 
-        android:id="@+id/parentIcon"
+    <item
+        android:id="@+id/parentIconMenu"
         android:icon="@drawable/ic_action_down"
         android:title=""
         app:showAsAction="always"/>

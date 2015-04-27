@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -42,9 +42,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:background="@drawable/circular_image" >
+        android:layout_marginTop="5dp"
+        android:background="@drawable/circular_image"
+        android:padding="10dp" >
 
         <com.touchKin.touchkinapp.custom.RoundedImageView
             android:id="@+id/imageView1"
@@ -62,13 +62,12 @@
             android:visibility="visible"
             app:pieInnerCircleRatio="220"
             app:pieSlicePadding="0dip" />
-
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal" >
 
         <TextView

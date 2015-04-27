@@ -7,29 +7,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="match_parent" >
 
         <include
             android:id="@+id/tool_bar"
             layout="@layout/toolbar" >
         </include>
-
-        <RelativeLayout
-            android:id="@+id/parentListLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="120dp"
-            android:layout_below="@+id/tool_bar"
-            android:visibility="invisible" >
-
-            <com.touchKin.touchkinapp.custom.HorizontalListView
-                android:id="@+id/parentListView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffffff" />
-
-          
-        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/realtabcontent"
@@ -39,6 +22,21 @@
             android:layout_below="@+id/tool_bar"
             android:background="#ffffff" >
         </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/parentListLayoutDashboard"
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:layout_below="@+id/tool_bar"
+            android:background="@color/black"
+            android:visibility="invisible" >
+
+            <com.touchKin.touchkinapp.custom.HorizontalListView
+                android:id="@+id/parentListView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
+        </RelativeLayout>
 
         <android.support.v4.app.FragmentTabHost
             android:id="@android:id/tabhost"
