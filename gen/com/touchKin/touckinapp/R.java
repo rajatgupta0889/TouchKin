@@ -2656,18 +2656,19 @@ containing a value of this type.
         public static final int steps=0x7f020092;
         public static final int stop_rec=0x7f020093;
         public static final int swap_camera=0x7f020094;
-        public static final int touch_back=0x7f020095;
-        public static final int triangle=0x7f020096;
-        public static final int video_cam=0x7f020097;
-        public static final int video_play=0x7f020098;
-        public static final int video_recorder=0x7f020099;
-        public static final int vpi__tab_indicator=0x7f02009a;
-        public static final int vpi__tab_selected_focused_holo=0x7f02009b;
-        public static final int vpi__tab_selected_holo=0x7f02009c;
-        public static final int vpi__tab_selected_pressed_holo=0x7f02009d;
-        public static final int vpi__tab_unselected_focused_holo=0x7f02009e;
-        public static final int vpi__tab_unselected_holo=0x7f02009f;
-        public static final int vpi__tab_unselected_pressed_holo=0x7f0200a0;
+        public static final int toolbar_bottom_background=0x7f020095;
+        public static final int touch_back=0x7f020096;
+        public static final int triangle=0x7f020097;
+        public static final int video_cam=0x7f020098;
+        public static final int video_play=0x7f020099;
+        public static final int video_recorder=0x7f02009a;
+        public static final int vpi__tab_indicator=0x7f02009b;
+        public static final int vpi__tab_selected_focused_holo=0x7f02009c;
+        public static final int vpi__tab_selected_holo=0x7f02009d;
+        public static final int vpi__tab_selected_pressed_holo=0x7f02009e;
+        public static final int vpi__tab_unselected_focused_holo=0x7f02009f;
+        public static final int vpi__tab_unselected_holo=0x7f0200a0;
+        public static final int vpi__tab_unselected_pressed_holo=0x7f0200a1;
     }
     public static final class id {
         public static final int ARGB_4444=0x7f0c0023;
