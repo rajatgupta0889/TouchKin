@@ -72,65 +72,65 @@ public class AddParentActivity extends ActionBarActivity implements
 		String phone = parentPhoneEditText.getText().toString();
 		String location = parentLocationEditText.getText().toString();
 
-		 if (!name.isEmpty() && !phone.isEmpty()) {
-//		Intent i = new Intent(AddParentActivity.this, DashBoardActivity.class);
-//		Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
-//				getApplicationContext(), R.anim.animation, R.anim.animation2)
-//				.toBundle();
+		// if (!name.isEmpty() && !phone.isEmpty()) {
+		Intent i = new Intent(AddParentActivity.this, DashBoardActivity.class);
+		Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
+				getApplicationContext(), R.anim.animation, R.anim.animation2)
+				.toBundle();
+
+		startActivity(i, bndlanimation);
+		finish();
+//			showpDialog();
 //
-//		startActivity(i, bndlanimation);
-//		finish();
-			showpDialog();
-
-			JSONObject params = new JSONObject();
-			try {
-				params.put("mobile", phone);
-				params.put("name", name);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-					"http://54.69.183.186:1340/kin/add-senior", params,
-					new Response.Listener<JSONObject>() {
-
-						@Override
-						public void onResponse(JSONObject response) {
-							Intent i = new Intent(AddParentActivity.this,
-									DashBoardActivity.class);
-							Bundle bndlanimation = ActivityOptions
-									.makeCustomAnimation(
-											getApplicationContext(),
-											R.anim.animation, R.anim.animation2)
-									.toBundle();
-
-							startActivity(i, bndlanimation);
-							// Log.d(TAG, response.toString());
-							// VolleyLog.v("Response:%n %s",
-							// response.toString(4));
-							hidepDialog();
-						}
-					}, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							Log.d("Error", "" + error);
-							VolleyLog.e("Error: ", error.getMessage());
-							Toast.makeText(getApplicationContext(),
-									error.getMessage(), Toast.LENGTH_SHORT)
-									.show();
-							hidepDialog();
-						}
-
-					});
-
-			AppController.getInstance().addToRequestQueue(req);
-
-		} else {
-			Toast.makeText(this, "Phone and name cannot be empty",
-					Toast.LENGTH_SHORT).show();
-
-		}
+//			JSONObject params = new JSONObject();
+//			try {
+//				params.put("mobile", phone);
+//				params.put("name", name);
+//			} catch (JSONException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//
+//			JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+//					"http://54.69.183.186:1340/kin/add-senior", params,
+//					new Response.Listener<JSONObject>() {
+//
+//						@Override
+//						public void onResponse(JSONObject response) {
+//							Intent i = new Intent(AddParentActivity.this,
+//									DashBoardActivity.class);
+//							Bundle bndlanimation = ActivityOptions
+//									.makeCustomAnimation(
+//											getApplicationContext(),
+//											R.anim.animation, R.anim.animation2)
+//									.toBundle();
+//
+//							startActivity(i, bndlanimation);
+//							// Log.d(TAG, response.toString());
+//							// VolleyLog.v("Response:%n %s",
+//							// response.toString(4));
+//							hidepDialog();
+//						}
+//					}, new Response.ErrorListener() {
+//						@Override
+//						public void onErrorResponse(VolleyError error) {
+//							Log.d("Error", "" + error);
+//							VolleyLog.e("Error: ", error.getMessage());
+//							Toast.makeText(getApplicationContext(),
+//									error.getMessage(), Toast.LENGTH_SHORT)
+//									.show();
+//							hidepDialog();
+//						}
+//
+//					});
+//
+//			AppController.getInstance().addToRequestQueue(req);
+//
+//		} else {
+//			Toast.makeText(this, "Phone and name cannot be empty",
+//					Toast.LENGTH_SHORT).show();
+//
+//		}
 	}
 
 	private void showpDialog() {

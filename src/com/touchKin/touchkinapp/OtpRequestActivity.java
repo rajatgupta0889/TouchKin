@@ -183,7 +183,7 @@ public class OtpRequestActivity extends ActionBarActivity {
 						}
 
 						Intent i = new Intent(OtpRequestActivity.this,
-								AddParentActivity.class);
+								DashBoardActivity.class);
 						Bundle bndlanimation = ActivityOptions
 								.makeCustomAnimation(getApplicationContext(),
 										R.anim.animation, R.anim.animation2)

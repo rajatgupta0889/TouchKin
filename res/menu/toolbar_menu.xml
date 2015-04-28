@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/parentNameMenu"
-        android:title=""
+        android:title="Mummy"
         app:showAsAction="always|withText"/>
     <item
         android:id="@+id/parentIconMenu"

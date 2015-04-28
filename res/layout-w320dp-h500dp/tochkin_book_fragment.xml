@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <com.aphidmobile.flip.FlipViewController
+        xmlns:flip="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/flipView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        flip:orientation="horizontal" />
+
+</RelativeLayout>

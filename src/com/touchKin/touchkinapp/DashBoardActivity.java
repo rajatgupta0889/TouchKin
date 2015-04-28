@@ -2,12 +2,12 @@ package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -34,7 +34,6 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -47,10 +46,11 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
+@SuppressLint("NewApi")
 public class DashBoardActivity extends ActionBarActivity implements
 		AnimationListener, OnItemClickListener {
 	private FragmentTabHost mTabHost;
-	String NAME = "Akash Bangad";
+	String NAME = "Rajat Gupta ";
 	String EMAIL = "akash.bangad@android4devs.com";
 	int PROFILE = R.drawable.mom;
 	String TITLES[] = { "My Family", "My Accounts", "Upgrade", "Terms of Use",
@@ -82,6 +82,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
+	       Configuration config = getResources().getConfiguration();
+	       Toast.makeText(this, config.screenHeightDp+" "+config.screenWidthDp, Toast.LENGTH_LONG).show();
 
 		setSupportActionBar(toolbar);
 		// SharedPreferences pref =
