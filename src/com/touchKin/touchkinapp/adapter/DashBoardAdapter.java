@@ -1,13 +1,14 @@
 package com.touchKin.touchkinapp.adapter;
 
-import com.touchKin.touchkinapp.DashBoardActivityFragment;
-import com.touchKin.touchkinapp.DashboardLocationFragment;
-import com.touchKin.touchkinapp.Fragment1;
-import com.touchKin.touchkinapp.TouchFragment;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+
+import com.touchKin.touchkinapp.DashBoardActivityFragment;
+import com.touchKin.touchkinapp.DashboardLocationFragment;
+import com.touchKin.touchkinapp.TouchFragment;
 
 public class DashBoardAdapter extends FragmentPagerAdapter {
 	private static int NUM_ITEMS = 3;
@@ -42,6 +43,11 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return NUM_ITEMS;
+	}
+
+	@Override
+	public void destroyItem(View collection, int position, Object view) {
+		((ViewPager) collection).removeView((View) view);
 	}
 
 }

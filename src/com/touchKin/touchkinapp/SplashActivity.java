@@ -8,11 +8,12 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -41,28 +42,29 @@ public class SplashActivity extends Activity {
 		// pref.edit().putString(GetUserLogin.UserTom, null);
 		// pref.edit().commit();
 		// System.out.println(pref.getString(GetUserLogin.UserTom, null));
-		new Thread(new Runnable() {
-			public void run() {
-				while (mProgressStatus < 100) {
-
-					progBar.incrementProgressBy(1);
-
-					// Update the progress bar
-					mHandler.post(new Runnable() {
-						public void run() {
-							progBar.setProgress(mProgressStatus);
-						}
-					});
-				}
-			}
-
-		}).start();
+		// new Thread(new Runnable() {
+		// public void run() {
+		// while (mProgressStatus < 100) {
+		//
+		// progBar.incrementProgressBy(1);
+		//
+		// // Update the progress bar
+		// mHandler.post(new Runnable() {
+		// public void run() {
+		// progBar.setProgress(mProgressStatus);
+		// }
+		// });
+		// }
+		// }
+		//
+		// }).start();
 		Log.d("Mobile", "" + pref.getString("mobile", null));
 		Log.d("otp", "" + pref.getString("otp", null));
 		if (pref.getString("mobile", null) != null
 				&& pref.getString("otp", null) != null) {
 			sendIntent(pref.getString("mobile", null),
 					pref.getString("otp", null));
+			// new SendRequest().execute(params)
 		} else {
 			new Handler().postDelayed(new Runnable() {
 
@@ -152,6 +154,23 @@ public class SplashActivity extends Activity {
 					});
 
 			AppController.getInstance().addToRequestQueue(req);
+		}
+	}
+
+	private class SendRequest extends AsyncTask<String, Void, Void> {
+		/**
+		 * The system calls this to perform work in a worker thread and delivers
+		 * it the parameters given to AsyncTask.execute()
+		 */
+		protected void onPostExecute(Void result) {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			sendIntent(params[0], params[1]);
+			return null;
 		}
 	}
 
