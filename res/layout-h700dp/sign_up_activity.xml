@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.example.touchkinparentapp.MainActivity" >
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/toolbar" >
+    </include>
+
+    <TextView
+        android:id="@+id/add_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tool_bar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Touchkin will send a one time sms to verify your phone number."
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="14dp"
+        android:text="Carrier sms charges may apply."
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:id="@+id/spiner_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignRight="@+id/otp_Genrate_Button"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal" >
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="135dp"
+            android:layout_height="65dp"
+            android:background="@drawable/spinner_background_holo_light"
+            android:spinnerMode="dialog" />
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_text_holo_light"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="Mobile Number"
+            android:inputType="phone"
+            android:textSize="30dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/previousButton"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_alignBaseline="@+id/otp_Genrate_Button"
+        android:layout_alignBottom="@+id/otp_Genrate_Button"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/previous_button" />
+
+    <Button
+        android:id="@+id/otp_Genrate_Button"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="26dp"
+        android:layout_marginRight="19dp"
+        android:background="@drawable/next_button" />
+
+</RelativeLayout>

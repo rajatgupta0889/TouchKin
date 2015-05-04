@@ -47,7 +47,7 @@
         android:padding="10dp" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/profile_pic"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_centerInParent="true"
@@ -65,13 +65,13 @@
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageView1"
+            android:layout_alignTop="@+id/profile_pic"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
             android:src="@drawable/steps" />
 
         <TextView
-            android:id="@+id/requestTextView"
+            android:id="@+id/add_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageView2"
@@ -85,7 +85,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/requestTextView"
+            android:layout_below="@+id/add_name"
             android:layout_centerHorizontal="true"
             android:text="Steps"
             android:textColor="@color/white"
