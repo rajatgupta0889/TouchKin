@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
@@ -51,9 +52,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		init(v);
 		viewPager.setAdapter(adapter);
 		pageListener = new PageListener();
-
+		viewPager.setOnPageChangeListener(pageListener);
 		indicator.setViewPager(viewPager);
-		((CirclePageIndicator) indicator).setSnap(true);
+		((CirclePageIndicator) indicator).setSnap(false);
 		indicator
 				.setFillColor(getResources().getColor(R.color.indicator_color));
 		indicator.setStrokeColor(getResources().getColor(
@@ -122,6 +123,12 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			TextView mTitle = (TextView) toolbar
 					.findViewById(R.id.toolbar_title);
 			mTitle.setText(getResources().getStringArray(R.array.frag_titles)[position]);
+
+			FragmentInterface fragment = (FragmentInterface) adapter
+					.instantiateItem(viewPager, position);
+			if (fragment != null) {
+				fragment.fragmentBecameVisible();
+			}
 
 		}
 	}

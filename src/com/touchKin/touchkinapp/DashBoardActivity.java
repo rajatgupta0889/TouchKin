@@ -82,8 +82,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
-	       Configuration config = getResources().getConfiguration();
-	       Toast.makeText(this, config.screenHeightDp+" "+config.screenWidthDp, Toast.LENGTH_LONG).show();
+		// Configuration config = getResources().getConfiguration();
+		// Toast.makeText(this, config.screenHeightDp+" "+config.screenWidthDp,
+		// Toast.LENGTH_LONG).show();
 
 		setSupportActionBar(toolbar);
 		// SharedPreferences pref =

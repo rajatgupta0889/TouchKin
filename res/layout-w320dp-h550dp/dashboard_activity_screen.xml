@@ -43,8 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@drawable/circular_image"
-        android:padding="10dp" >
+        android:background="@drawable/circular_image" >
 
         <ImageView
             android:id="@+id/imageView1"
@@ -53,13 +52,12 @@
             android:layout_centerInParent="true"
             android:src="@drawable/activity" />
 
-        <com.echo.holographlibrary.PieGraph
-            android:id="@+id/piegraph"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+            android:id="@+id/holoCircularProgressBar"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
             android:layout_centerInParent="true"
-            app:pieInnerCircleRatio="220"
-            app:pieSlicePadding="0dip" />
+            app:stroke_width="10dp" />
 
         <ImageView
             android:id="@+id/imageView2"
