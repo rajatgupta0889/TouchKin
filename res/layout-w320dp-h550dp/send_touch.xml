@@ -4,13 +4,25 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- Button
+    <!--
+         Button
         android:id="@+id/button_ChangeCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Switch Camera"  -->
+        android:text="Switch Camera"
+    -->
+
+
+    <!--
+    <FrameLayout
+        android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+    -->
+
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"

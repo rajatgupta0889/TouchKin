@@ -265,6 +265,7 @@ public class SignUpActivity extends ActionBarActivity {
 												R.anim.animation2).toBundle();
 								i.putExtra("phoneNumber", phoneNumber);
 								startActivity(i, bndlanimation);
+								finish();
 								break;
 							}
 							// Additional cases

@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,17 +26,17 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
 
 public class OtpRequestActivity extends ActionBarActivity {
-	EditText otp;
+	EditText otp, phoneNo;
 	String OneTimePass;
 	private ProgressDialog pDialog;
 	String phone;
@@ -52,10 +51,11 @@ public class OtpRequestActivity extends ActionBarActivity {
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		mTitle.setText("Verify your number");
+		phoneNo = (EditText) findViewById(R.id.mobileNumberEditText);
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Please wait...");
 		pDialog.setCancelable(false);
-
+		phoneNo.setText(phone);
 		Button submit_button = (Button) findViewById(R.id.submitButton);
 		otp = (EditText) findViewById(R.id.otp_editText);
 
@@ -174,9 +174,11 @@ public class OtpRequestActivity extends ActionBarActivity {
 							edit.putString("otp", response
 									.getString("mobile_verification_code"));
 							edit.apply();
-							Log.d("Response", "" + response);
-							Log.d("mobile", "" + pref.getString("mobile", null));
-							Log.d("otp", "" + pref.getString("mobile", null));
+							// Log.d("Response", "" + response);
+							// Log.d("mobile", "" + pref.getString("mobile",
+							// null));
+							// Log.d("otp", "" + pref.getString("mobile",
+							// null));
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -198,9 +200,18 @@ public class OtpRequestActivity extends ActionBarActivity {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
-						Toast.makeText(getApplicationContext(),
-								error.getMessage(), Toast.LENGTH_SHORT).show();
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+
+						if (response != null && response.data != null) {
+							int code = response.statusCode;
+							json = new String(response.data);
+							json = trimMessage(json, "message");
+							if (json != null)
+								displayMessage(json, code);
+
+						}
 						hidepDialog();
 					}
 
@@ -208,4 +219,24 @@ public class OtpRequestActivity extends ActionBarActivity {
 
 		AppController.getInstance().addToRequestQueue(req);
 	}
+
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
+	}
+
 }

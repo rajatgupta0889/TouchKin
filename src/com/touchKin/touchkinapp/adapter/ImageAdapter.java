@@ -18,8 +18,9 @@ public class ImageAdapter extends BaseAdapter {
 	LayoutInflater mLayoutInflater;
 
 	List<ParentListModel> parentList;
-//	int[] mResources = { R.drawable.mom, R.drawable.activity_bg,
-//			R.drawable.mom, R.drawable.mom, R.drawable.mom };
+
+	// int[] mResources = { R.drawable.mom, R.drawable.activity_bg,
+	// R.drawable.mom, R.drawable.mom, R.drawable.mom };
 
 	public ImageAdapter(Context context, List<ParentListModel> parentList) {
 		mContext = context;
@@ -61,7 +62,11 @@ public class ImageAdapter extends BaseAdapter {
 					.getDrawable(R.drawable.circular_image));
 		}
 		imageView.setImageResource(R.drawable.mom);
+		if (position + 1 == parentList.size()) {
+			convertView = mLayoutInflater
+					.inflate(R.layout.image_add_item, null);
 
+		}
 		return convertView;
 	}
 	// @Override

@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/img_tabtxt"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
 

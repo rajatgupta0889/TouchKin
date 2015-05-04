@@ -13,7 +13,7 @@
     </include>
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/requestTextView"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/requestTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
         android:text="Carrier sms charges may apply."

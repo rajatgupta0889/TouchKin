@@ -9,7 +9,7 @@
         android:id="@+id/mobileNumberEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/requestTextView"
         android:layout_centerHorizontal="true"
         android:background="@drawable/spinner_background_holo_light"
         android:ems="10"
@@ -57,7 +57,7 @@
         android:background="@drawable/next_button" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/requestTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tool_bar"

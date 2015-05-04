@@ -2,12 +2,13 @@ package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -34,6 +35,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -210,7 +212,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		mTitle.setText("TouchKin");
 
 		list = new ArrayList<ParentListModel>();
-		// getParentList();
+
 		// list.add(new ParentListModel("", true, "Mom", "1", "1"));
 		// list.add(new ParentListModel("", false, "Dad", "2", "2"));
 		// list.add(new ParentListModel("", false, "Uncle", "3", "3"));
@@ -394,37 +396,43 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public void getParentList() {
 
 		JsonArrayRequest req = new JsonArrayRequest(
-				"http://54.69.183.186:1340/kin/seniors",
+				"http://54.69.183.186:1340/user/care-receivers",
 				new Listener<JSONArray>() {
 
 					@Override
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
 						// Log.d("Response Array", " " + responseArray);
-						for (int i = 0; i < responseArray.length(); i++) {
-							try {
-								JSONObject obj = responseArray.getJSONObject(i);
-								ParentListModel item = new ParentListModel();
+						if (responseArray.length() > 0) {
+							for (int i = 0; i < responseArray.length(); i++) {
+								try {
+									JSONObject obj = responseArray
+											.getJSONObject(i);
 
-								item.setParentId(obj.getString("id"));
-								item.setParentName(obj.getString("name"));
-								item.setParentUserId(obj.getJSONObject("user")
-										.getString("id"));
-								if (i == 0) {
-									item.setIsSelected(true);
-									selectedParent = item;
-								} else {
-									item.setIsSelected(false);
+									ParentListModel item = new ParentListModel();
+									item.setParentId(obj.getString("id"));
+									item.setParentName(obj.getString("name"));
+									item.setParentUserId(obj.getJSONObject(
+											"user").getString("id"));
+									if (i == 0) {
+										item.setIsSelected(true);
+										selectedParent = item;
+									} else {
+										item.setIsSelected(false);
+									}
+									list.add(item);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-								list.add(item);
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
 							}
+						} else {
+							setMenuTitle(null);
 						}
+						list.add(new ParentListModel("", false, "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
-						if (list.size() > 0) {
+						if (list.size() > 1) {
 							selectedParent = list.get(0);
 							setMenuTitle(selectedParent);
 						}
@@ -453,24 +461,34 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 
 		ParentListModel item = list.get(position);
-		for (ParentListModel data : list) {
-			if (data.equals(item)) {
-				data.setIsSelected(true);
-			} else {
-				data.setIsSelected(false);
+		if (!item.getParentId().equals("")) {
+			for (ParentListModel data : list) {
+
+				if (data.equals(item)) {
+					data.setIsSelected(true);
+				} else {
+					data.setIsSelected(false);
+				}
 			}
+			setMenuTitle(item);
+			listview.setAdapter(imageAdapter);
+			mTabHost.setCurrentTab(0);
+			selectedParent = item;
+		} else {
+
 		}
-		setMenuTitle(item);
-		listview.setAdapter(imageAdapter);
 		toggleVissibility();
-		mTabHost.setCurrentTab(0);
-		selectedParent = item;
 
 	}
 
 	public void setMenuTitle(ParentListModel item) {
 		MenuItem parentMenu = menu.findItem(R.id.parentNameMenu);
-		parentMenu.setTitle(item.getParentName());
+		if (item != null) {
+			parentMenu.setTitle(item.getParentName());
+		} else {
+			parentMenu.setTitle("Add");
+			MenuItem iconMenu = menu.findItem(R.id.parentIconMenu);
+		}
 	}
 
 	public ParentListModel getSelectedParent() {

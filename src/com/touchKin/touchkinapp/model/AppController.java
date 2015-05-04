@@ -15,13 +15,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.touchKin.touchkinapp.custom.LruBitmapCache;
 
 @SuppressWarnings("deprecation")
 public class AppController extends Application {
 	private static final String SET_COOKIE_KEY = "Set-Cookie";
 	private static final String COOKIE_KEY = "Cookie";
 	private static final String SESSION_COOKIE = "sessionid";
+	private ImageLoader mImageLoader;
 	/**
 	 * Log or request TAG
 	 */
@@ -158,5 +161,14 @@ public class AppController extends Application {
 			headers.put(COOKIE_KEY, builder.toString());
 			Log.d("Pref", _preferences.getString(SESSION_COOKIE, ""));
 		}
+	}
+
+	public ImageLoader getImageLoader() {
+		getRequestQueue();
+		if (mImageLoader == null) {
+			mImageLoader = new ImageLoader(this.mRequestQueue,
+					new LruBitmapCache());
+		}
+		return this.mImageLoader;
 	}
 }
