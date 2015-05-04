@@ -16,7 +16,7 @@
         android:gravity="center"
         android:hint="9066665428"
         android:inputType="phone"
-        android:textSize="20dp" />
+        android:textSize="30dp" />
 
     <EditText
         android:id="@+id/otp_editText"
@@ -29,7 +29,7 @@
         android:gravity="center"
         android:hint="OTP"
         android:inputType="phone"
-        android:textSize="30dp" >
+        android:textSize="45dp" >
     </EditText>
 
     <include
@@ -38,8 +38,8 @@
 
     <Button
         android:id="@+id/previousButton"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:layout_alignBaseline="@+id/submitButton"
         android:layout_alignBottom="@+id/submitButton"
         android:layout_alignParentLeft="true"
@@ -48,8 +48,8 @@
 
     <Button
         android:id="@+id/submitButton"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="26dp"
@@ -64,6 +64,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:text="Please enter the OTP send to"
-        android:textSize="20dp" />
+        android:textSize="30dp" />
 
 </RelativeLayout>

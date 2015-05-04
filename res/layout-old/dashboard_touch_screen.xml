@@ -47,7 +47,7 @@
         android:padding="10dp" >
 
         <com.touchKin.touchkinapp.custom.RoundedImageView
-            android:id="@+id/profile_pic"
+            android:id="@+id/imageView1"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_centerInParent="true"

@@ -89,7 +89,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 																	// header.xml
 																	// for
 																	// email
-				profile = (ImageView) itemView.findViewById(R.id.profile_pic);// Creating
+				profile = (ImageView) itemView.findViewById(R.id.imageView1);// Creating
 
 				Holderid = 0; // Setting holder id = 0 as the object being
 								// populated are of type header view

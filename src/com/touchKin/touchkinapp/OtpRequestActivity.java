@@ -43,7 +43,6 @@ public class OtpRequestActivity extends ActionBarActivity {
 	String phone;
 	private Toolbar toolbar;
 	TextView mTitle;
-	String phoneNumber;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -184,14 +183,12 @@ public class OtpRequestActivity extends ActionBarActivity {
 						}
 
 						Intent i = new Intent(OtpRequestActivity.this,
-								Details.class);
+								DashBoardActivity.class);
 						Bundle bndlanimation = ActivityOptions
 								.makeCustomAnimation(getApplicationContext(),
 										R.anim.animation, R.anim.animation2)
 								.toBundle();
-						i.putExtra("phoneNumber", phone);
 						startActivity(i, bndlanimation);
-						
 						// Log.d(TAG, response.toString());
 						// VolleyLog.v("Response:%n %s",
 						// response.toString(4));
