@@ -185,14 +185,14 @@ public class OtpRequestActivity extends ActionBarActivity {
 							e.printStackTrace();
 						}
 
-						// Intent i = new Intent(OtpRequestActivity.this,
-						// Details.class);
-						// Bundle bndlanimation = ActivityOptions
-						// .makeCustomAnimation(getApplicationContext(),
-						// R.anim.animation, R.anim.animation2)
-						// .toBundle();
-						// i.putExtra("phoneNumber", phone);
-						// startActivity(i, bndlanimation);
+						 Intent i = new Intent(OtpRequestActivity.this,
+						 Details.class);
+						 Bundle bndlanimation = ActivityOptions
+						 .makeCustomAnimation(getApplicationContext(),
+						 R.anim.animation, R.anim.animation2)
+						 .toBundle();
+						 i.putExtra("phoneNumber", phone);
+						 startActivity(i, bndlanimation);
 						
 						// Log.d(TAG, response.toString());
 						// VolleyLog.v("Response:%n %s",
