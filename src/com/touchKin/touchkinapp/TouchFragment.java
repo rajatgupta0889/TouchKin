@@ -211,7 +211,7 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 3000);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 		super.onResume();
 	}
 
@@ -219,7 +219,7 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 	public void fragmentBecameVisible() {
 		// TODO Auto-generated method stub
 		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 3000);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 
 	}
 

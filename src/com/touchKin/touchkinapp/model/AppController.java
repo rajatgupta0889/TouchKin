@@ -2,7 +2,10 @@ package com.touchKin.touchkinapp.model;
 
 import java.util.Map;
 
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpParams;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -28,7 +31,7 @@ public class AppController extends Application {
 	/**
 	 * Log or request TAG
 	 */
-	public static DefaultHttpClient mHttpClient = new DefaultHttpClient();;
+	public static DefaultHttpClient mHttpClient = getThreadSafeClient();
 	public static final String TAG = AppController.class.getSimpleName();
 	/**
 	 * Global request queue for Volley
@@ -170,5 +173,21 @@ public class AppController extends Application {
 					new LruBitmapCache());
 		}
 		return this.mImageLoader;
+	}
+
+	public static DefaultHttpClient getThreadSafeClient() {
+
+		DefaultHttpClient client = new DefaultHttpClient();
+
+		ClientConnectionManager mgr = client.getConnectionManager();
+
+		HttpParams params = client.getParams();
+
+		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
+
+		mgr.getSchemeRegistry()), params);
+
+		return client;
+
 	}
 }

@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--
      The following two permissions are not required to use
-     Google Maps Android API v2, but are recommended.
+     Google Maps Android API v2, but are recommended.
     -->
     <uses-permission android:name="com.example.googlemap.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -64,14 +64,12 @@
         <activity
             android:name="com.touchKin.touchkinapp.SignUpActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.touchKin.touchkinapp.OtpRequestActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.touchKin.touchkinapp.AddParentActivity"
@@ -98,8 +96,17 @@
         <activity
             android:name="com.touchKin.touchkinapp.Details"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-             >
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.touchKin.touchkinapp.CircleNotificationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.touchKin.touchkinapp.AddCareActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
 
         <meta-data

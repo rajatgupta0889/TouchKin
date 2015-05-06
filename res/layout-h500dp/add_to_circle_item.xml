@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/rounded_button"
-        android:text="Accept"
+        android:text="Add Kin"
         android:textColor="@color/white" />
 
     <Button
@@ -30,7 +30,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
         android:background="@drawable/rounded_button"
-        android:text="Reject"
+        android:text="Remove"
         android:textColor="@color/white" />
 
     <TextView

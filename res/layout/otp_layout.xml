@@ -63,7 +63,7 @@
         android:layout_below="@+id/tool_bar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="Please enter the OTP send to"
+        android:text="Please read OTP sent to"
         android:textSize="20dp" />
 
 </RelativeLayout>

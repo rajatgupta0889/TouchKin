@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,8 +28,8 @@ public class SplashActivity extends Activity {
 	// Splash screen timer
 	private static int SPLASH_TIME_OUT = 2000;
 	ProgressBar progBar;
-	private int mProgressStatus = 0;
-	private Handler mHandler = new Handler();
+	// private int mProgressStatus = 0;
+	// private Handler mHandler = new Handler();
 	String applicationId;
 
 	@Override

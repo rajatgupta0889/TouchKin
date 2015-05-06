@@ -25,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
             android:text="@string/my_touch_duration"
             android:textColor="@color/text_grey"
             android:textSize="20sp" />
@@ -34,6 +33,7 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:text="@string/ago_text"
             android:textColor="@color/text_orange"
             android:textSize="20sp" />
@@ -46,34 +46,48 @@
         android:background="@drawable/circular_image"
         android:padding="10dp" >
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/profile_pic"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/activity" />
+
+        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+            android:id="@+id/holoCircularProgressBar"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_centerInParent="true"
+            app:stroke_width="10dp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" >
+            android:layout_alignTop="@+id/profile_pic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/steps" />
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_centerInParent="true" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_name"
+            android:layout_centerHorizontal="true"
+            android:text="Steps"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
-            <LinearLayout
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/shape_circle"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </RelativeLayout>
-
-        <com.echo.holographlibrary.PieGraph
-            android:id="@+id/piegraph"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerInParent="true"
-            app:pieInnerCircleRatio="220"
-            app:pieSlicePadding="0dip" />
+        <TextView
+            android:id="@+id/add_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:text="10"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <LinearLayout

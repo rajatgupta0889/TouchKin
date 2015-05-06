@@ -58,6 +58,15 @@ public class DashBoardActivityFragment extends Fragment implements
 
 		slices.add(slice);
 		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slices.add(slice);
 		slice = new PieSlice();
@@ -67,9 +76,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slices.add(slice);
 
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
+		
 
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
@@ -158,7 +165,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 3000);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 		super.onResume();
 	}
 
@@ -166,7 +173,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	public void fragmentBecameVisible() {
 		// TODO Auto-generated method stub
 		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 3000);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 
 	}
 }
