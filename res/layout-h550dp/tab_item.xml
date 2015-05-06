@@ -14,7 +14,7 @@
         android:layout_marginBottom="10dp"
         android:text="Medium Text"
         android:textColor="@android:color/white"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/img_tabtxt"

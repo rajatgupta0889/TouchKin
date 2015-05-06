@@ -252,7 +252,7 @@ public class SignUpActivity extends ActionBarActivity {
 
 						hidepDialog();
 						NetworkResponse response = error.networkResponse;
-						Log.d("Response", response.data.toString());
+//						Log.d("Response", response.data.toString());
 						if (response != null && response.data != null) {
 							switch (response.statusCode) {
 							case 400:

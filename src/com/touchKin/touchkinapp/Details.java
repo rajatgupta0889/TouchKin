@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,6 +74,8 @@ public class Details extends ActionBarActivity {
 	ImageLoader imgLoader;
 	String image_url;
 	private ProgressDialog pDialog;
+	private Toolbar toolbar;
+	TextView mTitle;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,7 +92,7 @@ public class Details extends ActionBarActivity {
 		phone_detail.setText(phone);
 		// Image url
 		image_url = serverPath + userID + ".jpeg";
-
+		mTitle.setText("Profile");
 		// ImageLoader class instance
 		imgLoader = new ImageLoader(getApplicationContext());
 		new MyTask().execute(image_url);
@@ -179,6 +182,8 @@ public class Details extends ActionBarActivity {
 		addImageView = (ImageView) findViewById(R.id.profile_pic);
 		imgView = (RoundedImageView) findViewById(R.id.change_profile_pic);
 		pDialog = new ProgressDialog(this);
+		toolbar = (Toolbar) findViewById(R.id.tool_bar);
+		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 	}
 
 	public void loadImagefromGallery(View view) {

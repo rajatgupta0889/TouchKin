@@ -7,10 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -29,6 +35,8 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 	ListView requestListView;
 	RequestListAdapter adapter;
 	List<RequestModel> requestList;
+	private Toolbar toolbar;
+	TextView mTitle, skip;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,21 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		init();
 		getConnectionRequest();
 		adapter.setCustomButtonListner(this);
+		mTitle.setText("Notification");
+		skip.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(CircleNotificationActivity.this,
+						DashBoardActivity.class);
+				Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
+						getApplicationContext(), R.anim.animation,
+						R.anim.animation2).toBundle();
+				startActivity(i, bndlanimation);
+			}
+		});
+
 	}
 
 	private void getConnectionRequest() {
@@ -66,9 +89,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 						} else {
 							Toast.makeText(CircleNotificationActivity.this,
 									"NO Request", Toast.LENGTH_SHORT).show();
-							requestList.add(new RequestModel("", "", "", ""));
-							requestList.add(new RequestModel("", "", "", ""));
-							requestList.add(new RequestModel("", "", "", ""));
+
 						}
 						adapter.notifyDataSetChanged();
 						requestListView.setAdapter(adapter);
@@ -94,6 +115,9 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		requestListView = (ListView) findViewById(R.id.requestListView);
 		requestList = new ArrayList<RequestModel>();
 		adapter = new RequestListAdapter(requestList, this);
+		toolbar = (Toolbar) findViewById(R.id.tool_bar);
+		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		skip = (TextView) findViewById(R.id.skip);
 	}
 
 	@Override
