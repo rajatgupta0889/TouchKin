@@ -13,24 +13,33 @@
         android:src="@drawable/activity_bg" />
 
     <Button
-        android:id="@+id/accept_button"
+        android:id="@+id/addKinButton"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/rounded_button"
-        android:text="Accept"
+        android:text="Add Kin"
         android:textColor="@color/white" />
 
     <Button
-        android:id="@+id/rejectButton"
+        android:id="@+id/removeKinButton"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
         android:background="@drawable/rounded_button"
-        android:text="Reject"
+        android:text="Remove"
         android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/parentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/parentImage"
+        android:layout_margin="5dp"
+        android:text="TextView" />
 
 </RelativeLayout>

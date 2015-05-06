@@ -411,9 +411,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 									ParentListModel item = new ParentListModel();
 									item.setParentId(obj.getString("id"));
-									item.setParentName(obj.getString("name"));
-									item.setParentUserId(obj.getJSONObject(
-											"user").getString("id"));
+									item.setParentName(obj.getString("nickname"));
+//									item.setParentUserId(obj.getJSONObject(
+//											"user").getString("id"));
 									if (i == 0) {
 										item.setIsSelected(true);
 										selectedParent = item;

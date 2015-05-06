@@ -64,6 +64,8 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 								}
 							}
 						} else {
+							Toast.makeText(CircleNotificationActivity.this,
+									"NO Request", Toast.LENGTH_SHORT).show();
 							requestList.add(new RequestModel("", "", "", ""));
 							requestList.add(new RequestModel("", "", "", ""));
 							requestList.add(new RequestModel("", "", "", ""));

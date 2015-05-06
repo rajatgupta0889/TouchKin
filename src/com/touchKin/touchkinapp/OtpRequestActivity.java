@@ -42,7 +42,7 @@ public class OtpRequestActivity extends ActionBarActivity {
 	String phone;
 	private Toolbar toolbar;
 	TextView mTitle;
-	String phoneNumber;
+	String phoneNumber, userID, userName = null;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,12 +169,16 @@ public class OtpRequestActivity extends ActionBarActivity {
 								.getSharedPreferences("loginPref", 0);
 						try {
 
-							Editor edit = pref.edit();
-							edit.putString("mobile",
-									response.getString("mobile"));
-							edit.putString("otp", response
-									.getString("mobile_verification_code"));
-							edit.apply();
+							// Editor edit = pref.edit();
+							// edit.putString("mobile",
+							// response.getString("mobile"));
+							// edit.putString("otp", response
+							// .getString("mobile_verification_code"));
+							// edit.apply();
+							if (response.has("first_name")) {
+								userName = response.getString("first_name");
+							}
+							userID = response.getString("id");
 							// Log.d("Response", "" + response);
 							// Log.d("mobile", "" + pref.getString("mobile",
 							// null));
@@ -185,15 +189,19 @@ public class OtpRequestActivity extends ActionBarActivity {
 							e.printStackTrace();
 						}
 
-						// Intent i = new Intent(OtpRequestActivity.this,
-						// Details.class);
-						// Bundle bndlanimation = ActivityOptions
-						// .makeCustomAnimation(getApplicationContext(),
-						// R.anim.animation, R.anim.animation2)
-						// .toBundle();
-						// i.putExtra("phoneNumber", phone);
-						// startActivity(i, bndlanimation);
-						
+						Intent i = new Intent(OtpRequestActivity.this,
+								Details.class);
+						Bundle bndlanimation = ActivityOptions
+								.makeCustomAnimation(getApplicationContext(),
+										R.anim.animation, R.anim.animation2)
+								.toBundle();
+						i.putExtra("phoneNumber", phone);
+						i.putExtra("id", userID);
+						if (userName != null)
+							i.putExtra("first_name", userName);
+
+						startActivity(i, bndlanimation);
+
 						// Log.d(TAG, response.toString());
 						// VolleyLog.v("Response:%n %s",
 						// response.toString(4));

@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/profile_pic"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
@@ -23,8 +23,8 @@
 
         <com.touchKin.touchkinapp.custom.RoundedImageView
             android:id="@+id/change_profile_pic"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center" />
@@ -47,8 +47,8 @@
             android:layout_below="@+id/profile_pic"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:ems="10"
             android:gravity="center"
+            android:maxLines="1"
             android:paddingBottom="10dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="invisible" />
@@ -59,15 +59,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:drawableLeft="@drawable/phone_pic" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_below="@+id/RelativeLayout1"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/phone_pic"
+        android:gravity="center_vertical"
         android:text="Phone Number"
         android:textSize="17sp" />
 
@@ -83,15 +78,15 @@
 
     <TextView
         android:id="@+id/phn_number_detail"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_marginLeft="22dp"
-        android:layout_toRightOf="@+id/textView3"
-        android:gravity="center"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_below="@+id/RelativeLayout1"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/textView2"
+        android:gravity="center_vertical"
         android:hint="9066665428"
+        android:textColor="@color/text_orange"
         android:textSize="17sp" />
 
 </RelativeLayout>
