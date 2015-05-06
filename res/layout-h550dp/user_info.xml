@@ -64,8 +64,7 @@
         android:layout_marginTop="10dp"
         android:drawableLeft="@drawable/phone_pic"
         android:gravity="center_vertical"
-        android:text="Phone Number"
-        android:textSize="17sp" />
+        android:text="Phone Number" />
 
     <Button
         android:id="@+id/next_detail_button"

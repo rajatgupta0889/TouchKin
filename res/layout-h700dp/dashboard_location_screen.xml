@@ -67,13 +67,12 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <com.echo.holographlibrary.PieGraph
-            android:id="@+id/piegraph"
+        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+            android:id="@+id/holoCircularProgressBar"
             android:layout_width="270dp"
             android:layout_height="270dp"
             android:layout_centerInParent="true"
-            app:pieInnerCircleRatio="220"
-            app:pieSlicePadding="0dip" />
+            app:stroke_width="10dp" />
     </RelativeLayout>
 
     <LinearLayout
