@@ -73,7 +73,7 @@ public class AddCareActivity extends ActionBarActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(AddCareActivity.this,
-						DashBoardActivity.class);
+						BluetoothScan.class);
 				Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
 						getApplicationContext(), R.anim.animation,
 						R.anim.animation2).toBundle();
