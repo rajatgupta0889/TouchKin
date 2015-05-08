@@ -7,23 +7,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.RequestListAdapter;
 import com.touchKin.touchkinapp.model.AppController;
@@ -36,7 +42,8 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 	RequestListAdapter adapter;
 	List<RequestModel> requestList;
 	private Toolbar toolbar;
-	TextView mTitle, skip;
+	TextView mTitle, notifTv;
+	Button skip;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +52,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		init();
 		getConnectionRequest();
 		adapter.setCustomButtonListner(this);
-		mTitle.setText("Notification");
+		mTitle.setText("Request");
 		skip.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -67,7 +74,6 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		JsonArrayRequest req = new JsonArrayRequest(
 				"http://54.69.183.186:1340/user/connection-requests",
 				new Listener<JSONArray>() {
-
 					@Override
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
@@ -154,6 +160,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 						} else {
 							Toast.makeText(CircleNotificationActivity.this,
 									"NO Request", Toast.LENGTH_SHORT).show();
+							notifTv.setVisibility(View.VISIBLE);
 
 						}
 						adapter.notifyDataSetChanged();
@@ -182,7 +189,8 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		adapter = new RequestListAdapter(requestList, this);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-		skip = (TextView) findViewById(R.id.skip);
+		skip = (Button) findViewById(R.id.skip);
+		notifTv = (TextView) findViewById(R.id.notifTV);
 	}
 
 	@Override
@@ -192,10 +200,89 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		if (isAccept) {
 			Toast.makeText(CircleNotificationActivity.this,
 					"Accept Button Clicked", Toast.LENGTH_SHORT).show();
+			acceptRequest(value);
 		} else {
 			Toast.makeText(CircleNotificationActivity.this,
 					"Reject Button Clicked", Toast.LENGTH_SHORT).show();
+			rejectRequest(value);
 		}
 
+	}
+
+	private void rejectRequest(String requestID) {
+		// TODO Auto-generated method stub
+		JSONObject param = new JSONObject();
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/user/connection-request/"
+						+ requestID + "/reject", param,
+
+				new Response.Listener<JSONObject>() {
+					@SuppressLint("NewApi")
+					@Override
+					public void onResponse(JSONObject response) {
+
+						Log.d("Response", "" + response);
+
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+
+						if (response != null && response.data != null) {
+							int code = response.statusCode;
+							// json = new String(response.data);
+							// json = trimMessage(json, "message");
+							// if (json != null)
+							// displayMessage(json, code);
+
+						}
+						// hidepDialog();
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
+	}
+
+	private void acceptRequest(String requestID) {
+		// TODO Auto-generated method stub
+		JSONObject param = new JSONObject();
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/user/connection-request/"
+						+ requestID + "/accept", param,
+
+				new Response.Listener<JSONObject>() {
+					@SuppressLint("NewApi")
+					@Override
+					public void onResponse(JSONObject response) {
+
+						Log.d("Response", "" + response);
+
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+
+						if (response != null && response.data != null) {
+							int code = response.statusCode;
+							// json = new String(response.data);
+							// json = trimMessage(json, "message");
+							// if (json != null)
+							// displayMessage(json, code);
+
+						}
+						// hidepDialog();
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
 	}
 }

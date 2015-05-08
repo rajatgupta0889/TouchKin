@@ -2,23 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:gravity="center_vertical" >
+    android:background="@color/white" >
 
     <com.touchKin.touchkinapp.custom.RoundedImageView
         android:id="@+id/parentImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="left"
-        android:layout_margin="5dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/mom" />
 
     <Button
         android:id="@+id/addKinButton"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/parentImage"
         android:background="@drawable/rounded_button"
         android:text="Add Kin"
         android:textColor="@color/white" />
@@ -27,9 +29,9 @@
         android:id="@+id/removeKinButton"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="14dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/addKinButton"
         android:background="@drawable/rounded_button"
         android:text="Remove"
         android:textColor="@color/white" />
@@ -40,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/parentImage"
         android:layout_below="@+id/parentImage"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="20dp"
         android:gravity="center"
         android:text="Mom" />
 

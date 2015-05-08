@@ -62,7 +62,7 @@ public class RequestListAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		RequestModel request = (RequestModel) getItem(position);
+		final RequestModel request = (RequestModel) getItem(position);
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.parent_request_item, null);
@@ -86,7 +86,8 @@ public class RequestListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (customListener != null)
-					customListener.onButtonClickListner(position, "", true);
+					customListener.onButtonClickListner(position,
+							request.getRequestID(), true);
 
 			}
 		});
@@ -96,7 +97,8 @@ public class RequestListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (customListener != null)
-					customListener.onButtonClickListner(position, "", false);
+					customListener.onButtonClickListner(position,
+							request.getRequestID(), false);
 			}
 		});
 

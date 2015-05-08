@@ -24,7 +24,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="14dp"
         android:layout_toRightOf="@+id/accept_button"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/button_click_selector"
         android:text="Reject"
         android:textColor="@color/white" />
 
@@ -35,7 +35,7 @@
         android:layout_below="@+id/requestTextView"
         android:layout_marginLeft="30dp"
         android:layout_toRightOf="@+id/parentImage"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/button_click_selector"
         android:text="Accept"
         android:textColor="@color/white" />
 
