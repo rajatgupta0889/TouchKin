@@ -231,6 +231,7 @@ public class Details extends ActionBarActivity {
 		public ImageUploadTask(Context context) {
 			// TODO Auto-generated constructor stub
 			this.context = context;
+			imgLoader.clearCache();
 		}
 
 		@SuppressWarnings("deprecation")
@@ -361,7 +362,7 @@ public class Details extends ActionBarActivity {
 
 		@Override
 		protected void onPreExecute() {
-			imgLoader.clearCache();
+
 		}
 
 		@Override
@@ -385,8 +386,7 @@ public class Details extends ActionBarActivity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				imgLoader.DisplayImage(image_url, R.drawable.add_people,
-						imgView);
+				imgLoader.DisplayImage(image_url, R.drawable.people, imgView);
 				// addImageView.setVisibility(View.INVISIBLE);
 			}
 		}
