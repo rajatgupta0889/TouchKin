@@ -110,6 +110,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.touchKin.touchkinapp.BluetoothScanList"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.touchKin.touchkinapp.AddCareActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >

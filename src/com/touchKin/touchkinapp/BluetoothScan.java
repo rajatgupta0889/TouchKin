@@ -33,7 +33,7 @@ public class BluetoothScan extends ActionBarActivity {
 						rippleBackground.stopRippleAnimation();
 
 						Intent i = new Intent(BluetoothScan.this,
-								DashBoardActivity.class);
+								BluetoothScanList.class);
 						Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
 								getApplicationContext(), R.anim.animation,
 								R.anim.animation2).toBundle();
