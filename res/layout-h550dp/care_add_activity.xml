@@ -11,12 +11,14 @@
     </include>
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/careListView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@+id/addButton"
-        android:layout_below="@+id/tool_bar" >
-    </ListView>
+        android:layout_below="@+id/tool_bar"
+        android:divider="@color/text_grey"
+        android:dividerHeight="0.5dp"
+        android:stackFromBottom="true" />
 
     <ImageButton
         android:id="@+id/addButton"
@@ -26,5 +28,28 @@
         android:layout_alignParentRight="true"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_btn" />
+
+    <TextView
+        android:id="@+id/skipTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Skip"
+        android:textColor="@color/text_orange"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="29dp"
+        android:text="Back"
+        android:textColor="@color/text_orange"
+        android:textSize="20sp" />
 
 </RelativeLayout>

@@ -2,7 +2,7 @@ package com.touchKin.touchkinapp.model;
 
 public class RequestModel {
 
-	String userName, userId, userImage, care_reciever_name;
+	String userName, userId, userImage, care_reciever_name, requestID, reqMsg;
 
 	public RequestModel() {
 		super();
@@ -48,6 +48,22 @@ public class RequestModel {
 
 	public void setCare_reciever_name(String care_reciever_name) {
 		this.care_reciever_name = care_reciever_name;
+	}
+
+	public String getRequestID() {
+		return requestID;
+	}
+
+	public void setRequestID(String requestID) {
+		this.requestID = requestID;
+	}
+
+	public String getReqMsg() {
+		return reqMsg;
+	}
+
+	public void setReqMsg(String reqMsg) {
+		this.reqMsg = reqMsg;
 	}
 
 }

@@ -79,7 +79,7 @@ public class RequestListAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.request.setText(request.getUserName() + "wants to add you");
+		viewHolder.request.setText(request.getReqMsg());
 		viewHolder.accept.setOnClickListener(new OnClickListener() {
 
 			@Override

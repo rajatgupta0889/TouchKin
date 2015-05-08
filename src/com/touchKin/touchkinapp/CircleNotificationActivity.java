@@ -52,7 +52,8 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(CircleNotificationActivity.this,
-						BluetoothScan.class);
+				AddCareActivity.class);
+
 				Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
 						getApplicationContext(), R.anim.animation,
 						R.anim.animation2).toBundle();
@@ -75,12 +76,77 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 						if (responseArray.length() > 0) {
 							for (int i = 0; i < responseArray.length(); i++) {
 								try {
-									JSONObject obj = responseArray
+									RequestModel item = new RequestModel();
+									JSONObject careRequest = responseArray
 											.getJSONObject(i);
+									JSONObject careInitiator = careRequest
+											.getJSONObject("initiator");
+									JSONObject careGiver = careRequest
+											.getJSONObject("care_giver");
+									JSONObject careReciever = careRequest
+											.getJSONObject("care_reciever");
+									if (careInitiator.getString("id").equals(
+											careGiver.get("id"))) {
+										if (careInitiator.has("nickname")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("nickname"));
+										} else if (careInitiator
+												.has("first_name")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("first_name"));
+										} else {
+											item.setCare_reciever_name(careInitiator
+													.getString("mobile"));
+										}
+										item.setReqMsg(item
+												.getCare_reciever_name()
+												+ " wants to care for you");
+									}
+									if (careInitiator.get("id").equals(
+											careReciever.get("id"))) {
+										if (careInitiator.has("nickname")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("nickname"));
+										} else if (careInitiator
+												.has("first_name")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("first_name"));
+										} else {
+											item.setCare_reciever_name(careInitiator
+													.getString("mobile"));
+										}
+										item.setReqMsg(item
+												.getCare_reciever_name()
+												+ " wants you to care for them");
 
+									}
+									if (!careInitiator.get("id").equals(
+											careReciever.get("id"))
+											&& !careInitiator
+													.getString("id")
+													.equals(careGiver.get("id"))) {
+										if (careInitiator.has("nickname")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("nickname"));
+										} else if (careInitiator
+												.has("first_name")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("first_name"));
+										} else {
+											item.setCare_reciever_name(careInitiator
+													.getString("mobile"));
+										}
+										item.setReqMsg(item
+												.getCare_reciever_name()
+												+ " wants you to care for"
+												+ careReciever
+														.getInt("nickname"));
+									}
 									// RequestModel item = new RequestModel();
 									//
-									// requestList.add(item);
+									item.setRequestID(careRequest
+											.getString("id"));
+									requestList.add(item);
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
