@@ -20,7 +20,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:text="Touchkin will send a one time sms to verify your phone number."
+        android:text="Touchkin will send a one time sms to verify your phone number"
         android:textSize="20dp" />
 
     <TextView
