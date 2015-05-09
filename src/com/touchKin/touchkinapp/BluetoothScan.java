@@ -38,6 +38,7 @@ public class BluetoothScan extends ActionBarActivity {
 								getApplicationContext(), R.anim.animation,
 								R.anim.animation2).toBundle();
 						startActivity(i, bndlanimation);
+						
 					}
 				}, 6000);
 			}

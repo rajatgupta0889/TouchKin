@@ -16,14 +16,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.BluetoothDeviceAdapter;
 import com.touchKin.touchkinapp.model.BluetoothDeviceModel;
 import com.touchKin.touckinapp.R;
 
 public class BluetoothScanList extends ActionBarActivity implements
-		ButtonClickListener, OnItemClickListener {
+		OnItemClickListener {
 	private Toolbar toolbar;
 	TextView mTitle, skip, back;
 	ListView bledevicelist;
@@ -54,15 +54,15 @@ public class BluetoothScanList extends ActionBarActivity implements
 				startActivity(i, bndlanimation);
 			}
 		});
-		adapter.setCustomButtonListner(this);
+		bledevicelist.setOnItemClickListener(this);
+		// adapter.setCustomButtonListner(this);
 		deviceList
 				.add(new BluetoothDeviceModel("123", "WristBand 0012", false));
 		deviceList.add(new BluetoothDeviceModel("124", "Device 9660", false));
 		deviceList.add(new BluetoothDeviceModel("125", "X-device 1234", false));
-	
 		adapter.notifyDataSetChanged();
 		bledevicelist.setOnItemClickListener(this);
-		bledevicelist.setAdapter(adapter);
+
 	}
 
 	private void init() {
@@ -74,13 +74,7 @@ public class BluetoothScanList extends ActionBarActivity implements
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		next = (Button) findViewById(R.id.next_button);
 		previous = (Button) findViewById(R.id.previous_button);
-
-	}
-
-	@Override
-	public void onButtonClickListner(int position, String value,
-			Boolean isAccept) {
-		// TODO Auto-generated method stub
+		bledevicelist.setAdapter(adapter);
 
 	}
 
@@ -89,7 +83,8 @@ public class BluetoothScanList extends ActionBarActivity implements
 			long id) {
 		// TODO Auto-generated method stub
 		BluetoothDeviceModel item = deviceList.get(position);
-
+		Toast.makeText(BluetoothScanList.this, "" + item, Toast.LENGTH_SHORT)
+				.show();
 		for (BluetoothDeviceModel data : deviceList) {
 
 			if (data.equals(item)) {

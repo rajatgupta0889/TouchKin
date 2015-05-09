@@ -59,12 +59,13 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(CircleNotificationActivity.this,
-				AddCareActivity.class);
+						AddCareActivity.class);
 
 				Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
 						getApplicationContext(), R.anim.animation,
 						R.anim.animation2).toBundle();
 				startActivity(i, bndlanimation);
+				finish();
 			}
 		});
 

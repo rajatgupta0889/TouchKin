@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff" >
+    android:background="@color/white" >
 
     <include
         android:id="@+id/tool_bar"
@@ -24,15 +24,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/previous_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/add_name"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:divider="@color/recycle_seprator"
-        android:dividerHeight="1dp" >
-
-    </ListView>
+        android:dividerHeight="0.5dp" />
 
     <Button
         android:id="@+id/previous_button"
@@ -49,6 +45,6 @@
         android:layout_height="44dp"
         android:layout_alignRight="@+id/add_name"
         android:layout_alignTop="@+id/previous_button"
-        android:background="@drawable/next_button"/>
+        android:background="@drawable/next_button" />
 
 </RelativeLayout>
