@@ -54,8 +54,10 @@ public class BluetoothScanList extends ActionBarActivity implements
 				startActivity(i, bndlanimation);
 			}
 		});
+
 		bledevicelist.setOnItemClickListener(this);
 		// adapter.setCustomButtonListner(this);
+
 		deviceList
 				.add(new BluetoothDeviceModel("123", "WristBand 0012", false));
 		deviceList.add(new BluetoothDeviceModel("124", "Device 9660", false));

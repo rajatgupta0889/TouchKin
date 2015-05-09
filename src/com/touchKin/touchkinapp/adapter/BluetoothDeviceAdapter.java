@@ -28,6 +28,12 @@ public class BluetoothDeviceAdapter extends BaseAdapter {
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+	
+	 public void addDevice(BluetoothDeviceModel device) {
+         if(!devices.contains(device)) {
+        	 devices.add(device);
+         }
+     }
 
 	@Override
 	public int getCount() {
