@@ -329,12 +329,18 @@ public class Details extends ActionBarActivity {
 	}
 
 	public String getPath(Uri uri, Activity activity) {
-		String[] projection = { MediaColumns.DATA };
-		Cursor cursor = activity
-				.managedQuery(uri, projection, null, null, null);
-		int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
-		cursor.moveToFirst();
-		return cursor.getString(column_index);
+		 Cursor cursor = null;
+		    try {
+		        String[] proj = { MediaStore.Images.Media.DATA };
+		        cursor = activity.getContentResolver().query(uri, proj, null, null, null);
+		        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		        cursor.moveToFirst();
+		        return cursor.getString(column_index);
+		    } finally {
+		        if (cursor != null) {
+		            cursor.close();
+		        }
+		    }
 	}
 
 	public String getPath(Uri uri) {
