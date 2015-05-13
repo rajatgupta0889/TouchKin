@@ -29,6 +29,20 @@
     </LinearLayout>
     -->
 
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add from contact" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text="or" />
+
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
@@ -45,7 +59,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
-        android:hint="Phone number" />
+        android:hint="Phone number"
+        android:inputType="phone" />
 
     <EditText
         android:id="@+id/nickname"
@@ -55,5 +70,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
         android:hint="Care reciever nickname" />
+
+    
+   
 
 </LinearLayout>

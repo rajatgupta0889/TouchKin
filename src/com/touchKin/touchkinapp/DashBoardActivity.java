@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -504,6 +505,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 			mTabHost.setCurrentTab(0);
 			selectedParent = item;
 		} else {
+			DialogFragment newFragment = new ContactDialogFragment();
+			newFragment.setCancelable(false);
+			newFragment.show(getSupportFragmentManager(), "TAG");
 
 		}
 		toggleVissibility();
