@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_layout"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:padding="8dip"
         app:radius="4dp" />
@@ -27,7 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,16 +39,16 @@
 
             <ImageView
                 android:id="@+id/sendTouch"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginRight="20dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="30dp"
                 android:src="@drawable/ic_icon_send_touch" />
 
             <TextView
                 android:id="@+id/parentNameTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="2dp"
                 android:layout_marginRight="20dp"
                 android:text="Send a Touch" />
         </LinearLayout>
@@ -61,16 +62,16 @@
 
             <ImageView
                 android:id="@+id/getService"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="30dp"
                 android:src="@drawable/ic_icon_get_service" />
 
             <TextView
                 android:id="@+id/parentPhoneTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="2dp"
                 android:layout_marginLeft="20dp"
                 android:text="Get a Service" />
         </LinearLayout>

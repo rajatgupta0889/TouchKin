@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -84,9 +85,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
-		// Configuration config = getResources().getConfiguration();
-		// Toast.makeText(this, config.screenHeightDp+" "+config.screenWidthDp,
-		// Toast.LENGTH_LONG).show();
+		 Configuration config = getResources().getConfiguration();
+		 Toast.makeText(this, config.screenHeightDp+" "+config.screenWidthDp,
+		 Toast.LENGTH_LONG).show();
 
 		setSupportActionBar(toolbar);
 		// SharedPreferences pref =
