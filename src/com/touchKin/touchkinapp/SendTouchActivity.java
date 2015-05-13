@@ -7,6 +7,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.commonsware.cwac.camera.CameraHost;
+import com.commonsware.cwac.camera.CameraUtils;
+import com.commonsware.cwac.camera.PictureTransaction;
+import com.commonsware.cwac.camera.SimpleCameraHost;
+
+import com.ryanharter.android.tooltips.ToolTip;
+import com.ryanharter.android.tooltips.ToolTipLayout;
+import com.ryanharter.android.tooltips.ToolTip.Builder;
+import com.commonsware.cwac.camera.CameraFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -50,52 +59,37 @@ import com.touchKin.touchkinapp.custom.FroyoAlbumDirFactory;
 import com.touchKin.touckinapp.R;
 
 @SuppressWarnings("deprecation")
-public class SendTouchActivity extends Activity implements OnClickListener {
-	private boolean cameraFront = false;
-	boolean recording = false;
-	public static int count = 0;
+public class SendTouchActivity extends Activity implements
+		DemoCameraFragment.Contract, OnClickListener {
+	private DemoCameraFragment current = null;
+	private DemoCameraFragment ffc = null;
+	private DemoCameraFragment std = null;
+	private boolean hasTwoCameras = (Camera.getNumberOfCameras() > 1);
+	private Context myContext;
 	private Camera mCamera;
-	private CameraPreview mPreview;
-	private MediaRecorder mediaRecorder;
 	private Button switchCamera, imageCapture, videoMode, imageMode,
 			menuButton;
-	RelativeLayout menuLayout;
 	private ToggleButton videoCapture;
-	private Context myContext;
-	private FrameLayout cameraPreview;
-	public static final int MEDIA_TYPE_IMAGE = 1;
-	public static final int MEDIA_TYPE_VIDEO = 2;
-	private static AlbumStorageDirFactory mAlbumStorageDirFactory = null;
-	File outFile;
-	private int cameraid;
-	String mCurrentPhotoPath;
-	private long startTime = 0L;
-	private Handler customHandler = new Handler();
-	long timeInMilliseconds = 0L;
-	long timeSwapBuff = 0L;
-	long updatedTime = 0L;
-	String videoTime;
+	RelativeLayout menuLayout;
 	private Button backButton;
+	private int cameraid;
 	ToolTipLayout tipContainer;
+	private boolean cameraFront = false;
+	private boolean singleShot = true;
+	private static final int CONTENT_REQUEST = 1337;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.send_touch);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		myContext = this;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-			mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
-		} else {
-			mAlbumStorageDirFactory = new BaseAlbumDirFactory();
-		}
 		initialize();
 	}
 
 	public void initialize() {
-		cameraPreview = (FrameLayout) findViewById(R.id.camera_preview);
-		mPreview = new CameraPreview(myContext, mCamera);
-		cameraPreview.addView(mPreview);
+
+		// cameraPreview = (FrameLayout) findViewById(R.id.container);
+		// mPreview = new CameraPreview(myContext, mCamera);
+		// cameraPreview.addView(mPreview);
 		videoCapture = (ToggleButton) findViewById(R.id.video_capture_button);
 		videoCapture.setOnClickListener(captrureListener);
 		switchCamera = (Button) findViewById(R.id.change_camera_button);
@@ -112,6 +106,7 @@ public class SendTouchActivity extends Activity implements OnClickListener {
 		backButton = (Button) findViewById(R.id.back_button);
 		backButton.setOnClickListener(this);
 		tipContainer = (ToolTipLayout) findViewById(R.id.tooltip_container);
+		myContext = SendTouchActivity.this;
 
 	}
 
@@ -124,16 +119,17 @@ public class SendTouchActivity extends Activity implements OnClickListener {
 			toast.show();
 			finish();
 		}
-		if (mCamera == null) {
-			// if the front facing camera does not exist
-			if (findFrontFacingCamera() < 0) {
-				Toast.makeText(this, "No front facing camera found.",
-						Toast.LENGTH_LONG).show();
-				switchCamera.setVisibility(View.GONE);
-			}
-			mCamera = Camera.open(findBackFacingCamera());
-			mPreview.refreshCamera(mCamera, cameraid);
+		if (std == null) {
+			std = DemoCameraFragment.newInstance(false);
+			current = std;
 		}
+		// if (ffc == null) {
+		// ffc=DemoCameraFragment.newInstance(true);
+		// current=ffc;
+		// }
+		getFragmentManager().beginTransaction()
+				.replace(R.id.container, current).commit();
+
 	}
 
 	private boolean hasCamera(Context context) {
@@ -145,260 +141,55 @@ public class SendTouchActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		releaseCamera();
-	}
-
 	OnClickListener switchCameraListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if (!recording) {
-				int camerasNumber = Camera.getNumberOfCameras();
-				if (camerasNumber > 1) {
-					releaseCamera();
-					chooseCamera();
-				} else {
-					Toast toast = Toast.makeText(myContext,
-							"Sorry, your phone has only one camera!",
-							Toast.LENGTH_LONG);
-					toast.show();
-				}
+			if (std != null) {
+				ffc = DemoCameraFragment.newInstance(true);
+				current = ffc;
+				std = null;
+			} else {
+				std = DemoCameraFragment.newInstance(false);
+				current = std;
+				ffc = null;
 			}
+
+			getFragmentManager().beginTransaction()
+					.replace(R.id.container, current).commit();
+
 		}
 	};
-
-	public void chooseCamera() {
-		if (cameraFront) {
-			int cameraId = findBackFacingCamera();
-			if (cameraId >= 0) {
-				mCamera = Camera.open(cameraId);
-				mPreview.refreshCamera(mCamera, cameraid);
-			}
-		} else {
-			int cameraId = findFrontFacingCamera();
-			if (cameraId >= 0) {
-				mCamera = Camera.open(cameraId);
-				mPreview.refreshCamera(mCamera, cameraid);
-			}
-		}
-	}
-
-	private int findFrontFacingCamera() {
-		int cameraId = -1;
-		int numberOfCameras = Camera.getNumberOfCameras();
-		for (int i = 0; i < numberOfCameras; i++) {
-			CameraInfo info = new CameraInfo();
-			Camera.getCameraInfo(i, info);
-			if (info.facing == CameraInfo.CAMERA_FACING_FRONT) {
-				cameraId = i;
-				cameraid = cameraId;
-				cameraFront = true;
-				break;
-			}
-		}
-		return cameraid;
-	}
-
-	private int findBackFacingCamera() {
-		int cameraId = -1;
-		int numberOfCameras = Camera.getNumberOfCameras();
-		for (int i = 0; i < numberOfCameras; i++) {
-			CameraInfo info = new CameraInfo();
-			Camera.getCameraInfo(i, info);
-			if (info.facing == CameraInfo.CAMERA_FACING_BACK) {
-				cameraId = i;
-				cameraid = cameraId;
-				cameraFront = false;
-				break;
-			}
-		}
-		return cameraid;
-	}
 
 	OnClickListener picturelistener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
-			mCamera.takePicture(null, null, mPicture);
+			current.takeSimplePicture();
+
 		}
 	};
-
-	private PictureCallback mPicture = new PictureCallback() {
-		@Override
-		public void onPictureTaken(byte[] data, Camera camera) {
-			File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-			if (pictureFile == null) {
-				return;
-			}
-			try {
-				mCurrentPhotoPath = pictureFile.getAbsolutePath();
-
-				FileOutputStream fos = new FileOutputStream(pictureFile);
-				fos.write(data);
-				fos.close();
-
-				// ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				// rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
-				// stream);
-				// byte[] byteArray = stream.toByteArray();
-				// fos = new FileOutputStream(pictureFile);
-				// fos.write(byteArray);
-				// fos.close();
-				releaseCamera();
-				galleryAddPic();
-				startPreview(MEDIA_TYPE_IMAGE, pictureFile);
-				// mCamera = Camera.open(cameraid);
-				// mPreview.refreshCamera(mCamera, cameraid);
-			} catch (FileNotFoundException e) {
-			} catch (IOException e) {
-			}
-		}
-
-	};
-
-	@SuppressLint("SimpleDateFormat")
-	private File getOutputMediaFile(int type) {
-		File mediaStorageDir = getAlbumDir();
-		Log.d("Directory", mediaStorageDir.toString());
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("TouchKin", "failed to create directory");
-				return null;
-			}
-		}
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
-		File mediaFile;
-		if (type == MEDIA_TYPE_IMAGE) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + timeStamp + ".jpg");
-		} else if (type == MEDIA_TYPE_VIDEO) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "VID_" + timeStamp + ".mp4");
-		} else {
-			return null;
-		}
-		return mediaFile;
-	}
-
-	private File getAlbumDir() {
-		File storageDir = null;
-
-		if (Environment.MEDIA_MOUNTED.equals(Environment
-				.getExternalStorageState())) {
-
-			storageDir = mAlbumStorageDirFactory
-					.getAlbumStorageDir(getAlbumName());
-
-			if (storageDir != null) {
-				if (!storageDir.mkdirs()) {
-					if (!storageDir.exists()) {
-						Log.d("CameraSample", "failed to create directory");
-						return null;
-					}
-				}
-			}
-
-		} else {
-			Log.v(getString(R.string.app_name),
-					"External storage is not mounted READ/WRITE.");
-		}
-		Log.d("StorageDir", storageDir.toString());
-		return storageDir;
-	}
-
-	private String getAlbumName() {
-		return getString(R.string.album_name);
-	}
 
 	OnClickListener captrureListener = new OnClickListener() {
+
 		@Override
 		public void onClick(View v) {
-			if (recording) {
-				mediaRecorder.stop();
-				releaseMediaRecorder();
-				timeSwapBuff += timeInMilliseconds;
-				customHandler.removeCallbacks(updateTimerThread);
+			try {
+				if (videoCapture.isChecked()) {
 
-				Toast.makeText(SendTouchActivity.this,
-						"Video captured!" + videoTime, Toast.LENGTH_LONG)
-						.show();
-				recording = false;
-				galleryAddPic();
-				startPreview(MEDIA_TYPE_VIDEO, outFile);
+					current.record();
 
-			} else {
-				if (!prepareMediaRecorder()) {
-					Toast.makeText(SendTouchActivity.this,
-							"Fail in prepareMediaRecorder()!\n - Ended -",
-							Toast.LENGTH_LONG).show();
-					finish();
+				} else {
+					current.stopRecording();
+
 				}
-				runOnUiThread(new Runnable() {
-					public void run() {
-						try {
-							mediaRecorder.start();
-							startTime = SystemClock.uptimeMillis();
-							customHandler.postDelayed(updateTimerThread, 0);
 
-						} catch (final Exception ex) {
-						}
-					}
-				});
-				recording = true;
+			} catch (Exception e) {
+				Log.e(getClass().getSimpleName(), "Exception trying to record",
+						e);
 			}
+
 		}
 	};
-
-	private boolean prepareMediaRecorder() {
-		count++;
-		mediaRecorder = new MediaRecorder();
-		mCamera.unlock();
-		mediaRecorder.setCamera(mCamera);
-		mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-		mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-		mediaRecorder.setProfile(CamcorderProfile
-				.get(CamcorderProfile.QUALITY_HIGH));
-		outFile = getOutputMediaFile(MEDIA_TYPE_VIDEO);
-		mCurrentPhotoPath = outFile.getAbsolutePath();
-		mediaRecorder.setOutputFile(outFile.toString());
-		mediaRecorder.setMaxDuration(60000); // Set max duration 60 sec.
-		mediaRecorder.setMaxFileSize(50000000); // Set max file size 50M
-		if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-			mediaRecorder.setOrientationHint(90);
-		} else {
-			mediaRecorder.setOrientationHint(0);
-		}
-
-		try {
-			mediaRecorder.prepare();
-		} catch (IllegalStateException e) {
-			releaseMediaRecorder();
-			return false;
-		} catch (IOException e) {
-			releaseMediaRecorder();
-			return false;
-		}
-		return true;
-	}
-
-	private void releaseMediaRecorder() {
-		if (mediaRecorder != null) {
-			mediaRecorder.reset();
-			mediaRecorder.release();
-			mediaRecorder = null;
-			mCamera.lock();
-		}
-	}
-
-	private void releaseCamera() {
-		if (mCamera != null) {
-			mCamera.release();
-			mCamera = null;
-		}
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -428,6 +219,20 @@ public class SendTouchActivity extends Activity implements OnClickListener {
 
 	}
 
+	private void startImageMode() {
+		// TODO Auto-generated method stub
+		menuLayout.setVisibility(View.INVISIBLE);
+		menuButton.setVisibility(View.VISIBLE);
+		imageCapture.setVisibility(View.VISIBLE);
+	}
+
+	private void startVideoMode() {
+		// TODO Auto-generated method stub
+		menuLayout.setVisibility(View.INVISIBLE);
+		menuButton.setVisibility(View.VISIBLE);
+		videoCapture.setVisibility(View.VISIBLE);
+	}
+
 	private void dismiss() {
 		// TODO Auto-generated method stub
 		tipContainer.dismiss(true);
@@ -435,9 +240,9 @@ public class SendTouchActivity extends Activity implements OnClickListener {
 
 	private void goBack() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(this, DashBoardActivity.class);
-		startActivity(intent);
-		finish();
+		// Intent intent = new Intent(this, DashBoardActivity.class);
+		// startActivity(intent);
+		// finish();
 	}
 
 	private void openDialog() {
@@ -454,149 +259,47 @@ public class SendTouchActivity extends Activity implements OnClickListener {
 		noButton.setOnClickListener(this);
 		yesButton.setOnClickListener(this);
 		// Create a ToolTip using the Builder class
-		ToolTip t = new Builder(SendTouchActivity.this).anchor(backButton)
-				.gravity(Gravity.BOTTOM) // The location of the view in relation
-				.dismissOnTouch(false) // to the anchor (LEFT, RIGHT, TOP,
-				// BOTTOM)
-				.color(Color.WHITE) // The color of the pointer arrow
-				.pointerSize(30) // The size of the pointer
-				.contentView(customLayout) // The actual contents of the ToolTip
-				.build();
-
-		tipContainer.addTooltip(t);
-	}
-
-	private void startImageMode() {
-		// TODO Auto-generated method stub
-		menuLayout.setVisibility(View.INVISIBLE);
-		menuButton.setVisibility(View.VISIBLE);
-		imageCapture.setVisibility(View.VISIBLE);
-	}
-
-	private void startVideoMode() {
-		// TODO Auto-generated method stub
-		menuLayout.setVisibility(View.INVISIBLE);
-		menuButton.setVisibility(View.VISIBLE);
-		videoCapture.setVisibility(View.VISIBLE);
+		// ToolTip t = new Builder(SendTouchActivity.this).anchor(backButton)
+		// .gravity(Gravity.BOTTOM) // The location of the view in relation
+		// .dismissOnTouch(false) // to the anchor (LEFT, RIGHT, TOP,
+		// // BOTTOM)
+		// .color(Color.WHITE) // The color of the pointer arrow
+		// .pointerSize(30) // The size of the pointer
+		// .contentView(customLayout) // The actual contents of the ToolTip
+		// .build();
+		//
+		// tipContainer.addTooltip(t);
 	}
 
 	private void openMenu() {
 		// TODO Auto-generated method stub
-		tipContainer.dismiss(true);
+		// tipContainer.dismiss(true);
 		videoCapture.setVisibility(View.INVISIBLE);
 		menuButton.setVisibility(View.INVISIBLE);
 		menuLayout.setVisibility(View.VISIBLE);
 		imageCapture.setVisibility(View.INVISIBLE);
 	}
 
-	private void startPreview(int mediaTypeImage, File file) {
+	@Override
+	public boolean isSingleShotMode() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(getApplicationContext(),
-				SendTouchPreview.class);
-		intent.putExtra("Media_Type", mediaTypeImage);
-		Log.d("Extra", Uri.fromFile(file).toString());
-
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-		startActivity(intent);
-		finish();
+		return (singleShot);
 	}
 
-	private void galleryAddPic() {
-		Intent mediaScanIntent = new Intent(
-				"android.intent.action.MEDIA_SCANNER_SCAN_FILE");
-		File f = new File(mCurrentPhotoPath);
-		Uri contentUri = Uri.fromFile(f);
-		mediaScanIntent.setData(contentUri);
-		this.sendBroadcast(mediaScanIntent);
+	@Override
+	public void setSingleShotMode(boolean mode) {
+		// TODO Auto-generated method stub
+		singleShot = mode;
 	}
 
-	private Runnable updateTimerThread = new Runnable() {
-
-		public void run() {
-
-			timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
-
-			updatedTime = timeSwapBuff + timeInMilliseconds;
-
-			int secs = (int) (updatedTime / 1000);
-
-			int mins = secs / 60;
-
-			secs = secs % 60;
-
-			int milliseconds = (int) (updatedTime % 1000);
-			videoTime = "" + mins + ":" + String.format("%02d", secs) + ":"
-					+ String.format("%03d", milliseconds);
-
-			customHandler.postDelayed(this, 0);
-
-		}
-
-	};
-
-	public int getCameraPhotoOrientation(Context context, Uri imageUri,
-			String imagePath) {
-		int rotate = 0;
-		try {
-			context.getContentResolver().notifyChange(imageUri, null);
-			File imageFile = new File(imagePath);
-
-			ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
-			int orientation = exif.getAttributeInt(
-					ExifInterface.TAG_ORIENTATION,
-					ExifInterface.ORIENTATION_NORMAL);
-
-			switch (orientation) {
-			case ExifInterface.ORIENTATION_ROTATE_270:
-				rotate = 270;
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_180:
-				rotate = 180;
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_90:
-				rotate = 90;
-				break;
-			}
-
-			Log.i("RotateImage", "Exif orientation: " + orientation);
-			Log.i("RotateImage", "Rotate value: " + rotate);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return rotate;
+	Contract getContract() {
+		return ((Contract) this);
 	}
 
-	public static int setCameraDisplayOrientation(Activity activity) {
+	interface Contract {
+		boolean isSingleShotMode();
 
-		// android.hardware.Camera.CameraInfo info = new
-		// android.hardware.Camera.CameraInfo();
-
-		int rotation = activity.getWindowManager().getDefaultDisplay()
-				.getRotation();
-		int degrees = 0;
-		switch (rotation) {
-		case Surface.ROTATION_0:
-			degrees = 0;
-			break;
-		case Surface.ROTATION_90:
-			degrees = 90;
-			break;
-		case Surface.ROTATION_180:
-			degrees = 180;
-			break;
-		case Surface.ROTATION_270:
-			degrees = 270;
-			break;
-		}
-		return degrees;
-		// int result;
-		// if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-		// result = (info.orientation + degrees) % 360;
-		// result = (360 - result) % 360; // compensate the mirror
-		// } else { // back-facing
-		// result = (info.orientation - degrees + 360) % 360;
-		// }
-
+		void setSingleShotMode(boolean mode);
 	}
 
 }

@@ -12,7 +12,7 @@
         android:layout_alignParentRight="true"
         android:text="Switch Camera"  -->
     <FrameLayout
-        android:id="@+id/camera_preview"
+        android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" />

@@ -7,22 +7,24 @@
 
     <com.touchKin.touchkinapp.custom.RoundedImageView
         android:id="@+id/parentImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="left"
-        android:layout_margin="5dp"
-        android:src="@drawable/activity_bg" />
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/mom" />
 
     <Button
         android:id="@+id/rejectButton"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_alignBaseline="@+id/accept_button"
-        android:layout_alignBottom="@+id/accept_button"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/requestTextView"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="14dp"
-        android:background="@drawable/rounded_button"
+        android:layout_toRightOf="@+id/accept_button"
+        android:background="@drawable/button_click_selector"
         android:text="Reject"
         android:textColor="@color/white" />
 
@@ -31,10 +33,9 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_below="@+id/requestTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/rounded_button"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/parentImage"
+        android:background="@drawable/button_click_selector"
         android:text="Accept"
         android:textColor="@color/white" />
 
@@ -43,7 +44,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/accept_button"
-        android:layout_alignTop="@+id/parentImage"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
         android:text="TextView" />
 
 </RelativeLayout>
