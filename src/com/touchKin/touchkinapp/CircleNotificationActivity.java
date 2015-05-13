@@ -73,8 +73,9 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		if (getIntent().getExtras().getParcelableArrayList("request") != null) {
 			requestList = getIntent().getExtras().getParcelableArrayList(
 					"request");
-
 		}
+		Log.d("Request List Size", requestList.get(0).getCare_reciever_name() + "");
+		adapter = new RequestListAdapter(requestList, this);
 		adapter.notifyDataSetChanged();
 
 	}
