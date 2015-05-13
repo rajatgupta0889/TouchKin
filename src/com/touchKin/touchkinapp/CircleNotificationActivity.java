@@ -3,16 +3,12 @@ package com.touchKin.touchkinapp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,13 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.RequestListAdapter;
@@ -52,7 +45,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		setContentView(R.layout.request_list);
 		init();
 		// getConnectionRequest();
-		adapter.setCustomButtonListner(this);
+
 		mTitle.setText("Request");
 		skip.setOnClickListener(new OnClickListener() {
 
@@ -73,9 +66,13 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 		if (getIntent().getExtras().getParcelableArrayList("request") != null) {
 			requestList = getIntent().getExtras().getParcelableArrayList(
 					"request");
-
 		}
+		Log.d("Request List Size", requestList.get(0).getCare_reciever_name()
+				+ "");
+		adapter = new RequestListAdapter(requestList, this);
+		requestListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
+		adapter.setCustomButtonListner(this);
 
 	}
 
@@ -196,31 +193,31 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 	public void init() {
 		requestListView = (ListView) findViewById(R.id.requestListView);
 		requestList = new ArrayList<RequestModel>();
-		adapter = new RequestListAdapter(requestList, this);
+		// adapter = new RequestListAdapter(requestList, this);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		skip = (Button) findViewById(R.id.skip);
 		notifTv = (TextView) findViewById(R.id.notifTV);
-		requestListView.setAdapter(adapter);
+
 	}
 
 	@Override
-	public void onButtonClickListner(int position, String value,
+	public void onButtonClickListner(int position, String reqId,
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
 		if (isAccept) {
 			Toast.makeText(CircleNotificationActivity.this,
 					"Accept Button Clicked", Toast.LENGTH_SHORT).show();
-			acceptRequest(value);
+			acceptRequest(reqId, position);
 		} else {
 			Toast.makeText(CircleNotificationActivity.this,
 					"Reject Button Clicked", Toast.LENGTH_SHORT).show();
-			rejectRequest(value);
+			rejectRequest(reqId, position);
 		}
 
 	}
 
-	private void rejectRequest(String requestID) {
+	private void rejectRequest(String requestID, final int position) {
 		// TODO Auto-generated method stub
 		JSONObject param = new JSONObject();
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
@@ -233,17 +230,18 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 					public void onResponse(JSONObject response) {
 
 						Log.d("Response", "" + response);
-
+						requestList.remove(position);
+						adapter.notifyDataSetChanged();
 					}
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						String json = null;
+						// String json = null;
 
 						NetworkResponse response = error.networkResponse;
 
 						if (response != null && response.data != null) {
-							int code = response.statusCode;
+							// int code = response.statusCode;
 							// json = new String(response.data);
 							// json = trimMessage(json, "message");
 							// if (json != null)
@@ -259,7 +257,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 
 	}
 
-	private void acceptRequest(String requestID) {
+	private void acceptRequest(String requestID, final int position) {
 		// TODO Auto-generated method stub
 		JSONObject param = new JSONObject();
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
@@ -272,17 +270,18 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 					public void onResponse(JSONObject response) {
 
 						Log.d("Response", "" + response);
-
+						requestList.remove(position);
+						adapter.notifyDataSetChanged();
 					}
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						String json = null;
+						// String json = null;
 
 						NetworkResponse response = error.networkResponse;
 
 						if (response != null && response.data != null) {
-							int code = response.statusCode;
+							// int code = response.statusCode;
 							// json = new String(response.data);
 							// json = trimMessage(json, "message");
 							// if (json != null)

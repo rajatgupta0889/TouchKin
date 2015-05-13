@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -89,9 +91,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
-		 Configuration config = getResources().getConfiguration();
-		 Toast.makeText(this, config.screenHeightDp+" "+config.screenWidthDp,
-		 Toast.LENGTH_LONG).show();
+		Configuration config = getResources().getConfiguration();
+		Toast.makeText(this,
+				config.screenHeightDp + " " + config.screenWidthDp,
+				Toast.LENGTH_LONG).show();
 
 		setSupportActionBar(toolbar);
 		// SharedPreferences pref =
@@ -160,8 +163,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 		mRecyclerView.setHasFixedSize(true); // Letting the system know that the
 		// list objects are of fixed
 		// size
+
 		MyAdapter.mListener = DashBoardActivity.this;
-		mAdapter = new MyAdapter(TITLES, NAME, "", DashBoardActivity.this); // Creating
+		SharedPreferences pref = this.getSharedPreferences("loginPref", 0);
+
+		mAdapter = new MyAdapter(TITLES, pref.getString("name", null),
+				pref.getString("id", null), DashBoardActivity.this); // Creating
 		mRecyclerView.setAdapter(mAdapter); // Setting the adapter to
 		// RecyclerView
 
@@ -541,6 +548,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		Toast.makeText(DashBoardActivity.this, "View image ",
 				Toast.LENGTH_SHORT).show();
+		Intent i = new Intent(DashBoardActivity.this, Details.class);
+		i.putExtra("fromOtp", false);
+		startActivity(i);
 	}
 
 }

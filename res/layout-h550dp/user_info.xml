@@ -1,7 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff" >
+    android:background="#ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true" >
 
     <include
         android:id="@+id/tool_bar"
@@ -110,10 +112,13 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
             android:gravity="center"
             android:hint="Age"
-            android:maxLength="2"
-             />
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:maxLength="2" />
 
         <!--
              <Spinner
@@ -132,34 +137,30 @@
             android:text="TextView" />
     </LinearLayout>
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ageLayout"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
 
-        <RadioGroup
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Male" />
 
-            <RadioButton
-                android:id="@+id/radioButton1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:text="Male" />
-
-            <RadioButton
-                android:id="@+id/radioButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:text="Female" />
-        </RadioGroup>
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Female" />
+    </RadioGroup>
 
 </RelativeLayout>

@@ -85,7 +85,7 @@ public class AddCirlceAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				buttonListener.onButtonClickListner(position, "", true);
+				buttonListener.onButtonClickListner(position, null, true);
 
 			}
 		});
@@ -94,7 +94,7 @@ public class AddCirlceAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				buttonListener.onButtonClickListner(position, "", false);
+				buttonListener.onButtonClickListner(position, null, false);
 			}
 		});
 		// viewHolder.userImage.setImageUrl("", AppController.getInstance()

@@ -1,29 +1,19 @@
 package com.touchKin.touchkinapp;
 
-import java.io.File;
-
-import com.commonsware.cwac.camera.CameraFragment;
-import com.commonsware.cwac.camera.CameraHost;
-import com.commonsware.cwac.camera.CameraUtils;
-import com.commonsware.cwac.camera.PictureTransaction;
-import com.commonsware.cwac.camera.SimpleCameraHost;
-import com.touchKin.touckinapp.R;
-
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-import android.hardware.Camera.Size;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.commonsware.cwac.camera.CameraFragment;
+import com.commonsware.cwac.camera.CameraHost;
+import com.commonsware.cwac.camera.PictureTransaction;
+import com.commonsware.cwac.camera.SimpleCameraHost;
+import com.touchKin.touckinapp.R;
 
 public class DemoCameraFragment extends CameraFragment {
 	private static final String KEY_USE_FFC = "com.commonsware.cwac.camera.demo.USE_FFC";
