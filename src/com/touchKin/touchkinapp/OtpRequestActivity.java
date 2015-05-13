@@ -8,6 +8,7 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -168,12 +169,12 @@ public class OtpRequestActivity extends ActionBarActivity {
 								.getSharedPreferences("loginPref", 0);
 						try {
 
-							// Editor edit = pref.edit();
-							// edit.putString("mobile",
-							// response.getString("mobile"));
-							// edit.putString("otp", response
-							// .getString("mobile_verification_code"));
-							// edit.apply();
+							Editor edit = pref.edit();
+							edit.putString("mobile",
+									response.getString("mobile"));
+							edit.putString("otp", response
+									.getString("mobile_verification_code"));
+							edit.apply();
 							if (response.has("first_name")) {
 								userName = response.getString("first_name");
 							}

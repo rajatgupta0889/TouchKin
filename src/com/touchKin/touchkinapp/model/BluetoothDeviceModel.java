@@ -1,9 +1,9 @@
 package com.touchKin.touchkinapp.model;
 
 public class BluetoothDeviceModel {
-	String deviceId, deviceName;
+	String deviceId, deviceName, deviceRssi;
 	Boolean check;
-	
+
 	public BluetoothDeviceModel() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -39,5 +39,13 @@ public class BluetoothDeviceModel {
 
 	public void setCheck(Boolean check) {
 		this.check = check;
+	}
+
+	public String getDeviceRssi() {
+		return deviceRssi;
+	}
+
+	public void setDeviceRssi(String deviceRssi) {
+		this.deviceRssi = deviceRssi;
 	}
 }

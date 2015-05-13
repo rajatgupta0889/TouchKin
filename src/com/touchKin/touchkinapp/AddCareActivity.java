@@ -51,7 +51,7 @@ import com.touchKin.touckinapp.R;
 public class AddCareActivity extends ActionBarActivity implements
 		ButtonClickListener, OnClickListener {
 	private Toolbar toolbar;
-	TextView mTitle,notifTv;
+	TextView mTitle, notifTv;
 	ListView careListView;
 	AddCirlceAdapter adapter;
 	List<AddCircleModel> circleList;
@@ -73,7 +73,7 @@ public class AddCareActivity extends ActionBarActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(AddCareActivity.this,
-						BluetoothScan.class);
+						DashBoardActivity.class);
 				Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
 						getApplicationContext(), R.anim.animation,
 						R.anim.animation2).toBundle();

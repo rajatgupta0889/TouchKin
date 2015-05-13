@@ -1,6 +1,9 @@
 package com.touchKin.touchkinapp.model;
 
-public class RequestModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class RequestModel implements Parcelable {
 
 	String userName, userId, userImage, care_reciever_name, requestID, reqMsg;
 
@@ -16,6 +19,17 @@ public class RequestModel {
 		this.userId = userId;
 		this.userImage = userImage;
 		this.care_reciever_name = care_reciever_name;
+	}
+
+	public RequestModel(Parcel in) {
+		// TODO Auto-generated constructor stub
+
+		userName = in.readString();
+		userId = in.readString();
+		userImage = in.readString();
+		care_reciever_name = in.readString();
+		requestID = in.readString();
+		reqMsg = in.readString();
 	}
 
 	public String getUserName() {
@@ -66,4 +80,30 @@ public class RequestModel {
 		this.reqMsg = reqMsg;
 	}
 
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeString(userName);
+		dest.writeString(userId);
+		dest.writeString(userImage);
+		dest.writeString(care_reciever_name);
+		dest.writeString(requestID);
+		dest.writeString(reqMsg);
+	}
+
+	public static final Parcelable.Creator<RequestModel> CREATOR = new Parcelable.Creator<RequestModel>() {
+		public RequestModel createFromParcel(Parcel in) {
+			return new RequestModel(in);
+		}
+
+		public RequestModel[] newArray(int size) {
+			return new RequestModel[size];
+		}
+	};
 }

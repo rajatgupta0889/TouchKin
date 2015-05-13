@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -43,6 +44,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter;
+import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -50,7 +52,7 @@ import com.touchKin.touckinapp.R;
 
 @SuppressLint("NewApi")
 public class DashBoardActivity extends ActionBarActivity implements
-		AnimationListener, OnItemClickListener {
+		AnimationListener, OnItemClickListener, IMyViewHolderClicks {
 	private FragmentTabHost mTabHost;
 	String NAME = "Rajat Gupta ";
 	String EMAIL = "akash.bangad@android4devs.com";
@@ -60,7 +62,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private Toolbar toolbar; // Declaring the Toolbar Object
 
 	RecyclerView mRecyclerView; // Declaring RecyclerView
-	RecyclerView.Adapter mAdapter; // Declaring Adapter For Recycler View
+	RecyclerView.Adapter<MyAdapter.ViewHolder> mAdapter; // Declaring Adapte
+															// For Recycler View
 	RecyclerView.LayoutManager mLayoutManager; // Declaring Layout Manager as a
 	TextView mTitle;
 	DrawerLayout Drawer; // Declaring DrawerLayout
@@ -117,8 +120,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 			public boolean onMenuItemClick(MenuItem item) {
 				// Handle the menu item
 				int id = item.getItemId();
-				Toast.makeText(getApplicationContext(), "HI" + id,
-						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext(), "HI" + id,
+				// Toast.LENGTH_SHORT).show();
 				if (id == R.id.parentNameMenu) {
 					// Not implemented here
 					toggleVissibility();
@@ -155,9 +158,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 		mRecyclerView.setHasFixedSize(true); // Letting the system know that the
 		// list objects are of fixed
 		// size
-		MyAdapter.context = getApplicationContext();
-		mAdapter = new MyAdapter(TITLES, NAME, PROFILE); // Creating
-
+		MyAdapter.mListener = DashBoardActivity.this;
+		mAdapter = new MyAdapter(TITLES, NAME, "", DashBoardActivity.this); // Creating
 		mRecyclerView.setAdapter(mAdapter); // Setting the adapter to
 		// RecyclerView
 
@@ -166,7 +168,31 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 		mRecyclerView.setLayoutManager(mLayoutManager); // Setting the layout
 		// Manager
-
+		// mRecyclerView
+		// .addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+		// @Override
+		// public boolean onInterceptTouchEvent(
+		// RecyclerView recyclerView, MotionEvent motionEvent) {
+		// View child = recyclerView.findChildViewUnder(
+		// motionEvent.getX(), motionEvent.getY());
+		//
+		// // Drawer.closeDrawers();
+		// Toast.makeText(
+		// DashBoardActivity.this,
+		// "The Item Clicked is: "
+		// + recyclerView.getChildPosition(child),
+		// Toast.LENGTH_SHORT).show();
+		//
+		// return true;
+		//
+		// }
+		//
+		// @Override
+		// public void onTouchEvent(RecyclerView recyclerView,
+		// MotionEvent motionEvent) {
+		//
+		// }
+		// });
 		Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout); // Drawer
 
 		// object
@@ -194,6 +220,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		}; // Drawer Toggle Object Made
 		Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the
 		// Drawer toggle
+
 		toolbar.setTitle("");
 		mDrawerToggle.setDrawerIndicatorEnabled(false);
 		toolbar.setNavigationOnClickListener(new OnClickListener() {
@@ -411,9 +438,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 									ParentListModel item = new ParentListModel();
 									item.setParentId(obj.getString("id"));
-									item.setParentName(obj.getString("nickname"));
-//									item.setParentUserId(obj.getJSONObject(
-//											"user").getString("id"));
+									item.setParentName(obj
+											.getString("nickname"));
+									// item.setParentUserId(obj.getJSONObject(
+									// "user").getString("id"));
 									if (i == 0) {
 										item.setIsSelected(true);
 										selectedParent = item;
@@ -493,6 +521,21 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 	public ParentListModel getSelectedParent() {
 		return selectedParent;
+	}
+
+	@Override
+	public void onItemTouch(int caller) {
+		// TODO Auto-generated method stub
+		Toast.makeText(DashBoardActivity.this, "View " + caller,
+				Toast.LENGTH_SHORT).show();
+
+	}
+
+	@Override
+	public void onImageTouch() {
+		// TODO Auto-generated method stub
+		Toast.makeText(DashBoardActivity.this, "View image ",
+				Toast.LENGTH_SHORT).show();
 	}
 
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 @SuppressLint("NewApi")
 public class NotificationReadingService extends NotificationListenerService {
 	Context context;
+	public static boolean isNotificationAccessEnabled = false;
 
 	@Override
 	public void onCreate() {
@@ -51,4 +53,17 @@ public class NotificationReadingService extends NotificationListenerService {
 
 	}
 
+	@Override
+	public IBinder onBind(Intent mIntent) {
+		IBinder mIBinder = super.onBind(mIntent);
+		isNotificationAccessEnabled = true;
+		return mIBinder;
+	}
+
+	@Override
+	public boolean onUnbind(Intent mIntent) {
+		boolean mOnUnbind = super.onUnbind(mIntent);
+		isNotificationAccessEnabled = false;
+		return mOnUnbind;
+	}
 }

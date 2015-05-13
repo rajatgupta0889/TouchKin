@@ -1,10 +1,8 @@
 package com.touchKin.touchkinapp;
 
-import com.skyfishjy.library.RippleBackground;
-import com.touchKin.touchkinapp.adapter.BluetoothDeviceAdapter;
-import com.touchKin.touchkinapp.model.BluetoothDeviceModel;
-import com.touchKin.touckinapp.R;
-import android.annotation.SuppressLint;
+import java.util.ArrayList;
+
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -19,25 +17,32 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-@SuppressLint("NewApi")
+import com.skyfishjy.library.RippleBackground;
+import com.touchKin.touchkinapp.adapter.BluetoothDeviceAdapter;
+import com.touchKin.touckinapp.R;
+
 public class BluetoothScan extends ActionBarActivity {
 
 	Button scan;
 	private BluetoothAdapter mBluetoothAdapter;
 	private static final int REQUEST_ENABLE_BT = 1;
-	private static final int SCAN_PERIOD = 10000;
+	private static final int SCAN_PERIOD = 5000;
 	BluetoothDeviceAdapter adapter;
+	ArrayList<BluetoothDevice> mDevices;
+	ArrayList<Integer> rssiList;
 	Handler mHandler;
 	private boolean mScanning;
+	RippleBackground rippleBackground;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bluetooth_scan);
-		final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
-		final Handler handler = new Handler();
+		rippleBackground = (RippleBackground) findViewById(R.id.content);
+		mHandler = new Handler();
 		scan = (Button) findViewById(R.id.bluetooth_scan);
-
+		mDevices = new ArrayList<BluetoothDevice>();
+		rssiList = new ArrayList<Integer>();
 		if (!getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_BLUETOOTH_LE)) {
 			Toast.makeText(BluetoothScan.this, R.string.ble_not_supported,
@@ -52,6 +57,7 @@ public class BluetoothScan extends ActionBarActivity {
 		}
 		final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 		mBluetoothAdapter = bluetoothManager.getAdapter();
+		// Checks if Bluetooth is supported on the device.
 		if (mBluetoothAdapter == null) {
 			Toast.makeText(BluetoothScan.this,
 					R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT)
@@ -65,22 +71,12 @@ public class BluetoothScan extends ActionBarActivity {
 			public void onClick(View view) {
 				rippleBackground.startRippleAnimation();
 
-				handler.postDelayed(new Runnable() {
+				mHandler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						// foundDevice();
-						rippleBackground.stopRippleAnimation();
-
-						Intent i = new Intent(BluetoothScan.this,
-								BluetoothScanList.class);
-						Bundle bndlanimation = ActivityOptions
-								.makeCustomAnimation(getApplicationContext(),
-										R.anim.animation, R.anim.animation2)
-								.toBundle();
-						startActivity(i, bndlanimation);
-
+						scanLeDevice(true);
 					}
-				}, 6000);
+				}, SCAN_PERIOD);
 
 				// // adapter = new BluetoothDeviceAdapter(null, null);
 				// // setListAdapter(adapter);
@@ -125,6 +121,7 @@ public class BluetoothScan extends ActionBarActivity {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void scanLeDevice(final boolean enable) {
 		if (enable) {
 			// Stops scanning after a pre-defined scan period.
@@ -133,7 +130,12 @@ public class BluetoothScan extends ActionBarActivity {
 				public void run() {
 					mScanning = false;
 					mBluetoothAdapter.stopLeScan(mLeScanCallback);
-					invalidateOptionsMenu();
+					Intent intent = new Intent(BluetoothScan.this,
+							BluetoothScanList.class);
+					intent.putParcelableArrayListExtra("Devices", mDevices);
+					intent.putIntegerArrayListExtra("rssi", rssiList);
+					startActivity(intent);
+					finish();
 				}
 			}, SCAN_PERIOD);
 
@@ -148,22 +150,36 @@ public class BluetoothScan extends ActionBarActivity {
 
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
-		public void onLeScan(final BluetoothDeviceModel device, int rssi,
+		@Override
+		public void onLeScan(final BluetoothDevice device, final int rssi,
 				byte[] scanRecord) {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					adapter.addDevice(device);
-					adapter.notifyDataSetChanged();
+					mDevices.add(device);
+					rssiList.add(rssi);
 				}
 			});
 		}
-
-		@Override
-		public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-			// TODO Auto-generated method stub
-
-		}
 	};
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// User chose not to enable Bluetooth.
+		if (requestCode == REQUEST_ENABLE_BT
+				&& resultCode == Activity.RESULT_CANCELED) {
+			finish();
+			return;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		scanLeDevice(false);
+		rssiList.clear();
+		mDevices.clear();
+
+	}
 }

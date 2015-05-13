@@ -3,6 +3,8 @@ package com.touchKin.touchkinapp;
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,6 +18,7 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +34,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v7.app.ActionBarActivity;
@@ -49,10 +53,14 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.AppController;
+import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
 @SuppressWarnings("deprecation")
@@ -76,6 +84,7 @@ public class Details extends ActionBarActivity {
 	private ProgressDialog pDialog;
 	private Toolbar toolbar;
 	TextView mTitle;
+	List<RequestModel> requestList;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,6 +120,7 @@ public class Details extends ActionBarActivity {
 					String userName = name.getText().toString();
 					// if (name.isDirty())
 					updateUser(userName);
+					getConnectionRequest();
 					// else {
 					// Intent i = new Intent(Details.this,
 					// CircleNotificationActivity.class);
@@ -184,6 +194,7 @@ public class Details extends ActionBarActivity {
 		pDialog = new ProgressDialog(this);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		requestList = new ArrayList<RequestModel>();
 	}
 
 	public void loadImagefromGallery(View view) {
@@ -431,30 +442,29 @@ public class Details extends ActionBarActivity {
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
 				"http://54.69.183.186:1340/user/complete-profile", params,
 				new Response.Listener<JSONObject>() {
-					@SuppressLint("NewApi")
 					@Override
 					public void onResponse(JSONObject response) {
 						hidepDialog();
 						Toast.makeText(Details.this, "PLease response",
 								Toast.LENGTH_SHORT).show();
-						Intent i = new Intent(Details.this,
-								CircleNotificationActivity.class);
-						Bundle bndlanimation = ActivityOptions
-								.makeCustomAnimation(getApplicationContext(),
-										R.anim.animation, R.anim.animation2)
-								.toBundle();
-						i.putExtra("phoneNumber", phone);
-						i.putExtra("id", userID);
-
-						i.putExtra("first_name", name);
-
-						startActivity(i, bndlanimation);
+						// Intent i = new Intent(Details.this,
+						// CircleNotificationActivity.class);
+						// Bundle bndlanimation = ActivityOptions
+						// .makeCustomAnimation(getApplicationContext(),
+						// R.anim.animation, R.anim.animation2)
+						// .toBundle();
+						// i.putExtra("phoneNumber", phone);
+						// i.putExtra("id", userID);
+						//
+						// i.putExtra("first_name", name);
+						//
+						// startActivity(i, bndlanimation);
 
 						// Log.d(TAG, response.toString());
 						// VolleyLog.v("Response:%n %s",
 						// response.toString(4));
 
-						finish();
+//						finish();
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -479,5 +489,132 @@ public class Details extends ActionBarActivity {
 				});
 
 		AppController.getInstance().addToRequestQueue(req);
+	}
+
+	private void getConnectionRequest() {
+		// TODO Auto-generated method stub
+		JsonArrayRequest req = new JsonArrayRequest(
+				"http://54.69.183.186:1340/user/connection-requests",
+				new Listener<JSONArray>() {
+					@Override
+					public void onResponse(JSONArray responseArray) {
+						// TODO Auto-generated method stub
+						Log.d("Response Array", " " + responseArray);
+						if (responseArray.length() > 0) {
+							for (int i = 0; i < responseArray.length(); i++) {
+								try {
+									RequestModel item = new RequestModel();
+									JSONObject careRequest = responseArray
+											.getJSONObject(i);
+									JSONObject careInitiator = careRequest
+											.getJSONObject("initiator");
+									JSONObject careGiver = careRequest
+											.getJSONObject("care_giver");
+									JSONObject careReciever = careRequest
+											.getJSONObject("care_reciever");
+									if (careInitiator.getString("id").equals(
+											careGiver.get("id"))) {
+										if (careInitiator.has("nickname")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("nickname"));
+										} else if (careInitiator
+												.has("first_name")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("first_name"));
+										} else {
+											item.setCare_reciever_name(careInitiator
+													.getString("mobile"));
+										}
+										item.setReqMsg(item
+												.getCare_reciever_name()
+												+ " wants to care for you");
+									}
+									if (careInitiator.get("id").equals(
+											careReciever.get("id"))) {
+										if (careInitiator.has("nickname")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("nickname"));
+										} else if (careInitiator
+												.has("first_name")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("first_name"));
+										} else {
+											item.setCare_reciever_name(careInitiator
+													.getString("mobile"));
+										}
+										item.setReqMsg(item
+												.getCare_reciever_name()
+												+ " wants you to care for them");
+
+									}
+									if (!careInitiator.get("id").equals(
+											careReciever.get("id"))
+											&& !careInitiator
+													.getString("id")
+													.equals(careGiver.get("id"))) {
+										if (careInitiator.has("nickname")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("nickname"));
+										} else if (careInitiator
+												.has("first_name")) {
+											item.setCare_reciever_name(careInitiator
+													.getString("first_name"));
+										} else {
+											item.setCare_reciever_name(careInitiator
+													.getString("mobile"));
+										}
+										item.setReqMsg(item
+												.getCare_reciever_name()
+												+ " wants you to care for"
+												+ careReciever
+														.getInt("nickname"));
+									}
+									// RequestModel item = new RequestModel();
+									//
+									item.setRequestID(careRequest
+											.getString("id"));
+									requestList.add(item);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+
+							Intent i = new Intent(Details.this,
+									CircleNotificationActivity.class);
+							Bundle bndlanimation = ActivityOptions
+									.makeCustomAnimation(
+											getApplicationContext(),
+											R.anim.animation, R.anim.animation2)
+									.toBundle();
+
+							i.putParcelableArrayListExtra("request",
+									(ArrayList<? extends Parcelable>) requestList);
+							startActivity(i, bndlanimation);
+
+						} else {
+							Intent i = new Intent(Details.this,
+									AddCareActivity.class);
+							Bundle bndlanimation = ActivityOptions
+									.makeCustomAnimation(
+											getApplicationContext(),
+											R.anim.animation, R.anim.animation2)
+									.toBundle();
+							startActivity(i, bndlanimation);
+						}
+
+					}
+
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
 	}
 }
