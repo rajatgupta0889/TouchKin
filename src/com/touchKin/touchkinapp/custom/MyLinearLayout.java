@@ -1,7 +1,5 @@
 package com.touchKin.touchkinapp.custom;
 
-import com.touchKin.touckinapp.R.color;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +8,8 @@ import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.touchKin.touckinapp.R.color;
 
 public class MyLinearLayout extends View {
 	Paint paint;

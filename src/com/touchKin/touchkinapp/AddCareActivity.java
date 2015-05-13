@@ -51,7 +51,7 @@ import com.touchKin.touckinapp.R;
 public class AddCareActivity extends ActionBarActivity implements
 		ButtonClickListener, OnClickListener {
 	private Toolbar toolbar;
-	TextView mTitle,notifTv;
+	TextView mTitle, notifTv;
 	ListView careListView;
 	AddCirlceAdapter adapter;
 	List<AddCircleModel> circleList;

@@ -1,9 +1,21 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.touchKin.touchkinapp.services;
 
-import java.util.List;
-import java.util.UUID;
-
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,64 +29,40 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
+import android.util.Log;
 
-import com.touchKin.touchkinapp.custom.Log;
+import java.util.List;
+import java.util.UUID;
+
 import com.touchKin.touchkinapp.custom.SampleGattAttributes;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+/**
+ * Service for managing connection and data communication with a GATT server
+ * hosted on a given Bluetooth LE device.
+ */
 public class BluetoothLeService extends Service {
-	// private final static String TAG =
-	// BluetoothLeService.class.getSimpleName();
+	private final static String TAG = BluetoothLeService.class.getSimpleName();
 
 	private BluetoothManager mBluetoothManager;
 	private BluetoothAdapter mBluetoothAdapter;
 	private String mBluetoothDeviceAddress;
 	private BluetoothGatt mBluetoothGatt;
 	private int mConnectionState = STATE_DISCONNECTED;
-	private BLEServiceCallback mBLEServiceCb = null;
 
 	private static final int STATE_DISCONNECTED = 0;
 	private static final int STATE_CONNECTING = 1;
 	private static final int STATE_CONNECTED = 2;
 
+	public final static String ACTION_GATT_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
+	public final static String ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
+	public final static String ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
+	public final static String ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
+	public final static String EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA";
+	public final static UUID UUID_HM_RX_TX = UUID
+			.fromString(SampleGattAttributes.HM_RX_TX);
 	public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID
 			.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
-
-	private final long READING_RSSI_TASK_FREQENCY = 500;
-
-	private static final int READ_RSSI_REPEAT = 1;
-
-	private final Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case READ_RSSI_REPEAT:
-				if (mBluetoothGatt != null) {
-					mBluetoothGatt.readRemoteRssi();
-				}
-
-				sendMessageDelayed(obtainMessage(READ_RSSI_REPEAT),
-						READING_RSSI_TASK_FREQENCY);
-				break;
-			}
-		}
-	};
-
-	private void startReadRssi() {
-		if (mHandler.hasMessages(READ_RSSI_REPEAT)) {
-			Log.w("+++++++++ Handler already has Message: READ_RSSI_REPEAT");
-		}
-
-		mHandler.sendEmptyMessage(READ_RSSI_REPEAT);
-	}
-
-	private void stopReadRssi() {
-		mHandler.removeMessages(READ_RSSI_REPEAT);
-	}
 
 	// Implements callback methods for GATT events that the app cares about. For
 	// example,
@@ -83,91 +71,57 @@ public class BluetoothLeService extends Service {
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status,
 				int newState) {
-			Log.d("onConnectionStateChange status = " + status
-					+ ", newState = " + newState);
-
+			String intentAction;
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
-				if (mBLEServiceCb != null) {
-					mBLEServiceCb.notifyConnectedGATT();
-				}
-
-				Log.d("Connected to GATT server.");
+				intentAction = ACTION_GATT_CONNECTED;
+				mConnectionState = STATE_CONNECTED;
+				broadcastUpdate(intentAction);
+				Log.i(TAG, "Connected to GATT server.");
 				// Attempts to discover services after successful connection.
-				Log.d("Attempting to start service discovery:"
+				Log.i(TAG, "Attempting to start service discovery:"
 						+ mBluetoothGatt.discoverServices());
-				startReadRssi();
 
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-				if (mBLEServiceCb != null) {
-					mBLEServiceCb.notifyDisconnectedGATT();
-				}
-
-				stopReadRssi();
-				Log.d("Disconnected from GATT server.");
-
+				intentAction = ACTION_GATT_DISCONNECTED;
+				mConnectionState = STATE_DISCONNECTED;
+				Log.i(TAG, "Disconnected from GATT server.");
+				broadcastUpdate(intentAction);
 			}
 		}
 
 		@Override
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-			Log.d("onServicesDiscovered status = " + status);
-
 			if (status == BluetoothGatt.GATT_SUCCESS) {
-				if (mBLEServiceCb != null) {
-					mBLEServiceCb.displayGATTServices();
-				}
-
+				broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
 			} else {
-				Log.d("onServicesDiscovered received: " + status);
+				Log.w(TAG, "onServicesDiscovered received: " + status);
 			}
 		}
 
 		@Override
 		public void onCharacteristicRead(BluetoothGatt gatt,
 				BluetoothGattCharacteristic characteristic, int status) {
-			Log.d("onCharacteristicRead status: " + status);
-
 			if (status == BluetoothGatt.GATT_SUCCESS) {
-				displayCharacteristic(characteristic);
+				broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
 			}
-		}
-
-		@Override
-		public void onCharacteristicWrite(BluetoothGatt gatt,
-				BluetoothGattCharacteristic characteristic, int status) {
-			Log.d("------------- onCharacteristicWrite status: " + status);
-
-			// do somethings here.
 		}
 
 		@Override
 		public void onCharacteristicChanged(BluetoothGatt gatt,
 				BluetoothGattCharacteristic characteristic) {
-			Log.d("onCharacteristicChanged");
-
-			displayCharacteristic(characteristic);
-		}
-
-		@Override
-		public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-			// Log.d("onReadRemoteRssi rssi = " + rssi + "; status = " +
-			// status);
-
-			if (mBLEServiceCb != null) {
-				mBLEServiceCb.displayRssi(rssi);
-			}
+			broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
 		}
 	};
 
-	public void setBLEServiceCb(BLEServiceCallback cb) {
-		if (cb != null) {
-			mBLEServiceCb = cb;
-		}
+	private void broadcastUpdate(final String action) {
+		final Intent intent = new Intent(action);
+		sendBroadcast(intent);
 	}
 
-	private void displayCharacteristic(
+	private void broadcastUpdate(final String action,
 			final BluetoothGattCharacteristic characteristic) {
-		String msg = null;
+		final Intent intent = new Intent(action);
+
 		// This is special handling for the Heart Rate Measurement profile. Data
 		// parsing is
 		// carried out as per profile specifications:
@@ -177,15 +131,14 @@ public class BluetoothLeService extends Service {
 			int format = -1;
 			if ((flag & 0x01) != 0) {
 				format = BluetoothGattCharacteristic.FORMAT_UINT16;
-				Log.d("Heart rate format UINT16.");
+				Log.d(TAG, "Heart rate format UINT16.");
 			} else {
 				format = BluetoothGattCharacteristic.FORMAT_UINT8;
-				Log.d("Heart rate format UINT8.");
+				Log.d(TAG, "Heart rate format UINT8.");
 			}
 			final int heartRate = characteristic.getIntValue(format, 1);
-			Log.d(String.format("Received heart rate: %d", heartRate));
-
-			msg = String.valueOf(heartRate);
+			Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+			intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
 		} else {
 			// For all other profiles, writes the data formatted in HEX.
 			final byte[] data = characteristic.getValue();
@@ -194,19 +147,15 @@ public class BluetoothLeService extends Service {
 						data.length);
 				for (byte byteChar : data)
 					stringBuilder.append(String.format("%02X ", byteChar));
-
-				msg = new String(data) + "\n" + stringBuilder.toString();
+				intent.putExtra(EXTRA_DATA, new String(data) + "\n"
+						+ stringBuilder.toString());
 			}
 		}
-
-		if (mBLEServiceCb != null) {
-			mBLEServiceCb.displayData(msg);
-		}
-
+		sendBroadcast(intent);
 	}
 
 	public class LocalBinder extends Binder {
-		BluetoothLeService getService() {
+		public BluetoothLeService getService() {
 			return BluetoothLeService.this;
 		}
 	}
@@ -241,14 +190,14 @@ public class BluetoothLeService extends Service {
 		if (mBluetoothManager == null) {
 			mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 			if (mBluetoothManager == null) {
-				Log.e("Unable to initialize BluetoothManager.");
+				Log.e(TAG, "Unable to initialize BluetoothManager.");
 				return false;
 			}
 		}
 
 		mBluetoothAdapter = mBluetoothManager.getAdapter();
 		if (mBluetoothAdapter == null) {
-			Log.e("Unable to obtain a BluetoothAdapter.");
+			Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
 			return false;
 		}
 
@@ -268,7 +217,8 @@ public class BluetoothLeService extends Service {
 	 */
 	public boolean connect(final String address) {
 		if (mBluetoothAdapter == null || address == null) {
-			Log.w("BluetoothAdapter not initialized or unspecified address.");
+			Log.w(TAG,
+					"BluetoothAdapter not initialized or unspecified address.");
 			return false;
 		}
 
@@ -276,7 +226,8 @@ public class BluetoothLeService extends Service {
 		if (mBluetoothDeviceAddress != null
 				&& address.equals(mBluetoothDeviceAddress)
 				&& mBluetoothGatt != null) {
-			Log.d("Trying to use an existing mBluetoothGatt for connection.");
+			Log.d(TAG,
+					"Trying to use an existing mBluetoothGatt for connection.");
 			if (mBluetoothGatt.connect()) {
 				mConnectionState = STATE_CONNECTING;
 				return true;
@@ -288,14 +239,14 @@ public class BluetoothLeService extends Service {
 		final BluetoothDevice device = mBluetoothAdapter
 				.getRemoteDevice(address);
 		if (device == null) {
-			Log.w("Device not found.  Unable to connect.");
+			Log.w(TAG, "Device not found.  Unable to connect.");
 			return false;
 		}
 		// We want to directly connect to the device, so we are setting the
 		// autoConnect
 		// parameter to false.
 		mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-		Log.d("Trying to create a new connection.");
+		Log.d(TAG, "Trying to create a new connection.");
 		mBluetoothDeviceAddress = address;
 		mConnectionState = STATE_CONNECTING;
 		return true;
@@ -309,7 +260,7 @@ public class BluetoothLeService extends Service {
 	 */
 	public void disconnect() {
 		if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-			Log.w("BluetoothAdapter not initialized");
+			Log.w(TAG, "BluetoothAdapter not initialized");
 			return;
 		}
 		mBluetoothGatt.disconnect();
@@ -338,24 +289,10 @@ public class BluetoothLeService extends Service {
 	 */
 	public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
 		if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-			Log.w("BluetoothAdapter not initialized");
+			Log.w(TAG, "BluetoothAdapter not initialized");
 			return;
 		}
 		mBluetoothGatt.readCharacteristic(characteristic);
-	}
-
-	/**
-	 * Requst a write on a give {@code BluetoothGattCharacteristic}. The write
-	 * result is reported asynchronously through the
-	 * {@code BluetoothGattCallback#onCharacteristicWrite(andorid.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
-	 * callback.
-	 */
-	public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
-		if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-			Log.w("BluetoothAdapter not initialized");
-			return;
-		}
-		mBluetoothGatt.writeCharacteristic(characteristic);
 	}
 
 	/**
@@ -369,11 +306,18 @@ public class BluetoothLeService extends Service {
 	public void setCharacteristicNotification(
 			BluetoothGattCharacteristic characteristic, boolean enabled) {
 		if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-			Log.w("BluetoothAdapter not initialized");
+			Log.w(TAG, "BluetoothAdapter not initialized");
 			return;
 		}
 		mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-
+		if (UUID_HM_RX_TX.equals(characteristic.getUuid())) {
+			BluetoothGattDescriptor descriptor = characteristic
+					.getDescriptor(UUID
+							.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+			descriptor
+					.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+			mBluetoothGatt.writeDescriptor(descriptor);
+		}
 		// This is specific to Heart Rate Measurement.
 		if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
 			BluetoothGattDescriptor descriptor = characteristic
@@ -399,15 +343,26 @@ public class BluetoothLeService extends Service {
 		return mBluetoothGatt.getServices();
 	}
 
-	public interface BLEServiceCallback {
-		public void displayRssi(int rssi);
+	public BluetoothGattService getSupportedGattService() {
+		if (mBluetoothGatt == null)
+			return null;
 
-		public void displayData(String data);
+		return mBluetoothGatt.getService(UUID
+				.fromString("00001523-1212-efde-1523-785feabcd123"));
+	}
 
-		public void notifyConnectedGATT();
+	/**
+	 * Write to a given char
+	 * 
+	 * @param characteristic
+	 *            The characteristic to write to
+	 */
+	public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+		if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+			Log.w(TAG, "BluetoothAdapter not initialized");
+			return;
+		}
 
-		public void notifyDisconnectedGATT();
-
-		public void displayGATTServices();
+		mBluetoothGatt.writeCharacteristic(characteristic);
 	}
 }

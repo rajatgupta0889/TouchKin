@@ -8,8 +8,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touckinapp.R;
 
 /**
@@ -27,11 +28,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 	private String mNavTitles[]; // String Array to store the passed titles
 									// Value from MainActivity.java
-
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	private String name; // String Resource for header View Name
-	private int profile; // int Resource for header view profile picture
+	private String profile; // int Resource for header view profile picture
 	private String email; // String Resource for header view email
-	public static Context context;
+	Context context;
+	public static IMyViewHolderClicks mListener;
 
 	// Creating a ViewHolder which extends the RecyclerView View Holder
 	// ViewHolder are used to to store the inflated views in order to recycle
@@ -41,7 +43,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 		int Holderid;
 
 		TextView textView;
-		ImageView imageView;
 		ImageView profile;
 		TextView Name;
 		View view;
@@ -75,10 +76,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Toast.makeText(context, "HI", Toast.LENGTH_SHORT)
-								.show();
+						mListener.onItemTouch(getPosition());
 					}
 				});
+
 			} else {
 
 				Name = (TextView) itemView.findViewById(R.id.name); // Creating
@@ -93,11 +94,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 				Holderid = 0; // Setting holder id = 0 as the object being
 								// populated are of type header view
+				itemView.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						mListener.onImageTouch();
+					}
+				});
 			}
 		}
+
+		public static interface IMyViewHolderClicks {
+			public void onItemTouch(int position);
+
+			public void onImageTouch();
+		}
+
 	}
 
-	public MyAdapter(String Titles[], String Name, int Profile) { // MyAdapter
+	public MyAdapter(String Titles[], String Name, String Profile,
+			Context context) { // MyAdapter
 		// Constructor
 		// with
 		// titles
@@ -108,7 +125,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 		// activity as we
 		mNavTitles = Titles; // have seen earlier
 		name = Name;
-		profile = Profile; // here we assign those passed values to the
+		profile = Profile;
+		this.context = context;
+		// here we assign those passed values to the
 		// values
 		// we declared here
 		// in adapter
@@ -175,8 +194,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 																// Titles
 
 		} else {
+			ImageLoader imageLoader = new ImageLoader(context);
 
-			holder.profile.setImageResource(profile); // Similarly we set the
+			imageLoader.DisplayImage(serverPath + profile, R.drawable.people,
+					holder.profile);
 			// resources for header
 			// view
 			holder.Name.setText(name);

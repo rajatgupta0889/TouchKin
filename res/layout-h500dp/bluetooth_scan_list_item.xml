@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="70dp"
-    android:background="#ffffff" >
+    android:background="#ffffff"
+    android:focusable="false" >
 
     <CheckBox
         android:id="@+id/checkBox"
@@ -12,7 +13,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/add_device_checkbox"
-        android:button="@null" />
+        android:button="@null"
+        android:focusable="false" />
 
     <TextView
         android:id="@+id/device_name"
@@ -24,6 +26,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="15dp"
         android:layout_toRightOf="@+id/checkBox"
+        android:focusable="false"
         android:gravity="center_vertical"
         android:text="Device name"
         android:textAppearance="?android:attr/textAppearanceLarge"
