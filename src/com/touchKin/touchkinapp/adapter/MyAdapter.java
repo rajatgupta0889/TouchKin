@@ -195,9 +195,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 		} else {
 			ImageLoader imageLoader = new ImageLoader(context);
-
-			imageLoader.DisplayImage(serverPath + profile, R.drawable.people,
-					holder.profile);
+			if (profile != null)
+				imageLoader.DisplayImage(serverPath + profile + ".jpeg",
+						R.drawable.people, holder.profile);
+			else {
+				holder.profile.setImageResource(R.drawable.people);
+			}
 			// resources for header
 			// view
 			holder.Name.setText(name);

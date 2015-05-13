@@ -174,6 +174,7 @@ public class OtpRequestActivity extends ActionBarActivity {
 									response.getString("mobile"));
 							edit.putString("otp", response
 									.getString("mobile_verification_code"));
+							edit.putString("id", response.getString("id"));
 							edit.apply();
 							if (response.has("first_name")) {
 								userName = response.getString("first_name");
@@ -197,6 +198,7 @@ public class OtpRequestActivity extends ActionBarActivity {
 								.toBundle();
 						i.putExtra("phoneNumber", phone);
 						i.putExtra("id", userID);
+						i.putExtra("fromOtp", true);
 						if (userName != null)
 							i.putExtra("first_name", userName);
 
