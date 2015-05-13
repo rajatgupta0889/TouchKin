@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.touchKin.touchkinapp.AddCareActivity.ContactDialogFragment;
+
 import com.touchKin.touchkinapp.adapter.BluetoothDeviceAdapter;
 import com.touchKin.touchkinapp.model.BluetoothDeviceModel;
 import com.touchKin.touckinapp.R;
