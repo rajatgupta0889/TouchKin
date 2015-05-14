@@ -35,11 +35,13 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
 
-public class ContactDialogFragment extends DialogFragment implements OnClickListener {
+public class ContactDialogFragment extends DialogFragment implements
+		OnClickListener {
 	static final int PICK_CONTACT_CIRCLE = 1;
 	static final int PICK_CONTACT_KIN = 2;
 	Button addContactButton;
 	EditText nameBox, phoneBox, nickname;
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -52,16 +54,16 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 		Bundle mArgs = getArguments();
 
 		View view = inflater.inflate(R.layout.contact_info, null);
-		 Button addContactButton = (Button) view.findViewById(R.id.addButton);
-		  nameBox = (EditText) view.findViewById(R.id.name);
-		  phoneBox = (EditText) view.findViewById(R.id.number);
-		  nickname = (EditText) view.findViewById(R.id.nickname);
-//		nameBox.setText(mArgs.getString("name"));
-//		phoneBox.setText(mArgs.getString("number"));
+		Button addContactButton = (Button) view.findViewById(R.id.addButton);
+		nameBox = (EditText) view.findViewById(R.id.name);
+		phoneBox = (EditText) view.findViewById(R.id.number);
+		nickname = (EditText) view.findViewById(R.id.nickname);
+		// nameBox.setText(mArgs.getString("name"));
+		// phoneBox.setText(mArgs.getString("number"));
 		View headerview = inflater.inflate(R.layout.header_view, null);
 		final TextView title = (TextView) headerview
 				.findViewById(R.id.parentNameTV);
-//		title.setText(mArgs.getString("title"));
+		// title.setText(mArgs.getString("title"));
 		builder.setCancelable(false);
 		builder.setView(view)
 				// Add action buttons
@@ -93,10 +95,19 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 				// then...
 				if (wantToCloseDialog)
 					dismiss();
-				if (Validation.hasText(nickname)) {
-					addCareReciever(nameBox.getText().toString(), phoneBox
-							.getText().toString().trim(), nickname.getText()
-							.toString());
+				String phoneNum = phoneBox.getText().toString();
+				if (Validation.hasText(nickname)
+						&& Validation.hasText(phoneBox)
+						&& Validation.hasText(nameBox)) {
+					if (!phoneNum.startsWith("+91")) {
+						if (!phoneNum.startsWith("0")) {
+							phoneNum = "+91" + phoneNum;
+						}else{
+							phoneNum = "+91"+ phoneNum.substring(1);
+						}
+					}
+					addCareReciever(nameBox.getText().toString(),
+							phoneNum.trim(), nickname.getText().toString());
 					ContactDialogFragment.this.getDialog().cancel();
 				}
 				// else dialog stays open. Make sure you have an obvious
@@ -106,7 +117,7 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 		});
 
 		addContactButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -134,7 +145,8 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 					@SuppressLint("NewApi")
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.d("care receiver added response", "care reveiver added" );
+						Log.d("care receiver added response",
+								"care reveiver added");
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -163,15 +175,16 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	private void fetchContact(int reqCode) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				ContactsContract.Contacts.CONTENT_URI);
 		startActivityForResult(intent, reqCode);
 	}
+
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
@@ -183,14 +196,32 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 				List<String> contact = getContact(data.getData());
 				if (contact.size() > 1) {
 					nameBox.setText(contact.get(0));
-					phoneBox.setText("+91"+contact.get(1));
-//					args.putString("number", contact.get(1));
-//					args.putString("name", contact.get(0));
-//					args.putString("title", "Add care reciever");
-//					DialogFragment newFragment = new ContactDialogFragment();
-//					newFragment.setArguments(args);
-//					newFragment.setCancelable(false);
-//					newFragment.show(getSupportFragmentManager(), "TAG");
+					// if(contact.get(1).matches("[0-9]+") &&
+					// contact.get(1).length() == 9){
+					// phoneBox.setText("+91"+contact.get(1));
+					// }
+					// if(contact.get(1).matches("[0-9]+") &&
+					// contact.get(1).length() == 12){
+					// phoneBox.setText(contact.get(1));
+					// }
+					// if(contact.get(1).matches("[0-9]+") &&
+					// contact.get(1).length() > 7){
+					if (contact.get(1).startsWith("0")) {
+						phoneBox.setText("+91" + contact.get(1).substring(1));
+					} else if (contact.get(1).startsWith("+91")) {
+						phoneBox.setText(contact.get(1));
+					} else {
+						phoneBox.setText("+91" + contact.get(1));
+					}
+
+					// }
+					// args.putString("number", contact.get(1));
+					// args.putString("name", contact.get(0));
+					// args.putString("title", "Add care reciever");
+					// DialogFragment newFragment = new ContactDialogFragment();
+					// newFragment.setArguments(args);
+					// newFragment.setCancelable(false);
+					// newFragment.show(getSupportFragmentManager(), "TAG");
 				}
 			}
 
@@ -207,19 +238,21 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 					DialogFragment newFragment = new ContactDialogFragment();
 					newFragment.setArguments(args);
 					newFragment.setCancelable(false);
-//					newFragment.show(getSupportFragmentManager(), "TAG");
+					// newFragment.show(getSupportFragmentManager(), "TAG");
 				}
 			}
 
 			break;
 		}
 	}
+
 	List<String> getContact(Uri contactData) {
 		// Bundle args = new Bundle();
 		String cNumber = null;
 		List<String> contact = new ArrayList<String>();
 		// Uri contactData = data.getData();
-		Cursor c = getActivity().managedQuery(contactData, null, null, null, null);
+		Cursor c = getActivity().managedQuery(contactData, null, null, null,
+				null);
 		if (c.moveToFirst()) {
 
 			String id = c.getString(c
@@ -267,4 +300,3 @@ public class ContactDialogFragment extends DialogFragment implements OnClickList
 		return contact;
 	}
 }
-
