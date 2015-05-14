@@ -42,7 +42,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -50,8 +49,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -61,6 +60,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.AppController;
@@ -92,6 +92,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	TextView mTitle;
 	List<RequestModel> requestList;
 	final String TAG = "Details";
+	Boolean male = true;
+	String yob = null;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -128,7 +130,12 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			detail.setText(userName);
 			name.setText(userName);
 		}
-
+		if (yob != null) {
+			userYear.setText(yob);
+			Calendar calendar = Calendar.getInstance();
+			int year = calendar.get(Calendar.YEAR);
+			userAge.setText(year - Integer.parseInt(yob));
+		}
 		userAge.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
@@ -153,9 +160,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						switch (id) {
 						case R.id.radioFemale:
 							Log.v(TAG, "female");
+							male = false;
 							break;
 						default:
 							Log.v(TAG, "Male?");
+							male = true;
 							break;
 						}
 					}
@@ -183,10 +192,15 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.next_button:
+		case R.id.next_detail_button:
 			if (!name.getText().toString().isEmpty()) {
 				String userName = name.getText().toString();
-				updateUser(userName);
+				String gender = "male";
+				if (!male) {
+					gender = "female";
+				}
+				String yob = userYear.getText().toString();
+				updateUser(userName, gender, yob);
 				getConnectionRequest();
 			} else {
 				Toast.makeText(Details.this, "PLease Add your Name",
@@ -433,12 +447,15 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			pDialog.dismiss();
 	}
 
-	private void updateUser(final String name) {
+	private void updateUser(final String name, final String gender,
+			final String yob) {
 		// TODO Auto-generated method stub
 		showpDialog();
 		JSONObject params = new JSONObject();
 		try {
 			params.put("first_name", name);
+			params.put("gender", gender);
+			params.put("yob", yob);
 
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
@@ -613,6 +630,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 									"request",
 									(ArrayList<? extends Parcelable>) requestList);
 							startActivity(i, bndlanimation);
+							finish();
 
 						} else {
 							Intent i = new Intent(Details.this,
@@ -623,6 +641,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 											R.anim.animation, R.anim.animation2)
 									.toBundle();
 							startActivity(i, bndlanimation);
+							finish();
 						}
 
 					}
@@ -641,22 +660,27 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	}
 
 	public void getUserInfo() {
-		JsonArrayRequest req = new JsonArrayRequest(
-				"http://54.69.183.186:1340/", new Listener<JSONArray>() {
+		CustomRequest req = new CustomRequest(
+				"http://54.69.183.186:1340/user/profile",
+				new Listener<JSONObject>() {
 					@Override
-					public void onResponse(JSONArray responseArray) {
+					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
-						if (responseArray.length() > 0) {
-							for (int i = 0; i < responseArray.length(); i++) {
-								// try {
-								//
-								// } catch (JSONException e) {
-								// // TODO Auto-generated catch block
-								// e.printStackTrace();
-								// }
+						try {
+							phone = responseArray.getString("mobile");
+							userID = responseArray.getString("id");
+							if (responseArray.getString("gender")
+									.equals("male")) {
+								male = true;
+							} else {
+								male = false;
 							}
-
+							yob = responseArray.getString("yob");
+							userName = responseArray.getString("first_name");
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 
 					}
@@ -664,8 +688,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
-
+						VolleyLog.e("Error get contach Info: ",
+								error.getMessage());
 					}
 
 				});

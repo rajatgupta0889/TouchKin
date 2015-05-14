@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.AddCircleModel;
-import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touckinapp.R;
 
 public class AddCirlceAdapter extends BaseAdapter {
@@ -22,6 +22,7 @@ public class AddCirlceAdapter extends BaseAdapter {
 	Context context;
 	LayoutInflater inflater;
 	ButtonClickListener buttonListener;
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	public AddCirlceAdapter(List<AddCircleModel> circles, Context context) {
 		super();
@@ -97,6 +98,13 @@ public class AddCirlceAdapter extends BaseAdapter {
 				buttonListener.onButtonClickListner(position, null, false);
 			}
 		});
+		ImageLoader imageLoader = new ImageLoader(context);
+		if (item.getUserImage() != null)
+			imageLoader.DisplayImage(serverPath + item.getUserImage()
+					+ ".jpeg", R.drawable.people, viewHolder.userImage);
+		else {
+			viewHolder.userImage.setImageResource(R.drawable.people);
+		}
 		// viewHolder.userImage.setImageUrl("", AppController.getInstance()
 		// .getImageLoader());
 		return convertView;

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
@@ -21,6 +22,7 @@ public class RequestListAdapter extends BaseAdapter {
 	Context context;
 	LayoutInflater inflater;
 	ButtonClickListener customListener;
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	public RequestListAdapter(List<RequestModel> requestList, Context context) {
 
@@ -101,7 +103,13 @@ public class RequestListAdapter extends BaseAdapter {
 							request.getRequestID(), false);
 			}
 		});
-
+		ImageLoader imageLoader = new ImageLoader(context);
+		if (request.getUserImage() != null)
+			imageLoader.DisplayImage(serverPath + request.getUserImage()
+					+ ".jpeg", R.drawable.people, viewHolder.userImage);
+		else {
+			viewHolder.userImage.setImageResource(R.drawable.people);
+		}
 		return convertView;
 	}
 }

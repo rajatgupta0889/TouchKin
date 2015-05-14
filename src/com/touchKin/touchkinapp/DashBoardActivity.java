@@ -22,11 +22,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -444,11 +444,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 								try {
 									JSONObject obj = responseArray
 											.getJSONObject(i);
-
+									Log.d("Response Array", " " + obj);
 									ParentListModel item = new ParentListModel();
 									item.setParentId(obj.getString("id"));
-									item.setParentName(obj
-											.getString("nickname"));
+									if (obj.has("nickname")) {
+										item.setParentName(obj
+												.getString("nickname"));
+									}else{
+										item.setParentName("");
+									}
 									// item.setParentUserId(obj.getJSONObject(
 									// "user").getString("id"));
 									if (i == 0) {
