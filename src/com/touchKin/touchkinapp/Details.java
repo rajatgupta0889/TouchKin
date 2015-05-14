@@ -20,9 +20,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,7 +46,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -50,8 +53,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -70,6 +73,8 @@ import com.touchKin.touckinapp.R;
 @SuppressWarnings("deprecation")
 public class Details extends ActionBarActivity implements OnClickListener {
 
+	final int PIC_CROP = 2;
+	private Uri selectedImageUri;
 	Button next;
 	TextView detail, phone_detail, userYear;
 	EditText name;
@@ -183,15 +188,20 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.next_button:
-			if (!name.getText().toString().isEmpty()) {
-				String userName = name.getText().toString();
-				updateUser(userName);
-				getConnectionRequest();
-			} else {
-				Toast.makeText(Details.this, "PLease Add your Name",
-						Toast.LENGTH_SHORT).show();
-			}
+		case R.id.next_detail_button:
+			// if (!name.getText().toString().isEmpty()) {
+			// String userName = name.getText().toString();
+			// updateUser(userName);
+			// getConnectionRequest();
+			Intent intent = new Intent(Details.this, AddCareActivity.class);
+			Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
+					getApplicationContext(), R.anim.animation,
+					R.anim.animation2).toBundle();
+			startActivity(intent, bndlanimation);
+			// } else {
+			// Toast.makeText(Details.this, "PLease Add your Name",
+			// Toast.LENGTH_SHORT).show();
+			// }
 			break;
 		case R.id.add_name:
 			detail.setVisibility(View.GONE);
@@ -221,14 +231,24 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					&& null != data) {
 				// Get the Image from data
 
-				Uri selectedImageUri = data.getData();
+				selectedImageUri = data.getData();
 
-				String tempPath = getPath(selectedImageUri, this);
-				BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
-				Bitmap bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
-				// Set the Image in ImageView after decoding the String
-				previewFilePath = tempPath;
-				imgView.setImageBitmap(bm);
+				performCrop();
+				}
+				else if(requestCode == PIC_CROP){
+				
+					//get the returned data
+					Bundle extras = data.getExtras();
+					//get the cropped bitmap
+					Bitmap thePic = extras.getParcelable("data");
+					
+//				String tempPath = getPath(selectedImageUri, this);
+//				BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+//				Bitmap bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
+//				// Set the Image in ImageView after decoding the String
+//				previewFilePath = tempPath;
+
+				imgView.setImageBitmap(thePic);
 				new ImageUploadTask(this).execute();
 
 			} else {
@@ -242,6 +262,36 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 	}
 
+	private void performCrop(){
+		 
+		try {
+		    //call the standard crop action intent (the user device may not support it)
+			Intent cropIntent = new Intent("com.android.camera.action.CROP"); 
+			    //indicate image type and Uri
+			cropIntent.setDataAndType(selectedImageUri, "image/*");
+			    //set crop properties
+			cropIntent.putExtra("crop", "true");
+			    //indicate aspect of desired crop
+			cropIntent.putExtra("aspectX", 1);
+			cropIntent.putExtra("aspectY", 1);
+			    //indicate output X and Y
+			cropIntent.putExtra("outputX", 256);
+			cropIntent.putExtra("outputY", 256);
+			    //retrieve data on return
+			cropIntent.putExtra("return-data", true);
+			    //start the activity - we handle returning in onActivityResult
+			startActivityForResult(cropIntent, PIC_CROP); 
+			
+		}
+		catch(ActivityNotFoundException anfe){
+		    //display an error message
+		    String errorMessage = "Whoops - your device doesn't support the crop action!";
+		    Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+		    toast.show();
+		}
+		
+	}
+	
 	class ImageUploadTask extends AsyncTask<Void, Void, Void> {
 
 		Context context;
