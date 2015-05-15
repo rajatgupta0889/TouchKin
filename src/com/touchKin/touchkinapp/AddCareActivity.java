@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -120,15 +121,23 @@ public class AddCareActivity extends ActionBarActivity implements
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
+						SharedPreferences pref = getApplicationContext()
+								.getSharedPreferences("countPref", 0);
+						Editor edit = pref.edit();
+
 						if (responseArray.length() > 0) {
+							edit.putBoolean("count", true);
+							edit.apply();
 							for (int i = 0; i < responseArray.length(); i++) {
 								try {
+
 									AddCircleModel item = new AddCircleModel();
 									JSONObject careReciever = responseArray
 											.getJSONObject(i);
 									item.setUserId(careReciever.getString("id"));
-									item.setUserName((careReciever
-											.getString("nickname")));
+									if (careReciever.has("nickname"))
+										item.setUserName((careReciever
+												.getString("nickname")));
 									//
 									circleList.add(item);
 								} catch (JSONException e) {
@@ -239,9 +248,6 @@ public class AddCareActivity extends ActionBarActivity implements
 			break;
 		}
 	}
-
-	
-	
 
 	List<String> getContact(Uri contactData) {
 		// Bundle args = new Bundle();

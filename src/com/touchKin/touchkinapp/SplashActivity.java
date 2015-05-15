@@ -57,37 +57,38 @@ public class SplashActivity extends Activity {
 		// }
 		//
 		// }).start();
-		Log.d("Mobile", "" + pref.getString("mobile", null));
-		Log.d("otp", "" + pref.getString("otp", null));
-		// if (pref.getString("mobile", null) != null
-		// && pref.getString("otp", null) != null) {
-		// sendIntent(pref.getString("mobile", null),
-		// pref.getString("otp", null));
-		// // new SendRequest().execute(params)
-		// } else {
-		new Handler().postDelayed(new Runnable() {
+//		Log.d("Mobile", "" + pref.getString("mobile", null));
+//		Log.d("otp", "" + pref.getString("otp", null));
+//		if (pref.getString("mobile", null) != null
+//				&& pref.getString("otp", null) != null) {
+//			sendIntent(pref.getString("mobile", null),
+//					pref.getString("otp", null));
+//			// new SendRequest().execute(params)
+//		} else {
+			new Handler().postDelayed(new Runnable() {
 
-			/*
-			 * Showing splash screen with a timer. This will be useful when you
-			 * want to show case your app logo / company
-			 */
-			@Override
-			public void run() {
-				// This method will be executed once the timer is over
-				// Start your app main activity
-				Intent i = new Intent(SplashActivity.this, SignUpActivity.class);
-				Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
-						getApplicationContext(), R.anim.animation,
-						R.anim.animation2).toBundle();
-				startActivity(i, bndlanimation);
-				finish();
-				// close this activity
-				finish();
-			}
-		}, SPLASH_TIME_OUT);
-	}
+				/*
+				 * Showing splash screen with a timer. This will be useful when
+				 * you want to show case your app logo / company
+				 */
+				@Override
+				public void run() {
+					// This method will be executed once the timer is over
+					// Start your app main activity
+					Intent i = new Intent(SplashActivity.this,
+							SignUpActivity.class);
+					Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
+							getApplicationContext(), R.anim.animation,
+							R.anim.animation2).toBundle();
+					startActivity(i, bndlanimation);
+					finish();
+					// close this activity
+					finish();
+				}
+			}, SPLASH_TIME_OUT);
+		}
 
-	// }
+	//}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,7 +116,7 @@ public class SplashActivity extends Activity {
 						@Override
 						public void onResponse(JSONObject response) {
 							Intent i = new Intent(SplashActivity.this,
-									BluetoothScan.class);
+									DashBoardActivity.class);
 							Bundle bndlanimation = ActivityOptions
 									.makeCustomAnimation(
 											getApplicationContext(),

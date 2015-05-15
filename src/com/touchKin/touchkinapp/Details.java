@@ -1,8 +1,8 @@
 package com.touchKin.touchkinapp;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -23,16 +23,17 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
@@ -70,6 +71,8 @@ import com.touchKin.touckinapp.R;
 @SuppressWarnings("deprecation")
 public class Details extends ActionBarActivity implements OnClickListener {
 
+	final int PIC_CROP = 2;
+	private Uri selectedImageUri;
 	Button next;
 	TextView detail, phone_detail, userYear;
 	EditText name;
@@ -99,25 +102,26 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_info);
 		init();
-		if (getIntent() != null) {
-			if (getIntent().getExtras().getBoolean("fromOtp")) {
-				phone = getIntent().getExtras().getString("phoneNumber");
-				userID = getIntent().getExtras().getString("id");
-				if (getIntent().getExtras().getString("first_name") != null)
-					userName = getIntent().getExtras().getString("first_name");
-			} else {
-				getUserInfo();
-			}
-		}
+		// if (getIntent() != null) {
+		// if (getIntent().getExtras().getBoolean("fromOtp")) {
+		// phone = getIntent().getExtras().getString("phoneNumber");
+		// userID = getIntent().getExtras().getString("id");
+		// if (getIntent().getExtras().getString("first_name") != null)
+		// userName = getIntent().getExtras().getString("first_name");
+		// } else {
+		// getUserInfo();
+		// }
+		// }
+		getUserInfo();
 		pDialog.setMessage("Updating info");
 		pDialog.setCancelable(false);
-		phone_detail.setText(phone);
+		// phone_detail.setText(phone);
 		// Image url
-		image_url = serverPath + userID + ".jpeg";
+		// image_url = serverPath + userID + ".jpeg";
 		mTitle.setText("Profile");
 		// ImageLoader class instance
 		imgLoader = new ImageLoader(getApplicationContext());
-		new MyTask().execute(image_url);
+		// new MyTask().execute(image_url);
 		// whenever you want to load an image from url
 		// call DisplayImage function
 		// url - image url to load
@@ -126,16 +130,16 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 		next.setOnClickListener(this);
 		detail.setOnClickListener(this);
-		if (userName != null && !userName.isEmpty()) {
-			detail.setText(userName);
-			name.setText(userName);
-		}
-		if (yob != null) {
-			userYear.setText(yob);
-			Calendar calendar = Calendar.getInstance();
-			int year = calendar.get(Calendar.YEAR);
-			userAge.setText(year - Integer.parseInt(yob));
-		}
+		// if (userName != null && !userName.isEmpty()) {
+		// detail.setText(userName);
+		// name.setText(userName);
+		// }
+		// if (yob != null) {
+		// userYear.setText(yob);
+		// Calendar calendar = Calendar.getInstance();
+		// int year = calendar.get(Calendar.YEAR);
+		// userAge.setText(year - Integer.parseInt(yob));
+		// }
 		userAge.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
@@ -153,7 +157,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			}
 		});
 
-		radioGroup.check(R.id.radioMale);
+		// radioGroup.check(R.id.radioMale);
 		radioGroup
 				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					public void onCheckedChanged(RadioGroup arg0, int id) {
@@ -206,6 +210,21 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				Toast.makeText(Details.this, "PLease Add your Name",
 						Toast.LENGTH_SHORT).show();
 			}
+			// =======
+			// // if (!name.getText().toString().isEmpty()) {
+			// // String userName = name.getText().toString();
+			// // updateUser(userName);
+			// // getConnectionRequest();
+			// Intent intent = new Intent(Details.this, AddCareActivity.class);
+			// Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
+			// getApplicationContext(), R.anim.animation,
+			// R.anim.animation2).toBundle();
+			// startActivity(intent, bndlanimation);
+			// // } else {
+			// // Toast.makeText(Details.this, "PLease Add your Name",
+			// // Toast.LENGTH_SHORT).show();
+			// // }
+			// >>>>>>> 894dff3bee0a0f3854c747e997d954fd54a5a35c
 			break;
 		case R.id.add_name:
 			detail.setVisibility(View.GONE);
@@ -235,14 +254,37 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					&& null != data) {
 				// Get the Image from data
 
-				Uri selectedImageUri = data.getData();
+				selectedImageUri = data.getData();
 
-				String tempPath = getPath(selectedImageUri, this);
-				BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
-				Bitmap bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
-				// Set the Image in ImageView after decoding the String
-				previewFilePath = tempPath;
-				imgView.setImageBitmap(bm);
+				performCrop();
+			} else if (requestCode == PIC_CROP) {
+
+				// get the returned data
+				Bundle extras = data.getExtras();
+				// get the cropped bitmap
+				Bitmap thePic = extras.getParcelable("data");
+				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+				thePic.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+				// you can create a new file name "test.jpg" in sdcard folder.
+				File f = new File(Environment.getExternalStorageDirectory()
+						+ File.separator + "test.jpg");
+				f.createNewFile();
+				previewFilePath = f.getAbsolutePath();
+				// write the bytes in file
+				FileOutputStream fo = new FileOutputStream(f);
+				fo.write(bytes.toByteArray());
+
+				// remember close de FileOutput
+				fo.close();
+				// String tempPath = getPath(selectedImageUri, this);
+				// BitmapFactory.Options btmapOptions = new
+				// BitmapFactory.Options();
+				// Bitmap bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
+				// // Set the Image in ImageView after decoding the String
+				// previewFilePath = tempPath;
+
+				imgView.setImageBitmap(thePic);
 				new ImageUploadTask(this).execute();
 
 			} else {
@@ -256,7 +298,52 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 	}
 
+	private void performCrop() {
+
+		try {
+			// call the standard crop action intent (the user device may not
+			// support it)
+			Intent cropIntent = new Intent("com.android.camera.action.CROP");
+			// indicate image type and Uri
+			cropIntent.setDataAndType(selectedImageUri, "image/*");
+			// set crop properties
+			cropIntent.putExtra("crop", "true");
+			// indicate aspect of desired crop
+			cropIntent.putExtra("aspectX", 1);
+			cropIntent.putExtra("aspectY", 1);
+			// indicate output X and Y
+			cropIntent.putExtra("outputX", 256);
+			cropIntent.putExtra("outputY", 256);
+			// retrieve data on return
+			cropIntent.putExtra("return-data", true);
+			// start the activity - we handle returning in onActivityResult
+			startActivityForResult(cropIntent, PIC_CROP);
+
+		} catch (ActivityNotFoundException anfe) {
+			// display an error message
+			String errorMessage = "Whoops - your device doesn't support the crop action!";
+			Toast toast = Toast
+					.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+			toast.show();
+		}
+
+	}
+
 	class ImageUploadTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			if (previewFilePath != null) {
+				File f = new File(previewFilePath);
+				if (f != null) {
+					if (f.delete())
+						Log.d("file", "Update and delete");
+
+				}
+			}
+		}
 
 		Context context;
 
@@ -321,31 +408,6 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		//
 		// }
 
-		// @Override
-		// protected void onPostExecute(Void) {
-		// try {
-		//
-		// if (sResponse != null) {
-		// Log.d("Response", sResponse);
-		// JSONObject JResponse = new JSONObject(sResponse);
-		// Log.d("JSON", JResponse.toString());
-		// // int success = JResponse.getInt("SUCCESS");
-		// // String message = JResponse.getString("MESSAGE");
-		// // if (success == 0) {
-		// // // Toast.makeText(getApplicationContext(), message,
-		// // // Toast.LENGTH_LONG).show();
-		// // } else {
-		// // // Toast.makeText(getApplicationContext(),
-		// // // "Photo uploaded successfully",
-		// // // Toast.LENGTH_SHORT).show();
-		// // }
-		// }
-		// } catch (Exception e) {
-		// // Toast.makeText(context, getString(R.string.app_name_empty),
-		// // Toast.LENGTH_LONG).show();
-		// Log.e(e.getClass().getName(), e.getMessage(), e);
-		// }
-
 	}
 
 	public String getPath(Uri uri, Activity activity) {
@@ -389,39 +451,40 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		return type;
 	}
 
-	private class MyTask extends AsyncTask<String, Void, Boolean> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Boolean doInBackground(String... params) {
-
-			try {
-				HttpURLConnection.setFollowRedirects(false);
-				HttpURLConnection con = (HttpURLConnection) new URL(params[0])
-						.openConnection();
-				con.setRequestMethod("HEAD");
-				System.out.println(con.getResponseCode());
-				Boolean result = con.getResponseCode() == HttpURLConnection.HTTP_OK;
-				con.disconnect();
-				return (result);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result) {
-				imgLoader.DisplayImage(image_url, R.drawable.people, imgView);
-				// addImageView.setVisibility(View.INVISIBLE);
-			}
-		}
-	}
+	//
+	// private class MyTask extends AsyncTask<String, Void, Boolean> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Boolean doInBackground(String... params) {
+	//
+	// try {
+	// HttpURLConnection.setFollowRedirects(false);
+	// HttpURLConnection con = (HttpURLConnection) new URL(params[0])
+	// .openConnection();
+	// con.setRequestMethod("HEAD");
+	// System.out.println(con.getResponseCode());
+	// Boolean result = con.getResponseCode() == HttpURLConnection.HTTP_OK;
+	// con.disconnect();
+	// return (result);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// return false;
+	// }
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Boolean result) {
+	// if (result) {
+	// imgLoader.DisplayImage(image_url, R.drawable.people, imgView);
+	// // addImageView.setVisibility(View.INVISIBLE);
+	// }
+	// }
+	// }
 
 	// public static boolean exists(String URLName) {
 	// try {
@@ -660,6 +723,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	}
 
 	public void getUserInfo() {
+		pDialog.setMessage("Fetching User Info");
+		showpDialog();
 		CustomRequest req = new CustomRequest(
 				"http://54.69.183.186:1340/user/profile",
 				new Listener<JSONObject>() {
@@ -667,17 +732,37 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
+						hidepDialog();
 						try {
 							phone = responseArray.getString("mobile");
 							userID = responseArray.getString("id");
-							if (responseArray.getString("gender")
-									.equals("male")) {
-								male = true;
-							} else {
-								male = false;
+							if (responseArray.has("gender")) {
+								if (responseArray.getString("gender").equals(
+										"male")) {
+									male = true;
+								} else {
+									male = false;
+								}
+								if (male)
+									radioGroup.check(R.id.radioMale);
+								else
+									radioGroup.check(R.id.radioFemale);
+								yob = responseArray.getString("yob");
+								if (yob != null) {
+									userYear.setText(yob);
+									Calendar calendar = Calendar.getInstance();
+									int year = calendar.get(Calendar.YEAR);
+									userAge.setText(""
+											+ (year - Integer.parseInt(yob)));
+								}
+								userName = responseArray
+										.getString("first_name");
+								detail.setText(userName);
+								phone_detail.setText(phone);
+								image_url = serverPath + userID + ".jpeg";
+								imgLoader.DisplayImage(image_url,
+										R.drawable.people, imgView);
 							}
-							yob = responseArray.getString("yob");
-							userName = responseArray.getString("first_name");
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -688,6 +773,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						hidepDialog();
 						VolleyLog.e("Error get contach Info: ",
 								error.getMessage());
 					}
