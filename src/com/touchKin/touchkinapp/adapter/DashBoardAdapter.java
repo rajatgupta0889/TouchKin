@@ -8,10 +8,11 @@ import android.view.View;
 
 import com.touchKin.touchkinapp.DashBoardActivityFragment;
 import com.touchKin.touchkinapp.DashboardLocationFragment;
+import com.touchKin.touchkinapp.DashboardWithoutKinFragment;
 import com.touchKin.touchkinapp.TouchFragment;
 
 public class DashBoardAdapter extends FragmentPagerAdapter {
-	private static int NUM_ITEMS = 3;
+	private static int NUM_ITEMS = 4;
 
 	public DashBoardAdapter(FragmentManager fm) {
 		super(fm);
@@ -23,11 +24,13 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 		// TODO Auto-generated method stub
 		switch (position) {
 		case 0: // Fragment # 0 - This will show FirstFragment
-			return TouchFragment.newInstance(0, "Touch");
+			return DashboardWithoutKinFragment.newInstance(0, "WithoutKin");
 		case 1: // Fragment # 0 - This will show FirstFragment different title
 			return DashboardLocationFragment.newInstance(1, "Location");
 		case 2: // Fragment # 1 - This will show SecondFragment
 			return DashBoardActivityFragment.newInstance(2, "Activity");
+		case 3:
+			return TouchFragment.newInstance(0, "Touch");
 		default:
 			return null;
 		}
