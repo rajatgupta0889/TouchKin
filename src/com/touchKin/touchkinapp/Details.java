@@ -736,7 +736,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						try {
 							phone = responseArray.getString("mobile");
 							userID = responseArray.getString("id");
-							if (responseArray.has("gender")) {
+							if (responseArray.has("gender")
+								) {
 								if (responseArray.getString("gender").equals(
 										"male")) {
 									male = true;
@@ -748,7 +749,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 								else
 									radioGroup.check(R.id.radioFemale);
 								yob = responseArray.getString("yob");
-								if (yob != null) {
+								if (yob !=null) {
 									userYear.setText(yob);
 									Calendar calendar = Calendar.getInstance();
 									int year = calendar.get(Calendar.YEAR);
@@ -783,5 +784,4 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
-
 }
