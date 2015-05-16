@@ -16,6 +16,7 @@
     <string name="album_name">TouchKin</string>
 
     <string-array name="frag_titles">
+        <item >WithoutKin</item>
         <item>TouchKin</item>
         <item>Location</item>
         <item>Activity</item>
