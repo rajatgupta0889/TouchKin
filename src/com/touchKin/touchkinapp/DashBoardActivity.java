@@ -79,6 +79,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	ActionBarDrawerToggle mDrawerToggle; // Declaring Action Bar Drawer Toggle
 	private ImageAdapter imageAdapter;
 	private Menu menu;
+	public static Boolean isCancel = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -246,8 +247,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 		mDrawerToggle.syncState(); // Finally we set the drawer toggle sync
 		// State
 		mTitle.setText("TouchKin");
-
-		list = new ArrayList<ParentListModel>();
 
 		// list.add(new ParentListModel("", true, "Mom", "1", "1"));
 		// list.add(new ParentListModel("", false, "Dad", "2", "2"));
@@ -430,7 +429,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	public void getParentList() {
-
+		list = new ArrayList<ParentListModel>();
 		JsonArrayRequest req = new JsonArrayRequest(
 				"http://54.69.183.186:1340/user/care-receivers",
 				new Listener<JSONArray>() {
@@ -439,6 +438,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
 						// Log.d("Response Array", " " + responseArray);
+
 						if (responseArray.length() > 0) {
 							for (int i = 0; i < responseArray.length(); i++) {
 								try {
@@ -450,8 +450,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 									if (obj.has("nickname")) {
 										item.setParentName(obj
 												.getString("nickname"));
-									}else{
-										item.setParentName("");
+									} else {
+										item.setParentName("maa");
 									}
 									// item.setParentUserId(obj.getJSONObject(
 									// "user").getString("id"));
@@ -519,7 +519,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 			DialogFragment newFragment = new ContactDialogFragment();
 			newFragment.setCancelable(false);
 			newFragment.show(getSupportFragmentManager(), "TAG");
-
+			if (!isCancel) {
+				getParentList();
+				Toast.makeText(DashBoardActivity.this, "Request is sent",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 		toggleVissibility();
 
@@ -532,6 +536,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		} else {
 			parentMenu.setTitle("Add");
 			MenuItem iconMenu = menu.findItem(R.id.parentIconMenu);
+
 		}
 	}
 

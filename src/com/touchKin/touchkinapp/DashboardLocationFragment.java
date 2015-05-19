@@ -202,7 +202,7 @@ public class DashboardLocationFragment extends Fragment implements
 				.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
 						getActivity(), marker))));
 		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-		googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 	}
 
 	@Override

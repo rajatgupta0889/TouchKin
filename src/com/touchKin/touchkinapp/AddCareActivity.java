@@ -149,6 +149,8 @@ public class AddCareActivity extends ActionBarActivity implements
 							Toast.makeText(AddCareActivity.this, "NO Request",
 									Toast.LENGTH_SHORT).show();
 							notifTv.setVisibility(View.VISIBLE);
+							edit.putBoolean("count", false);
+							edit.apply();
 
 						}
 						adapter.notifyDataSetChanged();

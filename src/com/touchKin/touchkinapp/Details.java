@@ -157,7 +157,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			}
 		});
 
-		// radioGroup.check(R.id.radioMale);
+		radioGroup.check(R.id.radioMale);
 		radioGroup
 				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					public void onCheckedChanged(RadioGroup arg0, int id) {
@@ -197,7 +197,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.next_detail_button:
-			if (!name.getText().toString().isEmpty()) {
+			if (!name.getText().toString().isEmpty()
+					&& !userAge.getText().toString().isEmpty()) {
 				String userName = name.getText().toString();
 				String gender = "male";
 				if (!male) {
@@ -612,7 +613,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 									JSONObject careGiver = careRequest
 											.getJSONObject("care_giver");
 									JSONObject careReciever = careRequest
-											.getJSONObject("care_reciever");
+											.getJSONObject("care_receiver");
 									if (careInitiator.getString("id").equals(
 											careGiver.get("id"))) {
 										if (careInitiator.has("nickname")) {
@@ -736,8 +737,9 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						try {
 							phone = responseArray.getString("mobile");
 							userID = responseArray.getString("id");
+
 							if (responseArray.has("gender")
-								) {
+									&& !responseArray.isNull("gender")) {
 								if (responseArray.getString("gender").equals(
 										"male")) {
 									male = true;
@@ -748,22 +750,32 @@ public class Details extends ActionBarActivity implements OnClickListener {
 									radioGroup.check(R.id.radioMale);
 								else
 									radioGroup.check(R.id.radioFemale);
-								yob = responseArray.getString("yob");
-								if (yob !=null) {
-									userYear.setText(yob);
-									Calendar calendar = Calendar.getInstance();
-									int year = calendar.get(Calendar.YEAR);
-									userAge.setText(""
-											+ (year - Integer.parseInt(yob)));
+								if (responseArray.has("yob")
+										&& !(responseArray.isNull("yob"))) {
+									yob = responseArray.getString("yob");
+									if (!yob.equalsIgnoreCase(null)) {
+										Log.d("YOB", yob);
+										userYear.setText(yob);
+										Calendar calendar = Calendar
+												.getInstance();
+										int year = calendar.get(Calendar.YEAR);
+										userAge.setText(""
+												+ (year - Integer.parseInt(yob)));
+									}
 								}
-								userName = responseArray
-										.getString("first_name");
-								detail.setText(userName);
-								phone_detail.setText(phone);
-								image_url = serverPath + userID + ".jpeg";
-								imgLoader.DisplayImage(image_url,
-										R.drawable.people, imgView);
+								if (responseArray.has("first_name")) {
+									userName = responseArray
+											.getString("first_name");
+									detail.setText(userName);
+									name.setText(userName);
+
+								}
+
 							}
+							phone_detail.setText(phone);
+							image_url = serverPath + userID + ".jpeg";
+							imgLoader.DisplayImage(image_url,
+									R.drawable.people, imgView);
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

@@ -81,6 +81,7 @@ public class ContactDialogFragment extends DialogFragment implements
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								ContactDialogFragment.this.getDialog().cancel();
+								DashBoardActivity.isCancel = true;
 							}
 						});
 		final AlertDialog dialog = builder.create();
@@ -93,6 +94,7 @@ public class ContactDialogFragment extends DialogFragment implements
 				Boolean wantToCloseDialog = false;
 				// Do stuff, possibly set wantToCloseDialog to true
 				// then...
+
 				if (wantToCloseDialog)
 					dismiss();
 				String phoneNum = phoneBox.getText().toString();
@@ -102,13 +104,14 @@ public class ContactDialogFragment extends DialogFragment implements
 					if (!phoneNum.startsWith("+91")) {
 						if (!phoneNum.startsWith("0")) {
 							phoneNum = "+91" + phoneNum;
-						}else{
-							phoneNum = "+91"+ phoneNum.substring(1);
+						} else {
+							phoneNum = "+91" + phoneNum.substring(1);
 						}
 					}
 					addCareReciever(nameBox.getText().toString(),
 							phoneNum.trim(), nickname.getText().toString());
 					ContactDialogFragment.this.getDialog().cancel();
+					DashBoardActivity.isCancel = false;
 				}
 				// else dialog stays open. Make sure you have an obvious
 				// way to close the dialog especially if you set

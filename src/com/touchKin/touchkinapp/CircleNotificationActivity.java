@@ -67,8 +67,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 			requestList = getIntent().getExtras().getParcelableArrayList(
 					"request");
 		}
-		Log.d("Request List Size", requestList.get(0).getCare_reciever_name()
-				+ "");
+
 		adapter = new RequestListAdapter(requestList, this);
 		requestListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
@@ -231,7 +230,7 @@ public class CircleNotificationActivity extends ActionBarActivity implements
 
 						Log.d("Response", "" + response);
 						requestList.remove(position);
-						adapter.notifyDataSetChanged();
+						adapter.notifyDataSetInvalidated();
 					}
 				}, new Response.ErrorListener() {
 					@Override

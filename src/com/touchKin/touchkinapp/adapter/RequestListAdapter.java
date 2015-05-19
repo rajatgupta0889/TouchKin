@@ -90,7 +90,8 @@ public class RequestListAdapter extends BaseAdapter {
 				if (customListener != null)
 					customListener.onButtonClickListner(position,
 							request.getRequestID(), true);
-
+				requestList.remove(request);
+				notifyDataSetChanged();
 			}
 		});
 		viewHolder.reject.setOnClickListener(new OnClickListener() {
@@ -101,6 +102,8 @@ public class RequestListAdapter extends BaseAdapter {
 				if (customListener != null)
 					customListener.onButtonClickListner(position,
 							request.getRequestID(), false);
+				requestList.remove(request);
+				notifyDataSetChanged();
 			}
 		});
 		ImageLoader imageLoader = new ImageLoader(context);
