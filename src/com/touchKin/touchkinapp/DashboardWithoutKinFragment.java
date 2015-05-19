@@ -21,29 +21,31 @@ import com.touchKin.touckinapp.R;
 
 public class DashboardWithoutKinFragment extends Fragment implements
 		FragmentInterface {
-
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 
+	// newInstance constructor for creating fragment with arguments
 	public static DashboardWithoutKinFragment newInstance(int page, String title) {
-		DashboardWithoutKinFragment dashboardwithoutkinfragment = new DashboardWithoutKinFragment();
+		DashboardWithoutKinFragment DashboardWithoutKinFragment = new DashboardWithoutKinFragment();
 		Bundle args = new Bundle();
 		args.putInt("someInt", page);
 		args.putString("someTitle", title);
-		dashboardwithoutkinfragment.setArguments(args);
-		return dashboardwithoutkinfragment;
+		DashboardWithoutKinFragment.setArguments(args);
+		return DashboardWithoutKinFragment;
 	}
 
+	// Store instance variables based on arguments passed
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
 
+	// Inflate the view for the fragment based on layout XML
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.dashboard_withoutkin,
-				container, false);
+		View view = inflater.inflate(R.layout.dashboard_withoutkin, container,
+				false);
 		final Resources resources = getResources();
 		// final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
@@ -146,6 +148,21 @@ public class DashboardWithoutKinFragment extends Fragment implements
 		return view;
 	}
 
+	/**
+	 * Animate.
+	 *
+	 * @param progressBar
+	 *            the progress bar
+	 * @param listener
+	 *            the listener
+	 */
+	// private void animate(final HoloCircularProgressBar progressBar,
+	// final AnimatorListener listener) {
+	// final float progress = (float) (Math.random() * 2);
+	// int duration = 3000;
+	// animate(progressBar, listener, progress, duration);
+	// }
+
 	private void animate(final HoloCircularProgressBar progressBar,
 			final AnimatorListener listener, final float progress,
 			final int duration) {
@@ -206,4 +223,5 @@ public class DashboardWithoutKinFragment extends Fragment implements
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 
 	}
+
 }

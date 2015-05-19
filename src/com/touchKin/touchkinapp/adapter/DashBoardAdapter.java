@@ -1,5 +1,7 @@
 package com.touchKin.touchkinapp.adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,7 +14,8 @@ import com.touchKin.touchkinapp.DashboardWithoutKinFragment;
 import com.touchKin.touchkinapp.TouchFragment;
 
 public class DashBoardAdapter extends FragmentPagerAdapter {
-	private static int NUM_ITEMS = 4;
+	private static int NUM_ITEMS = 3;
+	public static Context context;
 
 	public DashBoardAdapter(FragmentManager fm) {
 		super(fm);
@@ -22,15 +25,22 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		// TODO Auto-generated method stub
+		SharedPreferences pref = context.getSharedPreferences("countPref", 0);
+		// if (!pref.getBoolean("count", false)) {
+		// position = position - 1;
+		// }
+
 		switch (position) {
 		case 0: // Fragment # 0 - This will show FirstFragment
-			return DashboardWithoutKinFragment.newInstance(0, "WithoutKin");
+			if (!pref.getBoolean("count", false)) {
+				return DashboardWithoutKinFragment.newInstance(3, "WithoutKin");
+			} else {
+				return TouchFragment.newInstance(0, "Touch");
+			}
 		case 1: // Fragment # 0 - This will show FirstFragment different title
 			return DashboardLocationFragment.newInstance(1, "Location");
 		case 2: // Fragment # 1 - This will show SecondFragment
 			return DashBoardActivityFragment.newInstance(2, "Activity");
-		case 3:
-			return TouchFragment.newInstance(0, "Touch");
 		default:
 			return null;
 		}

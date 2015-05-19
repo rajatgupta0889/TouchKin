@@ -7,12 +7,23 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
@@ -23,6 +34,9 @@ public class DashBoardActivityFragment extends Fragment implements
 		FragmentInterface {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
+	TextView battery, wifiSignal, signalStr;
+	TelephonyManager Tel;
+	MyPhoneStateListener MyListener;
 
 	// newInstance constructor for creating fragment with arguments
 	public static DashBoardActivityFragment newInstance(int page, String title) {
@@ -76,8 +90,6 @@ public class DashBoardActivityFragment extends Fragment implements
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slices.add(slice);
 
-		
-
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 
@@ -113,6 +125,19 @@ public class DashBoardActivityFragment extends Fragment implements
 
 		slices.add(slice);
 		mHoloCircularProgressBar.setSlices(slices);
+
+		battery = (TextView) view.findViewById(R.id.battery);
+		wifiSignal = (TextView) view.findViewById(R.id.wifi);
+		getActivity().registerReceiver(this.mBatInfoReceiver,
+				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		WifiManager wifi = (WifiManager) getActivity().getSystemService(
+				Context.WIFI_SERVICE);
+		onReceive(wifi);
+		signalStr = (TextView) view.findViewById(R.id.signal);
+		/* Update the listener, and start it */
+		MyListener = new MyPhoneStateListener();
+		Tel = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 		return view;
 	}
 
@@ -161,12 +186,22 @@ public class DashBoardActivityFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
+		super.onResume();
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-		super.onResume();
+		 Tel.listen(MyListener,PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+		
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
 	}
 
 	@Override
@@ -176,4 +211,38 @@ public class DashBoardActivityFragment extends Fragment implements
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 
 	}
+
+	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context ctxt, Intent intent) {
+			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+			battery.setText("Battery " + ' ' + String.valueOf(level) + "%");
+		}
+	};
+
+	public void onReceive(WifiManager wifiManager) {
+		int numberOfLevels = 5;
+		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+		int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(),
+				numberOfLevels);
+		wifiSignal.setText("Wifi " + ' ' + String.valueOf(level) + "%");
+	}
+
+	/* —————————– */
+	/* Start the PhoneState listener */
+	/* —————————– */
+	private class MyPhoneStateListener extends PhoneStateListener {
+		/*
+		 * Get the Signal strength from the provider, each tiome there is an
+		 * update
+		 */
+		@Override
+		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+			super.onSignalStrengthsChanged(signalStrength);
+			signalStr.setText("Signal " + ' '
+					+ String.valueOf(signalStrength.getGsmSignalStrength()));
+		}
+
+	};/* End of private Class */
+
 }

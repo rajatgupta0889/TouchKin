@@ -1,6 +1,7 @@
 package com.touchKin.touchkinapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
-import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -50,6 +50,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 
 		View v = inflater.inflate(R.layout.dashboard_fragment, null);
 		init(v);
+		DashBoardAdapter.context = getActivity();
 		viewPager.setAdapter(adapter);
 		pageListener = new PageListener();
 		viewPager.setOnPageChangeListener(pageListener);
@@ -122,8 +123,16 @@ public class Fragment1 extends Fragment implements OnClickListener {
 					R.id.tool_bar);
 			TextView mTitle = (TextView) toolbar
 					.findViewById(R.id.toolbar_title);
+			// SharedPreferences pref = getActivity().getSharedPreferences(
+			// "countPref", 0);
+			// if (!pref.getBoolean("count", false)) {
+			// position = position - 1;
+			// }
+			// if (position == -1) {
+			//
+			// } else {
 			mTitle.setText(getResources().getStringArray(R.array.frag_titles)[position]);
-
+			// }
 			FragmentInterface fragment = (FragmentInterface) adapter
 					.instantiateItem(viewPager, position);
 			if (fragment != null) {

@@ -613,7 +613,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 									JSONObject careGiver = careRequest
 											.getJSONObject("care_giver");
 									JSONObject careReciever = careRequest
-											.getJSONObject("care_reciever");
+											.getJSONObject("care_receiver");
 									if (careInitiator.getString("id").equals(
 											careGiver.get("id"))) {
 										if (careInitiator.has("nickname")) {
@@ -737,7 +737,9 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						try {
 							phone = responseArray.getString("mobile");
 							userID = responseArray.getString("id");
-							if (responseArray.has("gender") && !responseArray.getString("gender").equals(null)) {
+
+							if (responseArray.has("gender")
+									&& !responseArray.isNull("gender")) {
 								if (responseArray.getString("gender").equals(
 										"male")) {
 									male = true;
@@ -748,9 +750,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 									radioGroup.check(R.id.radioMale);
 								else
 									radioGroup.check(R.id.radioFemale);
-								if (responseArray.has("yob") && !responseArray.getString("yob").equals(null)) {
+								if (responseArray.has("yob")
+										&& !(responseArray.isNull("yob"))) {
 									yob = responseArray.getString("yob");
-									if (!yob.equals(null)) {
+									if (!yob.equalsIgnoreCase(null)) {
 										Log.d("YOB", yob);
 										userYear.setText(yob);
 										Calendar calendar = Calendar
@@ -765,8 +768,9 @@ public class Details extends ActionBarActivity implements OnClickListener {
 											.getString("first_name");
 									detail.setText(userName);
 									name.setText(userName);
+
 								}
-								
+
 							}
 							phone_detail.setText(phone);
 							image_url = serverPath + userID + ".jpeg";
@@ -792,5 +796,4 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
-
 }
