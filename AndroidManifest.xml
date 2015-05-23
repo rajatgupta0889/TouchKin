@@ -24,9 +24,13 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" >
+    </uses-permission>
     <!--
      The following two permissions are not required to use
-     Google Maps Android API v2, but are recommended.
+     Google Maps Android API v2, but are recommended.
     -->
     <uses-permission android:name="com.example.googlemap.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -131,6 +135,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.touchKin.touchkinapp.MapActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <service
             android:name="com.touchKin.touchkinapp.services.BluetoothLeService"
@@ -143,6 +152,8 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+               <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
+
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -150,6 +161,12 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD5e17DLZV06yX244q5qZ8SwGh9FpAHHzw" />
+
+        <!-- <receiver android:name="com.touchKin.touchkinapp.broadcastReciever.IncomingSMS" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver> -->
     </application>
 
 </manifest>

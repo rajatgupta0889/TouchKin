@@ -57,7 +57,7 @@ public class MessageAdapter extends BaseAdapter {
 		MessageModel item = messageList.get(position);
 		RoundedImageView imageView = (RoundedImageView) convertView
 				.findViewById(R.id.parentImage);
-		imageView.setImageResource(R.drawable.mom);
+		imageView.setImageResource(R.drawable.ic_user_image);
 		TextView messageTextView = (TextView) convertView
 				.findViewById(R.id.message);
 		TextView messageDay = (TextView) convertView

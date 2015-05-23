@@ -25,7 +25,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 public class Fragment1 extends Fragment implements OnClickListener {
 
 	private ViewPager viewPager;
-	private DashBoardAdapter adapter;
+	public DashBoardAdapter adapter;
 	private CirclePageIndicator indicator;
 
 	ImageView sendTouch, getService;
@@ -140,6 +140,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			}
 
 		}
+	}
+	public void notifyFrag(){
+		adapter.notifyDataSetChanged();
 	}
 
 }

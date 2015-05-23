@@ -63,4 +63,8 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 		((ViewPager) collection).removeView((View) view);
 	}
 
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
+	}
 }

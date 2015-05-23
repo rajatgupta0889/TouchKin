@@ -59,12 +59,12 @@ public class SplashActivity extends Activity {
 		// }).start();
 //		Log.d("Mobile", "" + pref.getString("mobile", null));
 //		Log.d("otp", "" + pref.getString("otp", null));
-//		if (pref.getString("mobile", null) != null
-//				&& pref.getString("otp", null) != null) {
-//			sendIntent(pref.getString("mobile", null),
-//					pref.getString("otp", null));
-//			// new SendRequest().execute(params)
-//		} else {
+		if (pref.getString("mobile", null) != null
+				&& pref.getString("otp", null) != null) {
+			sendIntent(pref.getString("mobile", null),
+					pref.getString("otp", null));
+			// new SendRequest().execute(params)
+		} else {
 			new Handler().postDelayed(new Runnable() {
 
 				/*
@@ -88,7 +88,7 @@ public class SplashActivity extends Activity {
 			}, SPLASH_TIME_OUT);
 		}
 
-	//}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
