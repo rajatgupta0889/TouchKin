@@ -1,8 +1,16 @@
 package com.touchKin.touchkinapp;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Camera.Parameters;
+import android.hardware.Camera.Size;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,12 +19,15 @@ import android.widget.Toast;
 
 import com.commonsware.cwac.camera.CameraFragment;
 import com.commonsware.cwac.camera.CameraHost;
+import com.commonsware.cwac.camera.CameraUtils;
 import com.commonsware.cwac.camera.PictureTransaction;
 import com.commonsware.cwac.camera.SimpleCameraHost;
+import com.google.android.gms.tagmanager.Container;
 import com.touchKin.touckinapp.R;
 
 public class DemoCameraFragment extends CameraFragment {
 	private static final String KEY_USE_FFC = "com.commonsware.cwac.camera.demo.USE_FFC";
+	public static final int MEDIA_TYPE_IMAGE = 1;
 
 	static DemoCameraFragment newInstance(boolean useFFC) {
 		DemoCameraFragment f = new DemoCameraFragment();
@@ -34,7 +45,7 @@ public class DemoCameraFragment extends CameraFragment {
 		SimpleCameraHost.Builder builder = new SimpleCameraHost.Builder(
 				new DemoCameraHost(getActivity()));
 
-		setHost(builder.useFullBleedPreview(false).build());
+		setHost(builder.useFullBleedPreview(true).build());
 	}
 
 	@Override
@@ -51,9 +62,7 @@ public class DemoCameraFragment extends CameraFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		}
-
-	
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,7 +76,7 @@ public class DemoCameraFragment extends CameraFragment {
 	void takeSimplePicture() {
 		PictureTransaction xact = new PictureTransaction(getHost());
 		takePicture(xact);
-		
+
 	}
 
 	interface Contract {
@@ -75,9 +84,9 @@ public class DemoCameraFragment extends CameraFragment {
 
 		void setSingleShotMode(boolean mode);
 	}
+
 	class DemoCameraHost extends SimpleCameraHost {
 		boolean supportsFaces = false;
-		
 
 		public DemoCameraHost(Context _ctxt) {
 			super(_ctxt);
@@ -93,18 +102,32 @@ public class DemoCameraFragment extends CameraFragment {
 		}
 
 		@Override
-		public void saveImage(PictureTransaction xact, byte[] image) {
-			super.saveImage(xact, image);
-			
-				SendTouchPreview.imageToShow = image;
-				startActivity(new Intent(getActivity(), SendTouchPreview.class));
-			
+		protected File getVideoPath() {
+			// TODO Auto-generated method stub
+			((SendTouchActivity) getActivity()).setPath(super.getVideoPath());
+			return super.getVideoPath();
 		}
-@Override
-protected String getVideoFilename() {
-	// TODO Auto-generated method stub
-	return "abc.mp4";
-}
+
+		@Override
+		protected File getPhotoPath() {
+			// TODO Auto-generated method stub
+			((SendTouchActivity) getActivity()).setImagepath(super
+					.getPhotoPath());
+			return super.getPhotoPath();
+		}
+
+		@Override
+		public void saveImage(PictureTransaction xact, byte[] image) {
+			// TODO Auto-generated method stub
+			super.saveImage(xact, image);
+			Intent intent = new Intent(getActivity(), SendTouchPreview.class);
+			intent.putExtra("Media_Type", MEDIA_TYPE_IMAGE);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(getPhotoPath()));
+
+			startActivity(intent);
+		}
+
 		@Override
 		public void onCameraFail(CameraHost.FailureReason reason) {
 			super.onCameraFail(reason);

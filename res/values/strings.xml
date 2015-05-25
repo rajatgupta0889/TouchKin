@@ -80,5 +80,6 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_video_player_manual">VideoPlayerManual</string>
 
 </resources>

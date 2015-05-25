@@ -1,28 +1,36 @@
 package com.touchKin.touchkinapp.model;
 
-import java.util.List;
+import android.net.Uri;
 
 public class TouchKinBookModel {
 
 	private String videoUrl, videoText, videoDate, videoDay, videoSenderImage,
-			videoSenderName, videoViewCount, userImage, UserId,messageId;
-	
+			videoSenderName, videoViewCount, userImage, UserId, messageId;
+	Uri videouri;
+
+	public Uri getVideouri() {
+		return videouri;
+	}
+
+	public void setVideouri(String videourl) {
+		this.videouri = Uri.parse( "https://archive.org/download/ksnn_compilation_master_the_internet/"+videourl);
+	}
+
 	public String getMessageId() {
 		return messageId;
 	}
-
-
 
 	public void setMessageId(String messageId) {
 		this.messageId = messageId;
 	}
 
-	private List<TouchKinComments> touchKinComments;
+	// private List<TouchKinComments> touchKinComments;
 
 	public TouchKinBookModel(String videoUrl, String videoText,
 			String videoDate, String videoDay, String videoSenderImage,
-			String videoSenderName, String videoViewCount, String userImage,
-			String userId, List<TouchKinComments> touchKinComments) {
+			String videoSenderName, String videoViewCount, String userId) {
+		// add this into constructor for adding comment String userImage,,
+		// List<TouchKinComments> touchKinComments
 		super();
 		this.videoUrl = videoUrl;
 		this.videoText = videoText;
@@ -31,12 +39,11 @@ public class TouchKinBookModel {
 		this.videoSenderImage = videoSenderImage;
 		this.videoSenderName = videoSenderName;
 		this.videoViewCount = videoViewCount;
-		this.userImage = userImage;
+		// this.userImage = userImage;
 		UserId = userId;
-		this.touchKinComments = touchKinComments;
+		// this.touchKinComments = touchKinComments;
+		setVideouri(videoUrl);
 	}
-	
-	
 
 	public String getUserId() {
 		return UserId;
@@ -55,7 +62,9 @@ public class TouchKinBookModel {
 	}
 
 	public void setVideoUrl(String videoUrl) {
-		this.videoUrl = videoUrl;
+		
+		this.videoUrl =videoUrl;
+		setVideouri(videoUrl);
 	}
 
 	public String getVideoText() {
@@ -106,20 +115,20 @@ public class TouchKinBookModel {
 		this.videoViewCount = videoViewCount;
 	}
 
-	public String getUserImage() {
-		return userImage;
-	}
+//	public String getUserImage() {
+//		return userImage;
+//	}
+//
+//	public void setUserImage(String uderImage) {
+//		this.userImage = uderImage;
+//	}
 
-	public void setUserImage(String uderImage) {
-		this.userImage = uderImage;
-	}
-
-	public List<TouchKinComments> getTouchKinComments() {
-		return touchKinComments;
-	}
-
-	public void setTouchKinComments(List<TouchKinComments> touchKinComments) {
-		this.touchKinComments = touchKinComments;
-	}
+//	public List<TouchKinComments> getTouchKinComments() {
+//		return touchKinComments;
+//	}
+//
+//	public void setTouchKinComments(List<TouchKinComments> touchKinComments) {
+//		this.touchKinComments = touchKinComments;
+//	}
 
 }

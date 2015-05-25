@@ -7,8 +7,13 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Matrix;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -23,16 +28,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -55,6 +67,7 @@ public class SignUpActivity extends ActionBarActivity {
 	private ProgressDialog pDialog;
 	String areaCode;
 	String phoneNumber;
+	VideoView exam;
 	private static String TAG = SignUpActivity.class.getSimpleName();
 	private Toolbar toolbar;
 	TextView mTitle;
@@ -64,6 +77,7 @@ public class SignUpActivity extends ActionBarActivity {
 		setContentView(R.layout.sign_up_activity);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Please wait...");
 		pDialog.setCancelable(false);
@@ -141,7 +155,36 @@ public class SignUpActivity extends ActionBarActivity {
 				return false;
 			}
 		});
+
+		// RotateAnimation anim = new RotateAnimation(0f, 0f, 0f, 15f);
+		// anim.setInterpolator(new LinearInterpolator());
+		// anim.setRepeatCount(Animation.INFINITE);
+		// anim.setDuration(100);
+		// exam.startAnimation(anim);
+
+		// Animation rotate =
+		// AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+		// exam.startAnimation(rotate);
+
+//		Uri uri = new Uri.Builder()
+//				.scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+//				.authority(getPackageName())
+//				.path(Integer.toString(R.raw.trailer)).build();
+//		exam.setVideoURI(uri);
+//
+//		exam.setOnPreparedListener(new OnPreparedListener() {
+//			@Override
+//			public void onPrepared(MediaPlayer mp) {
+//				mp.setLooping(true);
+//			}
+//		});
 	}
+
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//		exam.start();
+//	}
 
 	/*
 	 * private class LongOperation extends AsyncTask<String, Void, String> {
@@ -252,7 +295,7 @@ public class SignUpActivity extends ActionBarActivity {
 
 						hidepDialog();
 						NetworkResponse response = error.networkResponse;
-//						Log.d("Response", response.data.toString());
+						// Log.d("Response", response.data.toString());
 						if (response != null && response.data != null) {
 							switch (response.statusCode) {
 							case 400:
