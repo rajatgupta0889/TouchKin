@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
@@ -18,6 +19,7 @@ public class ImageAdapter extends BaseAdapter {
 	LayoutInflater mLayoutInflater;
 
 	List<ParentListModel> parentList;
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	// int[] mResources = { R.drawable.mom, R.drawable.activity_bg,
 	// R.drawable.mom, R.drawable.mom, R.drawable.mom };
@@ -35,7 +37,7 @@ public class ImageAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public ParentListModel getItem(int position) {
 		// TODO Auto-generated method stub
 		return parentList.get(position);
 	}
@@ -61,7 +63,12 @@ public class ImageAdapter extends BaseAdapter {
 			convertView.setBackgroundDrawable(mContext.getResources()
 					.getDrawable(R.drawable.circular_image));
 		}
-		imageView.setImageResource(R.drawable.mom);
+		// imageView.setImageResource(R.drawable.mom);
+		ImageLoader imageLoader = new ImageLoader(mContext);
+
+		imageLoader.DisplayImage(serverPath + getItem(position).getParentId()
+				+ ".jpeg", R.drawable.ic_user_image, imageView);
+
 		if (position + 1 == parentList.size()) {
 			convertView = mLayoutInflater
 					.inflate(R.layout.image_add_item, null);
