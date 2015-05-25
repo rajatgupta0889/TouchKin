@@ -65,7 +65,7 @@
         android:background="@color/triangle"
         android:gravity="top"
         android:hint="Add a message"
-        android:textColorHint="@color/text_grey" >
+        android:textColorHint="@color/text_orange" >
     </EditText>
 
     <Button

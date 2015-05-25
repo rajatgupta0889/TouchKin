@@ -58,7 +58,7 @@ import com.touchKin.touckinapp.R;
 @SuppressLint("NewApi")
 public class DashBoardActivity extends ActionBarActivity implements
 		AnimationListener, OnItemClickListener, IMyViewHolderClicks {
-	private FragmentTabHost mTabHost;
+	public FragmentTabHost mTabHost;
 	String NAME = "Rajat Gupta ";
 	// String EMAIL = "akash.bangad@android4devs.com";
 	// int PROFILE = R.drawable.mom;
@@ -583,5 +583,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		i.putExtra("fromOtp", false);
 		startActivity(i);
 	}
-
+	public FragmentTabHost getTabHost(){
+		return mTabHost;
+	}
 }

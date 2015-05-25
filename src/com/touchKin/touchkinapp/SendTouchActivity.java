@@ -11,13 +11,14 @@ import com.commonsware.cwac.camera.CameraHost;
 import com.commonsware.cwac.camera.CameraUtils;
 import com.commonsware.cwac.camera.PictureTransaction;
 import com.commonsware.cwac.camera.SimpleCameraHost;
-
 import com.ryanharter.android.tooltips.ToolTip;
 import com.ryanharter.android.tooltips.ToolTipLayout;
 import com.ryanharter.android.tooltips.ToolTip.Builder;
 import com.commonsware.cwac.camera.CameraFragment;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,6 +45,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ import android.widget.ToggleButton;
 import com.ryanharter.android.tooltips.ToolTip;
 import com.ryanharter.android.tooltips.ToolTip.Builder;
 import com.ryanharter.android.tooltips.ToolTipLayout;
+import com.touchKin.touchkinapp.DemoCameraFragment.DemoCameraHost;
 import com.touchKin.touchkinapp.custom.AlbumStorageDirFactory;
 import com.touchKin.touchkinapp.custom.BaseAlbumDirFactory;
 import com.touchKin.touchkinapp.custom.CameraPreview;
@@ -70,6 +73,10 @@ public class SendTouchActivity extends Activity implements
 	private Button switchCamera, imageCapture, videoMode, imageMode,
 			menuButton;
 	private ToggleButton videoCapture;
+	public static final int MEDIA_TYPE_IMAGE = 1;
+	public static final int MEDIA_TYPE_VIDEO = 2;
+	private static int SPLASH_TIME_OUT = 2000;
+	ProgressBar progBar;
 	RelativeLayout menuLayout;
 	private Button backButton;
 	private int cameraid;
@@ -77,6 +84,27 @@ public class SendTouchActivity extends Activity implements
 	private boolean cameraFront = false;
 	private boolean singleShot = true;
 	private static final int CONTENT_REQUEST = 1337;
+	FrameLayout camerapreview;
+	DemoCameraHost democamerhost = null;
+	File path, imagepath;
+
+	public File getImagepath() {
+		return imagepath;
+	}
+
+	public void setImagepath(File imagepath) {
+		this.imagepath = imagepath;
+		Log.d("imagepath", " " + imagepath);
+	}
+
+	public File getPath() {
+		return path;
+	}
+
+	public void setPath(File path) {
+		this.path = path;
+		Log.d("path", " " + path);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,18 +118,16 @@ public class SendTouchActivity extends Activity implements
 		// cameraPreview = (FrameLayout) findViewById(R.id.container);
 		// mPreview = new CameraPreview(myContext, mCamera);
 		// cameraPreview.addView(mPreview);
+		camerapreview = (FrameLayout) findViewById(R.id.container);
+		progBar = (ProgressBar) findViewById(R.id.progressBar1);
 		videoCapture = (ToggleButton) findViewById(R.id.video_capture_button);
 		videoCapture.setOnClickListener(captrureListener);
 		switchCamera = (Button) findViewById(R.id.change_camera_button);
 		switchCamera.setOnClickListener(switchCameraListener);
-		imageCapture = (Button) findViewById(R.id.take_picture_button);
-		imageCapture.setOnClickListener(picturelistener);
-		videoMode = (Button) findViewById(R.id.video_mode_button);
-		videoMode.setOnClickListener(this);
-		imageMode = (Button) findViewById(R.id.image_mode_button);
-		imageMode.setOnClickListener(this);
-		menuButton = (Button) findViewById(R.id.menuButton);
-		menuButton.setOnClickListener(this);
+
+		imageMode = (Button) findViewById(R.id.take_picture_button);
+		imageMode.setOnClickListener(picturelistener);
+
 		menuLayout = (RelativeLayout) findViewById(R.id.menuLayout);
 		backButton = (Button) findViewById(R.id.back_button);
 		backButton.setOnClickListener(this);
@@ -166,6 +192,8 @@ public class SendTouchActivity extends Activity implements
 		public void onClick(View v) {
 			current.takeSimplePicture();
 
+			// start the new activity here.
+
 		}
 	};
 
@@ -180,6 +208,14 @@ public class SendTouchActivity extends Activity implements
 
 				} else {
 					current.stopRecording();
+					Log.d("getpath", " " + getPath());
+					Intent intent = new Intent(SendTouchActivity.this,
+							SendTouchPreview.class);
+					intent.putExtra("Media_Type", MEDIA_TYPE_VIDEO);
+					intent.putExtra(MediaStore.EXTRA_OUTPUT,
+							Uri.fromFile(getPath()));
+
+					startActivity(intent);
 
 				}
 
