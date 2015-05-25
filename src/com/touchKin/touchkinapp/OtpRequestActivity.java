@@ -7,13 +7,16 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +34,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.touchKin.touchkinapp.broadcastReciever.IncomingSMS;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
@@ -43,6 +47,8 @@ public class OtpRequestActivity extends ActionBarActivity {
 	private Toolbar toolbar;
 	TextView mTitle;
 	String phoneNumber, userID, userName = null;
+	IncomingSMS reciever;
+	String code;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,6 +113,43 @@ public class OtpRequestActivity extends ActionBarActivity {
 			}
 		});
 	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		reciever = new IncomingSMS();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		registerReceiver(reciever, filter);
+
+	}
+
+	protected void onResume() {
+		super.onResume();
+
+	};
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		new Handler().postDelayed(new Runnable() {
+			public void run() {
+				OtpRequestActivity.this.unregisterReceiver(reciever);
+			}
+		}, 0);
+		super.onStop();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Log.d("YourActivity", "onNewIntent is called!");
+
+		code = intent.getStringExtra("code");
+		Log.d("code", code);
+		otp.setText(code);
+		super.onNewIntent(intent);
+	} // End of onNewIntent(Intent intent)
 
 	private boolean checkValidation() {
 		boolean ret = true;
@@ -250,6 +293,15 @@ public class OtpRequestActivity extends ActionBarActivity {
 		}
 
 		return trimmedString;
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+		// unregisterReceiver(reciever);
+
 	}
 
 }

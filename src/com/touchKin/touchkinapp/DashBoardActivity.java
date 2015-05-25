@@ -11,10 +11,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -59,10 +63,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 		AnimationListener, OnItemClickListener, IMyViewHolderClicks {
 	public FragmentTabHost mTabHost;
 	String NAME = "Rajat Gupta ";
-	String EMAIL = "akash.bangad@android4devs.com";
-	int PROFILE = R.drawable.mom;
+	// String EMAIL = "akash.bangad@android4devs.com";
+	// int PROFILE = R.drawable.mom;
 	String TITLES[] = { "My Family", "My Accounts", "Upgrade", "Terms of Use",
-			"Contact Us" };
+			"Contact Us", "Sign out" };
 	private Toolbar toolbar; // Declaring the Toolbar Object
 
 	RecyclerView mRecyclerView; // Declaring RecyclerView
@@ -80,6 +84,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private ImageAdapter imageAdapter;
 	private Menu menu;
 	public static Boolean isCancel = true;
+	public String userId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
+		getParentList();
+
 		Configuration config = getResources().getConfiguration();
 		Toast.makeText(this,
 				config.screenHeightDp + " " + config.screenWidthDp,
@@ -167,9 +174,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 		MyAdapter.mListener = DashBoardActivity.this;
 		SharedPreferences pref = this.getSharedPreferences("loginPref", 0);
-
-		mAdapter = new MyAdapter(TITLES, pref.getString("name", null),
-				pref.getString("id", null), DashBoardActivity.this); // Creating
+		userId = pref.getString("id", null);
+		mAdapter = new MyAdapter(TITLES, pref.getString("name", null), userId,
+				DashBoardActivity.this); // Creating
 		mRecyclerView.setAdapter(mAdapter); // Setting the adapter to
 		// RecyclerView
 
@@ -253,7 +260,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// list.add(new ParentListModel("", false, "Uncle", "3", "3"));
 		// list.add(new ParentListModel("", false, "Aunt", "4", "4"));
 		// list.add(new ParentListModel("", false, "GM", "5", "5"));
-		getParentList();
 
 		listview.setOnItemClickListener(this);
 		animSlideUp.setAnimationListener(this);
@@ -470,6 +476,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 						} else {
 							setMenuTitle(null);
 						}
+						list.add(new ParentListModel(userId, false, "Me",
+								userId, ""));
 						list.add(new ParentListModel("", false, "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
@@ -515,6 +523,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 			listview.setAdapter(imageAdapter);
 			mTabHost.setCurrentTab(0);
 			selectedParent = item;
+			((Fragment1) getSupportFragmentManager().findFragmentByTag(
+					"DashBoard")).notifyFrag();
+
 		} else {
 			DialogFragment newFragment = new ContactDialogFragment();
 			newFragment.setCancelable(false);
@@ -549,6 +560,20 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		Toast.makeText(DashBoardActivity.this, "View " + caller,
 				Toast.LENGTH_SHORT).show();
+
+		if (caller == 6) {
+			SharedPreferences pref = getApplicationContext()
+					.getSharedPreferences("loginPref", 0);
+			Editor edit = pref.edit();
+			edit.putString("mobile", null);
+			edit.putString("otp", null);
+			edit.putString("id", null);
+			edit.apply();
+			Intent intent = new Intent(this, SignUpActivity.class);
+			startActivity(intent);
+			finish();
+
+		}
 
 	}
 

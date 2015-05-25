@@ -13,15 +13,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class TouchFragment extends Fragment implements FragmentInterface {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
+	ImageView parentImage;
+	ParentListModel parent;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -51,6 +57,8 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 				.findViewById(R.id.holoCircularProgressBar);
 		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
 		PieSlice slice = new PieSlice();
+		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
@@ -207,12 +215,18 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
+		super.onResume();
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-		super.onResume();
+
+		ImageLoader imageLoader = new ImageLoader(getActivity());
+		if (parent != null)
+			imageLoader.DisplayImage(serverPath + parent.getParentId()
+					+ ".jpeg", R.drawable.ic_user_image, parentImage);
+
 	}
 
 	@Override

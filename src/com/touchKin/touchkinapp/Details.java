@@ -681,7 +681,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 									e.printStackTrace();
 								}
 							}
-
+							hidepDialog();
 							Intent i = new Intent(Details.this,
 									CircleNotificationActivity.class);
 							Bundle bndlanimation = ActivityOptions

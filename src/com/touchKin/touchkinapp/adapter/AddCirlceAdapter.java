@@ -101,9 +101,9 @@ public class AddCirlceAdapter extends BaseAdapter {
 		ImageLoader imageLoader = new ImageLoader(context);
 		if (item.getUserImage() != null)
 			imageLoader.DisplayImage(serverPath + item.getUserImage()
-					+ ".jpeg", R.drawable.people, viewHolder.userImage);
+					+ ".jpeg", R.drawable.ic_user_image, viewHolder.userImage);
 		else {
-			viewHolder.userImage.setImageResource(R.drawable.people);
+			viewHolder.userImage.setImageResource(R.drawable.ic_user_image);
 		}
 		// viewHolder.userImage.setImageUrl("", AppController.getInstance()
 		// .getImageLoader());

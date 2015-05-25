@@ -225,7 +225,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 		int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(),
 				numberOfLevels);
-		wifiSignal.setText("Wifi " + ' ' + String.valueOf(level) + "%");
+		float val =  ((float)level/numberOfLevels) * 100f;
+		wifiSignal.setText("Wifi " + ' ' + String.valueOf((int)val) + "%");
 	}
 
 	/* —————————– */
