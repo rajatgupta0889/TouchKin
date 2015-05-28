@@ -8,8 +8,8 @@
 
     <com.touchKin.touchkinapp.custom.RoundedImageView
         android:id="@+id/parentImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:layout_margin="5dp"
         android:src="@drawable/activity_bg" />

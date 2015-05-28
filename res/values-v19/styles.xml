@@ -4,6 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
+        <item name="actionMenuTextColor">@color/text_grey</item>
+        <item name="android:actionMenuTextColor">@color/text_grey</item>
     </style>
 
     <style name="MyActionButtonStyle" parent="AppBaseTheme">

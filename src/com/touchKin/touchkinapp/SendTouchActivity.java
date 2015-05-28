@@ -231,15 +231,15 @@ public class SendTouchActivity extends Activity implements
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.menuButton:
-			openMenu();
-			break;
-		case R.id.video_mode_button:
-			startVideoMode();
-			break;
-		case R.id.image_mode_button:
-			startImageMode();
-			break;
+		// case R.id.menuButton:
+		// openMenu();
+		// break;
+		// case R.id.video_mode_button:
+		// startVideoMode();
+		// break;
+		// case R.id.image_mode_button:
+		// startImageMode();
+		// break;
 		case R.id.back_button:
 			openDialog();
 			break;

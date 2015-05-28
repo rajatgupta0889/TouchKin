@@ -8,13 +8,19 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -144,9 +150,48 @@ public class DashboardLocationFragment extends Fragment implements
 		PieSlice slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
-
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_left));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_left));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
@@ -158,35 +203,10 @@ public class DashboardLocationFragment extends Fragment implements
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-
-		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slices.add(slice);
 		mHoloCircularProgressBar.setSlices(slices);
 		buildGoogleApiClient();
@@ -266,9 +286,49 @@ public class DashboardLocationFragment extends Fragment implements
 		mProgressBarAnimator.start();
 	}
 
+	Builder dialog;
+
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
+		LocationManager lm = null;
+		boolean gps_enabled = false, network_enabled = false;
+		if (lm == null)
+			lm = (LocationManager) getActivity().getSystemService(
+					Context.LOCATION_SERVICE);
+		try {
+			gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		} catch (Exception ex) {
+		}
+		try {
+			network_enabled = lm
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		} catch (Exception ex) {
+		}
+
+		if (!gps_enabled && !network_enabled) {
+			dialog = new AlertDialog.Builder(getActivity());
+			dialog.setMessage("GPS is not enabled");
+			dialog.setPositiveButton(
+					getActivity().getResources().getString(
+							R.string.open_location_settings),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(
+								DialogInterface paramDialogInterface,
+								int paramInt) {
+							// TODO Auto-generated method stub
+							Intent myIntent = new Intent(
+									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							getActivity().startActivity(myIntent);
+							// get gps
+						}
+					});
+
+			dialog.show();
+
+		}
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -336,20 +396,22 @@ public class DashboardLocationFragment extends Fragment implements
 		// in rare cases when a location is not available.
 		mLastLocation = LocationServices.FusedLocationApi
 				.getLastLocation(mGoogleApiClient);
-		LatLng latLng = new LatLng(mLastLocation.getLatitude(),
-				mLastLocation.getLongitude());
+
 		if (mLastLocation != null) {
+			LatLng latLng = new LatLng(mLastLocation.getLatitude(),
+					mLastLocation.getLongitude());
+
 			View marker = ((LayoutInflater) getActivity().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE)).inflate(
 					R.layout.custom_marker, null);
 
 			if (googleMarker != null)
 				googleMarker.remove();
-			googleMarker = googleMap.addMarker(new MarkerOptions()
-					.position(latLng)
-					.title("randomlocation")
-					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
-							getActivity(), marker))));
+//			googleMarker = googleMap.addMarker(new MarkerOptions()
+//					.position(latLng)
+//					.title("randomlocation")
+//					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+//							getActivity(), marker))));
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 			googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 		} else {

@@ -11,17 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Switch Camera">-->
+        android:text="Switch Camera"-->
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_marginTop="70dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="20dp"
+        android:layout_alignParentLeft="true"
         android:orientation="vertical" />
 
     <RelativeLayout
@@ -36,24 +35,29 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginBottom="25dp"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/swap_camera" />
 
         <Button
-            android:id="@+id/image_mode_button"
+            android:id="@+id/take_picture_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:visibility="invisible"
             android:background="@drawable/camera" />
-
-        
 
         <ToggleButton
             android:id="@+id/video_capture_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="25dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="50dp"
             android:background="@drawable/record_toggle"
             android:textOff=""
             android:textOn="" />
@@ -73,8 +77,10 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="29dp"
+            android:visibility="invisible"
             android:background="@drawable/camera_back_button" />
+
     </com.ryanharter.android.tooltips.ToolTipLayout>
 
 </RelativeLayout>

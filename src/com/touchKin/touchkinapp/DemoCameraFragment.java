@@ -37,6 +37,8 @@ public class DemoCameraFragment extends CameraFragment {
 		f.setArguments(args);
 
 		return (f);
+	}public DemoCameraFragment() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -100,7 +102,7 @@ public class DemoCameraFragment extends CameraFragment {
 
 			return (getArguments().getBoolean(KEY_USE_FFC));
 		}
-
+		
 		@Override
 		protected File getVideoPath() {
 			// TODO Auto-generated method stub
@@ -126,6 +128,13 @@ public class DemoCameraFragment extends CameraFragment {
 					Uri.fromFile(getPhotoPath()));
 
 			startActivity(intent);
+		}
+		@Override
+		public Size getPreferredPreviewSizeForVideo(int displayOrientation,
+				int width, int height, Parameters parameters, Size deviceHint) {
+			// TODO Auto-generated method stub
+			return super.getPreferredPreviewSizeForVideo(displayOrientation, 100, 100,
+					parameters, deviceHint);
 		}
 
 		@Override

@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,8 +17,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -55,8 +54,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-@SuppressLint("NewApi")
-public class DashBoardActivity extends ActionBarActivity implements
+public class DashBoardActivity extends AppCompatActivity implements
 		AnimationListener, OnItemClickListener, IMyViewHolderClicks {
 	public FragmentTabHost mTabHost;
 	String NAME = "Rajat Gupta ";
@@ -454,7 +452,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setParentName(obj
 												.getString("nickname"));
 									} else {
-										item.setParentName("maa");
+										item.setParentName("Maa");
 									}
 									// item.setParentUserId(obj.getJSONObject(
 									// "user").getString("id"));

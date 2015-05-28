@@ -69,10 +69,6 @@ public class DashBoardActivityFragment extends Fragment implements
 		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
 		PieSlice slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
-
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
@@ -87,45 +83,52 @@ public class DashBoardActivityFragment extends Fragment implements
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-
-		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-
-		slices.add(slice);
-
-		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slices.add(slice);
-
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
-
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slices.add(slice);
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_left));
 		slices.add(slice);
-
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
+		slices.add(slice);
+		slice = new PieSlice();
+		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		mHoloCircularProgressBar.setSlices(slices);
-
 		battery = (TextView) view.findViewById(R.id.battery);
 		wifiSignal = (TextView) view.findViewById(R.id.wifi);
 		getActivity().registerReceiver(this.mBatInfoReceiver,
@@ -136,7 +139,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		signalStr = (TextView) view.findViewById(R.id.signal);
 		/* Update the listener, and start it */
 		MyListener = new MyPhoneStateListener();
-		Tel = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+		Tel = (TelephonyManager) getActivity().getSystemService(
+				Context.TELEPHONY_SERVICE);
 		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 		return view;
 	}
@@ -192,11 +196,10 @@ public class DashBoardActivityFragment extends Fragment implements
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-		 Tel.listen(MyListener,PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-		
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+
 	}
-	
-	
+
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
@@ -225,8 +228,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 		int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(),
 				numberOfLevels);
-		float val =  ((float)level/numberOfLevels) * 100f;
-		wifiSignal.setText("Wifi " + ' ' + String.valueOf((int)val) + "%");
+		float val = ((float) level / numberOfLevels) * 100f;
+		wifiSignal.setText("Wifi " + ' ' + String.valueOf((int) val) + "%");
 	}
 
 	/* —————————– */

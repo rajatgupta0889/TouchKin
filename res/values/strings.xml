@@ -14,6 +14,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="album_name">TouchKin</string>
+    <string name="open_location_settings">Start</string>
 
     <string-array name="frag_titles">
         <item>TouchKin</item>

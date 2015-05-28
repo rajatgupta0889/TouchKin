@@ -68,7 +68,6 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
-@SuppressWarnings("deprecation")
 public class Details extends ActionBarActivity implements OnClickListener {
 
 	final int PIC_CROP = 2;
@@ -354,6 +353,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			imgLoader.clearCache();
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		protected Void doInBackground(Void... unsued) {
 			try {

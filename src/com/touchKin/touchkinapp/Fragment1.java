@@ -26,9 +26,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 
 	private ViewPager viewPager;
 	public DashBoardAdapter adapter;
-	private CirclePageIndicator indicator;
+	// private CirclePageIndicator indicator;
 
-	ImageView sendTouch, getService;
+	TextView sendTouch, getService;
 	PageListener pageListener;
 
 	public Fragment1() {
@@ -54,13 +54,13 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		viewPager.setAdapter(adapter);
 		pageListener = new PageListener();
 		viewPager.setOnPageChangeListener(pageListener);
-		indicator.setViewPager(viewPager);
-		((CirclePageIndicator) indicator).setSnap(false);
-		indicator
-				.setFillColor(getResources().getColor(R.color.indicator_color));
-		indicator.setStrokeColor(getResources().getColor(
-				R.color.indicator_color));
-		indicator.setOnPageChangeListener(pageListener);
+		// indicator.setViewPager(viewPager);
+		// ((CirclePageIndicator) indicator).setSnap(false);
+		// indicator
+		// .setFillColor(getResources().getColor(R.color.indicator_color));
+		// indicator.setStrokeColor(getResources().getColor(
+		// R.color.indicator_color));
+		// indicator.setOnPageChangeListener(pageListener);
 
 		sendTouch.setOnClickListener(this);
 		return v;
@@ -70,10 +70,10 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		adapter = new DashBoardAdapter(getChildFragmentManager());
 		viewPager = (ViewPager) v.findViewById(R.id.pager);
 
-		indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
+		// indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
 
-		sendTouch = (ImageView) v.findViewById(R.id.sendTouch);
-		getService = (ImageView) v.findViewById(R.id.getService);
+		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
+		getService = (TextView) v.findViewById(R.id.getService);
 	}
 
 	@Override
@@ -141,7 +141,8 @@ public class Fragment1 extends Fragment implements OnClickListener {
 
 		}
 	}
-	public void notifyFrag(){
+
+	public void notifyFrag() {
 		adapter.notifyDataSetChanged();
 	}
 

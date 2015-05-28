@@ -10,7 +10,6 @@ import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-@SuppressLint("NewApi")
 public class NotificationReadingService extends NotificationListenerService {
 	Context context;
 	public static boolean isNotificationAccessEnabled = false;
@@ -23,6 +22,7 @@ public class NotificationReadingService extends NotificationListenerService {
 
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn) {
 
@@ -36,13 +36,13 @@ public class NotificationReadingService extends NotificationListenerService {
 		// Log.i("Ticker", ticker);
 		Log.i("Title", title);
 		Log.i("Text", text);
-
+		
 		Intent msgrcv = new Intent("Msg");
 		msgrcv.putExtra("package", pack);
 		// msgrcv.putExtra("ticker", ticker);
 		msgrcv.putExtra("title", title);
 		msgrcv.putExtra("text", text);
-
+		
 		LocalBroadcastManager.getInstance(context).sendBroadcast(msgrcv);
 
 	}

@@ -19,6 +19,8 @@
         <item name="windowActionBar">false</item>
         <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
         <item name="circularProgressBarStyle">@style/CircularProgressBar</item>
+        <item name="actionMenuTextColor">@color/text_grey</item>
+       <item name="android:actionMenuTextColor">@color/text_grey</item>
     </style>
 
     <style name="PopupAnimation">
