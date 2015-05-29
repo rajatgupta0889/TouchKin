@@ -18,6 +18,6 @@
     <color name="green">#31d95d</color>
     <color name="button_grey">#c7c7c7</color>
     <color name="button_orange">#ed824b</color>
-    
+    <color name="parent_image_outer_ring">#dcdede</color>
 
 </resources>

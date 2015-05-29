@@ -34,7 +34,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		FragmentInterface {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
-	TextView battery, wifiSignal, signalStr;
+	TextView battery;
 	TelephonyManager Tel;
 	MyPhoneStateListener MyListener;
 
@@ -130,13 +130,13 @@ public class DashBoardActivityFragment extends Fragment implements
 		slices.add(slice);
 		mHoloCircularProgressBar.setSlices(slices);
 		battery = (TextView) view.findViewById(R.id.battery);
-		wifiSignal = (TextView) view.findViewById(R.id.wifi);
+		// wifiSignal = (TextView) view.findViewById(R.id.wifi);
 		getActivity().registerReceiver(this.mBatInfoReceiver,
 				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 		WifiManager wifi = (WifiManager) getActivity().getSystemService(
 				Context.WIFI_SERVICE);
 		onReceive(wifi);
-		signalStr = (TextView) view.findViewById(R.id.signal);
+		// signalStr = (TextView) view.findViewById(R.id.signal);
 		/* Update the listener, and start it */
 		MyListener = new MyPhoneStateListener();
 		Tel = (TelephonyManager) getActivity().getSystemService(
@@ -208,6 +208,14 @@ public class DashBoardActivityFragment extends Fragment implements
 	}
 
 	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
+		getActivity().unregisterReceiver(this.mBatInfoReceiver);
+	}
+
+	@Override
 	public void fragmentBecameVisible() {
 		// TODO Auto-generated method stub
 		mHoloCircularProgressBar.setProgress(0.0f);
@@ -219,7 +227,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		@Override
 		public void onReceive(Context ctxt, Intent intent) {
 			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-			battery.setText("Battery " + ' ' + String.valueOf(level) + "%");
+			battery.setText(String.valueOf(level) + "%");
 		}
 	};
 
@@ -229,7 +237,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(),
 				numberOfLevels);
 		float val = ((float) level / numberOfLevels) * 100f;
-		wifiSignal.setText("Wifi " + ' ' + String.valueOf((int) val) + "%");
+		// wifiSignal.setText("Wifi " + ' ' + String.valueOf((int) val) + "%");
 	}
 
 	/* —————————– */
@@ -243,8 +251,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		@Override
 		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
 			super.onSignalStrengthsChanged(signalStrength);
-			signalStr.setText("Signal " + ' '
-					+ String.valueOf(signalStrength.getGsmSignalStrength()));
+			// signalStr.setText("Signal " + ' '
+			// + String.valueOf(signalStrength.getGsmSignalStrength()));
 		}
 
 	};/* End of private Class */

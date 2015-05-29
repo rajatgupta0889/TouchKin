@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:text="Mom is at Bangalore"
+            android:text="Mom is in "
             android:textColor="@color/text_orange"
             android:textSize="20sp" />
 
@@ -34,8 +34,8 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text_orange"
+            android:text="Bangalore"
+            android:textColor="@color/text_grey"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -53,13 +53,13 @@
             <fragment
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.MapFragment"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:layout_centerInParent="true" />
 
             <LinearLayout
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/shape_circle"
                 android:orientation="vertical" >
@@ -84,7 +84,7 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tap here to set Mom&apos;s"
+            android:text="Tap on map to set Mom&apos;s"
             android:textColor="@color/text_orange"
             android:textSize="20sp" />
 
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text="Location"
-            android:textColor="@color/text_orange"
+            android:textColor="@color/text_grey"
             android:textSize="20sp" />
     </LinearLayout>
 

@@ -48,6 +48,7 @@ public class ImageAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -61,7 +62,7 @@ public class ImageAdapter extends BaseAdapter {
 					.getDrawable(R.drawable.circular_image_selected));
 		} else {
 			convertView.setBackgroundDrawable(mContext.getResources()
-					.getDrawable(R.drawable.circular_image));
+					.getDrawable(R.drawable.parent_image));
 		}
 		// imageView.setImageResource(R.drawable.mom);
 		ImageLoader imageLoader = new ImageLoader(mContext);

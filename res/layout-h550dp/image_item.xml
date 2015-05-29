@@ -3,15 +3,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="@drawable/circular_image_selection"
+    android:background="@drawable/parent_image"
     android:orientation="vertical" >
 
     <com.touchKin.touchkinapp.custom.RoundedImageView
         android:id="@+id/parentImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="3dp"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
         android:src="@drawable/activity_bg" />
 
 </LinearLayout>

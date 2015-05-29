@@ -10,11 +10,13 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.ImageLoader;
@@ -22,7 +24,8 @@ import com.touchKin.touchkinapp.custom.PieSlice;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class TouchFragment extends Fragment implements FragmentInterface {
+public class TouchFragment extends Fragment implements FragmentInterface,
+		ButtonClickListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
@@ -58,7 +61,8 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
 		PieSlice slice = new PieSlice();
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
-		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		;
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		slice = new PieSlice();
@@ -192,12 +196,15 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-
-		ImageLoader imageLoader = new ImageLoader(getActivity());
-		if (parent != null)
-			imageLoader.DisplayImage(serverPath + parent.getParentId()
-					+ ".jpeg", R.drawable.ic_user_image, parentImage);
-
+		SetImage();
+		//
+		// ImageLoader imageLoader = new ImageLoader(getActivity());
+		// parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		// Log.d("Parent", "" + parent);
+		// if (parent != null) {
+		// imageLoader.DisplayImage(serverPath + parent.getParentId()
+		// + ".jpeg", R.drawable.ic_user_image, parentImage);
+		// }
 	}
 
 	@Override
@@ -208,4 +215,22 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 
 	}
 
+	private void SetImage() {
+		// TODO Auto-generated method stub
+		ImageLoader imageLoader = new ImageLoader(getActivity());
+
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		Log.d("Parent", "" + parent);
+		if (parent != null) {
+			imageLoader.DisplayImage(serverPath + parent.getParentId()
+					+ ".jpeg", R.drawable.ic_user_image, parentImage);
+		}
+	}
+
+	@Override
+	public void onButtonClickListner(int position, String value,
+			Boolean isAccept) {
+		// TODO Auto-generated method stub
+		SetImage();
+	}
 }

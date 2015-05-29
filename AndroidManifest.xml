@@ -34,6 +34,11 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+
+    <permission
+        android:name="com.touchKin.touchkinapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -45,8 +50,6 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
-    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
     <application
         android:name="com.touchKin.touchkinapp.model.AppController"
@@ -150,7 +153,19 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name="com.touchKin.touchkinapp.broadcastReciever.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.touchKin.touchkinapp" />
+            </intent-filter>
+        </receiver>
+
         <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
+        <service android:name="com.touchKin.touchkinapp.services.GcmIntentService" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -158,12 +173,6 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD5e17DLZV06yX244q5qZ8SwGh9FpAHHzw" />
-
-     <!--<receiver android:name="com.touchKin.touchkinapp.broadcastReciever.IncomingSMS" >
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>-->
     </application>
 
 </manifest>

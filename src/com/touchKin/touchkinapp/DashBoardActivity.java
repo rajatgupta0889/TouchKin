@@ -46,6 +46,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
@@ -80,6 +81,7 @@ public class DashBoardActivity extends AppCompatActivity implements
 	private Menu menu;
 	public static Boolean isCancel = true;
 	public String userId;
+	ButtonClickListener listener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -459,6 +461,7 @@ public class DashBoardActivity extends AppCompatActivity implements
 									if (i == 0) {
 										item.setIsSelected(true);
 										selectedParent = item;
+										// setMenuTitle(selectedParent);
 									} else {
 										item.setIsSelected(false);
 									}
@@ -468,18 +471,21 @@ public class DashBoardActivity extends AppCompatActivity implements
 									e.printStackTrace();
 								}
 							}
-						} else {
-							setMenuTitle(null);
 						}
+						// else {
+						// setMenuTitle(null);
+						// }
 						list.add(new ParentListModel(userId, false, "Me",
 								userId, ""));
 						list.add(new ParentListModel("", false, "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
-						if (list.size() > 1) {
+						if (selectedParent == null) {
 							selectedParent = list.get(0);
-							setMenuTitle(selectedParent);
 						}
+						if (listener != null)
+							listener.onButtonClickListner(0, null, false);
+						setMenuTitle(selectedParent);
 						listview.setAdapter(imageAdapter);
 
 					}
@@ -572,6 +578,10 @@ public class DashBoardActivity extends AppCompatActivity implements
 
 	}
 
+	public void setCustomButtonListner(ButtonClickListener listener) {
+		this.listener = listener;
+	}
+
 	@Override
 	public void onImageTouch() {
 		// TODO Auto-generated method stub
@@ -581,7 +591,8 @@ public class DashBoardActivity extends AppCompatActivity implements
 		i.putExtra("fromOtp", false);
 		startActivity(i);
 	}
-	public FragmentTabHost getTabHost(){
+
+	public FragmentTabHost getTabHost() {
 		return mTabHost;
 	}
 }
