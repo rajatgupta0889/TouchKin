@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.broadcastReciever.GcmBroadcastReceiver;
 import com.touchKin.touckinapp.R;
 
@@ -94,7 +95,7 @@ public class GcmIntentService extends IntentService {
 		String message = null;
 
 		message = msg;
-
+		intent = new Intent(this, DashBoardActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
