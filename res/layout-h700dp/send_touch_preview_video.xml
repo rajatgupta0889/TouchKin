@@ -81,8 +81,8 @@
 
     <ImageButton
         android:id="@+id/sendbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/parentListLayout"
         android:layout_below="@+id/view1"
@@ -112,9 +112,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/view2"
-        android:layout_alignTop="@+id/sendbutton"
-        android:gravity="right|center"
+        android:layout_marginBottom="169dp"
+        android:gravity="center"
         android:text="Send a message"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
