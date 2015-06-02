@@ -41,7 +41,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -75,7 +75,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
-public class Details extends AppCompatActivity implements OnClickListener {
+public class Details extends ActionBarActivity implements OnClickListener {
 
 	final int PIC_CROP = 2;
 	private Uri selectedImageUri;
