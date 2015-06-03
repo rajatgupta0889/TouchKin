@@ -198,38 +198,10 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 					thumbnail = ThumbnailUtils.createVideoThumbnail(
 							getPath(previewFilePath), Thumbnails.MINI_KIND);
-//					Matrix matrix = new Matrix();
-//					Bitmap bmThumbnail = Bitmap.createBitmap(thumbnail, 0, 0,
-//							thumbnail.getWidth(), thumbnail.getHeight(), matrix, true);
+
 					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
-							thumbnail, previewImage.getWidth(), previewImage.getHeight());
-//					Log.d("thumbnail", thumbnail + " " + extractthumbnail);
-//					MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//					try {
-//						Log.i("img_url", getPath(previewFilePath));
-//
-//						Uri uri = Uri.parse(getPath(previewFilePath));
-//						String scheme = uri.getScheme();
-//						Log.i("uri", "" + uri + " " + scheme);
-//						retriever.setDataSource(getPath(previewFilePath));
-//						bitmap = retriever.getFrameAtTime(20000000,
-//								MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-//						Log.d("bitmappp", " " + bitmap.getWidth() + " "
-//								+ bitmap.getHeight());
-//					} catch (IllegalArgumentException ex) {
-//						// Assume this is a corrupt video file
-//						Log.d("IllegalArgumentException", "" + ex.getMessage());
-//					} catch (RuntimeException ex) {
-//						// Assume this is a corrupt video file.
-//						Log.d("RuntimeException", "" + ex.getMessage());
-//					} finally {
-//						try {
-//							retriever.release();
-//						} catch (RuntimeException ex) {
-//							// Ignore failures while cleaning up.
-//							Log.d("RuntimeException", "" + ex.getMessage());
-//						}
-//					}
+							thumbnail, 300,
+							400);
 
 					previewImage.setImageBitmap(extractthumbnail);
 

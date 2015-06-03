@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_margin="5dp"
         android:src="@drawable/add_user_icon" />
 

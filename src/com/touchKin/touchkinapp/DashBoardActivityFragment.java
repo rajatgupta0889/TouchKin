@@ -37,6 +37,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	TextView battery;
 	TelephonyManager Tel;
 	MyPhoneStateListener MyListener;
+	
 
 	// newInstance constructor for creating fragment with arguments
 	public static DashBoardActivityFragment newInstance(int page, String title) {
@@ -130,6 +131,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		slices.add(slice);
 		mHoloCircularProgressBar.setSlices(slices);
 		battery = (TextView) view.findViewById(R.id.battery);
+		
 		// wifiSignal = (TextView) view.findViewById(R.id.wifi);
 		getActivity().registerReceiver(this.mBatInfoReceiver,
 				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
