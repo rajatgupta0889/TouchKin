@@ -42,15 +42,16 @@ public class TouchKinBookFragment extends Fragment {
 	private List<TouchKinBookModel> touchKinBook;
 	FlipViewAdapter flipViewAdapter;
 	FragmentTabHost host;
-	
 
-	String baseImageUrl = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/";
+	String baseImageUrl = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/kinbook-messages";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		// host.getTabWidget().setVisibility(View.GONE);
+
+		getKinMessages();
 	}
 
 	@Override
@@ -61,7 +62,12 @@ public class TouchKinBookFragment extends Fragment {
 		View v = inflater.inflate(R.layout.tochkin_book_fragment, null);
 
 		init(v);
-		setHasOptionsMenu(true);
+		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
+		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		mTitle.setText("Kinbook");
+		host = ((DashBoardActivity) getActivity()).getTabHost();
+		host.setVisibility(View.GONE);
+
 		// commentList.add(new TouchKinComments(
 		// "Mom, watch Mili and shaum playing with there freinds", "6:40",
 		// "Today", "Roy", ""));
@@ -88,20 +94,14 @@ public class TouchKinBookFragment extends Fragment {
 		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
 		// "12:00 Am", "today", "", "Rajat", "0", ""));
 		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-		// "12:00 Am", "today", "", "Rajat", "0", "" ));
+		// "12:00 Am", "today", "", "Prag", "0", ""));
 		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-		// "12:00 Am", "today", "", "Rajat", "0", "" ));
+		// "12:00 Am", "today", "", "Rajat", "0", ""));
 
-//		flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
-//		flipView.setAdapter(flipViewAdapter);
-//		flipView.invalidate();
-		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
-		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-		mTitle.setText("Kinbook");
-		host = ((DashBoardActivity) getActivity()).getTabHost();
-		host.setVisibility(View.GONE);
-		
-		getKinMessages();
+		// flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
+		// flipView.setAdapter(flipViewAdapter);
+		// flipView.invalidate();
+
 		return v;
 	}
 
@@ -130,12 +130,11 @@ public class TouchKinBookFragment extends Fragment {
 								// else
 								item.setVideoId(obj.getString("id"));
 								if (obj.getString("type").equals("video/mp4"))
-									item.setVideoUrl(obj.getString("id")
-											+ ".mp4");
-//								else
-//									item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
-//											+ obj.getString("id") + ".mov");
-								
+									item.setVideoUrl(obj.optString("sd_media"));
+								// else
+								// item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
+								// + obj.getString("id") + ".mov");
+								item.setVideoText(obj.optString("message"));
 								String time = obj.getString("createdAt");
 								String[] date = time.split("T");
 								String date1 = date[0];
@@ -151,7 +150,7 @@ public class TouchKinBookFragment extends Fragment {
 								// "owner").getString("first_name"));
 								// item.setVideoText("");
 								//
-								
+
 								item.setUserId(obj.getJSONObject("owner")
 										.getString("id"));
 								// item.setMessageId(obj.getString("id"));
