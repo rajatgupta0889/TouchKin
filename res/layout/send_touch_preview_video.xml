@@ -12,9 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/videoPreview"
-        android:layout_margin="5dp"
-        android:src="@drawable/mom"
-        android:visibility="visible" />
+        android:layout_margin="5dp" />
 
     <EditText
         android:id="@+id/phone_number_detail"

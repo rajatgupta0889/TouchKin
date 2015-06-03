@@ -1,6 +1,7 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ public class TouchKinBookFragment extends Fragment {
 	private List<TouchKinBookModel> touchKinBook;
 	FlipViewAdapter flipViewAdapter;
 	FragmentTabHost host;
+	
 
 	String baseImageUrl = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/";
 
@@ -74,32 +76,32 @@ public class TouchKinBookFragment extends Fragment {
 		// "Today", "fasdfasdfasdfasdfas", ""));
 		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
 		// "12:00 Am", "today", "", "Rajat", "0", "", "", commentList));
-		touchKinBook.add(new TouchKinBookModel(
-				"ksnn_compilation_master_the_internet_512kb.mp4",
-				"Hi this is the video related to server handling", "12:00 Am",
-		"today", "", "Rajat", "0", ""));
-//		touchKinBook
-//				.add(new TouchKinBookModel(
-//						"ksnn_compilation_master_the_internet.mp4",
-//						"Hi this is the video related to server handling in .mov format",
-//						"12:10 Am", "Monday", "", "Praf", "10", ""));
-//		touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-//				"12:00 Am", "today", "", "Rajat", "0", ""));
+		// touchKinBook.add(new TouchKinBookModel(
+		// "ksnn_compilation_master_the_internet_512kb.mp4",
+		// "Hi this is the video related to server handling", "12:00 Am",
+		// "today", "", "Rajat", "0", ""));
+		// touchKinBook
+		// .add(new TouchKinBookModel(
+		// "ksnn_compilation_master_the_internet.mp4",
+		// "Hi this is the video related to server handling in .mov format",
+		// "12:10 Am", "Monday", "", "Praf", "10", ""));
+		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
+		// "12:00 Am", "today", "", "Rajat", "0", ""));
 		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
 		// "12:00 Am", "today", "", "Rajat", "0", "" ));
 		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
 		// "12:00 Am", "today", "", "Rajat", "0", "" ));
 
-		flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
-		flipView.setAdapter(flipViewAdapter);
-		flipView.invalidate();
+//		flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
+//		flipView.setAdapter(flipViewAdapter);
+//		flipView.invalidate();
 		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
 		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		mTitle.setText("Kinbook");
 		host = ((DashBoardActivity) getActivity()).getTabHost();
 		host.setVisibility(View.GONE);
-
-//		getKinMessages();
+		
+		getKinMessages();
 		return v;
 	}
 
@@ -116,44 +118,53 @@ public class TouchKinBookFragment extends Fragment {
 						for (int i = 0; i < responseArray.length(); i++) {
 							try {
 								JSONObject obj = responseArray.getJSONObject(i);
-//								JSONArray comments = obj
-//										.getJSONArray("comments");
-								// commentList = getCommentList(comments);
+								// // JSONArray comments = obj
+								// // .getJSONArray("comments");
+								// // commentList = getCommentList(comments);
 								TouchKinBookModel item = new TouchKinBookModel();
-//								// item.setTouchKinComments(commentList);
-//								if (obj.getString("type").equals("image/jpeg"))
-//									item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
-//											+ obj.getString("id") + ".jpg");
+								// item.setTouchKinComments(commentList);
+								// if
+								// (obj.getString("type").equals("image/jpeg"))
+								// item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
+								// + obj.getString("id") + ".jpg");
+								// else
+								item.setVideoId(obj.getString("id"));
+								if (obj.getString("type").equals("video/mp4"))
+									item.setVideoUrl(obj.getString("id")
+											+ ".mp4");
 //								else
-									if (obj.getString("type").equals(
-										"video/mp4"))
-									item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
-											+ obj.getString("id") + ".mp4");
-								else
-									item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
-											+ obj.getString("id") + ".mov");
-//								String time = obj.getString("createdAt");
-//								 Date date = new Date(time);
-//								item.setVideoDay("");
-//								item.setVideoDate(":");
-								item.setVideoSenderName(obj.getJSONObject(
-										"owner").getString("first_name"));
-//								item.setVideoText("");
-//
-//								item.setUserId(obj.getJSONObject("owner")
-//										.getString("id"));
-//								item.setMessageId(obj.getString("id"));
-//
-//								touchKinBook.add(item);
+//									item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
+//											+ obj.getString("id") + ".mov");
+								
+								String time = obj.getString("createdAt");
+								String[] date = time.split("T");
+								String date1 = date[0];
+
+								String[] time1 = date[1].split(":");
+
+								String hours = time1[0] + ":" + time1[1];
+								Log.d("time", time + " " + date1 + " " + hours);
+								// Date date = new Date(time);
+								item.setVideoDay(date1);
+								item.setVideoDate(hours);
+								// item.setVideoSenderName(obj.getJSONObject(
+								// "owner").getString("first_name"));
+								// item.setVideoText("");
+								//
+								
+								item.setUserId(obj.getJSONObject("owner")
+										.getString("id"));
+								// item.setMessageId(obj.getString("id"));
+								//
+								touchKinBook.add(item);
 							} catch (JSONException e) {
-								// TODO Auto-generated catch block
+								// // TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 						flipViewAdapter = new FlipViewAdapter(touchKinBook,
 								getActivity());
 						flipView.setAdapter(flipViewAdapter);
-						flipView.invalidate();
 					}
 
 				}, new Response.ErrorListener() {

@@ -48,16 +48,8 @@ public class VideoFullScreen extends ActionBarActivity implements
 
 		videoscreen.setVideoURI(videopath);
 		videoscreen.setMediaController(new MediaController(this));
-		videoscreen.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				videoscreen.start();
-				return false;
-			}
-		});
-		
+
+		videoscreen.start();
 
 	}
 

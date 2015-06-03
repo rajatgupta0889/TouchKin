@@ -9,10 +9,9 @@
         android:id="@+id/relativeLayout1"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_alignRight="@+id/imageView1"
         android:layout_below="@+id/videoView"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="50dp"
         android:background="#ffffff"
         android:rotation="5" >
@@ -58,24 +57,13 @@
             android:textSize="13sp" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/profile_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="82dp"
-        android:background="@drawable/video_play"
-        android:rotation="-5" />
-
     <View
         android:id="@+id/view1"
         android:layout_width="320dp"
         android:layout_height="10dp"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@+id/relativeLayout1"
+        android:layout_alignRight="@+id/relativeLayout1"
         android:layout_below="@+id/relativeLayout1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:background="@drawable/shadow"
         android:rotation="5" />
 
@@ -83,7 +71,7 @@
         android:id="@+id/like_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/view1"
         android:layout_alignTop="@+id/view1"
         android:background="@drawable/ic_icon_send_touch" />
 
@@ -93,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:rotation="-5"
         android:src="@drawable/kinbookback" />
 
@@ -114,6 +102,16 @@
         android:layout_above="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
         android:background="@drawable/mom"
+        android:rotation="-5" />
+
+    <Button
+        android:id="@+id/profile_pic"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/play_btn"
         android:rotation="-5" />
 
 </RelativeLayout>
