@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.TouchKinBookModel;
 import com.touchKin.touckinapp.R;
@@ -35,7 +36,7 @@ public class FlipViewAdapter extends BaseAdapter {
 	TextView videoText, videoTime, videoDay, videoSenderName, videoViewCount;
 	RoundedImageView userImage, videoSenderImage;
 	// EditText commentEditText;
-	Button profilepic = null, backbutton, likebutton;
+	Button profilepic, backbutton, likebutton;
 	VideoView videoView = null;
 	ImageView imageView;
 	Bitmap thumbnail;
@@ -220,6 +221,12 @@ public class FlipViewAdapter extends BaseAdapter {
 		videoText.setText(touchKinBook.getVideoText());
 		videoTime.setText(touchKinBook.getVideoDate());
 		videoDay.setText(touchKinBook.getVideoDay());
+		ImageLoader imageloader = new ImageLoader(context);
+		imageloader.DisplayImage(
+				"https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
+						+ touchKinBook.getVideoId() + "-thumb-00001.png",
+				R.drawable.ic_user_image, imageView);
+
 		// viewHolder.userImage
 		// videoSenderName.setText(touchKinBook.getVideoSenderName());
 		// videoViewCount.setText(touchKinBook.getVideoViewCount());
