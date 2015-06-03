@@ -524,6 +524,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			setMenuTitle(item);
 			listview.setAdapter(imageAdapter);
 			mTabHost.setCurrentTab(0);
+			mTabHost.setVisibility(View.VISIBLE);
 			selectedParent = item;
 			((Fragment1) getSupportFragmentManager().findFragmentByTag(
 					"DashBoard")).notifyFrag();

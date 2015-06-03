@@ -1,11 +1,22 @@
 package com.touchKin.touchkinapp.model;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class TouchKinBookModel {
 
 	private String videoUrl, videoText, videoDate, videoDay, videoSenderImage,
-			videoSenderName, videoViewCount, userImage, UserId, messageId;
+			videoSenderName, videoViewCount, userImage, UserId, messageId,
+			videoId;
+
+	public String getVideoId() {
+		return videoId;
+	}
+
+	public void setVideoId(String videoId) {
+		this.videoId = videoId;
+	}
+
 	Uri videouri;
 
 	public Uri getVideouri() {
@@ -13,7 +24,9 @@ public class TouchKinBookModel {
 	}
 
 	public void setVideouri(String videourl) {
-		this.videouri = Uri.parse( "https://archive.org/download/ksnn_compilation_master_the_internet/"+videourl);
+		this.videouri = Uri
+				.parse("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
+						+ videourl);
 	}
 
 	public String getMessageId() {
@@ -62,8 +75,8 @@ public class TouchKinBookModel {
 	}
 
 	public void setVideoUrl(String videoUrl) {
-		
-		this.videoUrl =videoUrl;
+
+		this.videoUrl = videoUrl;
 		setVideouri(videoUrl);
 	}
 
@@ -115,20 +128,21 @@ public class TouchKinBookModel {
 		this.videoViewCount = videoViewCount;
 	}
 
-//	public String getUserImage() {
-//		return userImage;
-//	}
-//
-//	public void setUserImage(String uderImage) {
-//		this.userImage = uderImage;
-//	}
+	// public String getUserImage() {
+	// return userImage;
+	// }
+	//
+	// public void setUserImage(String uderImage) {
+	// this.userImage = uderImage;
+	// }
 
-//	public List<TouchKinComments> getTouchKinComments() {
-//		return touchKinComments;
-//	}
-//
-//	public void setTouchKinComments(List<TouchKinComments> touchKinComments) {
-//		this.touchKinComments = touchKinComments;
-//	}
+	// public List<TouchKinComments> getTouchKinComments() {
+	// return touchKinComments;
+	// }
+	//
+	// public void setTouchKinComments(List<TouchKinComments> touchKinComments)
+	// {
+	// this.touchKinComments = touchKinComments;
+	// }
 
 }

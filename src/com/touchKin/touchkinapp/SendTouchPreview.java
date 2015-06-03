@@ -191,65 +191,47 @@ public class SendTouchPreview extends ActionBarActivity implements
 					bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
 					previewImage.setImageBitmap(bm);
 				} else {
-					previewImage.setVisibility(View.INVISIBLE);
-					videoPreview.setVisibility(View.VISIBLE);
-
-					// videoPreview.setMediaController(new
-					// MediaController(this));
-					// int width = videoPreview.getMeasuredWidth();
-					// int height = videoPreview.getMeasuredHeight();
-					// LayoutParams params = new
-					// RelativeLayout.LayoutParams(width, height);
-					// videoPreview.setLayoutParams(params);
-					// int initialHeight = params.height;
-					// int initialWidth = params.width;
-					// videoPreview.setDimensions(initialWidth, initialHeight);
+					previewImage.setVisibility(View.VISIBLE);
+					videoPreview.setVisibility(View.INVISIBLE);
 
 					previewFilePath = (Uri) bundle.get(MediaStore.EXTRA_OUTPUT);
-					// MediaMetadataRetriever mMMR = new
-					// MediaMetadataRetriever();
-					// mMMR.setDataSource(getPath(previewFilePath));
-					// // api time unit is microseconds
-					// mMMR.getFrameAtTime(1 * 1000,
-					// MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-					// thumbnail = ThumbnailUtils.createVideoThumbnail(
-					// getPath(previewFilePath), Thumbnails.MINI_KIND);
-					// previewImage.setImageBitmap(thumbnail);
-					// Log.d("thumbnail", " " + thumbnail + " "
-					// + MediaStore.EXTRA_OUTPUT + " "
-					// + getPath(previewFilePath));
-					// videoPreview.setVideoURI(previewFilePath);
-					//
-					// // videoPreview.start();
-					// videoPreview.requestFocus();
-					MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-					try {
-						Log.i("img_url", getPath(previewFilePath));
 
-						Uri uri = Uri.parse(getPath(previewFilePath));
-						String scheme = uri.getScheme();
-						Log.i("uri", "" + uri + " " + scheme);
-						retriever.setDataSource(SendTouchPreview.this, uri);
-						bitmap = retriever.getFrameAtTime(1000,
-								MediaMetadataRetriever.OPTION_CLOSEST);
-						Log.d("bitmappp", " " + bitmap.getWidth() + " "
-								+ bitmap.getHeight());
-					} catch (IllegalArgumentException ex) {
-						// Assume this is a corrupt video file
-						Log.d("IllegalArgumentException", "" + ex.getMessage());
-					} catch (RuntimeException ex) {
-						// Assume this is a corrupt video file.
-						Log.d("RuntimeException", "" + ex.getMessage());
-					} finally {
-						try {
-							retriever.release();
-						} catch (RuntimeException ex) {
-							// Ignore failures while cleaning up.
-							Log.d("RuntimeException", "" + ex.getMessage());
-						}
-					}
+					thumbnail = ThumbnailUtils.createVideoThumbnail(
+							getPath(previewFilePath), Thumbnails.MINI_KIND);
+//					Matrix matrix = new Matrix();
+//					Bitmap bmThumbnail = Bitmap.createBitmap(thumbnail, 0, 0,
+//							thumbnail.getWidth(), thumbnail.getHeight(), matrix, true);
+					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
+							thumbnail, previewImage.getWidth(), previewImage.getHeight());
+//					Log.d("thumbnail", thumbnail + " " + extractthumbnail);
+//					MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//					try {
+//						Log.i("img_url", getPath(previewFilePath));
+//
+//						Uri uri = Uri.parse(getPath(previewFilePath));
+//						String scheme = uri.getScheme();
+//						Log.i("uri", "" + uri + " " + scheme);
+//						retriever.setDataSource(getPath(previewFilePath));
+//						bitmap = retriever.getFrameAtTime(20000000,
+//								MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+//						Log.d("bitmappp", " " + bitmap.getWidth() + " "
+//								+ bitmap.getHeight());
+//					} catch (IllegalArgumentException ex) {
+//						// Assume this is a corrupt video file
+//						Log.d("IllegalArgumentException", "" + ex.getMessage());
+//					} catch (RuntimeException ex) {
+//						// Assume this is a corrupt video file.
+//						Log.d("RuntimeException", "" + ex.getMessage());
+//					} finally {
+//						try {
+//							retriever.release();
+//						} catch (RuntimeException ex) {
+//							// Ignore failures while cleaning up.
+//							Log.d("RuntimeException", "" + ex.getMessage());
+//						}
+//					}
 
-					previewImage.setImageBitmap(bitmap);
+					previewImage.setImageBitmap(extractthumbnail);
 
 				}
 
@@ -614,15 +596,16 @@ public class SendTouchPreview extends ActionBarActivity implements
 			long id) {
 		// TODO Auto-generated method stub
 		ParentListModel item = list.get(position);
-		Toast.makeText(getApplicationContext(), "touched " + position,
-				Toast.LENGTH_LONG).show();
+		// Toast.makeText(getApplicationContext(), "touched " + position,
+		// Toast.LENGTH_LONG).show();
 
 		if (item.getIsSelected()) {
 			item.setIsSelected(false);
 		} else {
 			item.setIsSelected(true);
 		}
-		listview.setAdapter(imageAdapter);
+		// listview.setAdapter(imageAdapter);
+		imageAdapter.notifyDataSetChanged();
 	}
 
 	// @Override
