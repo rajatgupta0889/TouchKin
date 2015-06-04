@@ -198,6 +198,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 					thumbnail = ThumbnailUtils.createVideoThumbnail(
 							getPath(previewFilePath), Thumbnails.MINI_KIND);
+
 					// Matrix matrix = new Matrix();
 					// Bitmap bmThumbnail = Bitmap.createBitmap(thumbnail, 0, 0,
 					// thumbnail.getWidth(), thumbnail.getHeight(), matrix,
@@ -232,6 +233,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// Log.d("RuntimeException", "" + ex.getMessage());
 					// }
 					// }
+
 
 					previewImage.setImageBitmap(extractthumbnail);
 

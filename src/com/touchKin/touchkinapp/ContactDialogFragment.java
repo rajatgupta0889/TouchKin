@@ -97,7 +97,7 @@ public class ContactDialogFragment extends DialogFragment implements
 
 				if (wantToCloseDialog)
 					dismiss();
-				String phoneNum = phoneBox.getText().toString();
+				String phoneNum = phoneBox.getText().toString().trim();
 				if (Validation.hasText(nickname)
 						&& Validation.hasText(phoneBox)
 						&& Validation.hasText(nameBox)) {
@@ -210,11 +210,11 @@ public class ContactDialogFragment extends DialogFragment implements
 					// if(contact.get(1).matches("[0-9]+") &&
 					// contact.get(1).length() > 7){
 					if (contact.get(1).startsWith("0")) {
-						phoneBox.setText("+91" + contact.get(1).substring(1));
+						phoneBox.setText("+91" + contact.get(1).substring(1).replaceAll(" ", ""));
 					} else if (contact.get(1).startsWith("+91")) {
-						phoneBox.setText(contact.get(1));
+						phoneBox.setText(contact.get(1).replaceAll(" ", ""));
 					} else {
-						phoneBox.setText("+91" + contact.get(1));
+						phoneBox.setText("+91" + contact.get(1).replaceAll(" ", ""));
 					}
 
 					// }
@@ -272,7 +272,7 @@ public class ContactDialogFragment extends DialogFragment implements
 						ContactsContract.CommonDataKinds.Phone.CONTACT_ID
 								+ " = " + id, null, null);
 				phones.moveToFirst();
-				cNumber = phones.getString(phones.getColumnIndex("data1"));
+				cNumber = phones.getString(phones.getColumnIndex("data1")).trim();
 				System.out.println("number is:" + cNumber);
 				Log.d("Number", cNumber);
 				// args.putString("number", cNumber);

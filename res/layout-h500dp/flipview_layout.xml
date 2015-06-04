@@ -69,10 +69,11 @@
 
     <Button
         android:id="@+id/like_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignRight="@+id/view1"
         android:layout_alignTop="@+id/view1"
+        android:layout_marginTop="-10dp"
         android:background="@drawable/ic_icon_send_touch" />
 
     <ImageView
@@ -101,7 +102,6 @@
         android:layout_height="210dp"
         android:layout_above="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
-        
         android:rotation="-5" />
 
     <Button

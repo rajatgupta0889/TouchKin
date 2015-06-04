@@ -129,14 +129,7 @@ public class DemoCameraFragment extends CameraFragment {
 
 			startActivity(intent);
 		}
-		@Override
-		public Size getPreferredPreviewSizeForVideo(int displayOrientation,
-				int width, int height, Parameters parameters, Size deviceHint) {
-			// TODO Auto-generated method stub
-			return super.getPreferredPreviewSizeForVideo(displayOrientation, 100, 100,
-					parameters, deviceHint);
-		}
-
+		
 		@Override
 		public void onCameraFail(CameraHost.FailureReason reason) {
 			super.onCameraFail(reason);

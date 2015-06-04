@@ -17,7 +17,7 @@
     <EditText
         android:id="@+id/phone_number_detail"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
@@ -27,7 +27,7 @@
         android:hint="Type your message here"
         android:imeOptions="actionSend"
         android:inputType="text"
-        android:maxHeight="100dp"
+        android:maxHeight="120dp"
         android:padding="10dp"
         android:scrollbars="horizontal"
         android:textColor="@color/black"
@@ -36,7 +36,7 @@
     <RelativeLayout
         android:id="@+id/parentListLayout"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:layout_alignLeft="@+id/phone_number_detail"
         android:layout_alignRight="@+id/phone_number_detail"
         android:layout_below="@+id/phone_number_detail" >
@@ -103,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/send_message" />
+
     </LinearLayout>
 
     <Button

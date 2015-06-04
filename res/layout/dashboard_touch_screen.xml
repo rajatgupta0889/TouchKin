@@ -40,24 +40,48 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/circular_image" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/prev_dashboard_arrow" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/next_dashboard_arrow" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/circular_image" >
+
+            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+                android:id="@+id/holoCircularProgressBar"
+                android:layout_width="175dp"
+                android:layout_height="175dp"
+                android:layout_centerInParent="true"
+                app:stroke_width="10dp" />
+        </RelativeLayout>
 
         <com.touchKin.touchkinapp.custom.RoundedImageView
             android:id="@+id/profile_pic"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:src="@drawable/mom" />
-
-        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
-            android:id="@+id/holoCircularProgressBar"
-            android:layout_width="175dp"
-            android:layout_height="175dp"
-            android:layout_centerInParent="true"
-            app:stroke_width="10dp" />
     </RelativeLayout>
 
     <LinearLayout
