@@ -67,7 +67,7 @@ public class RoundedImageView extends ImageView {
 		Bitmap output = Bitmap.createBitmap(radius, radius, Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 
-		//final int color = 0xffa19774;
+		// final int color = 0xffa19774;
 		final Paint paint = new Paint();
 		final Rect rect = new Rect(0, 0, radius, radius);
 

@@ -215,6 +215,8 @@ public class SendTouchActivity extends Activity implements
 					intent.putExtra("Media_Type", MEDIA_TYPE_VIDEO);
 					intent.putExtra(MediaStore.EXTRA_OUTPUT,
 							Uri.fromFile(getPath()));
+					intent.putExtra("userId", getIntent().getExtras()
+							.getString("userId"));
 					startActivity(intent);
 					finish();
 				}

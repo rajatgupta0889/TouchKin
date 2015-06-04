@@ -19,7 +19,6 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -57,7 +56,8 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class DashBoardActivity extends ActionBarActivity implements
-		AnimationListener, OnItemClickListener, IMyViewHolderClicks {
+		AnimationListener, OnItemClickListener, IMyViewHolderClicks,
+		ButtonClickListener {
 	public FragmentTabHost mTabHost;
 	String NAME = "Rajat Gupta ";
 	// String EMAIL = "akash.bangad@android4devs.com";
@@ -97,10 +97,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 		InitView();
 		getParentList();
 
-		Configuration config = getResources().getConfiguration();
-		Toast.makeText(this,
-				config.screenHeightDp + " " + config.screenWidthDp,
-				Toast.LENGTH_LONG).show();
+		// Configuration config = getResources().getConfiguration();
+		// Toast.makeText(this,
+		// config.screenHeightDp + " " + config.screenWidthDp,
+		// Toast.LENGTH_LONG).show();
 
 		setSupportActionBar(toolbar);
 		// SharedPreferences pref =
@@ -533,11 +533,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			DialogFragment newFragment = new ContactDialogFragment();
 			newFragment.setCancelable(false);
 			newFragment.show(getSupportFragmentManager(), "TAG");
-			if (!isCancel) {
-				getParentList();
-				Toast.makeText(DashBoardActivity.this, "Request is sent",
-						Toast.LENGTH_SHORT).show();
-			}
+			((ContactDialogFragment) newFragment).SetButtonListener(this);
 		}
 		toggleVissibility();
 
@@ -596,5 +592,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 	public FragmentTabHost getTabHost() {
 		return mTabHost;
+	}
+
+	@Override
+	public void onButtonClickListner(int position, String value,
+			Boolean isAccept) {
+		// TODO Auto-generated method stub
+		getParentList();
 	}
 }
