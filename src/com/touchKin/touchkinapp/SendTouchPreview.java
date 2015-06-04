@@ -92,6 +92,7 @@ public class SendTouchPreview extends AppCompatActivity implements
 	Bitmap thumbnail, bitmap;
 	SendTouchActivity sendtouch;
 	ProgressDialog pDialog;
+	String userId;
 
 	// private ParentListModel selectedParent;
 
@@ -109,6 +110,7 @@ public class SendTouchPreview extends AppCompatActivity implements
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Sending the touch...");
 		pDialog.setCancelable(false);
+		userId = intent.getExtras().getString("userId");
 		// adding toolbar
 		// Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		// TextView mTitle = (TextView)
@@ -414,7 +416,11 @@ public class SendTouchPreview extends AppCompatActivity implements
 									} else {
 										item.setParentName("maa");
 									}
-									item.setIsSelected(false);
+									if (item.getParentId().equals(userId)) {
+										item.setIsSelected(true);
+									} else {
+										item.setIsSelected(false);
+									}
 									// //
 									// item.setParentUserId(obj.getJSONObject(
 									// // "user").getString("id"));

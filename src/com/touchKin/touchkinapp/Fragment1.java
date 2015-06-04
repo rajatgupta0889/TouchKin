@@ -1,7 +1,6 @@
 package com.touchKin.touchkinapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,20 +13,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
+import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
-import com.viewpagerindicator.CirclePageIndicator;
 
 public class Fragment1 extends Fragment implements OnClickListener {
 
 	private ViewPager viewPager;
 	public DashBoardAdapter adapter;
 	// private CirclePageIndicator indicator;
-
 	TextView sendTouch, getService;
 	PageListener pageListener;
 
@@ -114,6 +111,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	private void sendTouch() {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(getActivity(), SendTouchActivity.class);
+		ParentListModel model = ((DashBoardActivity) getActivity())
+				.getSelectedParent();
+		intent.putExtra("userId", model.getParentId());
 		startActivity(intent);
 	}
 

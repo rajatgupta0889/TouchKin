@@ -6,13 +6,14 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.GpsStatus.Listener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -31,6 +32,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
@@ -41,6 +43,8 @@ public class ContactDialogFragment extends DialogFragment implements
 	static final int PICK_CONTACT_KIN = 2;
 	Button addContactButton;
 	EditText nameBox, phoneBox, nickname;
+	ButtonClickListener listener;
+	ProgressDialog proDialog;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -51,9 +55,12 @@ public class ContactDialogFragment extends DialogFragment implements
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog
 		// layout
-		Bundle mArgs = getArguments();
+		// Bundle mArgs = getArguments();
 
 		View view = inflater.inflate(R.layout.contact_info, null);
+		proDialog = new ProgressDialog(getActivity());
+		proDialog.setMessage("Sending your request");
+		proDialog.setCancelable(false);
 		Button addContactButton = (Button) view.findViewById(R.id.addButton);
 		nameBox = (EditText) view.findViewById(R.id.name);
 		phoneBox = (EditText) view.findViewById(R.id.number);
@@ -61,8 +68,8 @@ public class ContactDialogFragment extends DialogFragment implements
 		// nameBox.setText(mArgs.getString("name"));
 		// phoneBox.setText(mArgs.getString("number"));
 		View headerview = inflater.inflate(R.layout.header_view, null);
-		final TextView title = (TextView) headerview
-				.findViewById(R.id.parentNameTV);
+		// final TextView title = (TextView) headerview
+		// .findViewById(R.id.parentNameTV);
 		// title.setText(mArgs.getString("title"));
 		builder.setCancelable(false);
 		builder.setView(view)
@@ -110,8 +117,6 @@ public class ContactDialogFragment extends DialogFragment implements
 					}
 					addCareReciever(nameBox.getText().toString(),
 							phoneNum.trim(), nickname.getText().toString());
-					ContactDialogFragment.this.getDialog().cancel();
-					DashBoardActivity.isCancel = false;
 				}
 				// else dialog stays open. Make sure you have an obvious
 				// way to close the dialog especially if you set
@@ -135,6 +140,7 @@ public class ContactDialogFragment extends DialogFragment implements
 
 		JSONObject params = new JSONObject();
 		try {
+			showpDialog();
 			params.put("mobile", phone);
 			params.put("nickname", nickname);
 		} catch (JSONException e1) {
@@ -145,11 +151,15 @@ public class ContactDialogFragment extends DialogFragment implements
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
 				"http://54.69.183.186:1340/user/add-care-receiver", params,
 				new Response.Listener<JSONObject>() {
-					@SuppressLint("NewApi")
 					@Override
 					public void onResponse(JSONObject response) {
 						Log.d("care receiver added response",
 								"care reveiver added");
+						hidepDialog();
+						Toast.makeText(getActivity(), "Request is sent",
+								Toast.LENGTH_SHORT).show();
+						listener.onButtonClickListner(0, "", true);
+						ContactDialogFragment.this.getDialog().cancel();
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -210,11 +220,14 @@ public class ContactDialogFragment extends DialogFragment implements
 					// if(contact.get(1).matches("[0-9]+") &&
 					// contact.get(1).length() > 7){
 					if (contact.get(1).startsWith("0")) {
-						phoneBox.setText("+91" + contact.get(1).substring(1).replaceAll(" ", ""));
+						phoneBox.setText("+91"
+								+ contact.get(1).substring(1)
+										.replaceAll(" ", ""));
 					} else if (contact.get(1).startsWith("+91")) {
 						phoneBox.setText(contact.get(1).replaceAll(" ", ""));
 					} else {
-						phoneBox.setText("+91" + contact.get(1).replaceAll(" ", ""));
+						phoneBox.setText("+91"
+								+ contact.get(1).replaceAll(" ", ""));
 					}
 
 					// }
@@ -254,6 +267,7 @@ public class ContactDialogFragment extends DialogFragment implements
 		String cNumber = null;
 		List<String> contact = new ArrayList<String>();
 		// Uri contactData = data.getData();
+		@SuppressWarnings("deprecation")
 		Cursor c = getActivity().managedQuery(contactData, null, null, null,
 				null);
 		if (c.moveToFirst()) {
@@ -272,7 +286,8 @@ public class ContactDialogFragment extends DialogFragment implements
 						ContactsContract.CommonDataKinds.Phone.CONTACT_ID
 								+ " = " + id, null, null);
 				phones.moveToFirst();
-				cNumber = phones.getString(phones.getColumnIndex("data1")).trim();
+				cNumber = phones.getString(phones.getColumnIndex("data1"))
+						.trim();
 				System.out.println("number is:" + cNumber);
 				Log.d("Number", cNumber);
 				// args.putString("number", cNumber);
@@ -302,4 +317,20 @@ public class ContactDialogFragment extends DialogFragment implements
 		}
 		return contact;
 	}
+
+	public void SetButtonListener(ButtonClickListener listener) {
+		// TODO Auto-generated method stub
+		this.listener = listener;
+	}
+
+	private void showpDialog() {
+		if (!proDialog.isShowing())
+			proDialog.show();
+	}
+
+	private void hidepDialog() {
+		if (proDialog.isShowing())
+			proDialog.dismiss();
+	}
+
 }
