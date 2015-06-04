@@ -13,6 +13,5 @@
     <!-- Default text size for action bar subtitle. -->
     <dimen name="abc_text_size_subtitle_material_toolbar">12dp</dimen>
     <dimen name="default_margin">12dip</dimen>
-    <dimen name="sendtouch_layoutmargin">5dp</dimen>
 
 </resources>

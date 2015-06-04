@@ -40,45 +40,70 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/circular_image" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/prev_dashboard_arrow" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/next_dashboard_arrow" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:rotation="45" >
-
-            <VideoView
-                android:id="@+id/videoView1"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
-                android:layout_centerInParent="true" />
-
-            <LinearLayout
-                android:layout_width="220dp"
-                android:layout_height="220dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/shape_circle"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </RelativeLayout>
-
-        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
-            android:id="@+id/holoCircularProgressBar"
-            android:layout_width="270dp"
-            android:layout_height="270dp"
-            android:layout_centerInParent="true"
-            app:stroke_width="10dp" />
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/play_btn" />
+            android:background="@drawable/circular_image" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:rotation="45" >
+
+                <VideoView
+                    android:id="@+id/videoView1"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_centerInParent="true" />
+
+                <LinearLayout
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/shape_circle"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </RelativeLayout>
+
+            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+                android:id="@+id/holoCircularProgressBar"
+                android:layout_width="270dp"
+                android:layout_height="270dp"
+                android:layout_centerInParent="true"
+                app:stroke_width="10dp" />
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/play_btn" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout

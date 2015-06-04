@@ -38,7 +38,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -71,7 +72,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class SendTouchPreview extends AppCompatActivity implements
+public class SendTouchPreview extends ActionBarActivity implements
 		OnClickListener, OnItemClickListener, IMyViewHolderClicks {
 
 	ImageView previewImage;
