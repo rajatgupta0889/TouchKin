@@ -40,61 +40,84 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/circular_image" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-        <ImageView
-            android:id="@+id/profile_pic"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/centre" />
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/prev_dashboard_arrow" />
 
-        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
-            android:id="@+id/holoCircularProgressBar"
-            android:layout_width="210dp"
-            android:layout_height="210dp"
-            android:layout_centerInParent="true"
-            app:stroke_width="10dp" />
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/next_dashboard_arrow" />
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="70dp"
-            android:src="@drawable/wifi" />
-
-        <ImageView
-            android:id="@+id/ImageView01"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignRight="@+id/profile_pic"
-            android:layout_alignTop="@+id/imageView1"
-            android:src="@drawable/network" />
-
-        <ImageView
-            android:id="@+id/ImageView02"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/battery"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/battery" />
-
-        <TextView
-            android:id="@+id/battery"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView1"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="60%"
-            android:textColor="@color/white" />
+            android:background="@drawable/circular_image" >
+
+            <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/centre" />
+
+            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+                android:id="@+id/holoCircularProgressBar"
+                android:layout_width="175dp"
+                android:layout_height="175dp"
+                android:layout_centerInParent="true"
+                app:stroke_width="10dp" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="70dp"
+                android:src="@drawable/wifi" />
+
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignRight="@+id/profile_pic"
+                android:layout_alignTop="@+id/imageView1"
+                android:src="@drawable/network" />
+
+            <ImageView
+                android:id="@+id/ImageView02"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/battery"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/battery" />
+
+            <TextView
+                android:id="@+id/battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="60%"
+                android:textColor="@color/white" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
