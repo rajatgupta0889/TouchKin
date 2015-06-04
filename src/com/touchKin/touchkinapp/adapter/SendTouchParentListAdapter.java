@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
@@ -17,7 +18,7 @@ import com.touchKin.touckinapp.R;
 public class SendTouchParentListAdapter extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mLayoutInflater;
-
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	List<ParentListModel> parentList;
 
 	// int[] mResources = { R.drawable.mom, R.drawable.activity_bg };
@@ -62,31 +63,36 @@ public class SendTouchParentListAdapter extends BaseAdapter {
 			imageView.setBackgroundDrawable(mContext.getResources()
 					.getDrawable(R.drawable.circular_image_selected));
 			checkbox.setChecked(true);
-			
+
 		} else {
 			imageView.setBackgroundDrawable(mContext.getResources()
 					.getDrawable(R.drawable.circular_image));
 			checkbox.setChecked(false);
 		}
+
 		TextView parentName = (TextView) convertView
 				.findViewById(R.id.parentNameTextView);
-		
+		ImageLoader imageLoader = new ImageLoader(mContext);
 
-		imageView.setImageResource(R.drawable.mom);
+		imageLoader.DisplayImage(serverPath + item.getParentId() + ".jpeg",
+				R.drawable.ic_user_image, imageView);
+
+		// imageView.setImageResource(R.drawable.mom);
 		parentName.setText(item.getParentName());
-//		final CheckBox cb = (CheckBox) convertView.findViewById(R.id.isSelectedCB);
-//		if (item.getIsSelected()) {
-//			cb.setChecked(true);
-//		}
-//		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//			@Override
-//			public void onCheckedChanged(CompoundButton buttonView,
-//					boolean isChecked) {
-//				// TODO Auto-generated method stub
-//				cb.setChecked(isChecked);
-//			}
-//		});
+		// final CheckBox cb = (CheckBox)
+		// convertView.findViewById(R.id.isSelectedCB);
+		// if (item.getIsSelected()) {
+		// cb.setChecked(true);
+		// }
+		// cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		//
+		// @Override
+		// public void onCheckedChanged(CompoundButton buttonView,
+		// boolean isChecked) {
+		// // TODO Auto-generated method stub
+		// cb.setChecked(isChecked);
+		// }
+		// });
 		return convertView;
 	}
 	// @Override
