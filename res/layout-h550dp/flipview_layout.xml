@@ -101,7 +101,6 @@
         android:layout_height="210dp"
         android:layout_above="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/mom"
         android:rotation="-5" />
 
     <Button

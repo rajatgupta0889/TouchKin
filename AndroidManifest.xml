@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="18"
+        android:minSdkVersion="14"
         android:targetSdkVersion="22" />
 
     <supports-screens
@@ -93,7 +93,8 @@
         </activity>
         <activity
             android:name="com.touchKin.touchkinapp.SendTouchActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.touchKin.touchkinapp.SendTouchPreview"

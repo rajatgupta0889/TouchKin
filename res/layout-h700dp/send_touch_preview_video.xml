@@ -7,19 +7,17 @@
     <ImageView
         android:id="@+id/imagePreview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="400dp"
         android:layout_alignBottom="@+id/videoPreview"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/videoPreview"
-        android:layout_margin="5dp"
-        android:src="@drawable/mom"
-        android:visibility="visible" />
+        android:layout_margin="5dp" />
 
     <EditText
         android:id="@+id/phone_number_detail"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
@@ -29,8 +27,9 @@
         android:hint="Type your message here"
         android:imeOptions="actionSend"
         android:inputType="text"
-        android:maxHeight="100dp"
+        android:maxHeight="150dp"
         android:padding="10dp"
+        android:textSize="25sp"
         android:scrollbars="horizontal"
         android:textColor="@color/black"
         android:textColorHint="@color/text_orange" />
@@ -38,7 +37,7 @@
     <RelativeLayout
         android:id="@+id/parentListLayout"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="140dp"
         android:layout_alignLeft="@+id/phone_number_detail"
         android:layout_alignRight="@+id/phone_number_detail"
         android:layout_below="@+id/phone_number_detail" >
@@ -64,7 +63,7 @@
     <VideoView
         android:id="@+id/videoPreview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="400dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_margin="5dp"
@@ -113,7 +112,7 @@
         android:layout_height="70dp"
         android:layout_alignTop="@+id/imagePreview"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="150dp"
         android:background="@drawable/play_btn" />
 
 </RelativeLayout>
