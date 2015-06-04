@@ -17,7 +17,7 @@
     <EditText
         android:id="@+id/phone_number_detail"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
@@ -27,7 +27,7 @@
         android:hint="Type your message here"
         android:imeOptions="actionSend"
         android:inputType="text"
-        android:maxHeight="100dp"
+        android:maxHeight="120dp"
         android:padding="10dp"
         android:scrollbars="horizontal"
         android:textColor="@color/black"
@@ -68,13 +68,14 @@
         android:layout_margin="5dp"
         android:visibility="invisible" />
 
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/parentListLayout"
-        android:background="#bfbfbf" />
+    <Button
+        android:id="@+id/play_btn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignTop="@+id/imagePreview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/play_btn" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -82,7 +83,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/view1" >
+        android:layout_below="@+id/parentListLayout" >
 
         <TextView
             android:id="@+id/textView2"
@@ -100,18 +101,17 @@
 
         <Button
             android:id="@+id/sendbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:background="@drawable/send_message" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/play_btn"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignTop="@+id/imagePreview"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/play_btn" />
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/parentListLayout"
+        android:background="#bfbfbf" />
 
 </RelativeLayout>

@@ -42,6 +42,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -110,6 +112,7 @@ public class DashboardLocationFragment extends Fragment implements
 
 		final Resources resources = getResources();
 		if (googleMap == null) {
+
 			googleMap = ((MapFragment) getActivity().getFragmentManager()
 					.findFragmentById(R.id.map)).getMap();
 		}
@@ -407,11 +410,11 @@ public class DashboardLocationFragment extends Fragment implements
 
 			if (googleMarker != null)
 				googleMarker.remove();
-//			googleMarker = googleMap.addMarker(new MarkerOptions()
-//					.position(latLng)
-//					.title("randomlocation")
-//					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
-//							getActivity(), marker))));
+			// googleMarker = googleMap.addMarker(new MarkerOptions()
+			// .position(latLng)
+			// .title("randomlocation")
+			// .icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+			// getActivity(), marker))));
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 			googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 		} else {
