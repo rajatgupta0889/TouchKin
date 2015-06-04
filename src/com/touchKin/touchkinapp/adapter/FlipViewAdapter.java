@@ -88,182 +88,191 @@ public class FlipViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		if (position == 0) {
+			convertView = inflater.inflate(R.layout.kinbook_front_page, null);
+			return convertView;
+		} else {
+//			if (convertView == null && viewHolder == null) {
+				convertView = inflater.inflate(R.layout.flipview_layout, null);
+				viewHolder = new ViewHolder();
+				// videoText = (TextView) convertView
+				// .findViewById(R.id.videoCommentTextView);
+				viewHolder.videoText = (TextView) convertView
+						.findViewById(R.id.videoCommentTextView);
+				viewHolder.videoTime = (TextView) convertView
+						.findViewById(R.id.videoTimeTextView);
+				viewHolder.videoDay = (TextView) convertView
+						.findViewById(R.id.videoDayTextView);
+				viewHolder.imageView = (ImageView) convertView
+						.findViewById(R.id.imageView);
+				// viewHolder.userImage = (RoundedImageView) convertView
+				// .findViewById(R.id.userImage);
+				// videoSenderName = (TextView) convertView
+				// .findViewById(R.id.videoSenderNameTextView);
+				// videoViewCount = (TextView) convertView
+				// .findViewById(R.id.videoSeenCountTextView);
 
-		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.flipview_layout, null);
-			viewHolder = new ViewHolder();
-			// videoText = (TextView) convertView
-			// .findViewById(R.id.videoCommentTextView);
-			viewHolder.videoText = (TextView) convertView
-					.findViewById(R.id.videoCommentTextView);
-			viewHolder.videoTime = (TextView) convertView
-					.findViewById(R.id.videoTimeTextView);
-			viewHolder.videoDay = (TextView) convertView
-					.findViewById(R.id.videoDayTextView);
-			viewHolder.imageView = (ImageView) convertView
-					.findViewById(R.id.imageView);
-			// viewHolder.userImage = (RoundedImageView) convertView
-			// .findViewById(R.id.userImage);
-			// videoSenderName = (TextView) convertView
-			// .findViewById(R.id.videoSenderNameTextView);
-			// videoViewCount = (TextView) convertView
-			// .findViewById(R.id.videoSeenCountTextView);
+				viewHolder.videoSenderImage = (RoundedImageView) convertView
+						.findViewById(R.id.senderImage);
+				viewHolder.videoView = (VideoView) convertView
+						.findViewById(R.id.videoView);
+				viewHolder.profilepic = (Button) convertView
+						.findViewById(R.id.profile_pic);
+				// backbutton = (Button)
+				// convertView.findViewById(R.id.back_button);
+				viewHolder.likebutton = (Button) convertView
+						.findViewById(R.id.like_button);
+				// viewHolder.commentEditText = (EditText) convertView
+				// .findViewById(R.id.commentEditText);
 
-			viewHolder.videoSenderImage = (RoundedImageView) convertView
-					.findViewById(R.id.senderImage);
-			viewHolder.videoView = (VideoView) convertView
-					.findViewById(R.id.videoView);
-			viewHolder.profilepic = (Button) convertView
-					.findViewById(R.id.profile_pic);
-			// backbutton = (Button) convertView.findViewById(R.id.back_button);
-			viewHolder.likebutton = (Button) convertView
-					.findViewById(R.id.like_button);
+				// viewHolder.commentList = (ListView) convertView
+				// .findViewById(R.id.commentList);
+
+				convertView.setTag(viewHolder);
+			// } else {
+			// viewHolder = (ViewHolder) convertView.getTag();
+			// }
+
+			final TouchKinBookModel touchKinBook = getItem(position);
+			//
+			// thumbnail = ThumbnailUtils.createVideoThumbnail(,
+			// Thumbnails.MICRO_KIND);
+			// // BitmapDrawable drawable = new BitmapDrawable(thumbnail);
+			// Toast.makeText(context, "  " + thumbnail,
+			// Toast.LENGTH_LONG).show();
+			// // videoView.setBackgroundDrawable(drawable);
+			// imageView.setImageBitmap(thumbnail);
+			// String url =
+			// "https://archive.org/download/ksnn_compilation_master_the_internet/"
+			// + touchKinBook.getVideoUrl();
+			// Log.d("url", url);
+
+			// MediaController vidControl = new MediaController(context);
+			// vidControl.setAnchorView(viewHolder.videoView);
+			// viewHolder.videoView.setMediaController(vidControl);
+
+			// Uri videouri = Uri.parse(url);
+			Log.d("videouri", "" + touchKinBook.getVideouri());
+			// viewHolder.videoView.setVideoURI(videouri);
+
+			viewHolder.profilepic.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// //
+					// videoView.setVideoURI(getItem(position).getVideouri());
+					// videoView.requestFocus();
+					// // viewHolder.videoView.setMediaController(new
+					// MediaController(
+					// // context));
+					//
+					// // String url =
+					// //
+					// "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
+					// // Toast.makeText(context, String.valueOf(position),
+					// // Toast.LENGTH_SHORT).show();
+					// if (videoView.isPlaying()) {
+					// videoView.stopPlayback();
+					// } else {
+					// videoView.start();
+					//
+					// }
+					// Toast.makeText(context, "" + position, Toast.LENGTH_LONG)
+					// .show();
+					// Log.d("videouri", "" + getItem(position).getVideouri());
+					Dialog dialog = new Dialog(context);
+					dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+					dialog.setContentView(R.layout.video_player);
+
+					// WindowManager.LayoutParams layoutparams = new
+					// WindowManager.LayoutParams(
+					// LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					// layoutparams.copyFrom(dialog.getWindow().getAttributes());
+					// dialog.getWindow().setAttributes(layoutparams);
+					final VideoView videoplayer = (VideoView) dialog
+							.findViewById(R.id.video_player);
+					videoplayer.setVideoURI(getItem(position).getVideouri());
+					// Intent intent = new Intent(context,
+					// VideoPlayerManual.class);
+					// intent.putExtra("videouri",
+					// getItem(position).getVideouri());
+					// context.startActivity(intent);
+					final MediaController mediacontroller = new MediaController(
+							context);
+
+					videoplayer.setMediaController(mediacontroller);
+					mediacontroller.setMediaPlayer(videoplayer);
+					// mediacontroller.setPadding(0, 250, 0, 0);
+					mediacontroller.setAnchorView(videoplayer);
+					dialog.show();
+					videoplayer.start();
+
+				}
+			});
+			// backbutton.setOnClickListener(new OnClickListener() {
+			//
+			// @Override
+			// public void onClick(View v) {
+			// // TODO Auto-generated method stub
+			//
+			// Intent intent = new Intent(context, DashBoardActivity.class);
+			// context.startActivity(intent);
+			//
+			// }
+			// });
+			viewHolder.likebutton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Toast.makeText(
+							context,
+							"You like video of your kin "
+									+ touchKinBook.getVideoSenderName(),
+							Toast.LENGTH_LONG).show();
+
+				}
+			});
+			viewHolder.videoText.setText(touchKinBook.getVideoText());
+			viewHolder.videoTime.setText(touchKinBook.getVideoDate());
+			viewHolder.videoDay.setText(touchKinBook.getVideoDay());
+			ImageLoader imageloader = new ImageLoader(context);
+			imageloader.DisplayImage(
+					"https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
+							+ touchKinBook.getVideoId() + "-thumb-00001.png",
+					R.drawable.ic_user_image, viewHolder.imageView);
+
+			// viewHolder.userImage
+			// videoSenderName.setText(touchKinBook.getVideoSenderName());
+			// videoViewCount.setText(touchKinBook.getVideoViewCount());
+
+			// viewHolder.videoSenderImage = (RoundedImageView) convertView
+			// .findViewById(R.id.senderImage);
+			// viewHolder.videoView = (VideoView) convertView
+			// .findViewById(R.id.videoView);
 			// viewHolder.commentEditText = (EditText) convertView
 			// .findViewById(R.id.commentEditText);
 
-			// viewHolder.commentList = (ListView) convertView
-			// .findViewById(R.id.commentList);
-
-			convertView.setTag(viewHolder);
-		} else {
-			viewHolder = (ViewHolder) convertView.getTag();
+			// comments = touchKinBook.getTouchKinComments();
+			// adapter = new CommentListAdapter(comments, context);
+			// viewHolder.commentList.setAdapter(adapter);
+			// Helper.getListViewSize(viewHolder.commentList);
+			// viewHolder.commentEditText
+			// .setOnEditorActionListener(new OnEditorActionListener() {
+			// public boolean onEditorAction(TextView v, int actionId,
+			// KeyEvent event) {
+			// if ((event != null && (event.getKeyCode() ==
+			// KeyEvent.KEYCODE_ENTER))
+			// || (actionId == EditorInfo.IME_ACTION_DONE)) {
+			// // Toast.makeText(MainActivity.this, "enter press",
+			// // Toast.LENGTH_LONG).show();
+			// sendIntent(viewHolder.commentEditText.getText()
+			// .toString(), touchKinBook.getMessageId());
+			// }
+			// return false;
+			// }
+			// });
 		}
-
-		final TouchKinBookModel touchKinBook = getItem(position);
-		//
-		// thumbnail = ThumbnailUtils.createVideoThumbnail(,
-		// Thumbnails.MICRO_KIND);
-		// // BitmapDrawable drawable = new BitmapDrawable(thumbnail);
-		// Toast.makeText(context, "  " + thumbnail, Toast.LENGTH_LONG).show();
-		// // videoView.setBackgroundDrawable(drawable);
-		// imageView.setImageBitmap(thumbnail);
-		// String url =
-		// "https://archive.org/download/ksnn_compilation_master_the_internet/"
-		// + touchKinBook.getVideoUrl();
-		// Log.d("url", url);
-
-		// MediaController vidControl = new MediaController(context);
-		// vidControl.setAnchorView(viewHolder.videoView);
-		// viewHolder.videoView.setMediaController(vidControl);
-
-		// Uri videouri = Uri.parse(url);
-		Log.d("videouri", "" + touchKinBook.getVideouri());
-		// viewHolder.videoView.setVideoURI(videouri);
-
-		viewHolder.profilepic.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// //
-				// videoView.setVideoURI(getItem(position).getVideouri());
-				// videoView.requestFocus();
-				// // viewHolder.videoView.setMediaController(new
-				// MediaController(
-				// // context));
-				//
-				// // String url =
-				// //
-				// "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
-				// // Toast.makeText(context, String.valueOf(position),
-				// // Toast.LENGTH_SHORT).show();
-				// if (videoView.isPlaying()) {
-				// videoView.stopPlayback();
-				// } else {
-				// videoView.start();
-				//
-				// }
-				// Toast.makeText(context, "" + position, Toast.LENGTH_LONG)
-				// .show();
-				// Log.d("videouri", "" + getItem(position).getVideouri());
-				Dialog dialog = new Dialog(context);
-				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				dialog.setContentView(R.layout.video_player);
-
-				// WindowManager.LayoutParams layoutparams = new
-				// WindowManager.LayoutParams(
-				// LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				// layoutparams.copyFrom(dialog.getWindow().getAttributes());
-				// dialog.getWindow().setAttributes(layoutparams);
-				final VideoView videoplayer = (VideoView) dialog
-						.findViewById(R.id.video_player);
-				videoplayer.setVideoURI(getItem(position).getVideouri());
-				// Intent intent = new Intent(context, VideoPlayerManual.class);
-				// intent.putExtra("videouri", getItem(position).getVideouri());
-				// context.startActivity(intent);
-				final MediaController mediacontroller = new MediaController(
-						context);
-
-				videoplayer.setMediaController(mediacontroller);
-				mediacontroller.setMediaPlayer(videoplayer);
-				// mediacontroller.setPadding(0, 250, 0, 0);
-				mediacontroller.setAnchorView(videoplayer);
-				dialog.show();
-				videoplayer.start();
-
-			}
-		});
-		// backbutton.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// // TODO Auto-generated method stub
-		//
-		// Intent intent = new Intent(context, DashBoardActivity.class);
-		// context.startActivity(intent);
-		//
-		// }
-		// });
-		viewHolder.likebutton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(
-						context,
-						"You like video of your kin "
-								+ touchKinBook.getVideoSenderName(),
-						Toast.LENGTH_LONG).show();
-
-			}
-		});
-		viewHolder.videoText.setText(touchKinBook.getVideoText());
-		viewHolder.videoTime.setText(touchKinBook.getVideoDate());
-		viewHolder.videoDay.setText(touchKinBook.getVideoDay());
-		ImageLoader imageloader = new ImageLoader(context);
-		imageloader.DisplayImage(
-				"https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
-						+ touchKinBook.getVideoId() + "-thumb-00001.png",
-				R.drawable.ic_user_image, viewHolder.imageView);
-
-		// viewHolder.userImage
-		// videoSenderName.setText(touchKinBook.getVideoSenderName());
-		// videoViewCount.setText(touchKinBook.getVideoViewCount());
-
-		// viewHolder.videoSenderImage = (RoundedImageView) convertView
-		// .findViewById(R.id.senderImage);
-		// viewHolder.videoView = (VideoView) convertView
-		// .findViewById(R.id.videoView);
-		// viewHolder.commentEditText = (EditText) convertView
-		// .findViewById(R.id.commentEditText);
-
-		// comments = touchKinBook.getTouchKinComments();
-		// adapter = new CommentListAdapter(comments, context);
-		// viewHolder.commentList.setAdapter(adapter);
-		// Helper.getListViewSize(viewHolder.commentList);
-		// viewHolder.commentEditText
-		// .setOnEditorActionListener(new OnEditorActionListener() {
-		// public boolean onEditorAction(TextView v, int actionId,
-		// KeyEvent event) {
-		// if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-		// || (actionId == EditorInfo.IME_ACTION_DONE)) {
-		// // Toast.makeText(MainActivity.this, "enter press",
-		// // Toast.LENGTH_LONG).show();
-		// sendIntent(viewHolder.commentEditText.getText()
-		// .toString(), touchKinBook.getMessageId());
-		// }
-		// return false;
-		// }
-		// });
 		return convertView;
 	}
 	// @SuppressLint("NewApi")

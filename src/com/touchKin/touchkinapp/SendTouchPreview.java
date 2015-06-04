@@ -21,48 +21,38 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.hardware.Camera;
-import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video.Thumbnails;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -81,7 +71,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class SendTouchPreview extends ActionBarActivity implements
+public class SendTouchPreview extends AppCompatActivity implements
 		OnClickListener, OnItemClickListener, IMyViewHolderClicks {
 
 	ImageView previewImage;
@@ -101,9 +91,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 	List<ParentListModel> list;
 	Bitmap thumbnail, bitmap;
 	SendTouchActivity sendtouch;
-	public static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
-	private static final int OPTIONS_SCALE_UP = 0x1;
-	public static final int OPTIONS_RECYCLE_INPUT = 0x2;
+	ProgressDialog pDialog;
 
 	// private ParentListModel selectedParent;
 
@@ -118,6 +106,9 @@ public class SendTouchPreview extends ActionBarActivity implements
 		Typeface latofont = Typeface.createFromAsset(getAssets(),
 				"fonts/Lato-LightItalic.ttf");
 		sendmessage.setTypeface(latofont);
+		pDialog = new ProgressDialog(this);
+		pDialog.setMessage("Sending the touch...");
+		pDialog.setCancelable(false);
 		// adding toolbar
 		// Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		// TextView mTitle = (TextView)
@@ -233,7 +224,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// Log.d("RuntimeException", "" + ex.getMessage());
 					// }
 					// }
-
 
 					previewImage.setImageBitmap(extractthumbnail);
 
@@ -551,6 +541,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 					Log.d("Response", sResponse);
 					JSONObject JResponse = new JSONObject(sResponse);
 					Log.d("JSON", JResponse.toString());
+					hidepDialog();
 					Toast.makeText(context, "your message sent",
 							Toast.LENGTH_SHORT).show();
 					finish();
@@ -571,6 +562,12 @@ public class SendTouchPreview extends ActionBarActivity implements
 				Log.e(e.getClass().getName(), e.getMessage(), e);
 			}
 		}
+
+		@Override
+		protected void onPreExecute() {
+			showpDialog();
+		}
+
 	}
 
 	public static String getMimeType(String url) {
@@ -641,5 +638,15 @@ public class SendTouchPreview extends ActionBarActivity implements
 		Intent setIntent = new Intent(this, SendTouchActivity.class);
 		startActivity(setIntent);
 		finish();
+	}
+
+	private void showpDialog() {
+		if (!pDialog.isShowing())
+			pDialog.show();
+	}
+
+	private void hidepDialog() {
+		if (pDialog.isShowing())
+			pDialog.dismiss();
 	}
 }

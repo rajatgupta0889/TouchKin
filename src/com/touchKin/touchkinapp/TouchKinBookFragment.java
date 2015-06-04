@@ -166,7 +166,8 @@ public class TouchKinBookFragment extends Fragment {
 						flipViewAdapter = new FlipViewAdapter(touchKinBook,
 								getActivity());
 						flipView.setAdapter(flipViewAdapter);
-						if (touchKinBook.size() < 1) {
+						touchKinBook.add(new TouchKinBookModel());
+						if (touchKinBook.size() < 2) {
 							tv.setVisibility(View.VISIBLE);
 							tv.setText("You donot have any Kibook messages !!");
 						}
