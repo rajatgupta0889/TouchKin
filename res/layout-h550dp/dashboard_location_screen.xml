@@ -40,38 +40,62 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/circular_image" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/prev_dashboard_arrow" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="6dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/next_dashboard_arrow" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" >
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circular_image" >
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_centerInParent="true" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" >
 
-            <LinearLayout
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_centerInParent="true" />
+
+                <LinearLayout
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/shape_circle"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </RelativeLayout>
+
+            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+                android:id="@+id/holoCircularProgressBar"
+                android:layout_width="210dp"
+                android:layout_height="210dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/shape_circle"
-                android:orientation="vertical" >
-            </LinearLayout>
+                app:stroke_width="10dp" />
         </RelativeLayout>
-
-        <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
-            android:id="@+id/holoCircularProgressBar"
-            android:layout_width="210dp"
-            android:layout_height="210dp"
-            android:layout_centerInParent="true"
-            app:stroke_width="10dp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -87,18 +111,6 @@
             android:text="Tap on map to set Mom&apos;s"
             android:textColor="@color/text_orange"
             android:textSize="20sp" />
-
-        <!--
-             <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:text="Home"
-            android:textColor="@color/text_grey"
-            android:textSize="20sp" />
-        -->
 
         <TextView
             android:id="@+id/textView7"
