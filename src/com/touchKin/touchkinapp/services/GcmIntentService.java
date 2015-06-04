@@ -16,6 +16,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.touchKin.touchkinapp.CircleNotificationActivity;
+import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.broadcastReciever.GcmBroadcastReceiver;
 import com.touchKin.touckinapp.R;
 
@@ -94,14 +96,15 @@ public class GcmIntentService extends IntentService {
 		String message = null;
 
 		message = msg;
-
+		intent = new Intent(this, CircleNotificationActivity.class);
+		intent.putExtra("Flag", true);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle("Dating App Notification")
+				.setContentTitle("Touchkin")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentText(message)

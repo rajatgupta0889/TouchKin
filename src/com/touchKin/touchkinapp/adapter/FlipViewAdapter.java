@@ -1,26 +1,16 @@
 package com.touchKin.touchkinapp.adapter;
 
-import java.net.URI;
 import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.support.v4.app.DialogFragment;
-import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.touchKin.touchkinapp.DashBoardActivity;
-import com.touchKin.touchkinapp.VideoPlayerManual;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
@@ -84,16 +72,18 @@ public class FlipViewAdapter extends BaseAdapter {
 		return position;
 	}
 
-	// private static class ViewHolder {
-	// TextView videoText, videoTime, videoDay, videoSenderName,
-	// videoViewCount;
-	// RoundedImageView userImage, videoSenderImage;
-	// // EditText commentEditText;
-	// Button profilepic, backbutton, likebutton;
-	// VideoView videoView;
-	// // ListView commentList;
-	// }
-	// final ViewHolder viewHolder;
+	private static class ViewHolder {
+		TextView videoText, videoTime, videoDay, videoSenderName,
+				videoViewCount;
+		ImageView imageView;
+		RoundedImageView videoSenderImage;
+		// EditText commentEditText;
+		Button profilepic, backbutton, likebutton;
+		VideoView videoView;
+		// ListView commentList;
+	}
+
+	ViewHolder viewHolder;
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
@@ -101,16 +91,17 @@ public class FlipViewAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.flipview_layout, null);
-			// viewHolder = new ViewHolder();
-			videoText = (TextView) convertView
-					.findViewById(R.id.videoCommentTextView);
+			viewHolder = new ViewHolder();
 			// videoText = (TextView) convertView
 			// .findViewById(R.id.videoCommentTextView);
-			videoTime = (TextView) convertView
+			viewHolder.videoText = (TextView) convertView
+					.findViewById(R.id.videoCommentTextView);
+			viewHolder.videoTime = (TextView) convertView
 					.findViewById(R.id.videoTimeTextView);
-			videoDay = (TextView) convertView
+			viewHolder.videoDay = (TextView) convertView
 					.findViewById(R.id.videoDayTextView);
-			imageView = (ImageView) convertView.findViewById(R.id.imageView);
+			viewHolder.imageView = (ImageView) convertView
+					.findViewById(R.id.imageView);
 			// viewHolder.userImage = (RoundedImageView) convertView
 			// .findViewById(R.id.userImage);
 			// videoSenderName = (TextView) convertView
@@ -118,19 +109,24 @@ public class FlipViewAdapter extends BaseAdapter {
 			// videoViewCount = (TextView) convertView
 			// .findViewById(R.id.videoSeenCountTextView);
 
-			videoSenderImage = (RoundedImageView) convertView
+			viewHolder.videoSenderImage = (RoundedImageView) convertView
 					.findViewById(R.id.senderImage);
-			videoView = (VideoView) convertView.findViewById(R.id.videoView);
-			profilepic = (Button) convertView.findViewById(R.id.profile_pic);
+			viewHolder.videoView = (VideoView) convertView
+					.findViewById(R.id.videoView);
+			viewHolder.profilepic = (Button) convertView
+					.findViewById(R.id.profile_pic);
 			// backbutton = (Button) convertView.findViewById(R.id.back_button);
-			likebutton = (Button) convertView.findViewById(R.id.like_button);
+			viewHolder.likebutton = (Button) convertView
+					.findViewById(R.id.like_button);
 			// viewHolder.commentEditText = (EditText) convertView
 			// .findViewById(R.id.commentEditText);
 
 			// viewHolder.commentList = (ListView) convertView
 			// .findViewById(R.id.commentList);
 
-			// convertView.setTag(viewHolder);
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
 		final TouchKinBookModel touchKinBook = getItem(position);
@@ -154,7 +150,7 @@ public class FlipViewAdapter extends BaseAdapter {
 		Log.d("videouri", "" + touchKinBook.getVideouri());
 		// viewHolder.videoView.setVideoURI(videouri);
 
-		profilepic.setOnClickListener(new OnClickListener() {
+		viewHolder.profilepic.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -217,7 +213,7 @@ public class FlipViewAdapter extends BaseAdapter {
 		//
 		// }
 		// });
-		likebutton.setOnClickListener(new OnClickListener() {
+		viewHolder.likebutton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -230,14 +226,14 @@ public class FlipViewAdapter extends BaseAdapter {
 
 			}
 		});
-		videoText.setText(touchKinBook.getVideoText());
-		videoTime.setText(touchKinBook.getVideoDate());
-		videoDay.setText(touchKinBook.getVideoDay());
+		viewHolder.videoText.setText(touchKinBook.getVideoText());
+		viewHolder.videoTime.setText(touchKinBook.getVideoDate());
+		viewHolder.videoDay.setText(touchKinBook.getVideoDay());
 		ImageLoader imageloader = new ImageLoader(context);
 		imageloader.DisplayImage(
 				"https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
 						+ touchKinBook.getVideoId() + "-thumb-00001.png",
-				R.drawable.ic_user_image, imageView);
+				R.drawable.ic_user_image, viewHolder.imageView);
 
 		// viewHolder.userImage
 		// videoSenderName.setText(touchKinBook.getVideoSenderName());

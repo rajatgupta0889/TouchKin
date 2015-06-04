@@ -3,11 +3,11 @@ package com.touchKin.touchkinapp.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
@@ -45,6 +45,9 @@ public class ImageAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
+		// if (position == parentList.size()) {
+		// return position - 1;
+		// }
 		return position;
 	}
 
@@ -52,9 +55,9 @@ public class ImageAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		if (convertView == null) {
-			convertView = mLayoutInflater.inflate(R.layout.image_item, null);
-		}
+
+		convertView = mLayoutInflater.inflate(R.layout.image_item, null);
+
 		RoundedImageView imageView = (RoundedImageView) convertView
 				.findViewById(R.id.parentImage);
 		if (parentList.get(position).getIsSelected()) {
@@ -66,14 +69,13 @@ public class ImageAdapter extends BaseAdapter {
 		}
 		// imageView.setImageResource(R.drawable.mom);
 		ImageLoader imageLoader = new ImageLoader(mContext);
-
-		imageLoader.DisplayImage(serverPath + getItem(position).getParentId()
-				+ ".jpeg", R.drawable.ic_user_image, imageView);
-
-		if (position + 1 == parentList.size()) {
+		if (position + 1 != parentList.size()) {
+			imageLoader.DisplayImage(serverPath
+					+ getItem(position).getParentId() + ".jpeg",
+					R.drawable.ic_user_image, imageView);
+		} else {
 			convertView = mLayoutInflater
 					.inflate(R.layout.image_add_item, null);
-
 		}
 		return convertView;
 	}
