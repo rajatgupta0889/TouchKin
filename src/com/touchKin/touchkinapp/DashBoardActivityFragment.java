@@ -211,8 +211,10 @@ public class DashBoardActivityFragment extends Fragment implements
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+
 		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
-		getActivity().unregisterReceiver(this.mBatInfoReceiver);
+		if (this.mBatInfoReceiver != null)
+			getActivity().unregisterReceiver(this.mBatInfoReceiver);
 	}
 
 	@Override

@@ -42,6 +42,7 @@ public class TouchKinBookFragment extends Fragment {
 	private List<TouchKinBookModel> touchKinBook;
 	FlipViewAdapter flipViewAdapter;
 	FragmentTabHost host;
+	TextView tv;
 
 	String baseImageUrl = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/kinbook-messages";
 
@@ -64,6 +65,7 @@ public class TouchKinBookFragment extends Fragment {
 		init(v);
 		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
 		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		tv = (TextView) v.findViewById(R.id.msg);
 		mTitle.setText("Kinbook");
 		host = ((DashBoardActivity) getActivity()).getTabHost();
 		host.setVisibility(View.GONE);
@@ -130,7 +132,7 @@ public class TouchKinBookFragment extends Fragment {
 								// else
 								item.setVideoId(obj.getString("id"));
 								if (obj.getString("type").equals("video/mp4"))
-									item.setVideoUrl(obj.optString("sd_media"));
+									item.setVideoUrl(obj.optString("hd_media"));
 								// else
 								// item.setVideoUrl("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
 								// + obj.getString("id") + ".mov");
@@ -164,6 +166,10 @@ public class TouchKinBookFragment extends Fragment {
 						flipViewAdapter = new FlipViewAdapter(touchKinBook,
 								getActivity());
 						flipView.setAdapter(flipViewAdapter);
+						if (touchKinBook.size() < 1) {
+							tv.setVisibility(View.VISIBLE);
+							tv.setText("You donot have any Kibook messages !!");
+						}
 					}
 
 				}, new Response.ErrorListener() {

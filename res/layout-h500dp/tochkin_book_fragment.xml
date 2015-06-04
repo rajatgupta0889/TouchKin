@@ -12,4 +12,12 @@
         android:layout_alignParentTop="true"
         flip:orientation="horizontal" />
 
-</RelativeLayout> 
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="TextView"
+        android:visibility="invisible" />
+
+</RelativeLayout>

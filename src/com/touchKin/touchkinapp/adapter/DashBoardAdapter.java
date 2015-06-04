@@ -1,7 +1,6 @@
 package com.touchKin.touchkinapp.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,7 +9,6 @@ import android.view.View;
 
 import com.touchKin.touchkinapp.DashBoardActivityFragment;
 import com.touchKin.touchkinapp.DashboardLocationFragment;
-import com.touchKin.touchkinapp.DashboardWithoutKinFragment;
 import com.touchKin.touchkinapp.TouchFragment;
 
 public class DashBoardAdapter extends FragmentPagerAdapter {

@@ -137,6 +137,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 					.instantiateItem(viewPager, position);
 			if (fragment != null) {
 				fragment.fragmentBecameVisible();
+
 			}
 
 		}
