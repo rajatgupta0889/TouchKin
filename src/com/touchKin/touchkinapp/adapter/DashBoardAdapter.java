@@ -25,18 +25,10 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		// TODO Auto-generated method stub
-		SharedPreferences pref = context.getSharedPreferences("countPref", 0);
-		// if (!pref.getBoolean("count", false)) {
-		// position = position - 1;
-		// }
 
 		switch (position) {
 		case 0: // Fragment # 0 - This will show FirstFragment
-			if (!pref.getBoolean("count", false)) {
-				return DashboardWithoutKinFragment.newInstance(3, "WithoutKin");
-			} else {
-				return TouchFragment.newInstance(0, "Touch");
-			}
+			return TouchFragment.newInstance(0, "Touch");
 		case 1: // Fragment # 0 - This will show FirstFragment different title
 			return DashboardLocationFragment.newInstance(1, "Location");
 		case 2: // Fragment # 1 - This will show SecondFragment

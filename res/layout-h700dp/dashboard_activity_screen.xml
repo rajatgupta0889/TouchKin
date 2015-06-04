@@ -16,42 +16,41 @@
             android:id="@+id/parentNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_last_touch_text"
+            android:text="Mom&apos;s activity is "
             android:textColor="@color/text_orange"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/ParentLocTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="@string/my_touch_duration"
+            android:text="very low"
             android:textColor="@color/text_grey"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="@string/ago_text"
+            android:text=""
             android:textColor="@color/text_orange"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/circular_image"
-        android:padding="10dp" >
+        android:background="@drawable/circular_image" >
 
         <ImageView
             android:id="@+id/profile_pic"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/activity" />
+            android:src="@drawable/centre" />
 
         <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
             android:id="@+id/holoCircularProgressBar"
@@ -61,34 +60,41 @@
             app:stroke_width="10dp" />
 
         <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/profile_pic"
+            android:id="@+id/imageView1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="70dp"
+            android:src="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/ImageView01"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignRight="@+id/profile_pic"
+            android:layout_alignTop="@+id/imageView1"
+            android:src="@drawable/network" />
+
+        <ImageView
+            android:id="@+id/ImageView02"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/battery"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="48dp"
-            android:src="@drawable/steps" />
+            android:layout_marginTop="5dp"
+            android:src="@drawable/battery" />
 
         <TextView
-            android:id="@+id/add_name"
+            android:id="@+id/battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView2"
+            android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:text="10"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/add_name"
-            android:layout_centerHorizontal="true"
-            android:text="Steps"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
+            android:layout_marginTop="20dp"
+            android:text="60%"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
     <LinearLayout
@@ -101,9 +107,9 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/kins_last_touch_text"
+            android:text="She has last active "
             android:textColor="@color/text_orange"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView6"
@@ -113,7 +119,7 @@
             android:layout_marginRight="4dp"
             android:text="@string/kin_touch_duration"
             android:textColor="@color/text_grey"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView7"
@@ -121,7 +127,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ago_text"
             android:textColor="@color/text_orange"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -24,9 +24,7 @@ public class TouchKinBookModel {
 	}
 
 	public void setVideouri(String videourl) {
-		this.videouri = Uri
-				.parse("https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
-						+ videourl);
+		this.videouri = Uri.parse(videourl);
 	}
 
 	public String getMessageId() {
