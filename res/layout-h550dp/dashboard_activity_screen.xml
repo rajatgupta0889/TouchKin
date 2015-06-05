@@ -76,28 +76,10 @@
 
             <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
-                android:layout_width="175dp"
-                android:layout_height="175dp"
+                android:layout_width="210dp"
+                android:layout_height="210dp"
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="70dp"
-                android:src="@drawable/wifi" />
-
-            <ImageView
-                android:id="@+id/ImageView01"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignRight="@+id/profile_pic"
-                android:layout_alignTop="@+id/imageView1"
-                android:src="@drawable/network" />
 
             <ImageView
                 android:id="@+id/ImageView02"
@@ -105,7 +87,7 @@
                 android:layout_height="30dp"
                 android:layout_below="@+id/battery"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:src="@drawable/battery" />
 
             <TextView
@@ -114,9 +96,26 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageView1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:text="60%"
                 android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/profile_pic"
+                android:layout_marginTop="50dp"
+                android:layout_toLeftOf="@+id/battery"
+                android:src="@drawable/wifi" />
+
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/imageView1"
+                android:layout_toRightOf="@+id/ImageView02"
+                android:src="@drawable/network" />
         </RelativeLayout>
     </RelativeLayout>
 

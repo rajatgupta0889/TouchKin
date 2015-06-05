@@ -1,6 +1,7 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.json.JSONException;
@@ -13,18 +14,20 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.GpsStatus.Listener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -71,6 +74,22 @@ public class ContactDialogFragment extends DialogFragment implements
 		// final TextView title = (TextView) headerview
 		// .findViewById(R.id.parentNameTV);
 		// title.setText(mArgs.getString("title"));
+		nickname.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				// TODO Auto-generated method stub
+				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+						|| (actionId == EditorInfo.IME_ACTION_DONE)) {
+					// Toast.makeText(MainActivity.this, "enter press",
+					// Toast.LENGTH_LONG).show();
+					addParent();
+				}
+				return false;
+			}
+		});
+
 		builder.setCancelable(false);
 		builder.setView(view)
 				// Add action buttons
@@ -104,20 +123,7 @@ public class ContactDialogFragment extends DialogFragment implements
 
 				if (wantToCloseDialog)
 					dismiss();
-				String phoneNum = phoneBox.getText().toString().trim();
-				if (Validation.hasText(nickname)
-						&& Validation.hasText(phoneBox)
-						&& Validation.hasText(nameBox)) {
-					if (!phoneNum.startsWith("+91")) {
-						if (!phoneNum.startsWith("0")) {
-							phoneNum = "+91" + phoneNum;
-						} else {
-							phoneNum = "+91" + phoneNum.substring(1);
-						}
-					}
-					addCareReciever(nameBox.getText().toString(),
-							phoneNum.trim(), nickname.getText().toString());
-				}
+				addParent();
 				// else dialog stays open. Make sure you have an obvious
 				// way to close the dialog especially if you set
 				// cancellable to false.
@@ -219,15 +225,15 @@ public class ContactDialogFragment extends DialogFragment implements
 					// }
 					// if(contact.get(1).matches("[0-9]+") &&
 					// contact.get(1).length() > 7){
+					String number = contact.get(1).substring(1)
+							.replaceAll(" ", "");
 					if (contact.get(1).startsWith("0")) {
-						phoneBox.setText("+91"
-								+ contact.get(1).substring(1)
-										.replaceAll(" ", ""));
+						phoneBox.setText("+91" + number);
+
 					} else if (contact.get(1).startsWith("+91")) {
-						phoneBox.setText(contact.get(1).replaceAll(" ", ""));
+						phoneBox.setText(number);
 					} else {
-						phoneBox.setText("+91"
-								+ contact.get(1).replaceAll(" ", ""));
+						phoneBox.setText("+91" + number);
 					}
 
 					// }
@@ -331,6 +337,23 @@ public class ContactDialogFragment extends DialogFragment implements
 	private void hidepDialog() {
 		if (proDialog.isShowing())
 			proDialog.dismiss();
+	}
+
+	private void addParent() {
+		// TODO Auto-generated method stub
+		String phoneNum = phoneBox.getText().toString();
+		if (Validation.hasText(nickname) && Validation.hasText(phoneBox)
+				&& Validation.hasText(nameBox)) {
+			if (!phoneNum.startsWith("+91")) {
+				if (!phoneNum.startsWith("0")) {
+					phoneNum = "+91" + phoneNum;
+				} else {
+					phoneNum = "+91" + phoneNum.substring(1);
+				}
+			}
+			addCareReciever(nameBox.getText().toString(), phoneNum.trim(),
+					nickname.getText().toString());
+		}
 	}
 
 }

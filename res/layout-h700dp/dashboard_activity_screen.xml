@@ -92,14 +92,6 @@
                 android:src="@drawable/wifi" />
 
             <ImageView
-                android:id="@+id/ImageView01"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignRight="@+id/profile_pic"
-                android:layout_alignTop="@+id/imageView1"
-                android:src="@drawable/network" />
-
-            <ImageView
                 android:id="@+id/ImageView02"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -117,6 +109,16 @@
                 android:layout_marginTop="20dp"
                 android:text="60%"
                 android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/imageView1"
+                android:layout_marginLeft="32dp"
+                android:layout_toRightOf="@+id/ImageView02"
+                android:src="@drawable/network" />
+
         </RelativeLayout>
     </RelativeLayout>
 
