@@ -441,7 +441,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 					@Override
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
-						// Log.d("Response Array", " " + responseArray);
+						Log.d("Response Array", " " + responseArray);
 
 						if (responseArray.length() > 0) {
 							for (int i = 0; i < responseArray.length(); i++) {

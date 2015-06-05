@@ -72,7 +72,7 @@
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/activity" />
+                android:src="@drawable/centre" />
 
             <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
@@ -81,35 +81,41 @@
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
 
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignTop="@+id/profile_pic"
+                android:layout_marginTop="24dp"
+                android:layout_toLeftOf="@+id/battery"
+                android:src="@drawable/wifi" />
+
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/imageView1"
+                android:layout_toRightOf="@+id/ImageView02"
+                android:src="@drawable/network" />
+
             <TextView
                 android:id="@+id/battery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/ImageView01"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="26dp"
-                android:text="Battery"
+                android:layout_marginTop="18dp"
+                android:text="60%"
                 android:textColor="@color/white" />
 
-            <TextView
-                android:id="@+id/signal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/ImageView02"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignLeft="@+id/battery"
                 android:layout_below="@+id/battery"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text="Signal"
-                android:textColor="@color/white" />
+                android:src="@drawable/battery" />
 
-            <TextView
-                android:id="@+id/wifi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/signal"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text="Wifi"
-                android:textColor="@color/white" />
         </RelativeLayout>
     </RelativeLayout>
 

@@ -108,8 +108,9 @@ public class RequestListAdapter extends BaseAdapter {
 		});
 		ImageLoader imageLoader = new ImageLoader(context);
 		if (request.getUserImage() != null)
-			imageLoader.DisplayImage(serverPath + request.getUserImage()
-					+ ".jpeg", R.drawable.ic_user_image, viewHolder.userImage);
+			imageLoader.DisplayImage(
+					serverPath + request.getUserId() + ".jpeg",
+					R.drawable.ic_user_image, viewHolder.userImage);
 		else {
 			viewHolder.userImage.setImageResource(R.drawable.ic_user_image);
 		}

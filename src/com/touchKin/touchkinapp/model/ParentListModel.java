@@ -6,6 +6,7 @@ public class ParentListModel {
 	String parentName;
 	String parentId;
 	String parentUserId;
+	Boolean reqStatus;
 
 	public ParentListModel() {
 		super();
@@ -60,4 +61,13 @@ public class ParentListModel {
 	public String getImageUrl() {
 		return imageUrl;
 	}
+
+	public Boolean getReqStatus() {
+		return reqStatus;
+	}
+
+	public void setReqStatus(Boolean reqStatus) {
+		this.reqStatus = reqStatus;
+	}
+
 }
