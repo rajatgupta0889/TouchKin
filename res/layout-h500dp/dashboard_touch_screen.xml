@@ -64,15 +64,9 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/circular_image" >
-
-            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
-                android:id="@+id/holoCircularProgressBar"
-                android:layout_width="175dp"
-                android:layout_height="175dp"
-                android:layout_centerInParent="true"
-                app:stroke_width="10dp" />
 
             <com.touchKin.touchkinapp.custom.RoundedImageView
                 android:id="@+id/profile_pic"
@@ -81,6 +75,13 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/mom" />
+
+            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+                android:id="@+id/holoCircularProgressBar"
+                android:layout_width="175dp"
+                android:layout_height="175dp"
+                android:layout_centerInParent="true"
+                app:stroke_width="10dp" />
         </RelativeLayout>
     </RelativeLayout>
 

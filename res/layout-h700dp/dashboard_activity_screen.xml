@@ -89,7 +89,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="70dp"
-                android:src="@drawable/wifi" />
+                android:src="@drawable/wifi3" />
 
             <ImageView
                 android:id="@+id/ImageView01"
