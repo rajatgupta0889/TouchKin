@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -50,12 +51,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class DashboardLocationFragment extends Fragment implements
 		FragmentInterface, ConnectionCallbacks, OnConnectionFailedListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
+	TextView parentName;
+	ParentListModel parent;
+
 	Marker googleMarker = null;
 	/**
 	 * Provides the entry point to Google Play services.
@@ -106,6 +111,10 @@ public class DashboardLocationFragment extends Fragment implements
 		try {
 			view = inflater.inflate(R.layout.dashboard_location_screen,
 					container, false);
+			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+			parentName = (TextView) view.findViewById(R.id.parentNameTV);
+			if (parent != null)
+				parentName.setText(parent.getParentName() + " is in ");
 		} catch (InflateException e) {
 			/* map is already there, just return view as it is */
 		}
@@ -385,7 +394,11 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		Log.d("Parent", parent + "");
+		if (parent != null) {
+			parentName.setText(parent.getParentName() + " activity ");
+		}
 	}
 
 	@Override

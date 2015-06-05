@@ -545,10 +545,11 @@ public class SendTouchPreview extends ActionBarActivity implements
 			try {
 
 				if (sResponse != null) {
+					hidepDialog();
 					Log.d("Response", sResponse);
 					JSONObject JResponse = new JSONObject(sResponse);
 					Log.d("JSON", JResponse.toString());
-					hidepDialog();
+
 					Toast.makeText(context, "your message sent",
 							Toast.LENGTH_SHORT).show();
 					finish();
@@ -562,6 +563,10 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// // "Photo uploaded successfully",
 					// // Toast.LENGTH_SHORT).show();
 					// }
+				} else {
+					hidepDialog();
+					Toast.makeText(context, "Problem while sending a touch",
+							Toast.LENGTH_SHORT).show();
 				}
 			} catch (Exception e) {
 				// Toast.makeText(context, getString(R.string.app_name_empty),

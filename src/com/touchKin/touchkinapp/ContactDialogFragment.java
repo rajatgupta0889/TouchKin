@@ -89,6 +89,8 @@ public class ContactDialogFragment extends DialogFragment implements
 				return false;
 			}
 		});
+		nameBox.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		phoneBox.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
 		builder.setCancelable(false);
 		builder.setView(view)
