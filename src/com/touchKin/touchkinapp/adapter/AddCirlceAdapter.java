@@ -100,7 +100,7 @@ public class AddCirlceAdapter extends BaseAdapter {
 		});
 		ImageLoader imageLoader = new ImageLoader(context);
 		if (item.getUserImage() != null)
-			imageLoader.DisplayImage(serverPath + item.getUserImage()
+			imageLoader.DisplayImage(serverPath + item.getUserId()
 					+ ".jpeg", R.drawable.ic_user_image, viewHolder.userImage);
 		else {
 			viewHolder.userImage.setImageResource(R.drawable.ic_user_image);

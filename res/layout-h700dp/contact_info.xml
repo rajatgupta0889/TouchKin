@@ -39,9 +39,9 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:gravity="center"
-        android:text="or" />
+        android:text="or"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/name"
@@ -50,7 +50,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
-        android:hint="Name" />
+        android:hint="Name"
+        android:imeOptions="actionNext" />
 
     <EditText
         android:id="@+id/number"
@@ -60,6 +61,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
         android:hint="Phone number"
+        android:imeOptions="actionNext"
         android:inputType="phone" />
 
     <EditText
@@ -69,9 +71,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
-        android:hint="Care reciever nickname" />
-
-    
-   
+        android:hint="Care reciever nickname"
+        android:imeOptions="actionDone" />
 
 </LinearLayout>

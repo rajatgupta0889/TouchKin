@@ -49,12 +49,15 @@ public class OtpRequestActivity extends ActionBarActivity {
 	String phoneNumber, userID, userName = null;
 	IncomingSMS reciever;
 	String code;
+	String deviceId, mobile_os;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.otp_layout);
 
 		phone = getIntent().getExtras().getString("phoneNumber");
+		deviceId = getIntent().getExtras().getString("device_id");
+		mobile_os = getIntent().getExtras().getString("device_os");
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		mTitle.setText("Verify your number");
@@ -195,7 +198,9 @@ public class OtpRequestActivity extends ActionBarActivity {
 		JSONObject params = new JSONObject();
 		try {
 			params.put("mobile", phone);
-			params.put("code", OneTimePass);
+			params.put("code", Integer.parseInt(OneTimePass));
+			params.put("mobile_device_id", deviceId);
+			params.put("mobile_os", mobile_os);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

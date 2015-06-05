@@ -1,5 +1,8 @@
 package com.touchKin.touchkinapp;
 
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,10 +13,14 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -52,6 +59,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
@@ -71,10 +81,41 @@ public class SignUpActivity extends ActionBarActivity {
 	private static String TAG = SignUpActivity.class.getSimpleName();
 	private Toolbar toolbar;
 	TextView mTitle;
+	/**
+	 * Substitute you own sender ID here. This is the project number you got
+	 * from the API Console, as described in "Getting Started."
+	 */
+	String SENDER_ID = "588149057277";
+
+	public static final String EXTRA_MESSAGE = "message";
+	public static final String PROPERTY_REG_ID = "registration_id";
+	private static final String PROPERTY_APP_VERSION = "appVersion";
+	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+	Context context;
+	String regid;
+	GoogleCloudMessaging gcm;
+	AtomicInteger msgId = new AtomicInteger();
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sign_up_activity);
+
+		context = SignUpActivity.this;
+		if (checkPlayServices()) {
+			gcm = GoogleCloudMessaging.getInstance(SignUpActivity.this);
+			regid = getRegistrationId(context);
+
+			if (regid.isEmpty()) {
+				registerInBackground();
+			}
+			/*
+			 * if(Session.getActiveSession() != null){ startActivity(new
+			 * Intent(getActivity(),LoginActivity.class)); }
+			 */
+
+		} else {
+			Log.i(TAG, "No valid Google Play Services APK found.");
+		}
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 
@@ -166,25 +207,25 @@ public class SignUpActivity extends ActionBarActivity {
 		// AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
 		// exam.startAnimation(rotate);
 
-//		Uri uri = new Uri.Builder()
-//				.scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-//				.authority(getPackageName())
-//				.path(Integer.toString(R.raw.trailer)).build();
-//		exam.setVideoURI(uri);
-//
-//		exam.setOnPreparedListener(new OnPreparedListener() {
-//			@Override
-//			public void onPrepared(MediaPlayer mp) {
-//				mp.setLooping(true);
-//			}
-//		});
+		// Uri uri = new Uri.Builder()
+		// .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+		// .authority(getPackageName())
+		// .path(Integer.toString(R.raw.trailer)).build();
+		// exam.setVideoURI(uri);
+		//
+		// exam.setOnPreparedListener(new OnPreparedListener() {
+		// @Override
+		// public void onPrepared(MediaPlayer mp) {
+		// mp.setLooping(true);
+		// }
+		// });
 	}
 
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		exam.start();
-//	}
+	// @Override
+	// protected void onResume() {
+	// super.onResume();
+	// exam.start();
+	// }
 
 	/*
 	 * private class LongOperation extends AsyncTask<String, Void, String> {
@@ -261,6 +302,8 @@ public class SignUpActivity extends ActionBarActivity {
 		JSONObject params = new JSONObject();
 		try {
 			params.put("mobile", phoneNumber);
+			params.put("mobile_device_id", getRegistrationId(context));
+			params.put("mobile_os", "android");
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -279,6 +322,8 @@ public class SignUpActivity extends ActionBarActivity {
 										R.anim.animation, R.anim.animation2)
 								.toBundle();
 						i.putExtra("phoneNumber", phoneNumber);
+						i.putExtra("device_id", getRegistrationId(context));
+						i.putExtra("device_os", "android");
 						startActivity(i, bndlanimation);
 
 						// Log.d(TAG, response.toString());
@@ -366,4 +411,158 @@ public class SignUpActivity extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Check the device to make sure it has the Google Play Services APK. If it
+	 * doesn't, display a dialog that allows users to download the APK from the
+	 * Google Play Store or enable it in the device's system settings.
+	 */
+	private boolean checkPlayServices() {
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(SignUpActivity.this);
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+				GooglePlayServicesUtil.getErrorDialog(resultCode,
+						SignUpActivity.this, PLAY_SERVICES_RESOLUTION_REQUEST)
+						.show();
+			} else {
+				Log.i(TAG, "This device is not supported.");
+				Toast.makeText(context, "This device is not supported",
+						Toast.LENGTH_LONG).show();
+				finish();
+			}
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Gets the current registration ID for application on GCM service.
+	 * <p>
+	 * If result is empty, the app needs to register.
+	 * 
+	 * @return registration ID, or empty string if there is no existing
+	 *         registration ID.
+	 */
+	private String getRegistrationId(Context context) {
+		final SharedPreferences prefs = getGCMPreferences(context);
+		String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+		if (registrationId.isEmpty()) {
+			Log.i(TAG, "Registration not found.");
+			return "";
+		}
+		// Check if app was updated; if so, it must clear the registration ID
+		// since the existing regID is not guaranteed to work with the new
+		// app version.
+		int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION,
+				Integer.MIN_VALUE);
+		int currentVersion = getAppVersion(context);
+		if (registeredVersion != currentVersion) {
+			Log.i(TAG, "App version changed.");
+			return "";
+		}
+		return registrationId;
+	}
+
+	/**
+	 * @return Application's {@code SharedPreferences}.
+	 */
+	private SharedPreferences getGCMPreferences(Context context) {
+		// This sample app persists the registration ID in shared preferences,
+		// but
+		// how you store the regID in your app is up to you.
+		return getSharedPreferences(Details.class.getSimpleName(),
+				Context.MODE_PRIVATE);
+	}
+
+	/**
+	 * @return Application's version code from the {@code PackageManager}.
+	 */
+	private static int getAppVersion(Context context) {
+		try {
+			PackageInfo packageInfo = context.getPackageManager()
+					.getPackageInfo(context.getPackageName(), 0);
+			return packageInfo.versionCode;
+		} catch (NameNotFoundException e) {
+			// should never happen
+			throw new RuntimeException("Could not get package name: " + e);
+		}
+	}
+
+	/**
+	 * Registers the application with GCM servers asynchronously.
+	 * <p>
+	 * Stores the registration ID and app versionCode in the application's
+	 * shared preferences.
+	 */
+	@SuppressWarnings("unchecked")
+	private void registerInBackground() {
+		new AsyncTask() {
+			@Override
+			protected Object doInBackground(Object... params) {
+				// TODO Auto-generated method stub
+				String msg = "";
+				try {
+					if (gcm == null) {
+						gcm = GoogleCloudMessaging.getInstance(context);
+					}
+					regid = gcm.register(SENDER_ID);
+					msg = "Device registered, registration ID=" + regid;
+					Log.d(TAG, msg);
+					// You should send the registration ID to your server over
+					// HTTP,
+					// so it can use GCM/HTTP or CCS to send messages to your
+					// app.
+					// The request to your server should be authenticated if
+					// your app
+					// is using accounts.
+					sendRegistrationIdToBackend();
+
+					// For this demo: we don't need to send it because the
+					// device
+					// will send upstream messages to a server that echo back
+					// the
+					// message using the 'from' address in the message.
+
+					// Persist the regID - no need to register again.
+					storeRegistrationId(context, regid);
+				} catch (IOException ex) {
+					// msg = "Error :" + ex.getMessage();
+					// If there is an error, don't just keep trying to register.
+					// Require the user to click a button again, or perform
+					// exponential back-off.
+				}
+				return null;
+			}
+
+		}.execute(null, null, null);
+	}
+
+	/**
+	 * Sends the registration ID to your server over HTTP, so it can use
+	 * GCM/HTTP or CCS to send messages to your app. Not needed for this demo
+	 * since the device sends upstream messages to a server that echoes back the
+	 * message using the 'from' address in the message.
+	 */
+	private void sendRegistrationIdToBackend() {
+		// Your implementation here.
+	}
+
+	/**
+	 * Stores the registration ID and app versionCode in the application's
+	 * {@code SharedPreferences}.
+	 * 
+	 * @param context
+	 *            application's context.
+	 * @param regId
+	 *            registration ID
+	 */
+	private void storeRegistrationId(Context context, String regId) {
+		final SharedPreferences prefs = getGCMPreferences(context);
+		int appVersion = getAppVersion(context);
+		Log.i(TAG, "Saving regId on app version " + appVersion);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_REG_ID, regId);
+		editor.putInt(PROPERTY_APP_VERSION, appVersion);
+		editor.commit();
+	}
 }

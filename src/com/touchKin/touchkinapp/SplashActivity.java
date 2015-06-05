@@ -57,8 +57,8 @@ public class SplashActivity extends Activity {
 		// }
 		//
 		// }).start();
-//		Log.d("Mobile", "" + pref.getString("mobile", null));
-//		Log.d("otp", "" + pref.getString("otp", null));
+		// Log.d("Mobile", "" + pref.getString("mobile", null));
+		// Log.d("otp", "" + pref.getString("otp", null));
 		if (pref.getString("mobile", null) != null
 				&& pref.getString("otp", null) != null) {
 			sendIntent(pref.getString("mobile", null),
@@ -103,7 +103,7 @@ public class SplashActivity extends Activity {
 			JSONObject params = new JSONObject();
 			try {
 				params.put("mobile", phone);
-				params.put("code", otp);
+				params.put("code", Integer.parseInt(otp));
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

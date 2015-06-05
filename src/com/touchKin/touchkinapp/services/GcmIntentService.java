@@ -63,7 +63,6 @@ public class GcmIntentService extends IntentService {
 					.equals(messageType)) {
 				Log.d(TAG, extras.getString("message"));
 				// Log.d(TAG, extras.toString());
-
 				String message = extras.getString("message");
 
 				sendNotification(message, "");
