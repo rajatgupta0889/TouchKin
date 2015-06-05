@@ -67,14 +67,7 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/circular_image" >
 
-            <ImageView
-                android:id="@+id/profile_pic"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/centre" />
-
-            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+           <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
                 android:layout_width="175dp"
                 android:layout_height="175dp"
@@ -82,99 +75,11 @@
                 app:stroke_width="10dp" />
 
             <ImageView
-                android:id="@+id/wifi0"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/profile_pic"
-                android:layout_marginTop="40dp"
-                android:layout_toLeftOf="@+id/battery"
-                android:src="@drawable/wifi0" />
-
-            <ImageView
-                android:id="@+id/wifi1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/profile_pic"
-                android:layout_marginTop="40dp"
-                android:layout_toLeftOf="@+id/battery"
-                android:src="@drawable/wifi1" />
-
-            <ImageView
-                android:id="@+id/wifi2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/profile_pic"
-                android:layout_marginTop="40dp"
-                android:layout_toLeftOf="@+id/battery"
-                android:src="@drawable/wifi2" />
-
-            <ImageView
-                android:id="@+id/wifi3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/profile_pic"
-                android:layout_marginTop="40dp"
-                android:layout_toLeftOf="@+id/battery"
-                android:src="@drawable/wifi3" />
-
-            <ImageView
-                android:id="@+id/wifi4"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/profile_pic"
-                android:layout_marginTop="40dp"
-                android:layout_toLeftOf="@+id/battery"
-                android:src="@drawable/wifi4" />
-
-            <TextView
-                android:id="@+id/battery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ImageView01"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="21dp"
-                android:text="60%"
-                android:textColor="@color/white" />
-
-            <ImageView
-                android:id="@+id/battery0"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignLeft="@+id/battery"
-                android:layout_below="@+id/battery"
-                android:src="@drawable/battery0" />
-
-            <ImageView
-                android:id="@+id/battery1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignLeft="@+id/battery"
-                android:layout_below="@+id/battery"
-                android:src="@drawable/battery20" />
-
-            <ImageView
-                android:id="@+id/battery2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignLeft="@+id/battery"
-                android:layout_below="@+id/battery"
-                android:src="@drawable/battery40" />
-
-            <ImageView
-                android:id="@+id/battery3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignLeft="@+id/battery"
-                android:layout_below="@+id/battery"
-                android:src="@drawable/battery60" />
-
-            <ImageView
-                android:id="@+id/battery4"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignLeft="@+id/battery"
-                android:layout_below="@+id/battery"
-                android:src="@drawable/battery80" />
+                android:id="@+id/profile_pic"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/centre" />
 
             <ImageView
                 android:id="@+id/battery5"
@@ -185,44 +90,33 @@
                 android:src="@drawable/battery100" />
 
             <ImageView
-                android:id="@+id/ImageView01"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/wifi0"
-                android:layout_toRightOf="@+id/battery0"
-                android:src="@drawable/network0" />
-
-            <ImageView
-                android:id="@+id/ImageView02"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_above="@+id/battery"
-                android:layout_alignLeft="@+id/ImageView01"
-                android:src="@drawable/network1" />
-
-            <ImageView
-                android:id="@+id/ImageView03"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_above="@+id/battery"
-                android:layout_alignLeft="@+id/ImageView01"
-                android:src="@drawable/network2" />
-
-            <ImageView
-                android:id="@+id/ImageView04"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_above="@+id/battery"
-                android:layout_alignLeft="@+id/ImageView01"
-                android:src="@drawable/network3" />
-
-            <ImageView
                 android:id="@+id/ImageView05"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignLeft="@+id/ImageView01"
-                android:layout_alignTop="@+id/ImageView01"
+                android:layout_alignTop="@+id/wifi4"
+                android:layout_toRightOf="@+id/battery"
                 android:src="@drawable/network4" />
+
+            <ImageView
+                android:id="@+id/wifi4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="31dp"
+                android:layout_toLeftOf="@+id/battery"
+                android:src="@drawable/wifi4" />
+
+            <TextView
+                android:id="@+id/battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ImageView05"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="19dp"
+                android:gravity="center"
+                android:text="60%"
+                android:textColor="@color/white" />
+
         </RelativeLayout>
     </RelativeLayout>
 
