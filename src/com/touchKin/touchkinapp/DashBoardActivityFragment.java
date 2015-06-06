@@ -16,6 +16,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
@@ -37,10 +39,13 @@ public class DashBoardActivityFragment extends Fragment implements
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	TextView battery;
+	ImageView battery5, wifi4, network4;
 	TelephonyManager Tel;
 	MyPhoneStateListener MyListener;
 	TextView parentName;
 	ParentListModel parent;
+
+	Context context;
 
 	// newInstance constructor for creating fragment with arguments
 	public static DashBoardActivityFragment newInstance(int page, String title) {
@@ -134,8 +139,12 @@ public class DashBoardActivityFragment extends Fragment implements
 		slice = new PieSlice();
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
+
 		mHoloCircularProgressBar.setSlices(slices);
 		battery = (TextView) view.findViewById(R.id.battery);
+		battery5 = (ImageView) view.findViewById(R.id.battery5);
+		wifi4 = (ImageView) view.findViewById(R.id.wifi4);
+		network4 = (ImageView) view.findViewById(R.id.ImageView05);
 
 		// wifiSignal = (TextView) view.findViewById(R.id.wifi);
 		getActivity().registerReceiver(this.mBatInfoReceiver,
@@ -241,6 +250,24 @@ public class DashBoardActivityFragment extends Fragment implements
 		public void onReceive(Context ctxt, Intent intent) {
 			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
 			battery.setText(String.valueOf(level) + "%");
+			if (level == 100) {
+				battery5.setImageResource(R.drawable.battery100);
+			} else if (level >= 80 || level < 100) {
+				battery5.setImageResource(R.drawable.battery80);
+
+			} else if (level >= 60 || level < 80) {
+				battery5.setImageResource(R.drawable.battery60);
+
+			} else if (level >= 40 || level < 60) {
+				battery5.setImageResource(R.drawable.battery40);
+
+			} else if (level >= 20 || level < 40) {
+				battery5.setImageResource(R.drawable.battery20);
+
+			} else if (level == 0) {
+				battery5.setImageResource(R.drawable.battery0);
+
+			}
 		}
 	};
 
@@ -250,12 +277,40 @@ public class DashBoardActivityFragment extends Fragment implements
 		int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(),
 				numberOfLevels);
 		float val = ((float) level / numberOfLevels) * 100f;
+		Log.d("wifi", level + " " + val);
+		if (level == 5) {
+			wifi4.setImageResource(R.drawable.wifi4);
+		} else if (level == 4) {
+			wifi4.setImageResource(R.drawable.wifi3);
+
+		} else if (level == 3) {
+			wifi4.setImageResource(R.drawable.wifi3);
+
+		} else if (level == 2) {
+			wifi4.setImageResource(R.drawable.wifi2);
+
+		} else if (level == 1) {
+			wifi4.setImageResource(R.drawable.wifi1);
+
+		} else if (level == 0) {
+			wifi4.setImageResource(R.drawable.wifi0);
+
+		}
 		// wifiSignal.setText("Wifi " + ' ' + String.valueOf((int) val) + "%");
 	}
 
 	/* —————————– */
 	/* Start the PhoneState listener */
 	/* —————————– */
+	// @SuppressWarnings("deprecation")
+	// private static boolean isAirplaneModeOn(Context context) {
+	// boolean isEnabled = Settings.System.getInt(
+	// context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON,
+	// 0) == 1;
+	// return isEnabled;
+	//
+	// }
+
 	private class MyPhoneStateListener extends PhoneStateListener {
 		/*
 		 * Get the Signal strength from the provider, each tiome there is an
@@ -264,10 +319,33 @@ public class DashBoardActivityFragment extends Fragment implements
 		@Override
 		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
 			super.onSignalStrengthsChanged(signalStrength);
-			// signalStr.setText("Signal " + ' '
-			// + String.valueOf(signalStrength.getGsmSignalStrength()));
-		}
+			int level = signalStrength.getGsmSignalStrength();
+			Log.d("signal", "" + level);
+			// if (!isAirplaneModeOn(context)) {
+			if (level >= 24) {
+				network4.setImageResource(R.drawable.network4);
 
-	};/* End of private Class */
+			} else if (level >= 16 || level < 24) {
+				network4.setImageResource(R.drawable.network3);
+
+			} else if (level >= 8 || level < 16) {
+				network4.setImageResource(R.drawable.network2);
+
+			} else if (level >= 0 || level < 8) {
+				network4.setImageResource(R.drawable.network1);
+
+			} else if (level == 0) {
+				network4.setImageResource(R.drawable.network0);
+
+			}
+		}
+		// else {
+		// network4.setImageResource(R.drawable.network0);
+		// }
+		// signalStr.setText("Signal " + ' '
+		// + String.valueOf(signalStrength.getGsmSignalStrength()));
+	}
+
+	/* End of private Class */
 
 }

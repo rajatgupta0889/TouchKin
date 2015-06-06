@@ -112,7 +112,7 @@ public class DashboardLocationFragment extends Fragment implements
 			view = inflater.inflate(R.layout.dashboard_location_screen,
 					container, false);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
-			parentName = (TextView) view.findViewById(R.id.parentNameTV);
+			parentName = (TextView) view.findViewById(R.id.ParentLocTV);
 			if (parent != null)
 				parentName.setText(parent.getParentName() + " is in ");
 		} catch (InflateException e) {
@@ -397,7 +397,7 @@ public class DashboardLocationFragment extends Fragment implements
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
 		if (parent != null) {
-			parentName.setText(parent.getParentName() + " activity ");
+			parentName.setText(parent.getParentName() + " is in ");
 		}
 	}
 
