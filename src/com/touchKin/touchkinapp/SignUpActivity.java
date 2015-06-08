@@ -10,16 +10,12 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Matrix;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,18 +31,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -300,10 +290,14 @@ public class SignUpActivity extends ActionBarActivity {
 		showpDialog();
 		phoneNumber = areaCode + phone_number.getText().toString();
 		JSONObject params = new JSONObject();
+		final String id = getRegistrationId(context);
+		Log.d("reg id ", id);
 		try {
 			params.put("mobile", phoneNumber);
-			params.put("mobile_device_id", getRegistrationId(context));
+			params.put("mobile_device_id", id);
 			params.put("mobile_os", "android");
+			Log.d("reg id ", params.getString("mobile_device_id"));
+
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -316,19 +310,24 @@ public class SignUpActivity extends ActionBarActivity {
 					@Override
 					public void onResponse(JSONObject response) {
 						Intent i = new Intent(SignUpActivity.this,
-								OtpRequestActivity.class);
+								Details.class);
 						Bundle bndlanimation = ActivityOptions
 								.makeCustomAnimation(getApplicationContext(),
 										R.anim.animation, R.anim.animation2)
 								.toBundle();
-						i.putExtra("phoneNumber", phoneNumber);
-						i.putExtra("device_id", getRegistrationId(context));
+						i.putExtra("device_id", id);
 						i.putExtra("device_os", "android");
+						i.putExtra("isLoggedin", false);
+						i.putExtra("isdifferentId", false);
 						startActivity(i, bndlanimation);
+						SharedPreferences userPref = getApplicationContext()
+								.getSharedPreferences("userPref", 0);
+						Editor edit = userPref.edit();
+						edit.putString("user", response.toString());
+						edit.apply();
+						// edit.commit();
+						Log.d(TAG, response.toString());
 
-						// Log.d(TAG, response.toString());
-						// VolleyLog.v("Response:%n %s",
-						// response.toString(4));
 						hidepDialog();
 						finish();
 					}
@@ -337,21 +336,32 @@ public class SignUpActivity extends ActionBarActivity {
 					public void onErrorResponse(VolleyError error) {
 						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
-
+						String json = null;
 						hidepDialog();
 						NetworkResponse response = error.networkResponse;
+
 						// Log.d("Response", response.data.toString());
 						if (response != null && response.data != null) {
 							switch (response.statusCode) {
 							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
 								Intent i = new Intent(SignUpActivity.this,
-										OtpRequestActivity.class);
+										Details.class);
 								Bundle bndlanimation = ActivityOptions
 										.makeCustomAnimation(
 												getApplicationContext(),
 												R.anim.animation,
 												R.anim.animation2).toBundle();
-								i.putExtra("phoneNumber", phoneNumber);
+								i.putExtra("phone_number", phoneNumber);
+								i.putExtra("device_id", id);
+								i.putExtra("device_os", "android");
+								i.putExtra("isLoggedin", false);
+								i.putExtra("isdifferentId", true);
 								startActivity(i, bndlanimation);
 								finish();
 								break;
@@ -564,5 +574,25 @@ public class SignUpActivity extends ActionBarActivity {
 		editor.putString(PROPERTY_REG_ID, regId);
 		editor.putInt(PROPERTY_APP_VERSION, appVersion);
 		editor.commit();
+	}
+
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 }

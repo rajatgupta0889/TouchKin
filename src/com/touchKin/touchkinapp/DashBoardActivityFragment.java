@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class DashBoardActivityFragment extends Fragment implements
@@ -41,6 +42,9 @@ public class DashBoardActivityFragment extends Fragment implements
 	ImageView battery5, wifi4, network4;
 	TelephonyManager Tel;
 	MyPhoneStateListener MyListener;
+	TextView parentName;
+	ParentListModel parent;
+
 	Context context;
 
 	// newInstance constructor for creating fragment with arguments
@@ -67,6 +71,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		View view = inflater.inflate(R.layout.dashboard_activity_screen,
 				container, false);
 		final Resources resources = getResources();
+
+		parentName = (TextView) view.findViewById(R.id.parentNameTV);
 
 		// final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
@@ -141,8 +147,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		network4 = (ImageView) view.findViewById(R.id.ImageView05);
 
 		// wifiSignal = (TextView) view.findViewById(R.id.wifi);
-		getActivity().registerReceiver(this.mBatInfoReceiver,
-				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
 		WifiManager wifi = (WifiManager) getActivity().getSystemService(
 				Context.WIFI_SERVICE);
 		onReceive(wifi);
@@ -218,6 +223,14 @@ public class DashBoardActivityFragment extends Fragment implements
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		getActivity().registerReceiver(this.mBatInfoReceiver,
+				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+	};
+
+	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
@@ -232,7 +245,11 @@ public class DashBoardActivityFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		Log.d("Parent", parent + "");
+		if (parent != null) {
+			parentName.setText(parent.getParentName() + " activity ");
+		}
 	}
 
 	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {

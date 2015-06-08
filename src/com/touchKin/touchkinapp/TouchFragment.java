@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
@@ -30,6 +31,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	ImageView parentImage;
+	TextView parentName;
 	ParentListModel parent;
 
 	// newInstance constructor for creating fragment with arguments
@@ -40,6 +42,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		args.putString("someTitle", title);
 		touchFragment.setArguments(args);
 		return touchFragment;
+
 	}
 
 	// Store instance variables based on arguments passed
@@ -58,11 +61,13 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		// final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
+
 		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
 		PieSlice slice = new PieSlice();
+		parentName = (TextView) view.findViewById(R.id.parentNameTV);
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
-		;
+
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		slice = new PieSlice();
@@ -218,12 +223,14 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	private void SetImage() {
 		// TODO Auto-generated method stub
 		ImageLoader imageLoader = new ImageLoader(getActivity());
-
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+
 		Log.d("Parent", "" + parent);
 		if (parent != null) {
 			imageLoader.DisplayImage(serverPath + parent.getParentId()
 					+ ".jpeg", R.drawable.ic_user_image, parentImage);
+
+			parentName.setText(parent.getParentName() + " last touch ");
 		}
 	}
 

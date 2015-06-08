@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="5dp"
-        android:text="Add Senior"
+        android:text="Add"
         android:textColor="@color/white"
         android:textSize="20sp" />
 

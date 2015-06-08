@@ -51,7 +51,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
         android:hint="Name"
-        android:imeOptions="actionNext" />
+        android:imeOptions="actionNext"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/number"
@@ -72,6 +73,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
         android:hint="Care reciever nickname"
-        android:imeOptions="actionDone" />
+        android:imeOptions="actionSend"
+        android:inputType="text" />
 
 </LinearLayout>

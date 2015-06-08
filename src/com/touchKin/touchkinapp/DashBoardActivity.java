@@ -586,7 +586,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		Toast.makeText(DashBoardActivity.this, "View image ",
 				Toast.LENGTH_SHORT).show();
 		Intent i = new Intent(DashBoardActivity.this, Details.class);
-		i.putExtra("fromOtp", false);
+		i.putExtra("isLoggedin", true);
 		startActivity(i);
 	}
 

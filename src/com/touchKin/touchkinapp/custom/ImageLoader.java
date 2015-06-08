@@ -41,9 +41,9 @@ public class ImageLoader {
 		stub_id = loader;
 		imageViews.put(imageView, url);
 		Bitmap bitmap = memoryCache.get(url);
-		if (bitmap != null)
+		if (bitmap != null) {
 			imageView.setImageBitmap(bitmap);
-		else {
+		} else {
 			queuePhoto(url, imageView);
 			imageView.setImageResource(loader);
 		}
