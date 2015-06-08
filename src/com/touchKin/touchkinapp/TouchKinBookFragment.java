@@ -1,7 +1,6 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -16,25 +15,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.aphidmobile.flip.FlipViewController;
-import com.touchKin.touchkinapp.adapter.CommentListAdapter;
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.FlipViewAdapter;
-import com.touchKin.touchkinapp.custom.Helper;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.TouchKinBookModel;
-import com.touchKin.touchkinapp.model.TouchKinComments;
 import com.touchKin.touckinapp.R;
 
-public class TouchKinBookFragment extends Fragment {
+public class TouchKinBookFragment extends Fragment implements
+		ButtonClickListener {
 
 	// List<TouchKinComments> commentList;
 	// CommentListAdapter adapter;
@@ -51,7 +50,8 @@ public class TouchKinBookFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		// host.getTabWidget().setVisibility(View.GONE);
-
+		touchKinBook = new ArrayList<TouchKinBookModel>();
+		touchKinBook.add(new TouchKinBookModel());
 		getKinMessages();
 	}
 
@@ -63,6 +63,7 @@ public class TouchKinBookFragment extends Fragment {
 		View v = inflater.inflate(R.layout.tochkin_book_fragment, null);
 
 		init(v);
+
 		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
 		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		tv = (TextView) v.findViewById(R.id.msg);
@@ -112,7 +113,6 @@ public class TouchKinBookFragment extends Fragment {
 		JsonArrayRequest req = new JsonArrayRequest(
 				"http://54.69.183.186:1340/kinbook/messages",
 				new Listener<JSONArray>() {
-
 					@Override
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
@@ -163,10 +163,8 @@ public class TouchKinBookFragment extends Fragment {
 								e.printStackTrace();
 							}
 						}
-						flipViewAdapter = new FlipViewAdapter(touchKinBook,
-								getActivity());
 						flipView.setAdapter(flipViewAdapter);
-						touchKinBook.add(new TouchKinBookModel());
+						flipViewAdapter.notifyDataSetChanged();
 						if (touchKinBook.size() < 2) {
 							tv.setVisibility(View.VISIBLE);
 							tv.setText("You donot have any Kibook messages !!");
@@ -191,11 +189,47 @@ public class TouchKinBookFragment extends Fragment {
 	void init(View v) {
 		// commentList = new ArrayList<TouchKinComments>();
 		// adapter = new CommentListAdapter(commentList, getActivity());
-		touchKinBook = new ArrayList<TouchKinBookModel>();
 		flipView = (FlipViewController) v.findViewById(R.id.flipView);
+		flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
+		flipViewAdapter.setCustomButtonListner(TouchKinBookFragment.this);
 
 	}
 
+	@Override
+	public void onButtonClickListner(int position, String value,
+			Boolean isAccept) {
+		// TODO Auto-generated method stub
+		if (!isAccept) {
+			deleteKinBook(value, position);
+		}
+
+	}
+
+	private void deleteKinBook(String value, final int position) {
+		// TODO Auto-generated method stub
+		JSONObject params = new JSONObject();
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE,
+				"http://54.69.183.186:1340/kinbook/message/delete/" + value,
+				params, new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						// Display the first 500 characters of the response
+						// string.
+						Log.d("kinBook", "Delete the kinbook");
+						touchKinBook.remove(position);
+						flipViewAdapter.notifyDataSetChanged();
+
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+
+					}
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
+	}
 	// private List<TouchKinComments> getCommentList(JSONArray comments) {
 	// List<TouchKinComments> list = new ArrayList<TouchKinComments>();
 	// try {
