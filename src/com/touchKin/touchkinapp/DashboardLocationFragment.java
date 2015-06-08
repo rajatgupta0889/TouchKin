@@ -58,7 +58,7 @@ public class DashboardLocationFragment extends Fragment implements
 		FragmentInterface, ConnectionCallbacks, OnConnectionFailedListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
-	TextView parentName;
+	TextView parentName, parentNameBottom;
 	ParentListModel parent;
 
 	Marker googleMarker = null;
@@ -113,6 +113,7 @@ public class DashboardLocationFragment extends Fragment implements
 					container, false);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 			parentName = (TextView) view.findViewById(R.id.ParentLocTV);
+			parentNameBottom = (TextView) view.findViewById(R.id.textView5);
 			if (parent != null)
 				parentName.setText(parent.getParentName() + " is in ");
 		} catch (InflateException e) {
@@ -398,6 +399,8 @@ public class DashboardLocationFragment extends Fragment implements
 		Log.d("Parent", parent + "");
 		if (parent != null) {
 			parentName.setText(parent.getParentName() + " is in ");
+			parentNameBottom.setText("Tap on map to set "
+					+ parent.getParentName() + "'s");
 		}
 	}
 

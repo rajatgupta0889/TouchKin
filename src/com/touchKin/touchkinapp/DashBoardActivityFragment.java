@@ -147,8 +147,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		network4 = (ImageView) view.findViewById(R.id.ImageView05);
 
 		// wifiSignal = (TextView) view.findViewById(R.id.wifi);
-		getActivity().registerReceiver(this.mBatInfoReceiver,
-				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
 		WifiManager wifi = (WifiManager) getActivity().getSystemService(
 				Context.WIFI_SERVICE);
 		onReceive(wifi);
@@ -222,6 +221,14 @@ public class DashBoardActivityFragment extends Fragment implements
 		super.onDestroy();
 		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
 	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		getActivity().registerReceiver(this.mBatInfoReceiver,
+				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+	};
 
 	@Override
 	public void onStop() {

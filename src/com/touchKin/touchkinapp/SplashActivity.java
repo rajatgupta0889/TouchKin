@@ -62,7 +62,8 @@ public class SplashActivity extends Activity {
 		if (pref.getString("mobile", null) != null
 				&& pref.getString("otp", null) != null) {
 			sendIntent(pref.getString("mobile", null),
-					pref.getString("otp", null));
+					pref.getString("otp", null),
+					pref.getString("device_id", null));
 			// new SendRequest().execute(params)
 		} else {
 			new Handler().postDelayed(new Runnable() {
@@ -97,13 +98,15 @@ public class SplashActivity extends Activity {
 		return true;
 	}
 
-	public void sendIntent(String phone, String otp) {
+	public void sendIntent(String phone, String otp, String id) {
 		if (phone != null && otp != null) {
 
 			JSONObject params = new JSONObject();
 			try {
 				params.put("mobile", phone);
 				params.put("code", Integer.parseInt(otp));
+				params.put("mobile_device_id", id);
+				params.put("mobile_os", "android");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -154,21 +157,21 @@ public class SplashActivity extends Activity {
 		}
 	}
 
-	private class SendRequest extends AsyncTask<String, Void, Void> {
-		/**
-		 * The system calls this to perform work in a worker thread and delivers
-		 * it the parameters given to AsyncTask.execute()
-		 */
-		protected void onPostExecute(Void result) {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			sendIntent(params[0], params[1]);
-			return null;
-		}
-	}
+	// private class SendRequest extends AsyncTask<String, Void, Void> {
+	// /**
+	// * The system calls this to perform work in a worker thread and delivers
+	// * it the parameters given to AsyncTask.execute()
+	// */
+	// protected void onPostExecute(Void result) {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... params) {
+	// // TODO Auto-generated method stub
+	// sendIntent(params[0], params[1]);
+	// return null;
+	// }
+	// }
 
 }

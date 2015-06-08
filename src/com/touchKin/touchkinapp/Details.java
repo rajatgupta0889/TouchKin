@@ -3,11 +3,9 @@ package com.touchKin.touchkinapp;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -22,22 +20,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
@@ -65,14 +64,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.touchKin.touchkinapp.custom.CustomRequest;
+import com.touchKin.touchkinapp.broadcastReciever.IncomingSMS;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.RequestModel;
+import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
 
 public class Details extends ActionBarActivity implements OnClickListener {
@@ -80,7 +77,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	final int PIC_CROP = 2;
 	private Uri selectedImageUri;
 	Button next;
-	TextView detail, phone_detail, userYear;
+	TextView phone_detail, userYear;
 	EditText name;
 	String name_detail, phone;
 	boolean hasFocus = false;
@@ -98,16 +95,33 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	String image_url;
 	private ProgressDialog pDialog;
 	private Toolbar toolbar;
-	TextView mTitle;
+	TextView mTitle, textTv;
 	List<RequestModel> requestList;
 	final String TAG = "Details";
 	Boolean male = true;
 	String yob = null;
+	IncomingSMS reciever;
+	String oneTimePass;
+	String deviceId, mobile_os;
+	String code;
+	EditText otp;
+	Boolean verified = false;
+	Button enterManually, resendOTP;
+	Boolean isLoggedIn;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_info);
 		init();
+		isLoggedIn = getIntent().getExtras().getBoolean("isLoggedin");
+		if (!isLoggedIn) {
+			deviceId = getIntent().getExtras().getString("device_id");
+			if (getIntent().getExtras().getBoolean("isdifferentId")) {
+				phone = getIntent().getExtras().getString("phone_number");
+			}
+			Log.d("Data ", "Phone " + phone + " mobile_os " + mobile_os + "id "
+					+ deviceId);
+		}
 
 		// if (getIntent() != null) {
 		// if (getIntent().getExtras().getBoolean("fromOtp")) {
@@ -120,15 +134,60 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		// }
 		// }
 
-		getUserInfo();
+		// getUserInfo();
 		pDialog.setMessage("Updating info");
 		pDialog.setCancelable(false);
-		// phone_detail.setText(phone);
+
+		SharedPreferences userPref = getApplicationContext()
+				.getSharedPreferences("userPref", 0);
+
+		String user = userPref.getString("user", null);
+		// Log.d("User", user + " ");
+		if (user != null) {
+			try {
+				JSONObject obj = new JSONObject(user);
+
+				Log.d("User", obj + "");
+				phone = obj.optString("mobile");
+				if (obj.has("first_name")) {
+					name.setText(obj.optString("first_name"));
+
+					String yob = obj.getString("yob");
+					if (yob != null) {
+						Log.d("YOB", yob);
+						userYear.setText(yob);
+						Calendar calendar = Calendar.getInstance();
+						int year = calendar.get(Calendar.YEAR);
+						userAge.setText("" + (year - Integer.parseInt(yob)));
+						verified = true;
+						if (!isLoggedIn) {
+							otp.setText(obj
+									.optString("mobile_verification_code"));
+							sendIntent();
+						}
+					}
+					String gender = obj.optString("gender");
+					if (!gender.equalsIgnoreCase("male"))
+						male = false;
+				}
+				userID = obj.optString("id");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (verified) {
+			enterManually.setVisibility(View.INVISIBLE);
+			resendOTP.setVisibility(View.INVISIBLE);
+			textTv.setVisibility(View.INVISIBLE);
+		}
+		phone_detail.setText(phone);
 		// Image url
-		// image_url = serverPath + userID + ".jpeg";
+		image_url = serverPath + userID + ".jpeg";
 		mTitle.setText("Profile");
 		// ImageLoader class instance
 		imgLoader = new ImageLoader(getApplicationContext());
+		imgLoader.DisplayImage(image_url, R.drawable.people, imgView);
 		// new MyTask().execute(image_url);
 		// whenever you want to load an image from url
 		// call DisplayImage function
@@ -137,7 +196,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		// image - ImageView
 
 		next.setOnClickListener(this);
-		detail.setOnClickListener(this);
+		// detail.setOnClickListener(this);
 		// if (userName != null && !userName.isEmpty()) {
 		// detail.setText(userName);
 		// name.setText(userName);
@@ -148,6 +207,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		// int year = calendar.get(Calendar.YEAR);
 		// userAge.setText(year - Integer.parseInt(yob));
 		// }
+		enterManually.setOnClickListener(this);
+		resendOTP.setOnClickListener(this);
 		userAge.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
@@ -186,7 +247,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	private void init() {
 		// TODO Auto-generated method stub
 		next = (Button) findViewById(R.id.next_detail_button);
-		detail = (TextView) findViewById(R.id.add_name);
+		// detail = (TextView) findViewById(R.id.add_name);
 		phone_detail = (TextView) findViewById(R.id.phn_number_detail);
 		name = (EditText) findViewById(R.id.edit_name);
 		addImageView = (ImageView) findViewById(R.id.profile_pic);
@@ -198,6 +259,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		userAge = (EditText) findViewById(R.id.userAge);
 		userYear = (TextView) findViewById(R.id.userYear);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+		otp = (EditText) findViewById(R.id.otp_editText);
+		enterManually = (Button) findViewById(R.id.enter_otp);
+		resendOTP = (Button) findViewById(R.id.resendOtp);
+		textTv = (TextView) findViewById(R.id.textTv);
 	}
 
 	@Override
@@ -207,43 +272,80 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		case R.id.next_detail_button:
 			if (!name.getText().toString().isEmpty()
 					&& !userAge.getText().toString().isEmpty()) {
-				String userName = name.getText().toString();
-				String gender = "male";
-				if (!male) {
-					gender = "female";
+				if (verified) {
+					String userName = name.getText().toString();
+					String gender = "male";
+					if (!male) {
+						gender = "female";
+					}
+					String yob = userYear.getText().toString();
+					if (name.isDirty() || userAge.isDirty()) {
+						updateUser(userName, gender, yob);
+					} else {
+						if (isLoggedIn)
+							finish();
+					}
+					if (!isLoggedIn)
+						getConnectionRequest();
+
+				} else {
+					Toast.makeText(Details.this,
+							"PLease wait while we verify you",
+							Toast.LENGTH_SHORT).show();
 				}
-				String yob = userYear.getText().toString();
-				updateUser(userName, gender, yob);
-				getConnectionRequest();
 			} else {
-				Toast.makeText(Details.this, "PLease Add your Name",
+				Toast.makeText(Details.this, "PLease Add your Name and age",
 						Toast.LENGTH_SHORT).show();
 			}
-			// =======
-			// // if (!name.getText().toString().isEmpty()) {
-			// // String userName = name.getText().toString();
-			// // updateUser(userName);
-			// // getConnectionRequest();
-			// Intent intent = new Intent(Details.this, AddCareActivity.class);
-			// Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
-			// getApplicationContext(), R.anim.animation,
-			// R.anim.animation2).toBundle();
-			// startActivity(intent, bndlanimation);
-			// // } else {
-			// // Toast.makeText(Details.this, "PLease Add your Name",
-			// // Toast.LENGTH_SHORT).show();
-			// // }
-			// >>>>>>> 894dff3bee0a0f3854c747e997d954fd54a5a35c
 			break;
 		case R.id.add_name:
-			detail.setVisibility(View.GONE);
+			// detail.setVisibility(View.GONE);
 			name.setVisibility(View.VISIBLE);
 			// name_detail = name.getText().toString();
 			// detail.setText(name_detail);
 			break;
+		case R.id.enter_otp:
+			otp.setVisibility(View.VISIBLE);
+			textTv.setVisibility(View.GONE);
+		case R.id.resendOtp:
+			resendOtp();
 		default:
 			break;
 		}
+	}
+
+	private void resendOtp() {
+		// TODO Auto-generated method stub
+		pDialog.setMessage("Resending OTP");
+		showpDialog();
+
+		JSONObject params = new JSONObject();
+		try {
+			params.put("mobile", phone);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/user/send-mobile-verification-code",
+				params, new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d(TAG, response.toString());
+						hidepDialog();
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						hidepDialog();
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
 	}
 
 	public void loadImagefromGallery(View view) {
@@ -550,12 +652,22 @@ public class Details extends ActionBarActivity implements OnClickListener {
 							Editor edit = pref.edit();
 							edit.putString("name",
 									response.getString("first_name"));
+							Log.d("complete profile", response + "");
+							edit.apply();
+
+							SharedPreferences userPref = getApplicationContext()
+									.getSharedPreferences("userPref", 0);
+							edit = userPref.edit();
+							edit.putString("user", response.toString());
 							edit.apply();
 							// Log.d("Response", "" + response);
 							// Log.d("mobile", "" + pref.getString("mobile",
 							// null));
 							// Log.d("otp", "" + pref.getString("mobile",
 							// null));
+							if (isLoggedIn) {
+								finish();
+							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -734,78 +846,231 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 	}
 
-	public void getUserInfo() {
-		pDialog.setMessage("Fetching User Info");
+	// public void getUserInfo() {
+	// pDialog.setMessage("Fetching User Info");
+	// showpDialog();
+	// CustomRequest req = new CustomRequest(
+	// "http://54.69.183.186:1340/user/profile",
+	// new Listener<JSONObject>() {
+	// @Override
+	// public void onResponse(JSONObject responseArray) {
+	// // TODO Auto-generated method stub
+	// Log.d("Response Array", " " + responseArray);
+	// hidepDialog();
+	// try {
+	// phone = responseArray.getString("mobile");
+	// userID = responseArray.getString("id");
+	//
+	// if (responseArray.has("gender")
+	// && !responseArray.isNull("gender")) {
+	// if (responseArray.getString("gender").equals(
+	// "male")) {
+	// male = true;
+	// } else {
+	// male = false;
+	// }
+	// if (male)
+	// radioGroup.check(R.id.radioMale);
+	// else
+	// radioGroup.check(R.id.radioFemale);
+	// if (responseArray.has("yob")
+	// && !(responseArray.isNull("yob"))) {
+	// yob = responseArray.getString("yob");
+	// if (!yob.equalsIgnoreCase(null)) {
+	// Log.d("YOB", yob);
+	// userYear.setText(yob);
+	// Calendar calendar = Calendar
+	// .getInstance();
+	// int year = calendar.get(Calendar.YEAR);
+	// userAge.setText(""
+	// + (year - Integer.parseInt(yob)));
+	// }
+	// }
+	// if (responseArray.has("first_name")) {
+	// userName = responseArray
+	// .getString("first_name");
+	// // detail.setText(userName);
+	// name.setText(userName);
+	//
+	// }
+	//
+	// }
+	// phone_detail.setText(phone);
+	// image_url = serverPath + userID + ".jpeg";
+	// imgLoader.DisplayImage(image_url,
+	// R.drawable.people, imgView);
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	//
+	// }, new Response.ErrorListener() {
+	// @Override
+	// public void onErrorResponse(VolleyError error) {
+	// hidepDialog();
+	// VolleyLog.e("Error get contach Info: ",
+	// error.getMessage());
+	// }
+	//
+	// });
+	//
+	// AppController.getInstance().addToRequestQueue(req);
+	//
+	// }
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		reciever = new IncomingSMS();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		registerReceiver(reciever, filter);
+
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		new Handler().postDelayed(new Runnable() {
+			public void run() {
+				Details.this.unregisterReceiver(reciever);
+			}
+		}, 0);
+		super.onStop();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d("YourActivity", "onNewIntent is called!");
+
+		code = intent.getStringExtra("code");
+		Log.d("code", code);
+		otp.setText(code);
+		sendIntent();
+	} // End of onNewIntent(Intent intent)
+
+	private boolean checkValidation() {
+		boolean ret = true;
+
+		if (!Validation.isOTPNumber(otp, true)) {
+			ret = false;
+		}
+		return ret;
+	}
+
+	public void sendIntent() {
 		showpDialog();
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/user/profile",
-				new Listener<JSONObject>() {
+		oneTimePass = otp.getText().toString();
+		JSONObject params = new JSONObject();
+		try {
+			params.put("mobile", phone);
+			params.put("code", Integer.parseInt(oneTimePass));
+			params.put("mobile_device_id", deviceId);
+			params.put("mobile_os", "android");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/user/verify-mobile", params,
+				new Response.Listener<JSONObject>() {
+					@SuppressLint("NewApi")
 					@Override
-					public void onResponse(JSONObject responseArray) {
-						// TODO Auto-generated method stub
-						Log.d("Response Array", " " + responseArray);
-						hidepDialog();
+					public void onResponse(JSONObject response) {
+
+						SharedPreferences pref = getApplicationContext()
+								.getSharedPreferences("loginPref", 0);
 						try {
-							phone = responseArray.getString("mobile");
-							userID = responseArray.getString("id");
 
-							if (responseArray.has("gender")
-									&& !responseArray.isNull("gender")) {
-								if (responseArray.getString("gender").equals(
-										"male")) {
-									male = true;
-								} else {
-									male = false;
-								}
-								if (male)
-									radioGroup.check(R.id.radioMale);
-								else
-									radioGroup.check(R.id.radioFemale);
-								if (responseArray.has("yob")
-										&& !(responseArray.isNull("yob"))) {
-									yob = responseArray.getString("yob");
-									if (!yob.equalsIgnoreCase(null)) {
-										Log.d("YOB", yob);
-										userYear.setText(yob);
-										Calendar calendar = Calendar
-												.getInstance();
-										int year = calendar.get(Calendar.YEAR);
-										userAge.setText(""
-												+ (year - Integer.parseInt(yob)));
-									}
-								}
-								if (responseArray.has("first_name")) {
-									userName = responseArray
-											.getString("first_name");
-									detail.setText(userName);
-									name.setText(userName);
-
-								}
-
+							Editor edit = pref.edit();
+							edit.putString("mobile",
+									response.getString("mobile"));
+							edit.putString("otp", response
+									.getString("mobile_verification_code"));
+							edit.putString("id", response.getString("id"));
+							edit.putString("device_id",
+									response.optString("mobile_device_id"));
+							edit.apply();
+							if (response.has("first_name")) {
+								userName = response.getString("first_name");
 							}
-							phone_detail.setText(phone);
-							image_url = serverPath + userID + ".jpeg";
-							imgLoader.DisplayImage(image_url,
-									R.drawable.people, imgView);
+							userID = response.getString("id");
+
+							Log.d("Response", "" + response);
+							// Log.d("mobile", "" + pref.getString("mobile",
+							// null));
+							// Log.d("otp", "" + pref.getString("mobile",
+							// null));
+							verified = true;
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						//
+						// Intent i = new Intent(Details.this, Details.class);
+						// Bundle bndlanimation = ActivityOptions
+						// .makeCustomAnimation(getApplicationContext(),
+						// R.anim.animation, R.anim.animation2)
+						// .toBundle();
+						// i.putExtra("phoneNumber", phone);
+						// i.putExtra("id", userID);
+						// i.putExtra("fromOtp", true);
+						// if (userName != null)
+						// i.putExtra("first_name", userName);
+						//
+						// startActivity(i, bndlanimation);
 
+						// Log.d(TAG, response.toString());
+						// VolleyLog.v("Response:%n %s",
+						// response.toString(4));
+						hidepDialog();
+						// finish();
 					}
-
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+
+						if (response != null && response.data != null) {
+							int code = response.statusCode;
+							json = new String(response.data);
+							json = trimMessage(json, "message");
+							if (json != null)
+								displayMessage(json, code);
+
+						}
 						hidepDialog();
-						VolleyLog.e("Error get contach Info: ",
-								error.getMessage());
 					}
 
 				});
 
 		AppController.getInstance().addToRequestQueue(req);
+	}
 
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 
 }
