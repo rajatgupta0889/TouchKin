@@ -1,7 +1,5 @@
 package com.touchKin.touchkinapp.broadcastReciever;
 
-import com.touchKin.touchkinapp.OtpRequestActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +8,8 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.touchKin.touchkinapp.Details;
 
 public class IncomingSMS extends BroadcastReceiver {
 
@@ -45,7 +45,7 @@ public class IncomingSMS extends BroadcastReceiver {
 					Toast toast = Toast.makeText(context, "senderNum: "
 							+ senderNum + ", message: " + message, duration);
 					Intent intent2open = new Intent(context,
-							OtpRequestActivity.class);
+							Details.class);
 					intent2open.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent2open.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					String value = message.replaceAll("[^0-9]", "");

@@ -1,76 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff" >
+    android:background="#ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true" >
 
     <include
         android:id="@+id/tool_bar"
         layout="@layout/toolbar" >
     </include>
-
-    <RelativeLayout
-        android:id="@+id/RelativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tool_bar"
-        android:layout_marginTop="10dp"
-        android:background="#f8f8f8"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/profile_pic"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:onClick="loadImagefromGallery"
-            android:src="@drawable/people" />
-
-        <com.touchKin.touchkinapp.custom.RoundedImageView
-            android:id="@+id/change_profile_pic"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/add_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_pic"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:paddingBottom="10dp"
-            android:text="Add Name"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/edit_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_pic"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingBottom="10dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:visibility="invisible" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/RelativeLayout1"
-        android:layout_marginTop="10dp"
-        android:drawableLeft="@drawable/phone_pic"
-        android:gravity="center_vertical"
-        android:text="Phone Number" />
 
     <Button
         android:id="@+id/next_detail_button"
@@ -82,17 +20,154 @@
         android:layout_marginRight="19dp"
         android:background="@drawable/next_button" />
 
+    <!--
+             <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp" />
+    -->
+
+    <ImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tool_bar"
+        android:onClick="loadImagefromGallery"
+        android:src="@drawable/people" />
+
+    <com.touchKin.touchkinapp.custom.RoundedImageView
+        android:id="@+id/change_profile_pic"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tool_bar" />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tool_bar"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/change_profile_pic"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Name" >
+    </EditText>
+
     <TextView
         android:id="@+id/phn_number_detail"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_below="@+id/RelativeLayout1"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/textView2"
-        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/edit_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="40dp"
+        android:layout_toRightOf="@+id/change_profile_pic"
+        android:gravity="center"
         android:hint="9066665428"
         android:textColor="@color/text_orange"
         android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/userAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/change_profile_pic"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:descendantFocusability="beforeDescendants"
+        android:ems="10"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:hint="Age"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:maxLength="2" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/radioGroup"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="Please wait while we verify your mobile number via OTP" />
+
+    <TextView
+        android:id="@+id/userYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/userAge"
+        android:layout_alignBottom="@+id/userAge"
+        android:layout_toLeftOf="@+id/next_detail_button"
+        android:layout_weight="1"
+        android:text="TextView" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Male" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Female" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/resendOtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/enter_otp"
+        android:layout_alignBottom="@+id/enter_otp"
+        android:layout_alignParentRight="true"
+        android:text="Resend OTP" />
+
+    <EditText
+        android:id="@+id/otp_editText"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/enter_otp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edit_text_holo_light"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="OTP"
+        android:inputType="phone"
+        android:textSize="30dp"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/enter_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next_detail_button"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp"
+        android:text="Enter Manually" />
 
 </RelativeLayout>
