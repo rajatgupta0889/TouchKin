@@ -48,11 +48,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
@@ -95,6 +99,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	String image_url;
 	private ProgressDialog pDialog;
 	private Toolbar toolbar;
+	List<String> list = new ArrayList<String>();
 	TextView mTitle, textTv;
 	List<RequestModel> requestList;
 	final String TAG = "Details";
@@ -104,6 +109,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	String oneTimePass;
 	String deviceId, mobile_os;
 	String code;
+	Spinner year_spinner;
+	int[] age_year;
 	EditText otp;
 	Boolean verified = false;
 	Button enterManually, resendOTP;
@@ -142,6 +149,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				.getSharedPreferences("userPref", 0);
 
 		String user = userPref.getString("user", null);
+
 		// Log.d("User", user + " ");
 		if (user != null) {
 			try {
@@ -155,7 +163,15 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					String yob = obj.getString("yob");
 					if (yob != null) {
 						Log.d("YOB", yob);
-						userYear.setText(yob);
+
+						age_year[0] = Integer.parseInt(yob) - 1;
+						age_year[1] = Integer.parseInt(yob);
+						age_year[2] = Integer.parseInt(yob) + 1;
+
+						list.add("" + age_year[0]);
+						list.add("" + age_year[1]);
+						list.add("" + age_year[2]);
+						year_spinner.setSelection(1);
 						Calendar calendar = Calendar.getInstance();
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
@@ -181,6 +197,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			resendOTP.setVisibility(View.INVISIBLE);
 			textTv.setVisibility(View.INVISIBLE);
 		}
+
 		phone_detail.setText(phone);
 		// Image url
 		image_url = serverPath + userID + ".jpeg";
@@ -209,6 +226,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		// }
 		enterManually.setOnClickListener(this);
 		resendOTP.setOnClickListener(this);
+
 		userAge.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
@@ -220,7 +238,14 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					Calendar calendar = Calendar.getInstance();
 					int year = calendar.get(Calendar.YEAR);
 					int yob = year - Integer.parseInt(age);
-					userYear.setText(" " + yob);
+					age_year[0] = yob - 1;
+					age_year[1] = yob;
+					age_year[2] = yob + 1;
+
+					list.add("" + age_year[0]);
+					list.add("" + age_year[1]);
+					list.add("" + age_year[2]);
+					year_spinner.setSelection(1);
 				}
 				return false;
 			}
@@ -242,6 +267,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						}
 					}
 				});
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, list);
+		dataAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		year_spinner.setAdapter(dataAdapter);
 	}
 
 	private void init() {
@@ -263,6 +293,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		enterManually = (Button) findViewById(R.id.enter_otp);
 		resendOTP = (Button) findViewById(R.id.resendOtp);
 		textTv = (TextView) findViewById(R.id.textTv);
+		age_year = new int[3];
+		year_spinner = (Spinner) findViewById(R.id.year_spinner);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
@@ -60,6 +61,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		// indicator.setOnPageChangeListener(pageListener);
 
 		sendTouch.setOnClickListener(this);
+		getService.setOnClickListener(this);
 		return v;
 	}
 
@@ -102,6 +104,8 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			sendTouch();
 			break;
 		case R.id.getService:
+			Toast.makeText(getActivity(), "call", Toast.LENGTH_SHORT);
+
 			break;
 		default:
 			break;
