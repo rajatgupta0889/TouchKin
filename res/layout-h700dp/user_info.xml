@@ -102,16 +102,6 @@
         android:gravity="center"
         android:text="Please wait while we verify your mobile number via OTP" />
 
-    <TextView
-        android:id="@+id/userYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/userAge"
-        android:layout_alignBottom="@+id/userAge"
-        android:layout_toLeftOf="@+id/next_detail_button"
-        android:layout_weight="1"
-        android:text="TextView" />
-
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
@@ -169,5 +159,15 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="16dp"
         android:text="Enter Manually" />
+
+    <Spinner
+        android:id="@+id/year_spinner"
+        android:layout_width="91dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/userAge"
+        android:layout_alignRight="@+id/next_detail_button"
+        android:layout_marginRight="22dp"
+        android:background="@drawable/spinner_background_holo_light"
+        android:spinnerMode="dialog" />
 
 </RelativeLayout>

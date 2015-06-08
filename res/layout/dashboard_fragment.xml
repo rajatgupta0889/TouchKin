@@ -47,11 +47,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:drawableTop="@drawable/ic_icon_get_service"
+            android:drawableTop="@drawable/call_btn"
             android:gravity="center"
             android:text="Get a Service"
             android:textColor="@color/text_grey"
             android:textSize="15sp" />
+        
     </LinearLayout>
     <!--
     <FrameLayout
