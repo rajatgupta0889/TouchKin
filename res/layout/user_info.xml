@@ -16,17 +16,9 @@
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="26dp"
-        android:layout_marginRight="19dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/next_button" />
-
-    <!--
-             <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp" />
-    -->
 
     <ImageView
         android:id="@+id/profile_pic"
@@ -53,7 +45,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/change_profile_pic"
-        android:ems="10"
+        android:background="@drawable/edit_text_holo_light"
         android:gravity="center"
         android:hint="Name" >
     </EditText>
@@ -65,7 +57,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/edit_name"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:layout_toRightOf="@+id/change_profile_pic"
         android:gravity="center"
         android:hint="9066665428"
@@ -77,19 +69,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/profile_pic"
         android:layout_below="@+id/change_profile_pic"
-        android:layout_marginTop="20dp"
         android:layout_weight="1"
         android:descendantFocusability="beforeDescendants"
-        android:ems="10"
         android:focusableInTouchMode="true"
         android:gravity="center"
         android:hint="Age"
         android:imeOptions="actionDone"
         android:inputType="number"
+        android:background="@drawable/edit_text_holo_light"
         android:maxLength="2" >
-
-        <requestFocus />
     </EditText>
 
     <TextView
@@ -98,16 +88,58 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/radioGroup"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="Please wait while we verify your mobile number via OTP" />
+
+    <Button
+        android:id="@+id/resendOtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/enter_otp"
+        android:layout_alignBottom="@+id/enter_otp"
+        android:layout_alignParentRight="true"
+        android:text="Resend OTP" />
+
+    <EditText
+        android:id="@+id/otp_editText"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/enter_otp"
+        android:layout_below="@+id/textTv"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edit_text_holo_light"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="OTP"
+        android:inputType="phone"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/enter_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next_detail_button"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:text="Enter Manually" />
+
+    <Spinner
+        android:id="@+id/year_spinner"
+        android:layout_width="91dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/userAge"
+        android:layout_alignTop="@+id/userAge"
+        android:layout_toRightOf="@+id/otp_editText"
+        android:background="@drawable/spinner_background_holo_light" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/year_spinner"
         android:orientation="horizontal" >
 
         <RadioButton
@@ -127,46 +159,5 @@
             android:layout_weight="1"
             android:text="Female" />
     </RadioGroup>
-
-    <Button
-        android:id="@+id/resendOtp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/enter_otp"
-        android:layout_alignBottom="@+id/enter_otp"
-        android:layout_alignParentRight="true"
-        android:text="Resend OTP" />
-
-    <EditText
-        android:id="@+id/otp_editText"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/enter_otp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/edit_text_holo_light"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="OTP"
-        android:inputType="phone"
-        android:textSize="30dp"
-        android:visibility="invisible" />
-
-    <Button
-        android:id="@+id/enter_otp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/next_detail_button"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="16dp"
-        android:text="Enter Manually" />
-
-    <Spinner
-        android:id="@+id/year_spinner"
-        android:layout_width="91dp"
-        android:layout_height="30dp"
-        android:layout_alignBottom="@+id/userAge"
-        android:layout_alignLeft="@+id/resendOtp"
-        android:background="@drawable/spinner_background_holo_light"
-        android:spinnerMode="dialog" />
 
 </RelativeLayout>
