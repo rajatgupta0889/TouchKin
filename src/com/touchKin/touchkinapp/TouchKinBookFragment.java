@@ -51,7 +51,7 @@ public class TouchKinBookFragment extends Fragment implements
 		super.onCreate(savedInstanceState);
 		// host.getTabWidget().setVisibility(View.GONE);
 		touchKinBook = new ArrayList<TouchKinBookModel>();
-		touchKinBook.add(new TouchKinBookModel());
+
 		getKinMessages();
 	}
 
@@ -117,6 +117,7 @@ public class TouchKinBookFragment extends Fragment implements
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
+						touchKinBook.add(new TouchKinBookModel());
 						for (int i = 0; i < responseArray.length(); i++) {
 							try {
 								JSONObject obj = responseArray.getJSONObject(i);
@@ -208,8 +209,14 @@ public class TouchKinBookFragment extends Fragment implements
 	private void deleteKinBook(String value, final int position) {
 		// TODO Auto-generated method stub
 		JSONObject params = new JSONObject();
-		JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE,
-				"http://54.69.183.186:1340/kinbook/message/delete/" + value,
+		try {
+			params.put("message_id", value);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JsonObjectRequest req = new JsonObjectRequest(
+				"http://54.69.183.186:1340/kinbook/message/delete/",
 				params, new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {

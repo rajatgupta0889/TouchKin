@@ -81,7 +81,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	final int PIC_CROP = 2;
 	private Uri selectedImageUri;
 	Button next;
-	TextView phone_detail, userYear;
+	TextView phone_detail;
 	EditText name;
 	String name_detail, phone;
 	boolean hasFocus = false;
@@ -176,11 +176,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
 						verified = true;
-						if (!isLoggedIn) {
-							otp.setText(obj
-									.optString("mobile_verification_code"));
-							sendIntent();
-						}
+						// if (!isLoggedIn) {
+						// otp.setText(obj
+						// .optString("mobile_verification_code"));
+						// sendIntent();
+						// }
 					}
 					String gender = obj.optString("gender");
 					if (!gender.equalsIgnoreCase("male"))
@@ -287,7 +287,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		requestList = new ArrayList<RequestModel>();
 		userAge = (EditText) findViewById(R.id.userAge);
-		userYear = (TextView) findViewById(R.id.userYear);
+		// userYear = (TextView) findViewById(R.id.userYear);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		otp = (EditText) findViewById(R.id.otp_editText);
 		enterManually = (Button) findViewById(R.id.enter_otp);
@@ -310,7 +310,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					if (!male) {
 						gender = "female";
 					}
-					String yob = userYear.getText().toString();
+					String yob = (String) year_spinner.getSelectedItem();
 					if (name.isDirty() || userAge.isDirty()) {
 						updateUser(userName, gender, yob);
 					} else {
