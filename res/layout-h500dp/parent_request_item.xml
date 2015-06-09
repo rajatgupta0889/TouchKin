@@ -13,7 +13,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:src="@drawable/mom" />
+        android:src="@drawable/ic_user_image" />
 
     <Button
         android:id="@+id/rejectButton"

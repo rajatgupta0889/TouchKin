@@ -3,6 +3,7 @@ package com.touchKin.touchkinapp;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -23,9 +24,11 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -39,6 +42,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -96,10 +100,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	ImageLoader imgLoader;
 	EditText userAge;
 	RadioGroup radioGroup;
+	private Intent pictureActionIntent = null;
 	String image_url;
 	private ProgressDialog pDialog;
 	private Toolbar toolbar;
-	List<String> list = new ArrayList<String>();
+	List<String> list;
 	TextView mTitle, textTv;
 	List<RequestModel> requestList;
 	final String TAG = "Details";
@@ -111,10 +116,16 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	String code;
 	Spinner year_spinner;
 	int[] age_year;
+	int yob_from_server;
+	String server_name, server_age;
 	EditText otp;
 	Boolean verified = false;
 	Button enterManually, resendOTP;
 	Boolean isLoggedIn;
+	ArrayAdapter<String> dataAdapter;
+	String selectedImagePath;
+	protected static final int CAMERA_REQUEST = 0;
+	protected static final int GALLERY_PICTURE = 1;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,7 +140,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			Log.d("Data ", "Phone " + phone + " mobile_os " + mobile_os + "id "
 					+ deviceId);
 		}
-
+		year_spinner.setEnabled(false);
+		dataAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		year_spinner.setAdapter(dataAdapter);
 		// if (getIntent() != null) {
 		// if (getIntent().getExtras().getBoolean("fromOtp")) {
 		// phone = getIntent().getExtras().getString("phoneNumber");
@@ -156,25 +170,32 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				JSONObject obj = new JSONObject(user);
 
 				Log.d("User", obj + "");
+
 				phone = obj.optString("mobile");
 				if (obj.has("first_name")) {
+
 					name.setText(obj.optString("first_name"));
+					server_name = obj.optString("first_name");
 
 					String yob = obj.getString("yob");
 					if (yob != null) {
 						Log.d("YOB", yob);
-
+						year_spinner.setEnabled(true);
+						yob_from_server = Integer.parseInt(yob);
+						Log.d("yob from server", " " + yob_from_server);
 						age_year[0] = Integer.parseInt(yob) - 1;
 						age_year[1] = Integer.parseInt(yob);
 						age_year[2] = Integer.parseInt(yob) + 1;
-
+						list.clear();
 						list.add("" + age_year[0]);
 						list.add("" + age_year[1]);
 						list.add("" + age_year[2]);
 						year_spinner.setSelection(1);
+						dataAdapter.notifyDataSetChanged();
 						Calendar calendar = Calendar.getInstance();
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
+						server_age = "" + (year - Integer.parseInt(yob));
 						verified = true;
 						// if (!isLoggedIn) {
 						// otp.setText(obj
@@ -234,6 +255,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						|| (actionId == EditorInfo.IME_ACTION_DONE)) {
 					// Toast.makeText(MainActivity.this, "enter press",
 					// Toast.LENGTH_LONG).show();
+					year_spinner.setEnabled(true);
 					String age = userAge.getText().toString();
 					Calendar calendar = Calendar.getInstance();
 					int year = calendar.get(Calendar.YEAR);
@@ -241,13 +263,30 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					age_year[0] = yob - 1;
 					age_year[1] = yob;
 					age_year[2] = yob + 1;
-
+					list.clear();
 					list.add("" + age_year[0]);
 					list.add("" + age_year[1]);
 					list.add("" + age_year[2]);
+					dataAdapter.notifyDataSetChanged();
 					year_spinner.setSelection(1);
 				}
 				return false;
+			}
+		});
+		year_spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				yob = parent.getSelectedItem().toString();
+				Log.d("yob", yob);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+
 			}
 		});
 
@@ -267,11 +306,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						}
 					}
 				});
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, list);
-		dataAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		year_spinner.setAdapter(dataAdapter);
+
 	}
 
 	private void init() {
@@ -287,7 +322,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		requestList = new ArrayList<RequestModel>();
 		userAge = (EditText) findViewById(R.id.userAge);
-		// userYear = (TextView) findViewById(R.id.userYear);
+
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		otp = (EditText) findViewById(R.id.otp_editText);
 		enterManually = (Button) findViewById(R.id.enter_otp);
@@ -295,6 +330,9 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		textTv = (TextView) findViewById(R.id.textTv);
 		age_year = new int[3];
 		year_spinner = (Spinner) findViewById(R.id.year_spinner);
+		list = new ArrayList<String>();
+		dataAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, list);
 	}
 
 	@Override
@@ -310,8 +348,14 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					if (!male) {
 						gender = "female";
 					}
-					String yob = (String) year_spinner.getSelectedItem();
-					if (name.isDirty() || userAge.isDirty()) {
+
+					// String yob = userYear.getText().toString();
+
+					if (!name.equals(server_name)
+							|| !userAge.equals(server_age)
+							|| !year_spinner.equals(yob_from_server)) {
+						Log.d("here", "come");
+
 						updateUser(userName, gender, yob);
 					} else {
 						if (isLoggedIn)
@@ -339,8 +383,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		case R.id.enter_otp:
 			otp.setVisibility(View.VISIBLE);
 			textTv.setVisibility(View.GONE);
+			break;
 		case R.id.resendOtp:
 			resendOtp();
+			break;
 		default:
 			break;
 		}
@@ -381,12 +427,75 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	}
 
 	public void loadImagefromGallery(View view) {
+
+		// startDialog();
+		selectImage();
 		// Create intent to Open Image applications like Gallery, Google Photos
-		Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		// Start the Intent
-		startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+		// Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+		// android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		// // Start the Intent
+		// startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
 	}
+
+	private void selectImage() {
+		final CharSequence[] items = { "Take Photo", "Choose from Library",
+				"Cancel" };
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Add Photo!");
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int item) {
+				if (items[item].equals("Take Photo")) {
+					pictureActionIntent = new Intent(
+							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+					pictureActionIntent.putExtra("return-data", true);
+					startActivityForResult(pictureActionIntent, CAMERA_REQUEST);
+
+				}
+
+				else if (items[item].equals("Choose from Library")) {
+					pictureActionIntent = new Intent(Intent.ACTION_PICK, null);
+					pictureActionIntent.setType("image/*");
+					pictureActionIntent.putExtra("return-data", true);
+					startActivityForResult(pictureActionIntent, GALLERY_PICTURE);
+				} else if (items[item].equals("Cancel")) {
+					dialog.dismiss();
+				}
+			}
+		});
+		builder.show();
+	}
+
+	// private void startDialog() {
+	// AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
+	// myAlertDialog.setTitle("Choose Your Option");
+	// myAlertDialog.setMessage("How do you want to set your picture?");
+	//
+	// myAlertDialog.setPositiveButton("Gallery",
+	// new DialogInterface.OnClickListener() {
+	// public void onClick(DialogInterface arg0, int arg1) {
+	// pictureActionIntent = new Intent(
+	// Intent.ACTION_GET_CONTENT, null);
+	// pictureActionIntent.setType("image/*");
+	// pictureActionIntent.putExtra("return-data", true);
+	// startActivityForResult(pictureActionIntent,
+	// GALLERY_PICTURE);
+	// }
+	// });
+	//
+	// myAlertDialog.setNegativeButton("Camera",
+	// new DialogInterface.OnClickListener() {
+	// public void onClick(DialogInterface arg0, int arg1) {
+	// pictureActionIntent = new Intent(
+	// android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+	// startActivityForResult(pictureActionIntent,
+	// CAMERA_REQUEST);
+	//
+	// }
+	// });
+	// myAlertDialog.show();
+	// }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -400,6 +509,31 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				selectedImageUri = data.getData();
 
 				performCrop();
+			} else if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK
+					&& data.hasExtra("data")) {
+				Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+				selectedImageUri = data.getData();
+
+				Cursor cursor = getContentResolver().query(
+						Media.EXTERNAL_CONTENT_URI,
+						new String[] { Media.DATA, Media.DATE_ADDED,
+								MediaStore.Images.ImageColumns.ORIENTATION },
+						Media.DATE_ADDED, null, "date_added ASC");
+				if (cursor != null && cursor.moveToFirst()) {
+					do {
+						Uri uri = Uri.parse(cursor.getString(cursor
+								.getColumnIndex(Media.DATA)));
+						selectedImagePath = uri.toString();
+					} while (cursor.moveToNext());
+					cursor.close();
+				}
+
+				Log.e("path of the image from camera ====> ", selectedImagePath);
+				performCrop();
+				// bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+				// update the image view with the bitmap
+				imgView.setImageBitmap(bitmap);
+
 			} else if (requestCode == PIC_CROP) {
 
 				// get the returned data

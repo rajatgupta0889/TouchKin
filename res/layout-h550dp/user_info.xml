@@ -54,6 +54,7 @@
         android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/change_profile_pic"
         android:ems="10"
+        android:background="@drawable/edit_text_holo_light"
         android:gravity="center"
         android:hint="Name" >
     </EditText>
@@ -79,7 +80,9 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/change_profile_pic"
         android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/phn_number_detail"
         android:layout_weight="1"
+        android:background="@drawable/edit_text_holo_light"
         android:descendantFocusability="beforeDescendants"
         android:ems="10"
         android:focusableInTouchMode="true"
@@ -165,7 +168,9 @@
         android:layout_width="91dp"
         android:layout_height="30dp"
         android:layout_alignBottom="@+id/userAge"
-        android:layout_alignRight="@+id/next_detail_button"
+        android:layout_alignLeft="@+id/phn_number_detail"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/userAge"
         android:background="@drawable/spinner_background_holo_light"
         android:spinnerMode="dialog" />
 

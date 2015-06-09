@@ -77,7 +77,7 @@ public class CommentListAdapter extends BaseAdapter {
 		viewHolder.commentText.setText(comments.getCommentText());
 		viewHolder.commmentTime.setText(comments.getCommentTime());
 		viewHolder.userImage.setImageDrawable(context.getResources()
-				.getDrawable(R.drawable.mom));
+				.getDrawable(R.drawable.ic_user_image));
 		return convertView;
 	}
 }

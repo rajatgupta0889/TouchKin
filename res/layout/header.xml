@@ -17,7 +17,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/mom" />
+            android:src="@drawable/ic_user_image" />
 
         <TextView
             android:id="@+id/name"

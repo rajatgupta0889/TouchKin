@@ -32,7 +32,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/mom" />
+            android:src="@drawable/ic_user_image" />
 
         <EditText
             android:id="@+id/phone_number_detail"
