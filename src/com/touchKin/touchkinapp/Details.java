@@ -287,7 +287,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		requestList = new ArrayList<RequestModel>();
 		userAge = (EditText) findViewById(R.id.userAge);
-		userYear = (TextView) findViewById(R.id.userYear);
+
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		otp = (EditText) findViewById(R.id.otp_editText);
 		enterManually = (Button) findViewById(R.id.enter_otp);

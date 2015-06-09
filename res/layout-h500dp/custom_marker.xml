@@ -17,6 +17,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="7dp"
-        android:src="@drawable/mom" />
+        android:src="@drawable/ic_user_image" />
 
 </RelativeLayout>
