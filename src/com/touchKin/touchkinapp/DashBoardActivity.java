@@ -573,6 +573,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 			finish();
 
 		}
+		if (caller == 1) {
+			Intent intent = new Intent(DashBoardActivity.this, MyFamily.class);
+			startActivity(intent);
+		}
 
 	}
 
