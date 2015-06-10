@@ -85,7 +85,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	final int PIC_CROP = 2;
 	private Uri selectedImageUri;
 	Button next;
-	TextView phone_detail, userYear;
+	TextView phone_detail;
 	EditText name;
 	String name_detail, phone;
 	boolean hasFocus = false;
@@ -197,11 +197,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						userAge.setText("" + (year - Integer.parseInt(yob)));
 						server_age = "" + (year - Integer.parseInt(yob));
 						verified = true;
-						if (!isLoggedIn) {
-							otp.setText(obj
-									.optString("mobile_verification_code"));
-							sendIntent();
-						}
+						// if (!isLoggedIn) {
+						// otp.setText(obj
+						// .optString("mobile_verification_code"));
+						// sendIntent();
+						// }
 					}
 					String gender = obj.optString("gender");
 					if (!gender.equalsIgnoreCase("male"))
@@ -355,6 +355,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 							|| !userAge.equals(server_age)
 							|| !year_spinner.equals(yob_from_server)) {
 						Log.d("here", "come");
+
 						updateUser(userName, gender, yob);
 					} else {
 						if (isLoggedIn)

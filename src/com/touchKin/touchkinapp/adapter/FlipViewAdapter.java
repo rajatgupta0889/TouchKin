@@ -35,7 +35,7 @@ public class FlipViewAdapter extends BaseAdapter {
 	TextView videoText, videoTime, videoDay, videoSenderName, videoViewCount;
 	RoundedImageView userImage, videoSenderImage;
 	// EditText commentEditText;
-	Button profilepic, backbutton, likebutton;
+	Button profilepic, backbutton, likebutton, delete;
 	VideoView videoView = null;
 	ImageView imageView;
 	Bitmap thumbnail;
@@ -78,7 +78,7 @@ public class FlipViewAdapter extends BaseAdapter {
 		ImageView imageView;
 		RoundedImageView videoSenderImage;
 		// EditText commentEditText;
-		Button profilepic, likebutton;
+		Button profilepic, likebutton, delete;
 		// VideoView videoView;
 		// ListView commentList;
 	}
@@ -111,7 +111,7 @@ public class FlipViewAdapter extends BaseAdapter {
 			// .findViewById(R.id.videoSenderNameTextView);
 			// videoViewCount = (TextView) convertView
 			// .findViewById(R.id.videoSeenCountTextView);
-
+			viewHolder.delete = (Button) convertView.findViewById(R.id.delete);
 			viewHolder.videoSenderImage = (RoundedImageView) convertView
 					.findViewById(R.id.senderImage);
 			// viewHolder.videoView = (VideoView) convertView
@@ -144,58 +144,12 @@ public class FlipViewAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View v) {
-					// //
-					// videoView.setVideoURI(getItem(position).getVideouri());
-					// videoView.requestFocus();
-					// // viewHolder.videoView.setMediaController(new
-					// MediaController(
-					// // context));
-					//
-					// // String url =
-					// //
-					// "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
-					// // Toast.makeText(context, String.valueOf(position),
-					// // Toast.LENGTH_SHORT).show();
-					// if (videoView.isPlaying()) {
-					// videoView.stopPlayback();
-					// } else {
-					// videoView.start();
-					//
-					// }
-					// Toast.makeText(context, "" + position, Toast.LENGTH_LONG)
-					// .show();
-					// Log.d("videouri", "" + getItem(position).getVideouri());
-					// Dialog dialog = new Dialog(context);
-					// dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-					// dialog.setContentView(R.layout.video_player);
 
-					// WindowManager.LayoutParams layoutparams = new
-					// WindowManager.LayoutParams(
-					// LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					// layoutparams.copyFrom(dialog.getWindow().getAttributes());
-					// dialog.getWindow().setAttributes(layoutparams);
-					// final VideoView videoplayer = (VideoView) dialog
-					// .findViewById(R.id.video_player);
-					// videoplayer.setVideoURI(getItem(position).getVideouri());
-					// // Intent intent = new Intent(context,
-					// // VideoPlayerManual.class);
-					// // intent.putExtra("videouri",
-					// // getItem(position).getVideouri());
-					// // context.startActivity(intent);
-					// final MediaController mediacontroller = new
-					// MediaController(
-					// context);
 					Intent intent = new Intent(context, VideoFullScreen.class);
 					intent.putExtra("thumbnail", thumbnail);
 					intent.putExtra("videopath", getItem(position)
 							.getVideouri());
 					context.startActivity(intent);
-					// videoplayer.setMediaController(mediacontroller);
-					// mediacontroller.setMediaPlayer(videoplayer);
-					// // mediacontroller.setPadding(0, 250, 0, 0);
-					// mediacontroller.setAnchorView(videoplayer);
-					// dialog.show();
-					// videoplayer.start();
 
 				}
 			});
@@ -210,7 +164,17 @@ public class FlipViewAdapter extends BaseAdapter {
 							"You like video of your kin "
 									+ touchKinBook.getVideoSenderName(),
 							Toast.LENGTH_LONG).show();
+					customListener.onButtonClickListner(0,
+							touchKinBook.getMessageId(), true);
+				}
+			});
+			viewHolder.delete.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					customListener.onButtonClickListner(1,
+							touchKinBook.getMessageId(), false);
 				}
 			});
 			viewHolder.videoText.setText(touchKinBook.getVideoText());
@@ -222,81 +186,8 @@ public class FlipViewAdapter extends BaseAdapter {
 							+ touchKinBook.getVideoId() + "-thumb-00001.png",
 					R.drawable.ic_user_image, viewHolder.imageView);
 
-			// viewHolder.userImage
-			// videoSenderName.setText(touchKinBook.getVideoSenderName());
-			// videoViewCount.setText(touchKinBook.getVideoViewCount());
-
-			// viewHolder.videoSenderImage = (RoundedImageView) convertView
-			// .findViewById(R.id.senderImage);
-			// viewHolder.videoView = (VideoView) convertView
-			// .findViewById(R.id.videoView);
-			// viewHolder.commentEditText = (EditText) convertView
-			// .findViewById(R.id.commentEditText);
-
-			// comments = touchKinBook.getTouchKinComments();
-			// adapter = new CommentListAdapter(comments, context);
-			// viewHolder.commentList.setAdapter(adapter);
-			// Helper.getListViewSize(viewHolder.commentList);
-			// viewHolder.commentEditText
-			// .setOnEditorActionListener(new OnEditorActionListener() {
-			// public boolean onEditorAction(TextView v, int actionId,
-			// KeyEvent event) {
-			// if ((event != null && (event.getKeyCode() ==
-			// KeyEvent.KEYCODE_ENTER))
-			// || (actionId == EditorInfo.IME_ACTION_DONE)) {
-			// // Toast.makeText(MainActivity.this, "enter press",
-			// // Toast.LENGTH_LONG).show();
-			// sendIntent(viewHolder.commentEditText.getText()
-			// .toString(), touchKinBook.getMessageId());
-			// }
-			// return false;
-			// }
-			// });
 		}
 		return convertView;
 	}
-	// @SuppressLint("NewApi")
-	// public void sendIntent(String text, String kbmId) {
-	// // Intent i = new Intent(SignUpActivity.this,
-	// // DashBoardActivity.class);
-	// // Bundle bndlanimation = ActivityOptions
-	// // .makeCustomAnimation(getApplicationContext(),
-	// // R.anim.animation, R.anim.animation2)
-	// // .toBundle();
-	// // startActivity(i,bndlanimation);
-	// //
-	//
-	// JSONObject params = new JSONObject();
-	// try {
-	// params.put("comment", text);
-	// params.put("kinbook_message_id", kbmId);
-	// } catch (JSONException e1) {
-	// // TODO Auto-generated catch block
-	// e1.printStackTrace();
-	// }
-	//
-	// JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-	// "http://54.69.183.186:1340/kinbook/comment", params,
-	// new Response.Listener<JSONObject>() {
-	//
-	// @Override
-	// public void onResponse(JSONObject response) {
-	//
-	// Log.d("Response", response.toString());
-	//
-	// // VolleyLog.v("Response:%n %s",
-	// // response.toString(4));
-	//
-	// }
-	// }, new Response.ErrorListener() {
-	// @Override
-	// public void onErrorResponse(VolleyError error) {
-	//
-	// }
-	// // Additional cases
-	//
-	// });
-	//
-	// AppController.getInstance().addToRequestQueue(req);
-	// }
+
 }
