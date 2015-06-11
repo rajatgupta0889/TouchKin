@@ -7,14 +7,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ExpandableListView;
 
-import com.touchKin.touchkinapp.adapter.MyFamilyExpandableListAdapter;
+import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
 import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
+import com.touchKin.touchkinapp.model.TravelItem;
 import com.touchKin.touckinapp.R;
 
 public class MyFamily extends AppCompatActivity {
-	MyFamilyExpandableListAdapter adapter;
-	List<ExpandableListGroupItem> list;
-	List<ExpandableListGroupItem> list1;
+	ExpandableListAdapter adapter;
+	ArrayList<TravelItem> list;
+	ArrayList<TravelItem> list1;
 	ExpandableListView expandListView;
 	List<String> item;
 
@@ -24,14 +25,15 @@ public class MyFamily extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_family);
 		init();
-		list.add(new ExpandableListGroupItem());
-		list.add(new ExpandableListGroupItem());
-		list.add(new ExpandableListGroupItem());
-		list1.add(new ExpandableListGroupItem());
-		list1.add(new ExpandableListGroupItem());
-		list1.add(new ExpandableListGroupItem());
-		list1.add(new ExpandableListGroupItem());
-		adapter = new MyFamilyExpandableListAdapter(MyFamily.this, list);
+		list.add(new TravelItem());
+		list.add(new TravelItem());
+		list.add(new TravelItem());
+
+		list1.add(new TravelItem());
+		list1.add(new TravelItem());
+		list1.add(new TravelItem());
+		list1.add(new TravelItem());
+		adapter = new ExpandableListAdapter(MyFamily.this);
 		adapter.setupTrips(list, list1);
 		expandListView.setAdapter(adapter);
 	}
@@ -39,8 +41,8 @@ public class MyFamily extends AppCompatActivity {
 	private void init() {
 		// TODO Auto-generated method stub
 		expandListView = (ExpandableListView) findViewById(R.id.familyList);
-		list = new ArrayList<ExpandableListGroupItem>();
-		list1 = new ArrayList<ExpandableListGroupItem>();
+		list = new ArrayList<TravelItem>();
+		list1 = new ArrayList<TravelItem>();
 	}
 
 	@Override
