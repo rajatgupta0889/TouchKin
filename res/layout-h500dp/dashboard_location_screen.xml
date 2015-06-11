@@ -81,10 +81,10 @@
                     android:layout_centerInParent="true" />
 
                 <LinearLayout
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
+                    android:layout_width="175dp"
+                    android:layout_height="175dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/shape_circle"
+                    android:background="@drawable/untitled"
                     android:orientation="vertical" >
                 </LinearLayout>
             </RelativeLayout>

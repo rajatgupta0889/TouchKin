@@ -76,15 +76,15 @@
                 <fragment
                     android:id="@+id/map"
                     android:name="com.google.android.gms.maps.MapFragment"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="163dp"
+                    android:layout_height="163dp"
                     android:layout_centerInParent="true" />
 
                 <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="210dp"
+                    android:layout_height="210dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/shape_circle"
+                    android:background="@drawable/untitled"
                     android:orientation="vertical" >
                 </LinearLayout>
             </RelativeLayout>
