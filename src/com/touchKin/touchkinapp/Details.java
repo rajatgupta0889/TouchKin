@@ -85,6 +85,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	final int PIC_CROP = 2;
 	private Uri selectedImageUri;
 	Button next;
+	TextView otptext;
 	TextView phone_detail;
 	EditText name;
 	String name_detail, phone;
@@ -322,7 +323,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		requestList = new ArrayList<RequestModel>();
 		userAge = (EditText) findViewById(R.id.userAge);
-
+		otptext = (TextView)findViewById(R.id.textTv);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		otp = (EditText) findViewById(R.id.otp_editText);
 		enterManually = (Button) findViewById(R.id.enter_otp);
@@ -365,6 +366,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						getConnectionRequest();
 
 				} else {
+					if(!otp.getText().toString().equals(""))
+						sendIntent();
 					Toast.makeText(Details.this,
 							"PLease wait while we verify you",
 							Toast.LENGTH_SHORT).show();
@@ -449,7 +452,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				if (items[item].equals("Take Photo")) {
 					pictureActionIntent = new Intent(
 							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-					pictureActionIntent.putExtra("return-data", true);
+					// File f = new File(android.os.Environment
+					// .getExternalStorageDirectory(), "temp.jpg");
+					// pictureActionIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+					// Uri.fromFile(f));
+
 					startActivityForResult(pictureActionIntent, CAMERA_REQUEST);
 
 				}
@@ -511,9 +518,28 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				performCrop();
 			} else if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK
 					&& data.hasExtra("data")) {
+
+				// File f = new
+				// File(Environment.getExternalStorageDirectory().toString());
+				// for (File temp : f.listFiles()) {
+				// if (temp.getName().equals("temp.jpg")) {
+				// f = temp;
+				// break;
+				// }
+				// selectedImageUri = Uri.fromFile(f);
 				Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 				selectedImageUri = data.getData();
+				//
+				// // Bitmap thePic = (Bitmap) data.getExtras().get("data");
+				// ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+				// thePic.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
+				// you can create a new file name "test.jpg" in sdcard folder.
+				// File f = new File(Environment.getExternalStorageDirectory()
+				// + File.separator + "abc.jpg");
+				// f.createNewFile();
+				// selectedImageUri = Uri.fromFile(f);
+				Log.d("path", " " + selectedImageUri);
 				Cursor cursor = getContentResolver().query(
 						Media.EXTERNAL_CONTENT_URI,
 						new String[] { Media.DATA, Media.DATE_ADDED,
@@ -532,7 +558,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				performCrop();
 				// bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
 				// update the image view with the bitmap
-				imgView.setImageBitmap(bitmap);
+//				imgView.setImageBitmap(bitmap);
 
 			} else if (requestCode == PIC_CROP) {
 
@@ -569,8 +595,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						Toast.LENGTH_LONG).show();
 			}
 		} catch (Exception e) {
-			Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
+
+			Toast.makeText(this, "Something went wrong " + e, Toast.LENGTH_LONG)
 					.show();
+			Log.d("Message", "" + e);
 		}
 
 	}
@@ -1172,6 +1200,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 							// null));
 							// Log.d("otp", "" + pref.getString("mobile",
 							// null));
+							otptext.setText("Your Phone number is verified");
 							verified = true;
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

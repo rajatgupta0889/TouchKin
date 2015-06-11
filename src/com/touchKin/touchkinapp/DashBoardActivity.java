@@ -568,6 +568,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 			edit.putString("otp", null);
 			edit.putString("id", null);
 			edit.apply();
+			SharedPreferences userPref = getApplicationContext()
+					.getSharedPreferences("userPref", 0);
+			 edit = userPref.edit();
+			edit.putString("user",null);
+			edit.apply();
 			Intent intent = new Intent(this, SignUpActivity.class);
 			startActivity(intent);
 			finish();
