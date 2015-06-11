@@ -16,84 +16,154 @@
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="26dp"
-        android:layout_marginRight="19dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/next_button" />
 
-    <!--
-             <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp" />
-    -->
-
-    <ImageView
-        android:id="@+id/profile_pic"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tool_bar"
-        android:onClick="loadImagefromGallery"
-        android:src="@drawable/people" />
-
-    <com.touchKin.touchkinapp.custom.RoundedImageView
-        android:id="@+id/change_profile_pic"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tool_bar" />
-
-    <EditText
-        android:id="@+id/edit_name"
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tool_bar"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="20dp"
-        android:layout_toRightOf="@+id/change_profile_pic"
-        android:ems="10"
+        android:background="#f8f8f8" >
+
+        <EditText
+            android:id="@+id/edit_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_pic"
+            android:layout_alignRight="@+id/change_profile_pic"
+            android:layout_below="@+id/change_profile_pic"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/edit_text_holo_light"
+            android:gravity="center"
+            android:hint="Add Name"
+            android:maxEms="10"
+            android:textAlignment="center"
+            android:textSize="25sp" >
+        </EditText>
+
+        <ImageView
+            android:id="@+id/profile_pic"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:onClick="loadImagefromGallery"
+            android:src="@drawable/people" />
+
+        <com.touchKin.touchkinapp.custom.RoundedImageView
+            android:id="@+id/change_profile_pic"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/mobile"
         android:gravity="center"
-        android:background="@drawable/edit_text_holo_light"
-        android:hint="Name" >
-    </EditText>
+        android:text="   Phone Number"
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/phn_number_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/edit_name"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="40dp"
-        android:layout_toRightOf="@+id/change_profile_pic"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/next_detail_button"
+        android:layout_alignTop="@+id/textView1"
         android:gravity="center"
         android:hint="9066665428"
-        android:textColor="@color/text_orange"
-        android:textSize="17sp" />
+        android:textColor="#f89c69"
+        android:textColorHint="#f89c69"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/user"
+        android:gravity="center"
+        android:text="   Age"
+        android:textSize="25sp" />
 
     <EditText
         android:id="@+id/userAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/change_profile_pic"
-        android:layout_marginTop="20dp"
-        android:layout_toLeftOf="@+id/year_spinner"
-        android:layout_weight="1"
-        android:background="@drawable/edit_text_holo_light"
-        android:descendantFocusability="beforeDescendants"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/textView2"
+        android:background="@drawable/border"
         android:ems="10"
         android:focusableInTouchMode="true"
         android:gravity="center"
-        android:hint="Age"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:maxLength="2" >
+        android:maxLength="2" />
 
-        <requestFocus />
-    </EditText>
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/year_spinner"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:text="Male"
+            android:textSize="25sp" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_weight="1"
+            android:text="Female"
+            android:textSize="25sp" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/otp_editText"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioGroup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/border"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="OTP"
+        android:inputType="phone"
+        android:textSize="40sp"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/textTv"
@@ -101,35 +171,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/radioGroup"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Please wait while we verify your mobile number via OTP" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/radioMale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:text="Male" />
-
-        <RadioButton
-            android:id="@+id/radioFemale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:text="Female" />
-    </RadioGroup>
+        android:text="Please wait while we verify your phone"
+        android:textColor="#f89c69"
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/resendOtp"
@@ -137,40 +183,38 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/enter_otp"
         android:layout_alignBottom="@+id/enter_otp"
-        android:layout_alignParentRight="true"
-        android:text="Resend OTP" />
-
-    <EditText
-        android:id="@+id/otp_editText"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/enter_otp"
-        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/textView3"
         android:background="@drawable/edit_text_holo_light"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="OTP"
-        android:inputType="phone"
-        android:textSize="30dp"
-        android:visibility="invisible" />
-
-    <Button
-        android:id="@+id/enter_otp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/next_detail_button"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="16dp"
-        android:text="Enter Manually" />
+        android:text="Resend OTP" />
 
     <Spinner
         android:id="@+id/year_spinner"
         android:layout_width="91dp"
         android:layout_height="30dp"
         android:layout_alignBottom="@+id/userAge"
-        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/phn_number_detail"
+        android:layout_alignTop="@+id/textView3"
+        android:background="@drawable/border" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/userAge"
+        android:layout_alignBottom="@+id/userAge"
+        android:layout_marginLeft="27dp"
         android:layout_toRightOf="@+id/otp_editText"
-        android:background="@drawable/spinner_background_holo_light"
-        android:spinnerMode="dialog" />
+        android:text="Year"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/enter_otp"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otp_editText"
+        android:layout_marginTop="34dp"
+        android:layout_toLeftOf="@+id/otp_editText"
+        android:background="@drawable/border"
+        android:text="Enter otp" />
 
 </RelativeLayout>

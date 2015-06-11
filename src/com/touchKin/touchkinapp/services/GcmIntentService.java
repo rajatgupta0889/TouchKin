@@ -65,7 +65,7 @@ public class GcmIntentService extends IntentService {
 				// Log.d(TAG, extras.toString());
 				String message = extras.getString("message");
 
-				sendNotification(message, "");
+				sendNotification("Message is:"+message, "");
 
 				for (int i = 0; i < 5; i++) {
 					Log.i(TAG,

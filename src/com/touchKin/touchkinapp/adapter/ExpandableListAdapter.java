@@ -1,6 +1,8 @@
 package com.touchKin.touchkinapp.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.Group.Type;
+import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.GroupChild.TypeChild;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
+import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
+import com.touchKin.touchkinapp.model.ParentListModel;
+import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touchkinapp.model.TravelItem;
 import com.touchKin.touckinapp.R;
 
@@ -31,6 +37,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	private Context context = null;
 	ArrayList<Group> groups = new ArrayList<Group>();
+	ArrayList<GroupChild> childGroups = new ArrayList<GroupChild>();
 
 	public ExpandableListAdapter(Context context) {
 		this.context = context;
@@ -71,7 +78,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
-		return groups.get(groupPosition).travelItems.get(childPosition);
+		return groups.get(groupPosition).child;
 	}
 
 	/*
@@ -96,128 +103,150 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 		// get the type of the group this child belongs
 		Type viewType = groups.get(groupPosition).type;
+
+		GroupChild child = (GroupChild) getChild(groupPosition, childPosition);
+		TypeChild childViewType = child.typeChild;
 		View view = convertView;
 
 		// if the type is future travel, use the future travel layout
-		if (viewType == Type.ME) {
-			if (view == null) {
-				view = LayoutInflater.from(context).inflate(
-						R.layout.expand_list_first_child, parent, false);
-				LinearLayout linearLayout = (LinearLayout) view
-						.findViewById(R.id.futureTravelLineItemLayout);
-				for (int i = 0; i < 25; i++) {
+		if (viewType == Type.CONN) {
 
-					final RoundedImageView tv = new RoundedImageView(context);
-					tv.setImageResource(R.drawable.ic_launcher);
-					tv.setId(100 + i);
-					tv.setOnClickListener(new OnClickListener() {
+			if (childViewType == TypeChild.ME) {
+				if (view == null) {
+					view = LayoutInflater.from(context).inflate(
+							R.layout.expand_list_first_child, parent, false);
 
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Toast.makeText(context, "click id " + tv.getId(),
-									Toast.LENGTH_SHORT).show();
+					LinearLayout linearLayout = (LinearLayout) view
+							.findViewById(R.id.futureTravelLineItemLayout);
+					LayoutInflater inflater = (LayoutInflater) context
+							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					if (child._listDataChild != null) {
+						for (int i = 0; i < 5; i++) {
+
+							View view1 = inflater.inflate(R.layout.image_item,
+									linearLayout, false);
+							final RoundedImageView tv = (RoundedImageView) view1
+									.findViewById(R.id.parentImage);
+							tv.setId(tv.getId() + i);
+							tv.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									// TODO Auto-generated method stub
+									Toast.makeText(context,
+											"click id " + tv.getId(),
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+							linearLayout.addView(view1);
 						}
-					});
-					linearLayout.addView(tv);
-				}
-				LinearLayout linearLayout1 = (LinearLayout) view
-						.findViewById(R.id.futureTravel);
-				for (int i = 0; i < 10; i++) {
+					}
+					if (child.connReq != null) {
+						LinearLayout linearLayout1 = (LinearLayout) view
+								.findViewById(R.id.futureTravel);
+						for (int i = 0; i < 10; i++) {
 
-					final TextView tv = new TextView(context);
-					tv.setText("Hey you get a request");
-					tv.setId(200 + i);
-					tv.setOnClickListener(new OnClickListener() {
+							final TextView tv = new TextView(context);
+							tv.setText("Hey you get a request");
+							tv.setId(200 + i);
+							tv.setOnClickListener(new OnClickListener() {
 
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Toast.makeText(context, "click id " + tv.getId(),
-									Toast.LENGTH_SHORT).show();
+								@Override
+								public void onClick(View v) {
+									// TODO Auto-generated method stub
+									Toast.makeText(context,
+											"click id " + tv.getId(),
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+							linearLayout1.addView(tv);
+
 						}
-					});
-					linearLayout1.addView(tv);
+					}
+					FutureTravelViewHolder holder = new FutureTravelViewHolder();
+					// holder.title = (TextView) view
+					// .findViewById(R.id.futureTravelTitle);
+					// holder.departure = (TextView) view
+					// .findViewById(R.id.futureTravelDeparture);
+					// holder.destination = (TextView) view
+					// .findViewById(R.id.futureTravelDestination);
+					// holder.date = (TextView) view
+					// .findViewById(R.id.futureTravelDate);
+					// holder.time = (TextView) view
+					// .findViewById(R.id.futureTravelTime);
+
+					view.setTag(holder);
 
 				}
-				FutureTravelViewHolder holder = new FutureTravelViewHolder();
-				// holder.title = (TextView) view
-				// .findViewById(R.id.futureTravelTitle);
-				// holder.departure = (TextView) view
-				// .findViewById(R.id.futureTravelDeparture);
-				// holder.destination = (TextView) view
-				// .findViewById(R.id.futureTravelDestination);
-				// holder.date = (TextView) view
-				// .findViewById(R.id.futureTravelDate);
-				// holder.time = (TextView) view
-				// .findViewById(R.id.futureTravelTime);
+				//
+				// FutureTravelViewHolder holder = (FutureTravelViewHolder) view
+				// .getTag();
+				//
+				// TravelItem currentItem = (TravelItem) getChild(groupPosition,
+				// childPosition);
 
-				view.setTag(holder);
+				// holder.title.setText(currentItem.getTitle());
+				// holder.departure.setText(currentItem.getDeparture());
+				// holder.destination.setText(currentItem.getDestination());
+				// holder.date.setText(currentItem.getDate());
+				// holder.time.setText(currentItem.getTime());
+			} else {
+				// if the type is past, use the past travel layout
+				if (view == null) {
+					view = LayoutInflater.from(context).inflate(
+							R.layout.expand_list_first_child, parent, false);
 
+					//
+					// PastTravelViewHolder holder = new PastTravelViewHolder();
+					// holder.title = (TextView) view
+					// .findViewById(R.id.pastTravelTitle);
+					// holder.departure = (TextView) view
+					// .findViewById(R.id.pastTravelDeparture);
+					// holder.destination = (TextView) view
+					// .findViewById(R.id.pastTravelDestination);
+					// holder.date = (TextView)
+					// view.findViewById(R.id.pastTravelDate);
+					//
+					// view.setTag(holder);
+					LinearLayout linearLayout = (LinearLayout) view
+							.findViewById(R.id.futureTravelLineItemLayout);
+					LayoutInflater inflater = (LayoutInflater) context
+							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					if (child._listDataChild != null) {
+						for (int i = 0; i < 5; i++) {
+
+							View view1 = inflater.inflate(R.layout.image_item,
+									linearLayout, false);
+							final RoundedImageView tv = (RoundedImageView) view1
+									.findViewById(R.id.parentImage);
+							tv.setId(tv.getId() + i);
+							tv.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									// TODO Auto-generated method stub
+									Toast.makeText(context,
+											"click id " + tv.getId(),
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+							linearLayout.addView(view1);
+						}
+
+					}
+				}
+//
+//				TravelItem currentItem = (TravelItem) getChild(groupPosition,
+//						childPosition);
+				//
+				// holder.title.setText(currentItem.getTitle());
+				// holder.departure.setText(currentItem.getDeparture());
+				// holder.destination.setText(currentItem.getDestination());
+				// holder.date.setText(currentItem.getDate());
 			}
-			//
-			// FutureTravelViewHolder holder = (FutureTravelViewHolder) view
-			// .getTag();
-			//
-			// TravelItem currentItem = (TravelItem) getChild(groupPosition,
-			// childPosition);
 
-			// holder.title.setText(currentItem.getTitle());
-			// holder.departure.setText(currentItem.getDeparture());
-			// holder.destination.setText(currentItem.getDestination());
-			// holder.date.setText(currentItem.getDate());
-			// holder.time.setText(currentItem.getTime());
 		} else {
-			// if the type is past, use the past travel layout
-			if (view == null) {
-				view = LayoutInflater.from(context).inflate(
-						R.layout.expand_list_first_child, parent, false);
-
-				//
-				// PastTravelViewHolder holder = new PastTravelViewHolder();
-				// holder.title = (TextView) view
-				// .findViewById(R.id.pastTravelTitle);
-				// holder.departure = (TextView) view
-				// .findViewById(R.id.pastTravelDeparture);
-				// holder.destination = (TextView) view
-				// .findViewById(R.id.pastTravelDestination);
-				// holder.date = (TextView)
-				// view.findViewById(R.id.pastTravelDate);
-				//
-				// view.setTag(holder);
-				LinearLayout linearLayout = (LinearLayout) view
-						.findViewById(R.id.futureTravelLineItemLayout);
-				LayoutInflater inflater = (LayoutInflater) context
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				for (int i = 0; i < 5; i++) {
-
-					View view1 = inflater.inflate(R.layout.image_item,
-							linearLayout, false);
-					final RoundedImageView tv = (RoundedImageView) view1
-							.findViewById(R.id.parentImage);
-					tv.setId(tv.getId() + i);
-					tv.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Toast.makeText(context, "click id " + tv.getId(),
-									Toast.LENGTH_SHORT).show();
-						}
-					});
-					linearLayout.addView(view1);
-				}
-			}
-
-			PastTravelViewHolder holder = (PastTravelViewHolder) view.getTag();
-
-			TravelItem currentItem = (TravelItem) getChild(groupPosition,
-					childPosition);
-			//
-			// holder.title.setText(currentItem.getTitle());
-			// holder.departure.setText(currentItem.getDeparture());
-			// holder.destination.setText(currentItem.getDestination());
-			// holder.date.setText(currentItem.getDate());
+			return null;
 		}
 		return view;
 	}
@@ -229,7 +258,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return groups.get(groupPosition).travelItems.size();
+		return 1;
 	}
 
 	/*
@@ -273,8 +302,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			View convertView, ViewGroup parent) {
 
 		View view = convertView;
-		TextView text = null;
-		ImageView image = null;
+		// TextView text = null;
+		// ImageView image = null;
 
 		if (view == null) {
 			view = LayoutInflater.from(context).inflate(
@@ -326,25 +355,41 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	/*
 	 * setup travel plans and past trips into groups
 	 */
-	public void setupTrips(ArrayList<TravelItem> pastPlans,
-			ArrayList<TravelItem> futurePlans) {
+	public void setupTrips(
+			HashMap<String, ArrayList<ParentListModel>> careGiver,
+			ArrayList<RequestModel> requests,
+			ArrayList<ExpandableListGroupItem> CareReciever,
+			ArrayList<ExpandableListGroupItem> pendingReq) {
 		groups.clear();
+		childGroups.clear();
+		if (CareReciever != null) {
 
-		if (pastPlans != null) {
-			Group g1 = new Group();
-			g1.type = Type.ME;
-			g1.travelItems.clear();
-			g1.travelItems = new ArrayList<TravelItem>(futurePlans);
+			for (ExpandableListGroupItem item : CareReciever) {
+				Group group = new Group();
+				group.type = Type.CONN;
+				GroupChild child = new GroupChild();
+				group.groupMemebr = item;
+				child._listDataChild = careGiver.get(item.getUserId());
+				child.typeChild = TypeChild.CR;
+				group.child = child;
+				groups.add(group);
+			}
+			if (requests != null) {
+				Group temp = groups.get(0);
+				temp.child.connReq = requests;
+				temp.child.typeChild = TypeChild.ME;
 
-			groups.add(g1);
+			}
+
 		}
-		if (futurePlans != null) {
-			Group g2 = new Group();
-			g2.type = Type.CR;
-			g2.travelItems.clear();
-			g2.travelItems = new ArrayList<TravelItem>(pastPlans);
+		if (pendingReq != null) {
 
-			groups.add(g2);
+			for (ExpandableListGroupItem item : pendingReq) {
+				Group group = new Group();
+				group.type = Type.REQ;
+				group.groupMemebr = item;
+				groups.add(group);
+			}
 		}
 
 		notifyDataSetChanged();
@@ -353,11 +398,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	/*
 	 * Holder for the Past view type
 	 */
-	class PastTravelViewHolder {
+	class ParentLayoutHolder {
 		TextView title;
 		TextView departure;
-		TextView destination;
-		TextView date;
+		RoundedImageView userImage;
+		ImageView icon;
 	}
 
 	/*
@@ -377,10 +422,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public static class Group {
 		public enum Type {
-			ME, CR, PR;
+			CONN, REQ;
 		};
 
 		public Type type;
-		ArrayList<TravelItem> travelItems = new ArrayList<TravelItem>();
+		public int groupSIze;
+		GroupChild child = null;
+		ExpandableListGroupItem groupMemebr;
+	}
+
+	public static class GroupChild {
+		public enum TypeChild {
+			ME, CR;
+		};
+
+		public TypeChild typeChild;
+
+		private ArrayList<ParentListModel> _listDataChild = null;
+		ArrayList<RequestModel> connReq = null;
 	}
 }
