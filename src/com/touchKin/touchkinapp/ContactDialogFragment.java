@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ public class ContactDialogFragment extends DialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -65,12 +67,15 @@ public class ContactDialogFragment extends DialogFragment implements
 		proDialog.setMessage("Sending your request");
 		proDialog.setCancelable(false);
 		Button addContactButton = (Button) view.findViewById(R.id.addButton);
+		addContactButton.setTransformationMethod(null);
+		Button add = (Button)view.findViewById(R.id.addbutton);
+		add.setTransformationMethod(null);
 		nameBox = (EditText) view.findViewById(R.id.name);
 		phoneBox = (EditText) view.findViewById(R.id.number);
 		nickname = (EditText) view.findViewById(R.id.nickname);
 		// nameBox.setText(mArgs.getString("name"));
 		// phoneBox.setText(mArgs.getString("number"));
-		View headerview = inflater.inflate(R.layout.header_view, null);
+//		View headerview = inflater.inflate(R.layout.header_view, null);
 		// final TextView title = (TextView) headerview
 		// .findViewById(R.id.parentNameTV);
 		// title.setText(mArgs.getString("title"));
@@ -93,32 +98,50 @@ public class ContactDialogFragment extends DialogFragment implements
 		phoneBox.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
 		builder.setCancelable(false);
-		builder.setView(view)
+		builder.setView(view);
 				// Add action buttons
-				.setCustomTitle(headerview)
-				.setIcon(R.drawable.ic_action_uset)
-				.setPositiveButton("Add",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								// sign in the user ...
-							}
-
-						})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								ContactDialogFragment.this.getDialog().cancel();
-								DashBoardActivity.isCancel = true;
-							}
-						});
+//				.setCustomTitle(headerview)
+//				.setIcon(R.drawable.ic_action_uset)
+//				.setPositiveButton("Add",
+//						new DialogInterface.OnClickListener() {
+//							@Override
+//							public void onClick(DialogInterface dialog, int id) {
+//								// sign in the user ...
+//							}
+//
+//						})
+//				.setNegativeButton("Cancel",
+//						new DialogInterface.OnClickListener() {
+//							public void onClick(DialogInterface dialog, int id) {
+//								ContactDialogFragment.this.getDialog().cancel();
+//								DashBoardActivity.isCancel = true;
+//							}
+//						});
 		final AlertDialog dialog = builder.create();
 		dialog.show();
-		Button positiveButton = (Button) dialog
-				.getButton(Dialog.BUTTON_POSITIVE);
-		positiveButton.setOnClickListener(new View.OnClickListener() {
+//		Button positiveButton = (Button) dialog
+//				.getButton(Dialog.BUTTON_POSITIVE);
+//		positiveButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+		// Boolean wantToCloseDialog = false;
+		// // Do stuff, possibly set wantToCloseDialog to true
+		// // then...
+		//
+		// if (wantToCloseDialog)
+		// dismiss();
+		//	addParent();
+//				// else dialog stays open. Make sure you have an obvious
+//				// way to close the dialog especially if you set
+//				// cancellable to false.
+//			}
+//		});
+
+		add.setOnClickListener(new OnClickListener() {
+			
 			@Override
 			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				Boolean wantToCloseDialog = false;
 				// Do stuff, possibly set wantToCloseDialog to true
 				// then...
@@ -126,12 +149,8 @@ public class ContactDialogFragment extends DialogFragment implements
 				if (wantToCloseDialog)
 					dismiss();
 				addParent();
-				// else dialog stays open. Make sure you have an obvious
-				// way to close the dialog especially if you set
-				// cancellable to false.
 			}
 		});
-
 		addContactButton.setOnClickListener(new OnClickListener() {
 
 			@Override
