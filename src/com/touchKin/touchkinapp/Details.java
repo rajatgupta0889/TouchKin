@@ -322,7 +322,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		requestList = new ArrayList<RequestModel>();
 		userAge = (EditText) findViewById(R.id.userAge);
-		otptext = (TextView)findViewById(R.id.textTv);
+		otptext = (TextView) findViewById(R.id.textTv);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		otp = (EditText) findViewById(R.id.otp_editText);
 		enterManually = (Button) findViewById(R.id.enter_otp);
@@ -365,7 +365,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						getConnectionRequest();
 
 				} else {
-					if(!otp.getText().toString().equals(""))
+					if (!otp.getText().toString().equals(""))
 						sendIntent();
 					Toast.makeText(Details.this,
 							"PLease wait while we verify you",
@@ -557,7 +557,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 				performCrop();
 				// bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
 				// update the image view with the bitmap
-//				imgView.setImageBitmap(bitmap);
+				// imgView.setImageBitmap(bitmap);
 
 			} else if (requestCode == PIC_CROP) {
 
