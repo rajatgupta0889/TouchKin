@@ -19,5 +19,7 @@
     <color name="button_grey">#c7c7c7</color>
     <color name="button_orange">#ed824b</color>
     <color name="parent_image_outer_ring">#dcdede</color>
+    <color name="child_divider">#c6c6c6</color>
+    <color name="expand_list_group">#ebebeb</color>
 
 </resources>

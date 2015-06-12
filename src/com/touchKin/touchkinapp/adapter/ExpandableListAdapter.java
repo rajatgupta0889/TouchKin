@@ -2,9 +2,9 @@ package com.touchKin.touchkinapp.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +21,6 @@ import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.model.RequestModel;
-import com.touchKin.touchkinapp.model.TravelItem;
 import com.touchKin.touckinapp.R;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -103,67 +102,69 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 		// get the type of the group this child belongs
 		Type viewType = groups.get(groupPosition).type;
-
+		Log.d("Positon", " child" + childPosition + " Parent" + groupPosition);
 		GroupChild child = (GroupChild) getChild(groupPosition, childPosition);
-		TypeChild childViewType = child.typeChild;
+
 		View view = convertView;
 
 		// if the type is future travel, use the future travel layout
 		if (viewType == Type.CONN) {
-
+			TypeChild childViewType = child.typeChild;
 			if (childViewType == TypeChild.ME) {
-				if (view == null) {
-					view = LayoutInflater.from(context).inflate(
-							R.layout.expand_list_first_child, parent, false);
+				// if (view == null) {
+				view = LayoutInflater.from(context).inflate(
+						R.layout.expand_list_first_child, parent, false);
 
-					LinearLayout linearLayout = (LinearLayout) view
-							.findViewById(R.id.futureTravelLineItemLayout);
-					LayoutInflater inflater = (LayoutInflater) context
-							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					if (child._listDataChild != null) {
-						for (int i = 0; i < 5; i++) {
+				LinearLayout linearLayout = (LinearLayout) view
+						.findViewById(R.id.futureTravelLineItemLayout);
+				LayoutInflater inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				if (child._listDataChild != null) {
+					for (int i = 0; i < child._listDataChild.size(); i++) {
 
-							View view1 = inflater.inflate(R.layout.image_item,
-									linearLayout, false);
-							final RoundedImageView tv = (RoundedImageView) view1
-									.findViewById(R.id.parentImage);
-							tv.setId(tv.getId() + i);
-							tv.setOnClickListener(new OnClickListener() {
+						View view1 = inflater.inflate(R.layout.image_item,
+								linearLayout, false);
+						final RoundedImageView tv = (RoundedImageView) view1
+								.findViewById(R.id.parentImage);
+						tv.setId(tv.getId() + i);
+						tv.setOnClickListener(new OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									Toast.makeText(context,
-											"click id " + tv.getId(),
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-							linearLayout.addView(view1);
-						}
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Toast.makeText(context,
+										"click id " + tv.getId(),
+										Toast.LENGTH_SHORT).show();
+							}
+						});
+						linearLayout.addView(view1);
 					}
-					if (child.connReq != null) {
-						LinearLayout linearLayout1 = (LinearLayout) view
-								.findViewById(R.id.futureTravel);
-						for (int i = 0; i < 10; i++) {
+				}
+				if (child.connReq != null) {
+					LinearLayout linearLayout1 = (LinearLayout) view
+							.findViewById(R.id.futureTravel);
+					for (int i = 0; i < child.connReq.size(); i++) {
 
-							final TextView tv = new TextView(context);
-							tv.setText("Hey you get a request");
-							tv.setId(200 + i);
-							tv.setOnClickListener(new OnClickListener() {
+						View view1 = inflater.inflate(
+								R.layout.connection_req_item, linearLayout,
+								false);
+						final RoundedImageView tv = (RoundedImageView) view1
+								.findViewById(R.id.parentImage);
+						tv.setId(tv.getId() + i);
+						tv.setOnClickListener(new OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									Toast.makeText(context,
-											"click id " + tv.getId(),
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-							linearLayout1.addView(tv);
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Toast.makeText(context,
+										"click id " + tv.getId(),
+										Toast.LENGTH_SHORT).show();
+							}
+						});
+						linearLayout1.addView(view1);
 
-						}
 					}
-					FutureTravelViewHolder holder = new FutureTravelViewHolder();
+
 					// holder.title = (TextView) view
 					// .findViewById(R.id.futureTravelTitle);
 					// holder.departure = (TextView) view
@@ -174,8 +175,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					// .findViewById(R.id.futureTravelDate);
 					// holder.time = (TextView) view
 					// .findViewById(R.id.futureTravelTime);
-
-					view.setTag(holder);
 
 				}
 				//
@@ -192,58 +191,57 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				// holder.time.setText(currentItem.getTime());
 			} else {
 				// if the type is past, use the past travel layout
-				if (view == null) {
-					view = LayoutInflater.from(context).inflate(
-							R.layout.expand_list_first_child, parent, false);
 
-					//
-					// PastTravelViewHolder holder = new PastTravelViewHolder();
-					// holder.title = (TextView) view
-					// .findViewById(R.id.pastTravelTitle);
-					// holder.departure = (TextView) view
-					// .findViewById(R.id.pastTravelDeparture);
-					// holder.destination = (TextView) view
-					// .findViewById(R.id.pastTravelDestination);
-					// holder.date = (TextView)
-					// view.findViewById(R.id.pastTravelDate);
-					//
-					// view.setTag(holder);
-					LinearLayout linearLayout = (LinearLayout) view
-							.findViewById(R.id.futureTravelLineItemLayout);
-					LayoutInflater inflater = (LayoutInflater) context
-							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					if (child._listDataChild != null) {
-						for (int i = 0; i < 5; i++) {
+				view = LayoutInflater.from(context).inflate(
+						R.layout.expand_list_first_child, parent, false);
 
-							View view1 = inflater.inflate(R.layout.image_item,
-									linearLayout, false);
-							final RoundedImageView tv = (RoundedImageView) view1
-									.findViewById(R.id.parentImage);
-							tv.setId(tv.getId() + i);
-							tv.setOnClickListener(new OnClickListener() {
-
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									Toast.makeText(context,
-											"click id " + tv.getId(),
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-							linearLayout.addView(view1);
-						}
-
-					}
-				}
-//
-//				TravelItem currentItem = (TravelItem) getChild(groupPosition,
-//						childPosition);
 				//
-				// holder.title.setText(currentItem.getTitle());
-				// holder.departure.setText(currentItem.getDeparture());
-				// holder.destination.setText(currentItem.getDestination());
-				// holder.date.setText(currentItem.getDate());
+				// PastTravelViewHolder holder = new PastTravelViewHolder();
+				// holder.title = (TextView) view
+				// .findViewById(R.id.pastTravelTitle);
+				// holder.departure = (TextView) view
+				// .findViewById(R.id.pastTravelDeparture);
+				// holder.destination = (TextView) view
+				// .findViewById(R.id.pastTravelDestination);
+				// holder.date = (TextView)
+				// view.findViewById(R.id.pastTravelDate);
+				//
+				// view.setTag(holder);
+				LinearLayout linearLayout = (LinearLayout) view
+						.findViewById(R.id.futureTravelLineItemLayout);
+				LayoutInflater inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				if (child._listDataChild != null) {
+					for (int i = 0; i < child._listDataChild.size(); i++) {
+
+						View view1 = inflater.inflate(R.layout.image_item,
+								linearLayout, false);
+						final RoundedImageView tv = (RoundedImageView) view1
+								.findViewById(R.id.parentImage);
+						tv.setId(tv.getId() + i);
+						tv.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Toast.makeText(context,
+										"click id " + tv.getId(),
+										Toast.LENGTH_SHORT).show();
+							}
+						});
+						linearLayout.addView(view1);
+					}
+
+				}
 			}
+			//
+			// TravelItem currentItem = (TravelItem) getChild(groupPosition,
+			// childPosition);
+			//
+			// holder.title.setText(currentItem.getTitle());
+			// holder.departure.setText(currentItem.getDeparture());
+			// holder.destination.setText(currentItem.getDestination());
+			// holder.date.setText(currentItem.getDate());
 
 		} else {
 			return null;
@@ -258,7 +256,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return 1;
+		Group grp = groups.get(groupPosition);
+		if (grp.child != null)
+			return 1;
+		else {
+			return 0;
+		}
 	}
 
 	/*
@@ -302,33 +305,39 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			View convertView, ViewGroup parent) {
 
 		View view = convertView;
-		// TextView text = null;
-		// ImageView image = null;
+		TextView name = null;
+		TextView kinCount = null;
+		ImageView image = null;
 
 		if (view == null) {
 			view = LayoutInflater.from(context).inflate(
 					R.layout.expandable_group_item, parent, false);
 		}
+		Group grp = groups.get(groupPosition);
+		name = (TextView) view.findViewById(R.id.userName);
+		kinCount = (TextView) view.findViewById(R.id.kinInfo);
+		image = (ImageView) view.findViewById(R.id.drawer);
+		if (grp.type == Type.CONN) {
 
-		// title.append(" (");
-		// title.append(groups.get(groupPosition).travelItems.size());
-		// title.append(")");
-		//
-		// text.setText(title.toString());
+			// title.append(" (");
+			// title.append(groups.get(groupPosition).travelItems.size());
+			// title.append(")");
+			//
+			// text.setText(title.toString());
 
-		/*
-		 * if this is not the first group (future travel) show the arrow image
-		 * and change state if necessary
-		 */
-		// if (groupPosition != 0) {
-		// int imageResourceId = isExpanded ? android.R.drawable.arrow_up_float
-		// : android.R.drawable.arrow_down_float;
-		// image.setImageResource(imageResourceId);
-		//
-		// image.setVisibility(View.VISIBLE);
-		// } else {
-		// image.setVisibility(View.INVISIBLE);
-		// }
+			/*
+			 * if this is not the first group (future travel) show the arrow
+			 * image and change state if necessary
+			 */
+
+			int imageResourceId = isExpanded ? R.drawable.list_open
+					: R.drawable.list_close;
+			image.setImageResource(imageResourceId);
+
+		} else {
+			int imageResourceId = R.drawable.info;
+			image.setImageResource(imageResourceId);
+		}
 		return view;
 	}
 
@@ -374,12 +383,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				group.child = child;
 				groups.add(group);
 			}
-			if (requests != null) {
-				Group temp = groups.get(0);
-				temp.child.connReq = requests;
-				temp.child.typeChild = TypeChild.ME;
 
-			}
+		}
+		if (requests != null) {
+			Group temp = groups.get(0);
+			temp.child.connReq = requests;
+			temp.child.typeChild = TypeChild.ME;
 
 		}
 		if (pendingReq != null) {
@@ -398,17 +407,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	/*
 	 * Holder for the Past view type
 	 */
-	class ParentLayoutHolder {
-		TextView title;
-		TextView departure;
+	class MyLaoutHolder {
+		TextView name;
+		TextView kinCount;
 		RoundedImageView userImage;
 		ImageView icon;
+		RoundedImageView careGiversImage;
+		ImageView accept, reject;
+		TextView reqText;
+		RoundedImageView reqUserImage;
+		LinearLayout linearLayout, linearLayout2;
+
 	}
 
 	/*
 	 * Holder for the Future view type
 	 */
-	class FutureTravelViewHolder {
+	class CRLayoutHolder {
 		TextView title;
 		TextView departure;
 		TextView destination;

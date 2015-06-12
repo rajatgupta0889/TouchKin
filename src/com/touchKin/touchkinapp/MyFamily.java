@@ -4,11 +4,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
+import com.touchKin.touchkinapp.adapter.ImageAdapter;
+import com.touchKin.touchkinapp.custom.CustomRequest;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.model.RequestModel;
@@ -23,6 +40,7 @@ public class MyFamily extends AppCompatActivity {
 	ArrayList<ExpandableListGroupItem> pendingReq;
 	ExpandableListView expandListView;
 	List<String> item;
+	LinearLayout footerView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +59,45 @@ public class MyFamily extends AppCompatActivity {
 		careGiver.put(CareReciever.get(2).getUserId(), parents);
 		requests.add(new RequestModel("", "", "", ""));
 		requests.add(new RequestModel("", "", "", ""));
+		pendingReq.add(new ExpandableListGroupItem());
+		pendingReq.add(new ExpandableListGroupItem());
+		LayoutInflater inflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		footerView = (LinearLayout) inflater.inflate(
+				R.layout.expand_list_footer, null);
+		expandListView.addFooterView(footerView);
 		adapter = new ExpandableListAdapter(MyFamily.this);
-		adapter.setupTrips(careGiver, requests, CareReciever, null);
+		fetchMyFamily();
+		adapter.setupTrips(careGiver, requests, CareReciever, pendingReq);
 		expandListView.setAdapter(adapter);
+
+	}
+
+	private void fetchMyFamily() {
+		// TODO Auto-generated method stub
+
+		CustomRequest req = new CustomRequest(
+				"http://54.69.183.186:1340/user/family", 
+				new Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject responseArray) {
+						// TODO Auto-generated method stub
+						Log.d("Response Array", " " + responseArray);
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MyFamily.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
+
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
 	}
 
 	private void init() {
