@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/horizontalScrollView1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
-    <LinearLayout
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
 
-        <com.touchKin.touchkinapp.custom.RoundedImageView
-            android:id="@+id/parentImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:layout_margin="3dp"
-            android:background="@drawable/parent_image"
-            android:src="@drawable/activity_bg" />
+        <LinearLayout
+            android:id="@+id/futureTravelLineItemLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <!--
+             <TextView
+            android:id="@+id/futureTravelTitle"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/not_available_text" />
+            -->
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/futureTravel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/horizontalScrollView1"
+        android:orientation="vertical" >
     </LinearLayout>
 
-</HorizontalScrollView>
+</RelativeLayout>

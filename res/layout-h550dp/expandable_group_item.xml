@@ -32,4 +32,13 @@
         android:layout_marginBottom="16dp"
         android:text="TextView" />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/abc_btn_check_material" />
+
 </RelativeLayout>
