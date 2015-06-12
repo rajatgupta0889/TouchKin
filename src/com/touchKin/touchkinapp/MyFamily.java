@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.ExpandableListView;
 
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
@@ -14,7 +14,7 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
-public class MyFamily extends AppCompatActivity {
+public class MyFamily extends ActionBarActivity {
 	ExpandableListAdapter adapter;
 	HashMap<String, ArrayList<ParentListModel>> careGiver;
 	ArrayList<RequestModel> requests;
