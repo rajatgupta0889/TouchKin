@@ -15,8 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.Group.Type;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.GroupChild.TypeChild;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -30,6 +32,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	private static final int PAST_TRAVEL_VIEW = 1;
 	private static final int FUTURE_TRAVEL_VIEW = 0;
+	public static final int ADD_FOR_ME = 2;
+	public static final int ADD_FOR_CR = 3;
+	public static final int CONN_REQ = 4;
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	/*
 	 * data
@@ -37,6 +43,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	private Context context = null;
 	ArrayList<Group> groups = new ArrayList<Group>();
 	ArrayList<GroupChild> childGroups = new ArrayList<GroupChild>();
+	ButtonClickListener listener;
 
 	public ExpandableListAdapter(Context context) {
 		this.context = context;
@@ -47,6 +54,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 * 
 	 * @see android.widget.BaseExpandableListAdapter#getChildType(int, int)
 	 */
+
+	public void setButtonListener(ButtonClickListener listener) {
+		this.listener = listener;
+	}
+
 	@Override
 	public int getChildType(int groupPosition, int childPosition) {
 		int type = -1;
@@ -103,9 +115,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		// get the type of the group this child belongs
 		Type viewType = groups.get(groupPosition).type;
 		Log.d("Positon", " child" + childPosition + " Parent" + groupPosition);
-		GroupChild child = (GroupChild) getChild(groupPosition, childPosition);
+		final GroupChild child = (GroupChild) getChild(groupPosition,
+				childPosition);
 
 		View view = convertView;
+		ImageLoader imageLoader = new ImageLoader(context);
+		// imageLoader.DisplayImage(
+		// serverPath + groupMember.getUserId() + ".jpeg",
+		// R.drawable.ic_user_image, image);
 
 		// if the type is future travel, use the future travel layout
 		if (viewType == Type.CONN) {
@@ -126,20 +143,29 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								linearLayout, false);
 						final RoundedImageView tv = (RoundedImageView) view1
 								.findViewById(R.id.parentImage);
-						tv.setId(tv.getId() + i);
-						tv.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								Toast.makeText(context,
-										"click id " + tv.getId(),
-										Toast.LENGTH_SHORT).show();
-							}
-						});
+						imageLoader.DisplayImage(serverPath
+								+ child._listDataChild.get(i).getParentId()
+								+ ".jpeg", R.drawable.ic_user_image, tv);
+					
 						linearLayout.addView(view1);
 					}
+
 				}
+				View view2 = inflater.inflate(R.layout.image_item,
+						linearLayout, false);
+				final RoundedImageView image = (RoundedImageView) view2
+						.findViewById(R.id.parentImage);
+				image.setImageResource(R.drawable.accept);
+				image.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						listener.onButtonClickListner(ADD_FOR_ME, "", false);
+					}
+				});
+				linearLayout.addView(view2);
+
 				if (child.connReq != null) {
 					LinearLayout linearLayout1 = (LinearLayout) view
 							.findViewById(R.id.futureTravel);
@@ -150,17 +176,39 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								false);
 						final RoundedImageView tv = (RoundedImageView) view1
 								.findViewById(R.id.parentImage);
-						tv.setId(tv.getId() + i);
-						tv.setOnClickListener(new OnClickListener() {
+						imageLoader.DisplayImage(serverPath
+								+ child.connReq.get(i).getUserId() + ".jpeg",
+								R.drawable.ic_user_image, tv);
+						ImageView accept = (ImageView) view1
+								.findViewById(R.id.accept);
+						ImageView reject = (ImageView) view1
+								.findViewById(R.id.reject);
+						final String id = child.connReq.get(i).getRequestID();
+						final int pos = i;
+						accept.setOnClickListener(new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								Toast.makeText(context,
-										"click id " + tv.getId(),
-										Toast.LENGTH_SHORT).show();
+								listener.onButtonClickListner(CONN_REQ, id,
+										true);
+								child.connReq.remove(pos);
+								notifyDataSetChanged();
 							}
 						});
+						reject.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								listener.onButtonClickListner(CONN_REQ, id,
+										false);
+								child.connReq.remove(pos);
+								notifyDataSetChanged();
+
+							}
+						});
+
 						linearLayout1.addView(view1);
 
 					}
@@ -218,21 +266,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								linearLayout, false);
 						final RoundedImageView tv = (RoundedImageView) view1
 								.findViewById(R.id.parentImage);
-						tv.setId(tv.getId() + i);
-						tv.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								Toast.makeText(context,
-										"click id " + tv.getId(),
-										Toast.LENGTH_SHORT).show();
-							}
-						});
+						imageLoader.DisplayImage(serverPath
+								+ child._listDataChild.get(i).getParentId()
+								+ ".jpeg", R.drawable.ic_user_image, tv);
+						// tv.setOnClickListener(new OnClickListener() {
+						//
+						// @Override
+						// public void onClick(View v) {
+						// // TODO Auto-generated method stub
+						// Toast.makeText(context,
+						// "click id " + tv.getId(),
+						// Toast.LENGTH_SHORT).show();
+						// }
+						// });
 						linearLayout.addView(view1);
 					}
 
 				}
+				View view2 = inflater.inflate(R.layout.image_item,
+						linearLayout, false);
+				final RoundedImageView image = (RoundedImageView) view2
+						.findViewById(R.id.parentImage);
+				image.setImageResource(R.drawable.accept);
+				image.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						listener.onButtonClickListner(ADD_FOR_CR, "", false);
+					}
+				});
+				linearLayout.addView(view2);
+
 			}
 			//
 			// TravelItem currentItem = (TravelItem) getChild(groupPosition,
@@ -317,6 +382,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		name = (TextView) view.findViewById(R.id.userName);
 		kinCount = (TextView) view.findViewById(R.id.kinInfo);
 		image = (ImageView) view.findViewById(R.id.drawer);
+		RoundedImageView imageview = (RoundedImageView) view
+				.findViewById(R.id.parentImageView);
+		ExpandableListGroupItem groupMember = grp.groupMemebr;
 		if (grp.type == Type.CONN) {
 
 			// title.append(" (");
@@ -329,7 +397,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			 * if this is not the first group (future travel) show the arrow
 			 * image and change state if necessary
 			 */
-
+			ImageLoader imageLoader = new ImageLoader(context);
+			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
+					+ ".jpeg", R.drawable.ic_user_image, imageview);
+			name.setText(groupMember.getUserName());
+			kinCount.setText("You have " + groupMember.getKinCount()
+					+ " Kin and " + groupMember.getReqCount() + "requests");
 			int imageResourceId = isExpanded ? R.drawable.list_open
 					: R.drawable.list_close;
 			image.setImageResource(imageResourceId);
@@ -371,6 +444,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			ArrayList<ExpandableListGroupItem> pendingReq) {
 		groups.clear();
 		childGroups.clear();
+
 		if (CareReciever != null) {
 
 			for (ExpandableListGroupItem item : CareReciever) {

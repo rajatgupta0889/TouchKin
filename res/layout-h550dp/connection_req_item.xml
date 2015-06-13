@@ -39,14 +39,14 @@
             android:text="TextView" />
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/reject"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginRight="8dp"
             android:src="@drawable/reject" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/accept"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginRight="8dp"

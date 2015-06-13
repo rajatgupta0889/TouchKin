@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/expand_list_group"
     android:orientation="vertical" >
 
     <com.touchKin.touchkinapp.custom.RoundedImageView
@@ -20,6 +21,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@+id/drawer"
         android:layout_toRightOf="@+id/parentImageView"
         android:text="TextView" />
 
@@ -30,6 +32,16 @@
         android:layout_alignBottom="@+id/parentImageView"
         android:layout_alignLeft="@+id/userName"
         android:layout_marginBottom="16dp"
+        android:layout_toLeftOf="@+id/drawer"
         android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/drawer"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/list_close" />
 
 </RelativeLayout>

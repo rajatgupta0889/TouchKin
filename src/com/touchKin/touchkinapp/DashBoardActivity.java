@@ -265,6 +265,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mAdapter.notifyDataSetChanged();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -531,7 +538,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 		} else {
 			DialogFragment newFragment = new ContactDialogFragment();
-			newFragment.setCancelable(false);
+			newFragment.setCancelable(true);
 			newFragment.show(getSupportFragmentManager(), "TAG");
 			((ContactDialogFragment) newFragment).SetButtonListener(this);
 		}
@@ -570,8 +577,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 			edit.apply();
 			SharedPreferences userPref = getApplicationContext()
 					.getSharedPreferences("userPref", 0);
-			 edit = userPref.edit();
-			edit.putString("user",null);
+			edit = userPref.edit();
+			edit.putString("user", null);
 			edit.apply();
 			Intent intent = new Intent(this, SignUpActivity.class);
 			startActivity(intent);
