@@ -15,6 +15,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -336,6 +338,12 @@ public class SignUpActivity extends ActionBarActivity {
 						String json = null;
 						hidepDialog();
 						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(context,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
 
 						// Log.d("Response", response.data.toString());
 						if (response != null && response.data != null) {
@@ -370,6 +378,13 @@ public class SignUpActivity extends ActionBarActivity {
 				});
 
 		AppController.getInstance().addToRequestQueue(req);
+	}
+
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	public class MyAdapter extends ArrayAdapter<String> {
