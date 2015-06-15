@@ -44,6 +44,7 @@ import com.touchKin.touckinapp.R;
 
 public class MyFamily extends AppCompatActivity implements OnClickListener,
 		ButtonClickListener {
+
 	ExpandableListAdapter adapter;
 	HashMap<String, ArrayList<ParentListModel>> careGiver;
 	ArrayList<RequestModel> requests;
