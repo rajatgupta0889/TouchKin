@@ -10,9 +10,12 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import android.support.v7.app.ActionBarActivity;
+
 import android.util.Log;
 import android.view.LayoutInflater;
+
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
-public class MyFamily extends AppCompatActivity {
+public class MyFamily extends ActionBarActivity {
 	ExpandableListAdapter adapter;
 	HashMap<String, ArrayList<ParentListModel>> careGiver;
 	ArrayList<RequestModel> requests;
@@ -77,7 +80,7 @@ public class MyFamily extends AppCompatActivity {
 		// TODO Auto-generated method stub
 
 		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/user/family", 
+				"http://54.69.183.186:1340/user/family",
 				new Listener<JSONObject>() {
 
 					@Override
