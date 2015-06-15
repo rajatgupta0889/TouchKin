@@ -81,8 +81,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private ImageAdapter imageAdapter;
 	private Menu menu;
 	public static Boolean isCancel = true;
-	public String userId;
+	public String userId, userName;
 	ButtonClickListener listener;
+	JSONObject userObj;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,9 +172,20 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// size
 
 		MyAdapter.mListener = DashBoardActivity.this;
-		SharedPreferences pref = this.getSharedPreferences("loginPref", 0);
-		userId = pref.getString("id", null);
-		mAdapter = new MyAdapter(TITLES, pref.getString("name", null), userId,
+		SharedPreferences userPref = getApplicationContext()
+				.getSharedPreferences("userPref", 0);
+
+		String user = userPref.getString("user", null);
+		try {
+			userObj = new JSONObject(user);
+			userId = userObj.getString("id");
+			userName = userObj.getString("first_name");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		mAdapter = new MyAdapter(TITLES, userName, userId,
 				DashBoardActivity.this); // Creating
 		mRecyclerView.setAdapter(mAdapter); // Setting the adapter to
 		// RecyclerView
@@ -568,16 +580,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 				Toast.LENGTH_SHORT).show();
 
 		if (caller == 6) {
-			SharedPreferences pref = getApplicationContext()
-					.getSharedPreferences("loginPref", 0);
-			Editor edit = pref.edit();
-			edit.putString("mobile", null);
-			edit.putString("otp", null);
-			edit.putString("id", null);
-			edit.apply();
+
 			SharedPreferences userPref = getApplicationContext()
 					.getSharedPreferences("userPref", 0);
-			edit = userPref.edit();
+			Editor edit = userPref.edit();
 			edit.putString("user", null);
 			edit.apply();
 			Intent intent = new Intent(this, SignUpActivity.class);
@@ -587,6 +593,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 		}
 		if (caller == 1) {
 			Intent intent = new Intent(DashBoardActivity.this, MyFamily.class);
+			intent.putExtra("isLoggedIn", true);
+			
 			startActivity(intent);
 		}
 

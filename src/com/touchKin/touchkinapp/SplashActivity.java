@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.internal.mp;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touckinapp.R;
 
@@ -36,34 +37,50 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_screen);
-		SharedPreferences pref = this.getSharedPreferences("loginPref", 0);
+		SharedPreferences userPref = getApplicationContext()
+				.getSharedPreferences("userPref", 0);
 		progBar = (ProgressBar) findViewById(R.id.progressBar1);
-		// pref.edit().putString(GetUserLogin.UserTom, null);
-		// pref.edit().commit();
-		// System.out.println(pref.getString(GetUserLogin.UserTom, null));
-		// new Thread(new Runnable() {
-		// public void run() {
-		// while (mProgressStatus < 100) {
-		//
-		// progBar.incrementProgressBy(1);
-		//
-		// // Update the progress bar
-		// mHandler.post(new Runnable() {
-		// public void run() {
-		// progBar.setProgress(mProgressStatus);
-		// }
-		// });
-		// }
-		// }
-		//
-		// }).start();
-		// Log.d("Mobile", "" + pref.getString("mobile", null));
-		// Log.d("otp", "" + pref.getString("otp", null));
-		if (pref.getString("mobile", null) != null
-				&& pref.getString("otp", null) != null) {
-			sendIntent(pref.getString("mobile", null),
-					pref.getString("otp", null),
-					pref.getString("device_id", null));
+		String user = userPref.getString("user", null);
+		String mobile = null;
+		String code = null;
+		String mobile_device_id = null;
+		Log.d("USer", user + " ");
+		if (user != null) {
+
+			try {
+				JSONObject userObj = new JSONObject(user);
+				mobile = userObj.getString("mobile");
+				code = userObj.getString("mobile_verification_code");
+				mobile_device_id = userObj.getString("mobile_device_id");
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// pref.edit().putString(GetUserLogin.UserTom, null);
+			// pref.edit().commit();
+			// System.out.println(pref.getString(GetUserLogin.UserTom, null));
+			// new Thread(new Runnable() {
+			// public void run() {
+			// while (mProgressStatus < 100) {
+			//
+			// progBar.incrementProgressBy(1);
+			//
+			// // Update the progress bar
+			// mHandler.post(new Runnable() {
+			// public void run() {
+			// progBar.setProgress(mProgressStatus);
+			// }
+			// });
+			// }
+			// }
+			//
+			// }).start();
+			// Log.d("Mobile", "" + pref.getString("mobile", null));
+			// Log.d("otp", "" + pref.getString("otp", null));
+		}
+		if (mobile != null && code != null) {
+			sendIntent(mobile, code, mobile_device_id);
 			// new SendRequest().execute(params)
 		} else {
 			new Handler().postDelayed(new Runnable() {

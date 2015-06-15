@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,7 +54,6 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class SignUpActivity extends ActionBarActivity {
 
 	String[] country;

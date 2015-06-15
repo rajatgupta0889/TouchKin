@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
@@ -57,13 +59,15 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 	JSONObject mySelf;
 	private Toolbar toolbar;
 	TextView mTitle;
-
+	Button next;
+	Boolean isLoggedIn;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_family);
 		init();
+		isLoggedIn = getIntent().getExtras().getBoolean("isLoggedIn");
 		mTitle.setText("My Family");
 		SharedPreferences userPref = getApplicationContext()
 				.getSharedPreferences("userPref", 0);
@@ -116,6 +120,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 		adapter = new ExpandableListAdapter(MyFamily.this);
 		adapter.setButtonListener(this);
 		expandListView.setAdapter(adapter);
+		next.setOnClickListener(this);
 	}
 
 	private void getConnectionRequest() {
@@ -299,6 +304,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 		me = new ExpandableListGroupItem();
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		next = (Button) findViewById(R.id.next);
 
 	}
 
@@ -322,10 +328,21 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 		case R.id.footerView:
 			addContact();
 			break;
-
+		case R.id.next:
+			gotoNextScreen();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void gotoNextScreen() {
+		// TODO Auto-generated method stub
+		if(!isLoggedIn){
+			Intent intent = new Intent(MyFamily.this, DashBoardActivity.class);
+			startActivity(intent);
+		}
+		finish();
 	}
 
 	@Override

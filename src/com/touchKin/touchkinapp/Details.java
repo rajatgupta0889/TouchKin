@@ -168,7 +168,6 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		if (user != null) {
 			try {
 				JSONObject obj = new JSONObject(user);
-
 				Log.d("User", obj + "");
 
 				phone = obj.optString("mobile");
@@ -195,13 +194,14 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						Calendar calendar = Calendar.getInstance();
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
-						server_age = "" + (year - Integer.parseInt(yob));
+						server_age = userAge.getText().toString();
 						verified = true;
 						// if (!isLoggedIn) {
 						// otp.setText(obj
 						// .optString("mobile_verification_code"));
 						// sendIntent();
 						// }
+
 					}
 					String gender = obj.optString("gender");
 					if (!gender.equalsIgnoreCase("male"))
@@ -355,11 +355,17 @@ public class Details extends ActionBarActivity implements OnClickListener {
 							|| !userAge.equals(server_age)
 							|| !year_spinner.equals(yob_from_server)) {
 						Log.d("here", "come");
-
 						updateUser(userName, gender, yob);
 					} else {
 						if (isLoggedIn)
 							finish();
+						else {
+							Intent intent = new Intent(Details.this,
+									MyFamily.class);
+							intent.putExtra("isLoggedIn", false);
+							startActivity(intent);
+							finish();
+						}
 					}
 				} else {
 					if (!otp.getText().toString().equals(""))
@@ -786,34 +792,25 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					@Override
 					public void onResponse(JSONObject response) {
 						hidepDialog();
-						SharedPreferences pref = getApplicationContext()
-								.getSharedPreferences("loginPref", 0);
-						try {
 
-							Editor edit = pref.edit();
-							edit.putString("name",
-									response.getString("first_name"));
-							Log.d("complete profile", response + "");
-							edit.apply();
-
-							SharedPreferences userPref = getApplicationContext()
-									.getSharedPreferences("userPref", 0);
-							edit = userPref.edit();
-							edit.putString("user", response.toString());
-							edit.apply();
-							// Log.d("Response", "" + response);
-							// Log.d("mobile", "" + pref.getString("mobile",
-							// null));
-							// Log.d("otp", "" + pref.getString("mobile",
-							// null));
-							if (isLoggedIn) {
-								finish();
-							}
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						SharedPreferences userPref = getApplicationContext()
+								.getSharedPreferences("userPref", 0);
+						Editor edit = userPref.edit();
+						edit.putString("user", response.toString());
+						edit.apply();
+						// Log.d("Response", "" + response);
+						// Log.d("mobile", "" + pref.getString("mobile",
+						// null));
+						// Log.d("otp", "" + pref.getString("mobile",
+						// null));
+						if (!isLoggedIn) {
+							Intent intent = new Intent(Details.this,
+									MyFamily.class);
+							intent.putExtra("isLoggedIn", false);
+							startActivity(intent);
 						}
 
+						finish();
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -903,35 +900,32 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					@Override
 					public void onResponse(JSONObject response) {
 
-						SharedPreferences pref = getApplicationContext()
-								.getSharedPreferences("loginPref", 0);
-						try {
-
-							Editor edit = pref.edit();
-							edit.putString("mobile",
-									response.getString("mobile"));
-							edit.putString("otp", response
-									.getString("mobile_verification_code"));
-							edit.putString("id", response.getString("id"));
-							edit.putString("device_id",
-									response.optString("mobile_device_id"));
-							edit.apply();
-							if (response.has("first_name")) {
-								userName = response.getString("first_name");
+						SharedPreferences userPref = getApplicationContext()
+								.getSharedPreferences("userPref", 0);
+						if (!response.has("code")) {
+							try {
+								response.put("code",
+										Integer.parseInt(oneTimePass));
+							} catch (NumberFormatException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-							userID = response.getString("id");
-
-							Log.d("Response", "" + response);
-							// Log.d("mobile", "" + pref.getString("mobile",
-							// null));
-							// Log.d("otp", "" + pref.getString("mobile",
-							// null));
-							otptext.setText("Your Phone number is verified");
-							verified = true;
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
+						Editor edit = userPref.edit();
+						edit.putString("user", response.toString());
+						edit.apply();
+
+						Log.d("Response", "" + response);
+						// Log.d("mobile", "" + pref.getString("mobile",
+						// null));
+						// Log.d("otp", "" + pref.getString("mobile",
+						// null));
+						otptext.setText("Your Phone number is verified");
+						verified = true;
+
 						//
 						// Intent i = new Intent(Details.this, Details.class);
 						// Bundle bndlanimation = ActivityOptions
