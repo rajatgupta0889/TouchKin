@@ -146,7 +146,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						imageLoader.DisplayImage(serverPath
 								+ child._listDataChild.get(i).getParentId()
 								+ ".jpeg", R.drawable.ic_user_image, tv);
-					
+
 						linearLayout.addView(view1);
 					}
 
@@ -213,48 +213,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 					}
 
-					// holder.title = (TextView) view
-					// .findViewById(R.id.futureTravelTitle);
-					// holder.departure = (TextView) view
-					// .findViewById(R.id.futureTravelDeparture);
-					// holder.destination = (TextView) view
-					// .findViewById(R.id.futureTravelDestination);
-					// holder.date = (TextView) view
-					// .findViewById(R.id.futureTravelDate);
-					// holder.time = (TextView) view
-					// .findViewById(R.id.futureTravelTime);
-
 				}
-				//
-				// FutureTravelViewHolder holder = (FutureTravelViewHolder) view
-				// .getTag();
-				//
-				// TravelItem currentItem = (TravelItem) getChild(groupPosition,
-				// childPosition);
 
-				// holder.title.setText(currentItem.getTitle());
-				// holder.departure.setText(currentItem.getDeparture());
-				// holder.destination.setText(currentItem.getDestination());
-				// holder.date.setText(currentItem.getDate());
-				// holder.time.setText(currentItem.getTime());
 			} else {
 				// if the type is past, use the past travel layout
 
 				view = LayoutInflater.from(context).inflate(
 						R.layout.expand_list_first_child, parent, false);
 
-				//
-				// PastTravelViewHolder holder = new PastTravelViewHolder();
-				// holder.title = (TextView) view
-				// .findViewById(R.id.pastTravelTitle);
-				// holder.departure = (TextView) view
-				// .findViewById(R.id.pastTravelDeparture);
-				// holder.destination = (TextView) view
-				// .findViewById(R.id.pastTravelDestination);
-				// holder.date = (TextView)
-				// view.findViewById(R.id.pastTravelDate);
-				//
-				// view.setTag(holder);
 				LinearLayout linearLayout = (LinearLayout) view
 						.findViewById(R.id.futureTravelLineItemLayout);
 				LayoutInflater inflater = (LayoutInflater) context
@@ -269,16 +235,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						imageLoader.DisplayImage(serverPath
 								+ child._listDataChild.get(i).getParentId()
 								+ ".jpeg", R.drawable.ic_user_image, tv);
-						// tv.setOnClickListener(new OnClickListener() {
-						//
-						// @Override
-						// public void onClick(View v) {
-						// // TODO Auto-generated method stub
-						// Toast.makeText(context,
-						// "click id " + tv.getId(),
-						// Toast.LENGTH_SHORT).show();
-						// }
-						// });
+
 						linearLayout.addView(view1);
 					}
 
@@ -299,14 +256,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				linearLayout.addView(view2);
 
 			}
-			//
-			// TravelItem currentItem = (TravelItem) getChild(groupPosition,
-			// childPosition);
-			//
-			// holder.title.setText(currentItem.getTitle());
-			// holder.departure.setText(currentItem.getDeparture());
-			// holder.destination.setText(currentItem.getDestination());
-			// holder.date.setText(currentItem.getDate());
 
 		} else {
 			return null;
@@ -387,12 +336,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		ExpandableListGroupItem groupMember = grp.groupMemebr;
 		if (grp.type == Type.CONN) {
 
-			// title.append(" (");
-			// title.append(groups.get(groupPosition).travelItems.size());
-			// title.append(")");
-			//
-			// text.setText(title.toString());
-
 			/*
 			 * if this is not the first group (future travel) show the arrow
 			 * image and change state if necessary
@@ -401,8 +344,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
 					+ ".jpeg", R.drawable.ic_user_image, imageview);
 			name.setText(groupMember.getUserName());
-			kinCount.setText("You have " + groupMember.getKinCount()
-					+ " Kin and " + groupMember.getReqCount() + "requests");
+			if (groupMember.getReqCount() != null
+					&& groupMember.getKinCount() != null) {
+				kinCount.setText("You have " + groupMember.getKinCount()
+						+ " Kin and " + groupMember.getReqCount() + "requests");
+			} else {
+				kinCount.setText("Click to get details");
+			}
 			int imageResourceId = isExpanded ? R.drawable.list_open
 					: R.drawable.list_close;
 			image.setImageResource(imageResourceId);

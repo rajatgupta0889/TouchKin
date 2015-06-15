@@ -1,14 +1,10 @@
 package com.touchKin.touchkinapp.services;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -17,7 +13,6 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.touchKin.touchkinapp.CircleNotificationActivity;
-import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.broadcastReciever.GcmBroadcastReceiver;
 import com.touchKin.touckinapp.R;
 
@@ -61,26 +56,27 @@ public class GcmIntentService extends IntentService {
 				Log.d(TAG, messageType);
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
 					.equals(messageType)) {
-				Log.d(TAG, extras.getString("message"));
-				// Log.d(TAG, extras.toString());
-				String message = extras.getString("message");
+				if (extras.getString("message") != null) {
+					Log.d(TAG, extras.getString("message") + "");
+					// Log.d(TAG, extras.toString());
+					String message = extras.getString("message");
 
-				sendNotification("Message is:"+message, "");
+					sendNotification("Message is:" + message, "");
+					for (int i = 0; i < 5; i++) {
+						Log.i(TAG, "Working ... " + (i + 1) + "/5 @"
+								+ SystemClock.elapsedRealtime());
+						try {
+							Thread.sleep(5000);
 
-				for (int i = 0; i < 5; i++) {
-					Log.i(TAG,
-							"Working ... " + (i + 1) + "/5 @"
-									+ SystemClock.elapsedRealtime());
-					try {
-						Thread.sleep(5000);
+						} catch (InterruptedException exp) {
 
-					} catch (InterruptedException exp) {
+						}
 
 					}
-
+					Log.i(TAG,
+							"Completed work @ " + SystemClock.elapsedRealtime());
+					Log.i(TAG, "Recieved @ " + extras.toString());
 				}
-				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-				Log.i(TAG, "Recieved @ " + extras.toString());
 			}
 
 		}
