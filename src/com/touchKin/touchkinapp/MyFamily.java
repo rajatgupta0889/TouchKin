@@ -14,7 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +44,7 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
-public class MyFamily extends ActionBarActivity implements OnClickListener,
+public class MyFamily extends AppCompatActivity implements OnClickListener,
 		ButtonClickListener {
 
 	ExpandableListAdapter adapter;
@@ -61,6 +61,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 	TextView mTitle;
 	Button next;
 	Boolean isLoggedIn;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -157,6 +158,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 											item.setCare_reciever_name(careInitiator
 													.getString("mobile"));
 										}
+										item.setUserId(careGiver.getString("id"));
 										item.setReqMsg(item
 												.getCare_reciever_name()
 												+ " wants to care for you");
@@ -174,6 +176,8 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 											item.setCare_reciever_name(careInitiator
 													.getString("mobile"));
 										}
+										item.setUserId(careReciever.getString("id"));
+
 										item.setReqMsg(item
 												.getCare_reciever_name()
 												+ " wants you to care for them");
@@ -195,6 +199,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 											item.setCare_reciever_name(careInitiator
 													.getString("mobile"));
 										}
+										item.setUserId(careInitiator.getString("id"));
 										item.setReqMsg(item
 												.getCare_reciever_name()
 												+ " wants you to care for"
@@ -203,6 +208,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 									}
 									// RequestModel item = new RequestModel();
 									//
+									
 									item.setRequestID(careRequest
 											.getString("id"));
 									requests.add(item);
@@ -250,19 +256,25 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 									.getJSONArray("care_receivers");
 							int crCount = careRecievers.length();
 							for (int i = 0; i < crCount; i++) {
+
 								JSONObject cr = careRecievers.getJSONObject(i);
-								ExpandableListGroupItem item = new ExpandableListGroupItem();
-								item.setUserId(cr.getString("id"));
-								item.setUserName(cr.optString("first_name"));
-								CareReciever.add(item);
+								if (cr != null) {
+									ExpandableListGroupItem item = new ExpandableListGroupItem();
+									item.setUserId(cr.getString("id"));
+									item.setUserName(cr.optString("first_name"));
+									CareReciever.add(item);
+								}
 							}
 							int cgCount = careGivers.length();
 							for (int i = 0; i < cgCount; i++) {
 								JSONObject cg = careGivers.getJSONObject(i);
-								ParentListModel item = new ParentListModel();
-								item.setParentId(cg.getString("id"));
-								item.setParentName(cg.optString("first_name"));
-								parents.add(item);
+								if (cg != null) {
+									ParentListModel item = new ParentListModel();
+									item.setParentId(cg.getString("id"));
+									item.setParentName(cg
+											.optString("first_name"));
+									parents.add(item);
+								}
 							}
 							CareReciever.get(0).setKinCount(cgCount + "");
 							Log.d("Care reciever Length",
@@ -338,7 +350,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 	private void gotoNextScreen() {
 		// TODO Auto-generated method stub
-		if(!isLoggedIn){
+		if (!isLoggedIn) {
 			Intent intent = new Intent(MyFamily.this, DashBoardActivity.class);
 			startActivity(intent);
 		}

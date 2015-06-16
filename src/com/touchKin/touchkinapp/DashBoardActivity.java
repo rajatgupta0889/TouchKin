@@ -68,7 +68,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 	RecyclerView mRecyclerView; // Declaring RecyclerView
 	RecyclerView.Adapter<MyAdapter.ViewHolder> mAdapter; // Declaring Adapte
-															// For Recycler View
+	// For Recycler View
+	RelativeLayout relative;
 	RecyclerView.LayoutManager mLayoutManager; // Declaring Layout Manager as a
 	TextView mTitle;
 	DrawerLayout Drawer; // Declaring DrawerLayout
@@ -221,7 +222,17 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// }
 		// });
 		Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout); // Drawer
+		relative.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (parentRelativeLayout.getVisibility() == View.VISIBLE) {
+					parentRelativeLayout.startAnimation(animSlideUp);
+
+				}
+			}
+		});
 		// object
 		// Assigned
 		// to the
@@ -236,12 +247,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 				// code here will execute once the drawer is opened( As I dont
 				// want anything happened whe drawer is
 				// open I am not going to put anything here)
+
 			}
 
 			@Override
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
 				// Code here will execute once drawer is closed
+
 			}
 
 		}; // Drawer Toggle Object Made
@@ -401,6 +414,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayoutDashboard);
 		animSlideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 		animSlideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+		relative = (RelativeLayout) findViewById(R.id.relativeDashboard);
 	}
 
 	private TabSpec setIndicator(Context ctx, TabSpec spec, int resid,
@@ -419,8 +433,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private void toggleVissibility() {
 		// TODO Auto-generated method stub
 		if (parentRelativeLayout.getVisibility() == View.VISIBLE) {
-
-			parentRelativeLayout.setVisibility(View.VISIBLE);
 			parentRelativeLayout.startAnimation(animSlideUp);
 
 		} else {
@@ -434,8 +446,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		if (animation == animSlideDown) {
 			parentRelativeLayout.setVisibility(View.VISIBLE);
+			parentRelativeLayout.setClickable(true);
+
 		} else if (animation == animSlideUp) {
-			parentRelativeLayout.setVisibility(View.INVISIBLE);
+			parentRelativeLayout.setVisibility(View.GONE);
+			parentRelativeLayout.setClickable(false);
 		}
 	}
 
@@ -594,7 +609,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		if (caller == 1) {
 			Intent intent = new Intent(DashBoardActivity.this, MyFamily.class);
 			intent.putExtra("isLoggedIn", true);
-			
+
 			startActivity(intent);
 		}
 

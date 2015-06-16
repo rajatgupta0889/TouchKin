@@ -180,6 +180,7 @@
 
         <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.GcmIntentService" />
+        <service android:name="com.touchKin.touchkinapp.services.LocationSendingService" />
 
         <meta-data
             android:name="com.google.android.gms.version"

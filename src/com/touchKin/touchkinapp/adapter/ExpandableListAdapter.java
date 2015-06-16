@@ -183,6 +183,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								.findViewById(R.id.accept);
 						ImageView reject = (ImageView) view1
 								.findViewById(R.id.reject);
+						TextView textMessage = (TextView) view1
+								.findViewById(R.id.textMessage);
+						textMessage.setText(child.connReq.get(i).getReqMsg());
 						final String id = child.connReq.get(i).getRequestID();
 						final int pos = i;
 						accept.setOnClickListener(new OnClickListener() {
@@ -348,6 +351,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					&& groupMember.getKinCount() != null) {
 				kinCount.setText("You have " + groupMember.getKinCount()
 						+ " Kin and " + groupMember.getReqCount() + "requests");
+			} else if (groupMember.getKinCount() != null) {
+				kinCount.setText("You have " + groupMember.getKinCount()
+						+ " Kin");
 			} else {
 				kinCount.setText("Click to get details");
 			}
