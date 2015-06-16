@@ -67,21 +67,10 @@
             android:id="@+id/videoCommentTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/senderImage"
             android:layout_below="@+id/videoTimeTextView"
             android:layout_toRightOf="@+id/senderImage"
             android:text="Mom, watch Mili and sha playing with there freinds"
             android:textSize="21sp" />
-
-        <TextView
-            android:id="@+id/videoDayTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/videoCommentTextView"
-            android:layout_alignRight="@+id/videoCommentTextView"
-            android:layout_marginRight="60dp"
-            android:text="Friday"
-            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/videoTimeTextView"
@@ -91,6 +80,16 @@
             android:layout_alignTop="@+id/senderImage"
             android:layout_marginLeft="41dp"
             android:text="6:45 PM"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/videoDayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/videoCommentTextView"
+            android:layout_marginLeft="72dp"
+            android:layout_toRightOf="@+id/videoTimeTextView"
+            android:text="Friday"
             android:textSize="17sp" />
 
     </RelativeLayout>

@@ -49,6 +49,7 @@ public class ContactDialogFragment extends DialogFragment implements
 	EditText nameBox, phoneBox, nickname;
 	ButtonClickListener listener;
 	ProgressDialog proDialog;
+	String phonevalid;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -68,14 +69,14 @@ public class ContactDialogFragment extends DialogFragment implements
 		proDialog.setCancelable(false);
 		Button addContactButton = (Button) view.findViewById(R.id.addButton);
 		addContactButton.setTransformationMethod(null);
-		Button add = (Button)view.findViewById(R.id.addbutton);
+		Button add = (Button) view.findViewById(R.id.addbutton);
 		add.setTransformationMethod(null);
 		nameBox = (EditText) view.findViewById(R.id.name);
 		phoneBox = (EditText) view.findViewById(R.id.number);
 		nickname = (EditText) view.findViewById(R.id.nickname);
 		// nameBox.setText(mArgs.getString("name"));
 		// phoneBox.setText(mArgs.getString("number"));
-//		View headerview = inflater.inflate(R.layout.header_view, null);
+		// View headerview = inflater.inflate(R.layout.header_view, null);
 		// final TextView title = (TextView) headerview
 		// .findViewById(R.id.parentNameTV);
 		// title.setText(mArgs.getString("title"));
@@ -89,7 +90,12 @@ public class ContactDialogFragment extends DialogFragment implements
 						|| (actionId == EditorInfo.IME_ACTION_DONE)) {
 					// Toast.makeText(MainActivity.this, "enter press",
 					// Toast.LENGTH_LONG).show();
-					addParent();
+					if(Validation.isPhoneNumber(phoneBox, true) && !phoneBox.getText().toString().startsWith("+")){
+						addParent();
+					}
+					else if (phoneBox.getText().toString().startsWith("+91") && Validation.isPhoneNumberWithCode(phoneBox, true)) {
+						addParent();
+					}
 				}
 				return false;
 			}
@@ -99,46 +105,46 @@ public class ContactDialogFragment extends DialogFragment implements
 
 		builder.setCancelable(false);
 		builder.setView(view);
-				// Add action buttons
-//				.setCustomTitle(headerview)
-//				.setIcon(R.drawable.ic_action_uset)
-//				.setPositiveButton("Add",
-//						new DialogInterface.OnClickListener() {
-//							@Override
-//							public void onClick(DialogInterface dialog, int id) {
-//								// sign in the user ...
-//							}
-//
-//						})
-//				.setNegativeButton("Cancel",
-//						new DialogInterface.OnClickListener() {
-//							public void onClick(DialogInterface dialog, int id) {
-//								ContactDialogFragment.this.getDialog().cancel();
-//								DashBoardActivity.isCancel = true;
-//							}
-//						});
+		// Add action buttons
+		// .setCustomTitle(headerview)
+		// .setIcon(R.drawable.ic_action_uset)
+		// .setPositiveButton("Add",
+		// new DialogInterface.OnClickListener() {
+		// @Override
+		// public void onClick(DialogInterface dialog, int id) {
+		// // sign in the user ...
+		// }
+		//
+		// })
+		// .setNegativeButton("Cancel",
+		// new DialogInterface.OnClickListener() {
+		// public void onClick(DialogInterface dialog, int id) {
+		// ContactDialogFragment.this.getDialog().cancel();
+		// DashBoardActivity.isCancel = true;
+		// }
+		// });
 		final AlertDialog dialog = builder.create();
 		dialog.show();
-//		Button positiveButton = (Button) dialog
-//				.getButton(Dialog.BUTTON_POSITIVE);
-//		positiveButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
+		// Button positiveButton = (Button) dialog
+		// .getButton(Dialog.BUTTON_POSITIVE);
+		// positiveButton.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
 		// Boolean wantToCloseDialog = false;
 		// // Do stuff, possibly set wantToCloseDialog to true
 		// // then...
 		//
 		// if (wantToCloseDialog)
 		// dismiss();
-		//	addParent();
-//				// else dialog stays open. Make sure you have an obvious
-//				// way to close the dialog especially if you set
-//				// cancellable to false.
-//			}
-//		});
+		// addParent();
+		// // else dialog stays open. Make sure you have an obvious
+		// // way to close the dialog especially if you set
+		// // cancellable to false.
+		// }
+		// });
 
 		add.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -148,7 +154,13 @@ public class ContactDialogFragment extends DialogFragment implements
 
 				if (wantToCloseDialog)
 					dismiss();
-				addParent();
+				if(Validation.isPhoneNumber(phoneBox, true) && !phoneBox.getText().toString().startsWith("+")){
+					addParent();
+				}
+				else if (phoneBox.getText().toString().startsWith("+91") && Validation.isPhoneNumberWithCode(phoneBox, true)) {
+					addParent();
+				}
+
 			}
 		});
 		addContactButton.setOnClickListener(new OnClickListener() {
@@ -161,6 +173,8 @@ public class ContactDialogFragment extends DialogFragment implements
 		});
 		return dialog;
 	}
+
+	
 
 	private void addCareReciever(String name, String phone, String nickname) {
 		// TODO Auto-generated method stub
@@ -246,13 +260,16 @@ public class ContactDialogFragment extends DialogFragment implements
 					// }
 					// if(contact.get(1).matches("[0-9]+") &&
 					// contact.get(1).length() > 7){
-					String number = contact.get(1).substring(1)
-							.replaceAll(" ", "");
+					String number = contact.get(1).replaceAll(" ", "");
 					if (contact.get(1).startsWith("0")) {
-						phoneBox.setText("+91" + number);
-
+						phonevalid = number.substring(1);
+						phoneBox.setText("+91" + number.substring(1));
 					} else if (contact.get(1).startsWith("+91")) {
+						phonevalid = number.substring(0, 3);
 						phoneBox.setText(number);
+					} else if (contact.get(1).startsWith("91")) {
+						phonevalid = number.substring(0, 2);
+						phoneBox.setText("+" + number);
 					} else {
 						phoneBox.setText("+91" + number);
 					}

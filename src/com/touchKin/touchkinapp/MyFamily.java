@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 	TextView mTitle;
 	Button next;
 	Boolean isLoggedIn;
+	ProgressBar myfamilyprogressbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +160,8 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 											item.setCare_reciever_name(careInitiator
 													.getString("mobile"));
 										}
-										item.setUserId(careGiver.getString("id"));
+										item.setUserId(careGiver
+												.getString("id"));
 										item.setReqMsg(item
 												.getCare_reciever_name()
 												+ " wants to care for you");
@@ -176,7 +179,8 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 											item.setCare_reciever_name(careInitiator
 													.getString("mobile"));
 										}
-										item.setUserId(careReciever.getString("id"));
+										item.setUserId(careReciever
+												.getString("id"));
 
 										item.setReqMsg(item
 												.getCare_reciever_name()
@@ -199,7 +203,8 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 											item.setCare_reciever_name(careInitiator
 													.getString("mobile"));
 										}
-										item.setUserId(careInitiator.getString("id"));
+										item.setUserId(careInitiator
+												.getString("id"));
 										item.setReqMsg(item
 												.getCare_reciever_name()
 												+ " wants you to care for"
@@ -208,7 +213,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 									}
 									// RequestModel item = new RequestModel();
 									//
-									
+
 									item.setRequestID(careRequest
 											.getString("id"));
 									requests.add(item);
@@ -247,6 +252,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 					public void onResponse(JSONObject responseObject) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseObject);
+						myfamilyprogressbar.setVisibility(View.INVISIBLE);
 						try {
 							JSONArray careGivers = responseObject
 									.getJSONArray("care_givers");
@@ -314,6 +320,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 		requests = new ArrayList<RequestModel>();
 
 		me = new ExpandableListGroupItem();
+		myfamilyprogressbar = (ProgressBar) findViewById(R.id.myfamilyprogressbar);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		next = (Button) findViewById(R.id.next);

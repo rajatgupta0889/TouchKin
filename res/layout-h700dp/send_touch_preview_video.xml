@@ -106,9 +106,10 @@
         android:gravity="top"
         android:hint="Type your message here"
         android:imeOptions="actionSend"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         android:maxHeight="120dp"
         android:padding="10dp"
+        android:textSize="30dp"
         android:scrollbars="horizontal"
         android:textColor="@color/black"
         android:textColorHint="@color/text_orange" />

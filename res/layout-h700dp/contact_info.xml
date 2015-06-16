@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="#ffffff"
-    android:layout_gravity="center"
-    android:padding="5dp" >
+    android:layout_gravity="center" >
 
     <TextView
         android:id="@+id/textView2"

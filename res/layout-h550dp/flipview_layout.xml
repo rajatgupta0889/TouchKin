@@ -77,7 +77,6 @@
             android:id="@+id/videoCommentTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/senderImage"
             android:layout_below="@+id/videoTimeTextView"
             android:layout_toRightOf="@+id/senderImage"
             android:text="Mom, watch Mili and sha playing with there freinds"
@@ -88,8 +87,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/videoCommentTextView"
-            android:layout_alignRight="@+id/videoCommentTextView"
-            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/videoTimeTextView"
             android:text="Friday"
             android:textSize="13sp" />
 
