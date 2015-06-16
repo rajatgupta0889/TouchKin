@@ -67,6 +67,13 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/circular_image" >
 
+             <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/centre" />
+             
             <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
                 android:layout_width="210dp"
@@ -74,12 +81,7 @@
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
 
-            <ImageView
-                android:id="@+id/profile_pic"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/centre" />
+           
 
             <ImageView
                 android:id="@+id/battery5"

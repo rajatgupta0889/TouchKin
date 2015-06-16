@@ -11,12 +11,14 @@ public class Validation {
 	// private static final String EMAIL_REGEX =
 	// "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private static final String PHONE_REGEX = "^(1\\-)?[0-9]{3}\\-?[0-9]{3}\\-?[0-9]{4}$";
+	private static final String PHONE_CODE = "^(1\\-)?[+]{1}\\-?[0-9]{4}\\-?[0-9]{4}\\-?[0-9]{4}$";
 	private static final String OTP_REGEX = "^(1\\-)?[0-9]{4}$";
 
 	// Error Messages
 	private static final String REQUIRED_MSG = "required";
 	// private static final String EMAIL_MSG = "invalid email";
 	private static final String PHONE_MSG = "Invalid Phone Number";
+	private static final String PHONE_CODE_MSG = "Enter Valid Phone Number with Country Code";
 	private static final String OTP_MSG = "Invalid OTP Number";
 
 	// call this method when you need to check email validation
@@ -28,6 +30,9 @@ public class Validation {
 	// call this method when you need to check phone number validation
 	public static boolean isPhoneNumber(EditText editText, boolean required) {
 		return isValid(editText, PHONE_REGEX, PHONE_MSG, required);
+	}
+	public static boolean isPhoneNumberWithCode(EditText editText, boolean required) {
+		return isValid(editText, PHONE_CODE, PHONE_CODE_MSG, required);
 	}
 
 	public static boolean isOTPNumber(EditText editText, boolean required) {
@@ -50,6 +55,19 @@ public class Validation {
 		// pattern doesn't match so returning false
 		if (required && !Pattern.matches(regex, text)) {
 			editText.setError(errMsg);
+			return false;
+		}
+		;
+
+		return true;
+	}
+
+	public static boolean isValid(String editText, String regex, String errMsg,
+			boolean required) {
+
+		// pattern doesn't match so returning false
+		if (required && !Pattern.matches(regex, editText)) {
+
 			return false;
 		}
 		;
