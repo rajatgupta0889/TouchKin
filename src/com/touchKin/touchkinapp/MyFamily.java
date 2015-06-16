@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 	TextView mTitle;
 	Button next;
 	Boolean isLoggedIn;
+	ProgressBar myfamilyprogressbar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -241,6 +243,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					public void onResponse(JSONObject responseObject) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseObject);
+						myfamilyprogressbar.setVisibility(View.INVISIBLE);
 						try {
 							JSONArray careGivers = responseObject
 									.getJSONArray("care_givers");
@@ -302,6 +305,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		requests = new ArrayList<RequestModel>();
 
 		me = new ExpandableListGroupItem();
+		myfamilyprogressbar = (ProgressBar)findViewById(R.id.myfamilyprogressbar);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		next = (Button) findViewById(R.id.next);

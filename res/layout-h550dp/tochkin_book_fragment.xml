@@ -19,5 +19,12 @@
         android:text="TextView" 
         android:layout_centerInParent="true"
         android:visibility="invisible"/>
+     <ProgressBar
+        android:id="@+id/kinbookprogressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/msg"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class TouchKinBookFragment extends Fragment implements
 	FlipViewAdapter flipViewAdapter;
 	FragmentTabHost host;
 	TextView tv;
+	ProgressBar kinbookprogressbar;
 
 	String baseImageUrl = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/kinbook-messages";
 
@@ -117,6 +119,7 @@ public class TouchKinBookFragment extends Fragment implements
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
+						kinbookprogressbar.setVisibility(View.INVISIBLE);
 						touchKinBook.add(new TouchKinBookModel());
 						for (int i = 0; i < responseArray.length(); i++) {
 							try {
@@ -190,6 +193,7 @@ public class TouchKinBookFragment extends Fragment implements
 	void init(View v) {
 		// commentList = new ArrayList<TouchKinComments>();
 		// adapter = new CommentListAdapter(commentList, getActivity());
+		kinbookprogressbar = (ProgressBar)v.findViewById(R.id.kinbookprogressbar);
 		flipView = (FlipViewController) v.findViewById(R.id.flipView);
 		flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
 		flipViewAdapter.setCustomButtonListner(TouchKinBookFragment.this);

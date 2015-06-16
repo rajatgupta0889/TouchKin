@@ -94,7 +94,7 @@
         android:background="@drawable/triangle" />
 
     <EditText
-        android:id="@+id/phone_number_detail"
+         android:id="@+id/phone_number_detail"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
         android:layout_above="@+id/parentListLayout"
@@ -106,7 +106,7 @@
         android:gravity="top"
         android:hint="Type your message here"
         android:imeOptions="actionSend"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         android:maxHeight="120dp"
         android:padding="10dp"
         android:scrollbars="horizontal"

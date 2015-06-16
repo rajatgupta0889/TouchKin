@@ -27,8 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
+import com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -44,6 +46,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	MyPhoneStateListener MyListener;
 	TextView parentName;
 	ParentListModel parent;
+	AirplaneModeReceiver rec;
 
 	Context context;
 
@@ -257,21 +260,22 @@ public class DashBoardActivityFragment extends Fragment implements
 		public void onReceive(Context ctxt, Intent intent) {
 			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
 			battery.setText(String.valueOf(level) + "%");
+			Log.d("battery", " " + level);
 			if (level == 100) {
 				battery5.setImageResource(R.drawable.battery100);
-			} else if (level >= 80 || level < 100) {
+			} else if (level >= 80 && level < 100) {
 				battery5.setImageResource(R.drawable.battery80);
 
-			} else if (level >= 60 || level < 80) {
+			} else if (level >= 60 && level < 80) {
 				battery5.setImageResource(R.drawable.battery60);
 
-			} else if (level >= 40 || level < 60) {
+			} else if (level >= 40 && level < 60) {
 				battery5.setImageResource(R.drawable.battery40);
-
-			} else if (level >= 20 || level < 40) {
+				Log.d("battery", " " + level);
+			} else if (level >= 20 && level < 40) {
 				battery5.setImageResource(R.drawable.battery20);
 
-			} else if (level == 0) {
+			} else if (level < 20) {
 				battery5.setImageResource(R.drawable.battery0);
 
 			}
@@ -323,22 +327,23 @@ public class DashBoardActivityFragment extends Fragment implements
 		 * Get the Signal strength from the provider, each tiome there is an
 		 * update
 		 */
+
 		@Override
 		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
 			super.onSignalStrengthsChanged(signalStrength);
 			int level = signalStrength.getGsmSignalStrength();
 			Log.d("signal", "" + level);
-			// if (!isAirplaneModeOn(context)) {
+
 			if (level >= 24) {
 				network4.setImageResource(R.drawable.network4);
 
-			} else if (level >= 16 || level < 24) {
+			} else if (level >= 16 && level < 24) {
 				network4.setImageResource(R.drawable.network3);
 
-			} else if (level >= 8 || level < 16) {
+			} else if (level >= 8 && level < 16) {
 				network4.setImageResource(R.drawable.network2);
 
-			} else if (level >= 0 || level < 8) {
+			} else if (level > 0 && level < 8) {
 				network4.setImageResource(R.drawable.network1);
 
 			} else if (level == 0) {
@@ -346,13 +351,5 @@ public class DashBoardActivityFragment extends Fragment implements
 
 			}
 		}
-		// else {
-		// network4.setImageResource(R.drawable.network0);
-		// }
-		// signalStr.setText("Signal " + ' '
-		// + String.valueOf(signalStrength.getGsmSignalStrength()));
 	}
-
-	/* End of private Class */
-
 }
