@@ -8,13 +8,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="166dp"
-        android:layout_marginRight="51dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="179dp"
         android:gravity="center"
         android:text="MY KINBOOK"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_above="@+id/parent_name"
+        android:layout_alignLeft="@+id/parent_name"
+        android:src="@drawable/touchkin_heart" />
 
 </RelativeLayout>
