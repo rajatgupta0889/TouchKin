@@ -1,5 +1,14 @@
 package com.touchKin.touchkinapp.services;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -8,14 +17,17 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.touchKin.touchkinapp.model.AppController;
 
 public class LocationSendingService extends Service implements LocationListener {
-	private final Context mContext;
+	private Context mContext;
 
 	// flag for GPS status
 	boolean isGPSEnabled = false;
@@ -42,6 +54,10 @@ public class LocationSendingService extends Service implements LocationListener 
 	public LocationSendingService(Context context) {
 		this.mContext = context;
 		getLocation();
+	}
+
+	public LocationSendingService() {
+
 	}
 
 	public Location getLocation() {
@@ -202,6 +218,119 @@ public class LocationSendingService extends Service implements LocationListener 
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
+	}
+
+	@Override
+	public void onCreate() {
+		Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
+		mContext = getApplicationContext();
+		Location loc = getLocation();
+		JSONObject param = new JSONObject();
+		JSONObject point = new JSONObject();
+		if (loc != null) {
+			try {
+				param.put("y", loc.getLongitude());
+				param.put("x", loc.getLatitude());
+				point.put("poin", param);
+				sendLocationToServer(point);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		Toast.makeText(this, "Servics Stopped", Toast.LENGTH_SHORT).show();
+		super.onDestroy();
+	}
+
+	public void sendLocationToServer(JSONObject param) {
+		// JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+		// "http://54.69.183.186:1340/location/add", param,
+		// new Response.Listener<JSONObject>() {
+		// @Override
+		// public void onResponse(JSONObject response) {
+		//
+		// Log.d("Response", "" + response);
+		// // Log.d("mobile", "" + pref.getString("mobile",
+		// // null));
+		// // Log.d("otp", "" + pref.getString("mobile",
+		// // null));
+		//
+		// }
+		// }, new Response.ErrorListener() {
+		// @Override
+		// public void onErrorResponse(VolleyError error) {
+		// Log.d("Response", "" + error);
+		// }
+		//
+		// });
+		//
+		// AppController.getInstance().addToRequestQueue(req);
+		new SendDataInBG().execute(param);
+	}
+
+	public class SendDataInBG extends AsyncTask<JSONObject, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			Log.d("result", result);
+		}
+
+		String response = null;
+
+		@SuppressWarnings("deprecation")
+		@Override
+		protected String doInBackground(JSONObject... params) {
+			// TODO Auto-generated method stub
+			HttpEntity httpEntity = null;
+			HttpResponse httpResponse = null;
+			try {
+
+				// this is storage overwritten on each iteration with bytes
+
+				HttpClient httpClient = AppController.mHttpClient;
+
+				HttpPost httpPost = new HttpPost(
+						"http://54.69.183.186:1340/location/add");
+				// adding post params
+				if (params != null) {
+					httpPost.setEntity(new StringEntity(params.toString()));
+				}
+
+				httpResponse = httpClient.execute(httpPost);
+				// entity.addPart("media", fileBody);
+
+				// entity.addPart("photoCaption", new
+				// StringBody(caption.getText()
+				// .toString()));
+
+				httpEntity = httpResponse.getEntity();
+				response = EntityUtils.toString(httpEntity);
+				Log.d("Response", response);
+				// if (resEntity != null) {
+				// System.out.println(EntityUtils.toString(resEntity));
+				// }
+				// if (resEntity != null) {
+				// resEntity.consumeContent();
+				// }
+				return response;
+			} catch (Exception e) {
+				Log.e(e.getClass().getName(), e.getMessage(), e);
+				return response;
+			}
+
+			// (null);
+		}
 	}
 
 }

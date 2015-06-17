@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.custom.ServiceHelper;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
@@ -85,7 +86,7 @@ public class DashboardLocationFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		//ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(getActivity().getApplicationContext());
 	}
 
 	@Override

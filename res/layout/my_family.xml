@@ -13,6 +13,7 @@
         android:id="@+id/familyList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/next"
         android:layout_below="@+id/tool_bar"
         android:layout_marginTop="5dp"
         android:background="@color/expand_list_group"

@@ -1,8 +1,13 @@
 package com.touchKin.touchkinapp.model;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.Map;
 
+import org.apache.http.client.CookieStore;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
@@ -33,6 +38,9 @@ public class AppController extends Application {
 	 */
 	public static DefaultHttpClient mHttpClient = getThreadSafeClient();
 	public static final String TAG = AppController.class.getSimpleName();
+
+	CookieStore cookieStore = new BasicCookieStore();
+
 	/**
 	 * Global request queue for Volley
 	 */
@@ -52,6 +60,8 @@ public class AppController extends Application {
 		mInstance = this;
 		_preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		Log.d("Pref", _preferences.getString(SESSION_COOKIE, ""));
+		CookieHandler.setDefault(new CookieManager(null,
+				CookiePolicy.ACCEPT_ALL));
 	}
 
 	/**

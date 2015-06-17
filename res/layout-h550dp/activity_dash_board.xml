@@ -2,12 +2,14 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/DrawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:elevation="7dp" >
+    android:layout_height="match_parent" >
 
     <RelativeLayout
+        android:id="@+id/relativeDashboard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true" >
 
         <include
             android:id="@+id/tool_bar"
@@ -28,7 +30,7 @@
             android:layout_width="fill_parent"
             android:layout_height="100dp"
             android:layout_below="@+id/tool_bar"
-            android:visibility="invisible" >
+            android:visibility="gone" >
 
             <com.touchKin.touchkinapp.custom.HorizontalListView
                 android:id="@+id/parentListView"
