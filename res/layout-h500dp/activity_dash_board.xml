@@ -6,8 +6,11 @@
     android:elevation="7dp" >
 
     <RelativeLayout
+       android:id="@+id/relativeDashboard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true" >
 
         <include
             android:id="@+id/tool_bar"
