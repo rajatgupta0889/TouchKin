@@ -14,7 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +45,7 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.model.RequestModel;
 import com.touchKin.touckinapp.R;
 
-public class MyFamily extends AppCompatActivity implements OnClickListener,
+public class MyFamily extends ActionBarActivity implements OnClickListener,
 		ButtonClickListener {
 
 	ExpandableListAdapter adapter;
