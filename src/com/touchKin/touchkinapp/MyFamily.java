@@ -9,9 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,6 +66,8 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 	Button next;
 	Boolean isLoggedIn;
 	ProgressBar myfamilyprogressbar;
+	Boolean isFromNotification;
+	String phone, device_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,21 +76,30 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 		setContentView(R.layout.my_family);
 		init();
 		isLoggedIn = getIntent().getExtras().getBoolean("isLoggedIn");
+		isFromNotification = getIntent().getExtras().getBoolean("Flag");
 		mTitle.setText("My Family");
 		SharedPreferences userPref = getApplicationContext()
 				.getSharedPreferences("userPref", 0);
 
 		String user = userPref.getString("user", null);
-		getConnectionRequest();
-		fetchMyFamily();
 		try {
 			mySelf = new JSONObject(user);
 			CareReciever.add(new ExpandableListGroupItem(
 					mySelf.getString("id"), mySelf.getString("first_name"), "",
 					""));
+			phone = mySelf.getString("mobile");
+			device_id = mySelf.getString("mobile_device_id");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		if (isFromNotification != null && isFromNotification) {
+			SignUp(phone, device_id);
+		} else {
+
+			getConnectionRequest();
+			fetchMyFamily();
 		}
 		// parents.add(new ParentListModel("", false, "", "", ""));
 		// parents.add(new ParentListModel("", false, "", "", ""));
@@ -112,8 +126,18 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 				return false;
 			}
 		});
-		pendingReq.add(new ExpandableListGroupItem());
-		pendingReq.add(new ExpandableListGroupItem());
+		expandListView.setOnGroupExpandListener(new OnGroupExpandListener() {
+			int previousGroup = -1;
+
+			@Override
+			public void onGroupExpand(int groupPosition) {
+				if (groupPosition != previousGroup)
+					expandListView.collapseGroup(previousGroup);
+				previousGroup = groupPosition;
+			}
+		});
+		// pendingReq.add(new ExpandableListGroupItem());
+		// pendingReq.add(new ExpandableListGroupItem());
 		LayoutInflater inflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		footerView = (LinearLayout) inflater.inflate(
@@ -287,6 +311,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 									"" + CareReciever.size());
 							careGiver.put(CareReciever.get(0).getUserId(),
 									parents);
+
 							adapter.setupTrips(careGiver, requests,
 									CareReciever, pendingReq);
 
@@ -302,6 +327,7 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(MyFamily.this, error.getMessage(),
 								Toast.LENGTH_SHORT).show();
+						myfamilyprogressbar.setVisibility(View.INVISIBLE);
 
 					}
 
@@ -519,6 +545,45 @@ public class MyFamily extends AppCompatActivity implements OnClickListener,
 
 		AppController.getInstance().addToRequestQueue(req);
 
+	}
+
+	public void SignUp(String phone, String device_id) {
+		JSONObject params = new JSONObject();
+		try {
+			params.put("mobile", phone);
+			params.put("mobile_device_id", device_id);
+			params.put("mobile_os", "android");
+			Log.d("reg id ", params.getString("mobile_device_id"));
+
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/user/signup", params,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d("Response", response.toString());
+						getConnectionRequest();
+						fetchMyFamily();
+						expandListView.expandGroup(0);
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
+						Toast.makeText(MyFamily.this,
+								"Sorry Unable to fectch request right now",
+								Toast.LENGTH_LONG).show();
+						// Additional cases
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
 	}
 
 }
