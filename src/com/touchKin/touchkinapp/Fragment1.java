@@ -111,8 +111,10 @@ public class Fragment1 extends Fragment implements OnClickListener {
 
 			if (parent != null) {
 				Intent callIntent = new Intent(Intent.ACTION_DIAL);
-				callIntent.setData(Uri.parse("tel:"+parent.getMobilenumber()));
-				startActivity(callIntent);
+				callIntent
+						.setData(Uri.parse("tel:" + parent.getMobilenumber()));
+				Intent chooser = Intent.createChooser(callIntent, "Call using");
+				startActivity(chooser);
 			} else {
 				Toast.makeText(getActivity(),
 						"Please Select Your parent to call", Toast.LENGTH_SHORT)

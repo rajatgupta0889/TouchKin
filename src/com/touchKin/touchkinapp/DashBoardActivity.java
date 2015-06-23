@@ -240,7 +240,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 		View count = menu.findItem(R.id.parentIconMenu).getActionView();
 		Log.d("count", count + "");
-		TextView notification = (TextView)count.findViewById(R.id.hotlist_hot);
+		TextView notification = (TextView) count.findViewById(R.id.hotlist_hot);
 		notification.setText("5");
 		this.menu = menu;
 		if (selectedParent != null) {
@@ -424,7 +424,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 												R.drawable.ic_action_down, 0);
 										item.setParentName(obj
 												.getString("nickname"));
-										item.setMobilenumber(obj.getString("mobile"));
+										item.setMobilenumber(obj
+												.getString("mobile"));
 									} else {
 										mTitle.setText("maa");
 										item.setParentName("Maa");
@@ -448,8 +449,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// else {
 						// setMenuTitle(null);
 						// }
-						list.add(new ParentListModel(userId, false, "Me",
-								userId, "", "9066665428"));
+						try {
+							list.add(new ParentListModel(userId, false, "Me",
+									userId, "", userObj.getString("mobile")));
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						list.add(new ParentListModel("", false, "", "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
