@@ -129,7 +129,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 		// });
 		// toolbar.setNavigationIcon(R.drawable.back);
 		// setSupportActionBar(toolbar);
-		// getActionBar().setDisplayHomeAsUpEnabled(true);
+		// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		// toolbar.setNavigationOnClickListener(new OnClickListener() {
 		//
 		// @Override
