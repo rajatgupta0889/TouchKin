@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -50,6 +51,8 @@ public class ContactDialogFragment extends DialogFragment implements
 	ButtonClickListener listener;
 	ProgressDialog proDialog;
 	String phonevalid;
+	int addAs;
+	String phoneNo;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -57,7 +60,8 @@ public class ContactDialogFragment extends DialogFragment implements
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-
+		addAs = getArguments().getInt("num");
+		phoneNo = getArguments().getString("mobile");
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog
 		// layout
@@ -90,10 +94,11 @@ public class ContactDialogFragment extends DialogFragment implements
 						|| (actionId == EditorInfo.IME_ACTION_DONE)) {
 					// Toast.makeText(MainActivity.this, "enter press",
 					// Toast.LENGTH_LONG).show();
-					if(Validation.isPhoneNumber(phoneBox, true) && !phoneBox.getText().toString().startsWith("+")){
+					if (Validation.isPhoneNumber(phoneBox, true)
+							&& !phoneBox.getText().toString().startsWith("+")) {
 						addParent();
-					}
-					else if (phoneBox.getText().toString().startsWith("+91") && Validation.isPhoneNumberWithCode(phoneBox, true)) {
+					} else if (phoneBox.getText().toString().startsWith("+91")
+							&& Validation.isPhoneNumberWithCode(phoneBox, true)) {
 						addParent();
 					}
 				}
@@ -154,10 +159,11 @@ public class ContactDialogFragment extends DialogFragment implements
 
 				if (wantToCloseDialog)
 					dismiss();
-				if(Validation.isPhoneNumber(phoneBox, true) && !phoneBox.getText().toString().startsWith("+")){
+				if (Validation.isPhoneNumber(phoneBox, true)
+						&& !phoneBox.getText().toString().startsWith("+")) {
 					addParent();
-				}
-				else if (phoneBox.getText().toString().startsWith("+91") && Validation.isPhoneNumberWithCode(phoneBox, true)) {
+				} else if (phoneBox.getText().toString().startsWith("+91")
+						&& Validation.isPhoneNumberWithCode(phoneBox, true)) {
 					addParent();
 				}
 
@@ -174,20 +180,8 @@ public class ContactDialogFragment extends DialogFragment implements
 		return dialog;
 	}
 
-	
-
-	private void addCareReciever(String name, String phone, String nickname) {
+	private void addCareReciever(JSONObject params) {
 		// TODO Auto-generated method stub
-
-		JSONObject params = new JSONObject();
-		try {
-			showpDialog();
-			params.put("mobile", phone);
-			params.put("nickname", nickname);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
 				"http://54.69.183.186:1340/user/add-care-receiver", params,
@@ -199,7 +193,7 @@ public class ContactDialogFragment extends DialogFragment implements
 						hidepDialog();
 						Toast.makeText(getActivity(), "Request is sent",
 								Toast.LENGTH_SHORT).show();
-						listener.onButtonClickListner(0, "", true);
+						listener.onButtonClickListner(1000, "", true);
 						ContactDialogFragment.this.getDialog().cancel();
 					}
 				}, new Response.ErrorListener() {
@@ -389,8 +383,29 @@ public class ContactDialogFragment extends DialogFragment implements
 					phoneNum = "+91" + phoneNum.substring(1);
 				}
 			}
-			addCareReciever(nameBox.getText().toString(), phoneNum.trim(),
-					nickname.getText().toString());
+
+			JSONObject params = new JSONObject();
+			if (addAs == com.touchKin.touchkinapp.adapter.ExpandableListAdapter.ADD_CR) {
+				try {
+					params.put("mobile", phoneNum);
+					params.put("nickname", nickname.getText().toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} else if (addAs == com.touchKin.touchkinapp.adapter.ExpandableListAdapter.ADD_CG) {
+				try {
+					params.put("care_giver_mobile_no", phoneNum);
+					params.put("nickname", nickname.getText().toString());
+					params.put("mobile", phoneNo);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			addCareReciever(params);
 		}
 	}
 

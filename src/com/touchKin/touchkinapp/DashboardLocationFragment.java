@@ -2,6 +2,10 @@ package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -32,6 +36,11 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,9 +58,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
+import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
 import com.touchKin.touchkinapp.custom.ServiceHelper;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
@@ -86,7 +97,8 @@ public class DashboardLocationFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(getActivity().getApplicationContext());
+		ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(getActivity()
+				.getApplicationContext());
 	}
 
 	@Override
@@ -402,6 +414,7 @@ public class DashboardLocationFragment extends Fragment implements
 			parentName.setText(parent.getParentName() + " is in ");
 			parentNameBottom.setText("Tap on map to set "
 					+ parent.getParentName() + "'s");
+			getLocation(parent.getParentId());
 		}
 	}
 
@@ -474,6 +487,34 @@ public class DashboardLocationFragment extends Fragment implements
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
 				.addApi(LocationServices.API).build();
+	}
+
+	public void getLocation(String id) {
+		Log.d("id ", id);
+		JsonArrayRequest req = new JsonArrayRequest(
+				"http://54.69.183.186:1340/location/fetch/" + id,
+				new Listener<JSONArray>() {
+
+					@Override
+					public void onResponse(JSONArray responseArray) {
+						// TODO Auto-generated method stub
+						Log.d("Response Array Location", " " + responseArray);
+
+					}
+
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(getActivity(), error.getMessage(),
+								Toast.LENGTH_SHORT).show();
+
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
 	}
 
 }

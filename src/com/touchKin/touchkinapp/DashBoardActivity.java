@@ -47,6 +47,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
+import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
 import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
@@ -82,7 +83,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private ImageAdapter imageAdapter;
 	private Menu menu;
 	public static Boolean isCancel = true;
-	public String userId, userName;
+	public String userId, userName, phoneNo;
 	ButtonClickListener listener;
 	JSONObject userObj;
 
@@ -181,6 +182,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			userObj = new JSONObject(user);
 			userId = userObj.getString("id");
 			userName = userObj.getString("first_name");
+			phoneNo = userObj.getString("mobile");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -566,6 +568,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 		} else {
 			DialogFragment newFragment = new ContactDialogFragment();
 			newFragment.setCancelable(true);
+			Bundle args = new Bundle();
+			args.putInt("num", ExpandableListAdapter.ADD_CR);
+			args.putString("mobile", phoneNo);
+			newFragment.setArguments(args);
 			newFragment.show(getSupportFragmentManager(), "TAG");
 			((ContactDialogFragment) newFragment).SetButtonListener(this);
 		}

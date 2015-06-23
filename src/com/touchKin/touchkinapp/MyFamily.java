@@ -86,7 +86,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 			mySelf = new JSONObject(user);
 			CareReciever.add(new ExpandableListGroupItem(
 					mySelf.getString("id"), mySelf.getString("first_name"), "",
-					""));
+					"", mySelf.getString("mobile")));
 			phone = mySelf.getString("mobile");
 			device_id = mySelf.getString("mobile_device_id");
 		} catch (JSONException e) {
@@ -131,9 +131,11 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 			@Override
 			public void onGroupExpand(int groupPosition) {
-				if (groupPosition != previousGroup)
-					expandListView.collapseGroup(previousGroup);
-				previousGroup = groupPosition;
+				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
+					if (groupPosition != previousGroup)
+						expandListView.collapseGroup(previousGroup);
+					previousGroup = groupPosition;
+				}
 			}
 		});
 		// pendingReq.add(new ExpandableListGroupItem());
@@ -291,8 +293,16 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 								if (cr != null) {
 									ExpandableListGroupItem item = new ExpandableListGroupItem();
 									item.setUserId(cr.getString("id"));
-									item.setUserName(cr.optString("first_name"));
-									CareReciever.add(item);
+									item.setUserName(cr.optString("nickname"));
+									item.setMobileNo(cr.optString("mobile"));
+									if (cr.has("care_receiver_status")
+											&& cr.getString(
+													"care_receiver_status")
+													.equalsIgnoreCase("pending")) {
+										pendingReq.add(item);
+									} else {
+										CareReciever.add(item);
+									}
 								}
 							}
 							int cgCount = careGivers.length();
@@ -303,7 +313,13 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 									item.setParentId(cg.getString("id"));
 									item.setParentName(cg
 											.optString("first_name"));
-									parents.add(item);
+									if (cg.has("care_receiver_status")
+											&& cg.getString(
+													"care_receiver_status")
+													.equalsIgnoreCase("pending")) {
+									} else {
+										parents.add(item);
+									}
 								}
 							}
 							CareReciever.get(0).setKinCount(cgCount + "");
@@ -314,7 +330,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 							adapter.setupTrips(careGiver, requests,
 									CareReciever, pendingReq);
-
+							expandListView.expandGroup(0);
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -371,7 +387,13 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.footerView:
-			addContact();
+			try {
+				addContact(ExpandableListAdapter.ADD_CR,
+						mySelf.getString("mobile"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case R.id.next:
 			gotoNextScreen();
@@ -394,8 +416,8 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 	public void onButtonClickListner(int position, String value,
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
-		if (position == ExpandableListAdapter.ADD_FOR_ME) {
-			addContact();
+		if (position == ExpandableListAdapter.ADD_CG) {
+			addContact(ExpandableListAdapter.ADD_CG, value);
 		}
 		if (position == ExpandableListAdapter.CONN_REQ) {
 			if (isAccept) {
@@ -404,15 +426,19 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				rejectRequest(value);
 			}
 		}
-		if (position == ExpandableListAdapter.ADD_FOR_CR) {
-			addContact();
+		if (position == 1000) {
+			fetchMyFamily();
 		}
 
 	}
 
-	public void addContact() {
+	public void addContact(int reqTO, String ParentNo) {
 		DialogFragment newFragment = new ContactDialogFragment();
 		newFragment.setCancelable(true);
+		Bundle args = new Bundle();
+		args.putInt("num", reqTO);
+		args.putString("mobile", ParentNo);
+		newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "TAG");
 		((ContactDialogFragment) newFragment).SetButtonListener(MyFamily.this);
 	}
@@ -516,7 +542,12 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 								ParentListModel item = new ParentListModel();
 								item.setParentId(cg.getString("id"));
 								item.setParentName(cg.optString("first_name"));
-								parents.add(item);
+								if (cg.has("care_receiver_status")
+										&& cg.getString("care_receiver_status")
+												.equalsIgnoreCase("pending")) {
+								} else {
+									parents.add(item);
+								}
 							}
 							CareReciever.get(position)
 									.setKinCount(cgCount + "");
@@ -569,7 +600,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						Log.d("Response", response.toString());
 						getConnectionRequest();
 						fetchMyFamily();
-						expandListView.expandGroup(0);
+
 					}
 				}, new Response.ErrorListener() {
 					@Override
