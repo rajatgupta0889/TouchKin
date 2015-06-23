@@ -16,11 +16,11 @@
     <string name="album_name">TouchKin</string>
     <string name="open_location_settings">Start</string>
 
-    <string-array name="frag_titles">
+  <!-- <string-array name="frag_titles">
         <item>TouchKin</item>
         <item>Location</item>
         <item>Activity</item>
-    </string-array>
+    </string-array>-->
     <string-array name="list_name">
         <item>Australia</item>
         <item>Austria</item>

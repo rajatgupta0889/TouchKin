@@ -34,6 +34,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
@@ -86,6 +87,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public String userId, userName, phoneNo;
 	ButtonClickListener listener;
 	JSONObject userObj;
+	static Button notifCount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,79 +101,31 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 		InitView();
 		getParentList();
-
-		// Configuration config = getResources().getConfiguration();
-		// Toast.makeText(this,
-		// config.screenHeightDp + " " + config.screenWidthDp,
-		// Toast.LENGTH_LONG).show();
-
 		setSupportActionBar(toolbar);
-		// SharedPreferences pref =
-		// getApplicationContext().getSharedPreferences(
-		// "loginPref", 0);
-		//
-		// Editor edit = pref.edit();
-		// edit.putString("mobile", null);
-		// edit.putString("otp", null);
-		// edit.apply();
-		// Log.d("mobile", "" + pref.getString("mobile", null));
-		// Log.d("otp", "" + pref.getString("mobile", null));
-
 		toolbar.inflateMenu(R.menu.toolbar_menu);
-		// toolbar.setTitle("TouchKin");
-		// toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-		//
-		// @Override
-		// public boolean onMenuItemClick(MenuItem arg0) {
-		// // TODO Auto-generated method stub
-		// Toast.makeText(getApplicationContext(), "HI",
-		// Toast.LENGTH_SHORT).show();
-		// return true;
-		// }
-		// });
 		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				// Handle the menu item
 				int id = item.getItemId();
-				// Toast.makeText(getApplicationContext(), "HI" + id,
-				// Toast.LENGTH_SHORT).show();
-				if (id == R.id.parentNameMenu) {
-					// Not implemented here
-					toggleVissibility();
-					return true;
-				}
-				if (id == R.id.parentIconMenu) {
-					// Not implemented here
-					toggleVissibility();
-					return true;
-				}
-				// switch (id) {
-				// case R.:
+				// if (id == R.id.parentNameMenu) {
 				//
-				// break;
-				//
-				// default:
-				// break;
+				// toggleVissibility();
+				// return true;
 				// }
+				if (id == R.id.parentIconMenu) {
+
+					// toggleVissibility();
+					return true;
+				}
 
 				return true;
 			}
 		});
 
-		// toolbar.in
-		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);// Assigning
-																		// the
-																		// RecyclerView
-																		// Object
-																		// to
-																		// the
-																		// xml
-																		// View
+		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
-		mRecyclerView.setHasFixedSize(true); // Letting the system know that the
-		// list objects are of fixed
-		// size
+		mRecyclerView.setHasFixedSize(true);
 
 		MyAdapter.mListener = DashBoardActivity.this;
 		SharedPreferences userPref = getApplicationContext()
@@ -184,7 +138,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 			userName = userObj.getString("first_name");
 			phoneNo = userObj.getString("mobile");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -197,32 +150,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// Manager
 
 		mRecyclerView.setLayoutManager(mLayoutManager); // Setting the layout
-		// Manager
-		// mRecyclerView
-		// .addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-		// @Override
-		// public boolean onInterceptTouchEvent(
-		// RecyclerView recyclerView, MotionEvent motionEvent) {
-		// View child = recyclerView.findChildViewUnder(
-		// motionEvent.getX(), motionEvent.getY());
-		//
-		// // Drawer.closeDrawers();
-		// Toast.makeText(
-		// DashBoardActivity.this,
-		// "The Item Clicked is: "
-		// + recyclerView.getChildPosition(child),
-		// Toast.LENGTH_SHORT).show();
-		//
-		// return true;
-		//
-		// }
-		//
-		// @Override
-		// public void onTouchEvent(RecyclerView recyclerView,
-		// MotionEvent motionEvent) {
-		//
-		// }
-		// });
 		Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout); // Drawer
 		relative.setOnClickListener(new OnClickListener() {
 
@@ -275,16 +202,19 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 			}
 		});
+		mTitle.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				toggleVissibility();
+
+			}
+		});
 
 		mDrawerToggle.syncState(); // Finally we set the drawer toggle sync
 		// State
-		mTitle.setText("TouchKin");
-
-		// list.add(new ParentListModel("", true, "Mom", "1", "1"));
-		// list.add(new ParentListModel("", false, "Dad", "2", "2"));
-		// list.add(new ParentListModel("", false, "Uncle", "3", "3"));
-		// list.add(new ParentListModel("", false, "Aunt", "4", "4"));
-		// list.add(new ParentListModel("", false, "GM", "5", "5"));
+		// mTitle.setText("TouchKin");
 
 		listview.setOnItemClickListener(this);
 		animSlideUp.setAnimationListener(this);
@@ -293,7 +223,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		mAdapter.notifyDataSetChanged();
 	}
@@ -301,7 +230,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+
 		getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+		View count = menu.findItem(R.id.parentIconMenu).getActionView();
+		Log.d("count", count + "");
+		TextView notification = (TextView)count.findViewById(R.id.hotlist_hot);
+		notification.setText("5");
 		this.menu = menu;
 		if (selectedParent != null) {
 			setMenuTitle(selectedParent);
@@ -317,43 +251,32 @@ public class DashBoardActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		Toast.makeText(getApplicationContext(), "HI menu" + id,
 				Toast.LENGTH_SHORT).show();
-		if (id == R.id.parentNameMenu) {
-			// Not implemented here
-			toggleVissibility();
-			return true;
-		}
+		// if (id == R.id.parentNameMenu) {
+		// // Not implemented here
+		//
+		// return true;
+		// }
 		if (id == R.id.parentIconMenu) {
 			// Not implemented here
-			toggleVissibility();
+
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void setTabColor(FragmentTabHost mTabHost) {
-		// TODO Auto-generated method stub
 		for (int i = 0; i < this.mTabHost.getTabWidget().getChildCount(); i++) {
 			this.mTabHost
 					.getTabWidget()
 					.getChildAt(i)
 					.setBackgroundColor(getResources().getColor(R.color.tab_bg)); // unselected
-			// TextView tv = (TextView)
-			// this.mTabHost.getTabWidget().getChildAt(i)
-			// .findViewById(android.R.id.title);
-			// tv.setTextColor(Color.WHITE);
+
 		}
 		this.mTabHost
 				.getTabWidget()
 				.getChildAt(this.mTabHost.getCurrentTab())
 				.setBackgroundColor(
-						getResources().getColor(R.color.tab_selected)); // 2nd
-																		// tab
-																		// TextView
-																		// tv =
-																		// (TextView)
-																		// this.mTabHost.getTabWidget().findViewById(
-		// android.R.id.title);
-		// tv.setTextColor(Color.WHITE); // selected
+						getResources().getColor(R.color.tab_selected));
 
 	}
 
@@ -488,9 +411,16 @@ public class DashBoardActivity extends ActionBarActivity implements
 									ParentListModel item = new ParentListModel();
 									item.setParentId(obj.getString("id"));
 									if (obj.has("nickname")) {
+										mTitle.setText(obj
+												.getString("nickname"));
+										mTitle.setCompoundDrawablesWithIntrinsicBounds(
+												0, 0,
+												R.drawable.ic_action_down, 0);
 										item.setParentName(obj
 												.getString("nickname"));
+										item.setMobilenumber(obj.getString("mobile"));
 									} else {
+										mTitle.setText("maa");
 										item.setParentName("Maa");
 									}
 									// item.setParentUserId(obj.getJSONObject(
@@ -513,8 +443,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// setMenuTitle(null);
 						// }
 						list.add(new ParentListModel(userId, false, "Me",
-								userId, ""));
-						list.add(new ParentListModel("", false, "", "", ""));
+								userId, "", "9066665428"));
+						list.add(new ParentListModel("", false, "", "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
 						if (selectedParent == null) {
@@ -558,6 +488,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				}
 			}
 			setMenuTitle(item);
+			mTitle.setText(list.get(position).getParentName());
 			listview.setAdapter(imageAdapter);
 			mTabHost.setCurrentTab(0);
 			mTabHost.setVisibility(View.VISIBLE);
@@ -580,14 +511,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	public void setMenuTitle(ParentListModel item) {
-		MenuItem parentMenu = menu.findItem(R.id.parentNameMenu);
-		if (item != null) {
-			parentMenu.setTitle(item.getParentName());
-		} else {
-			parentMenu.setTitle("Add");
-			MenuItem iconMenu = menu.findItem(R.id.parentIconMenu);
+		// MenuItem parentMenu = menu.findItem(R.id.parentNameMenu);
+		// if (item != null) {
+		// parentMenu.setTitle(item.getParentName());
+		// } else {
+		// parentMenu.setTitle("Add");
+		// MenuItem iconMenu = menu.findItem(R.id.parentIconMenu);
 
-		}
+		// }
 	}
 
 	public ParentListModel getSelectedParent() {

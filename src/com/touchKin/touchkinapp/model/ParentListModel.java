@@ -7,19 +7,31 @@ public class ParentListModel {
 	String parentId;
 	String parentUserId;
 	Boolean reqStatus;
+	String mobilenumber;
+
+	public String getMobilenumber() {
+		return mobilenumber;
+	}
+
+	public void setMobilenumber(String mobilenumber) {
+		this.mobilenumber = mobilenumber;
+	}
 
 	public ParentListModel() {
 		super();
 	}
 
 	public ParentListModel(String imageUrl, Boolean isSelected,
-			String parentName, String parentId, String parentUserId) {
+			String parentName, String parentId, String parentUserId,
+			String mobilenumber) {
 		super();
 		this.imageUrl = imageUrl;
 		this.isSelected = isSelected;
 		this.parentName = parentName;
 		this.parentId = parentId;
 		this.parentUserId = parentUserId;
+		this.mobilenumber = mobilenumber;
+
 	}
 
 	public String getParentUserId() {
