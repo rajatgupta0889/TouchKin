@@ -14,6 +14,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -232,11 +233,22 @@ public class LocationSendingService extends Service implements LocationListener 
 		Location loc = getLocation();
 		JSONObject param = new JSONObject();
 		JSONObject point = new JSONObject();
+		SharedPreferences userPref = getApplicationContext()
+				.getSharedPreferences("userPref", 0);
+		String user = userPref.getString("user", null);
+
 		if (loc != null) {
 			try {
+				JSONObject mySelf = new JSONObject(user);
 				param.put("y", loc.getLongitude());
 				param.put("x", loc.getLatitude());
-				point.put("poin", param);
+				point.put("point", param);
+				point.put("mobile", mySelf.getString("mobile"));
+				point.put("mobile_os", "android");
+				point.put("mobile_device_id",
+						mySelf.getString("mobile_device_id"));
+				// point.put("kind", "location");
+
 				sendLocationToServer(point);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -283,7 +295,8 @@ public class LocationSendingService extends Service implements LocationListener 
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			Log.d("result", result);
+			if (result != null)
+				Log.d("result", result);
 		}
 
 		String response = null;
@@ -297,14 +310,14 @@ public class LocationSendingService extends Service implements LocationListener 
 			try {
 
 				// this is storage overwritten on each iteration with bytes
-
+				Log.d("point", params[0].toString());
 				HttpClient httpClient = AppController.mHttpClient;
 
 				HttpPost httpPost = new HttpPost(
 						"http://54.69.183.186:1340/location/add");
 				// adding post params
 				if (params != null) {
-					httpPost.setEntity(new StringEntity(params.toString()));
+					httpPost.setEntity(new StringEntity(params[0].toString()));
 				}
 
 				httpResponse = httpClient.execute(httpPost);

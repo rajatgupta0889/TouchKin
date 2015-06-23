@@ -13,7 +13,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.Group.Type;
@@ -32,9 +31,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	private static final int PAST_TRAVEL_VIEW = 1;
 	private static final int FUTURE_TRAVEL_VIEW = 0;
-	public static final int ADD_FOR_ME = 2;
-	public static final int ADD_FOR_CR = 3;
-	public static final int CONN_REQ = 4;
+	public static final int ADD_CR = 2;
+	public static final int ADD_CG = 3;
+	public static final int CONN_REQ = 5;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	/*
@@ -109,7 +108,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	 * android.view.View, android.view.ViewGroup)
 	 */
 	@Override
-	public View getChildView(int groupPosition, int childPosition,
+	public View getChildView(final int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 
 		// get the type of the group this child belongs
@@ -161,7 +160,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						listener.onButtonClickListner(ADD_FOR_ME, "", false);
+						listener.onButtonClickListner(ADD_CG, groups
+								.get(groupPosition).groupMemebr.getMobileNo(),
+								false);
 					}
 				});
 				linearLayout.addView(view2);
@@ -253,7 +254,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						listener.onButtonClickListner(ADD_FOR_CR, "", false);
+						listener.onButtonClickListner(ADD_CG, groups
+								.get(groupPosition).groupMemebr.getMobileNo(),
+								false);
 					}
 				});
 				linearLayout.addView(view2);
@@ -352,8 +355,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				kinCount.setText("You have " + groupMember.getKinCount()
 						+ " Kin and " + groupMember.getReqCount() + "requests");
 			} else if (groupMember.getKinCount() != null) {
-				kinCount.setText("You have " + groupMember.getKinCount()
-						+ " Kin");
+				kinCount.setText(groupMember.getUserName() + " have "
+						+ groupMember.getKinCount() + " Kin");
 			} else {
 				kinCount.setText("Click to get details");
 			}
@@ -362,8 +365,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			image.setImageResource(imageResourceId);
 
 		} else {
+			ImageLoader imageLoader = new ImageLoader(context);
+			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
+					+ ".jpeg", R.drawable.ic_user_image, imageview);
+			name.setText(groupMember.getUserName());
+			kinCount.setVisibility(View.INVISIBLE);
 			int imageResourceId = R.drawable.info;
 			image.setImageResource(imageResourceId);
+
 		}
 		return view;
 	}

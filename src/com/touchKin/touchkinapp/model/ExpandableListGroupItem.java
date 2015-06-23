@@ -2,7 +2,7 @@ package com.touchKin.touchkinapp.model;
 
 public class ExpandableListGroupItem {
 
-	String userId, userName, kinCount, reqCount;
+	String userId, userName, kinCount, reqCount, mobileNo;
 
 	public ExpandableListGroupItem() {
 		super();
@@ -10,12 +10,13 @@ public class ExpandableListGroupItem {
 	}
 
 	public ExpandableListGroupItem(String userId, String userName,
-			String kinCount, String reqCount) {
+			String kinCount, String reqCount, String mobileNo) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.kinCount = kinCount;
 		this.reqCount = reqCount;
+		this.mobileNo = mobileNo;
 	}
 
 	public String getUserId() {
@@ -48,6 +49,14 @@ public class ExpandableListGroupItem {
 
 	public void setReqCount(String reqCount) {
 		this.reqCount = reqCount;
+	}
+
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
 	}
 
 }
