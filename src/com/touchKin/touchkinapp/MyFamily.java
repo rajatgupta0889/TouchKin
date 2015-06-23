@@ -118,11 +118,12 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 				// TODO Auto-generated method stub
-				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
-					ExpandableListGroupItem item = CareReciever
-							.get(groupPosition);
-					fetchMyCRFamily(item.getUserId(), groupPosition);
-				}
+				// if (groupPosition > 0 && groupPosition < CareReciever.size())
+				// {
+				// ExpandableListGroupItem item = CareReciever
+				// .get(groupPosition);
+				// fetchMyCRFamily(item.getUserId(), groupPosition);
+				// }
 				return false;
 			}
 		});
@@ -134,6 +135,11 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
 					if (groupPosition != previousGroup)
 						expandListView.collapseGroup(previousGroup);
+
+					ExpandableListGroupItem item = CareReciever
+							.get(groupPosition);
+					fetchMyCRFamily(item.getUserId(), groupPosition);
+
 					previousGroup = groupPosition;
 				}
 			}

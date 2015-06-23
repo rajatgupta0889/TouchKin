@@ -177,14 +177,17 @@
                 <category android:name="com.touchKin.touchkinapp" />
             </intent-filter>
         </receiver>
-        <!-- <receiver android:name="com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver" >
+        <!--
+        <receiver android:name="com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
 
         <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.GcmIntentService" />
+        <service android:name="com.touchKin.touchkinapp.services.MessageAndCallReadingService" />
         <service android:name="com.touchKin.touchkinapp.services.LocationSendingService" />
 
         <meta-data

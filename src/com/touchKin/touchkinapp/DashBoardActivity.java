@@ -54,6 +54,8 @@ import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
+import com.touchKin.touchkinapp.services.LocationSendingService;
+import com.touchKin.touchkinapp.services.MessageAndCallReadingService;
 import com.touchKin.touckinapp.R;
 
 public class DashBoardActivity extends ActionBarActivity implements
@@ -289,6 +291,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 		listview.setOnItemClickListener(this);
 		animSlideUp.setAnimationListener(this);
 		animSlideDown.setAnimationListener(this);
+
+		Intent intent = new Intent(DashBoardActivity.this,
+				MessageAndCallReadingService.class);
+		startService(intent);
 	}
 
 	@Override
