@@ -1,6 +1,7 @@
 package com.touchKin.touchkinapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -28,6 +29,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	// private CirclePageIndicator indicator;
 	TextView sendTouch, getService;
 	PageListener pageListener;
+	ParentListModel parent;
 
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
@@ -52,6 +54,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		viewPager.setAdapter(adapter);
 		pageListener = new PageListener();
 		viewPager.setOnPageChangeListener(pageListener);
+
 		// indicator.setViewPager(viewPager);
 		// ((CirclePageIndicator) indicator).setSnap(false);
 		// indicator
@@ -104,7 +107,17 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			sendTouch();
 			break;
 		case R.id.getService:
-			Toast.makeText(getActivity(), "call", Toast.LENGTH_SHORT);
+			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+
+			if (parent != null) {
+				Intent callIntent = new Intent(Intent.ACTION_DIAL);
+				callIntent.setData(Uri.parse("tel:"+parent.getMobilenumber()));
+				startActivity(callIntent);
+			} else {
+				Toast.makeText(getActivity(),
+						"Please Select Your parent to call", Toast.LENGTH_SHORT)
+						.show();
+			}
 
 			break;
 		default:
@@ -135,7 +148,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			// if (position == -1) {
 			//
 			// } else {
-			mTitle.setText(getResources().getStringArray(R.array.frag_titles)[position]);
+			// mTitle.setText(getResources().getStringArray(R.array.frag_titles)[position]);
 			// }
 			FragmentInterface fragment = (FragmentInterface) adapter
 					.instantiateItem(viewPager, position);
