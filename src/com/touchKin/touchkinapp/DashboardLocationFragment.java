@@ -14,7 +14,6 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,41 +36,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
-import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
+import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.custom.ServiceHelper;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class DashboardLocationFragment extends Fragment implements
-		FragmentInterface, ConnectionCallbacks, OnConnectionFailedListener {
+		FragmentInterface {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	TextView parentName, parentNameBottom;
 	ParentListModel parent;
+	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	Marker googleMarker = null;
 	/**
@@ -106,9 +102,9 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		super.onStop();
 		googleMap.clear();
-		if (mGoogleApiClient.isConnected()) {
-			mGoogleApiClient.disconnect();
-		}
+		// if (mGoogleApiClient.isConnected()) {
+		// mGoogleApiClient.disconnect();
+		// }
 
 	}
 
@@ -235,7 +231,7 @@ public class DashboardLocationFragment extends Fragment implements
 		slice.setColor(resources.getColor(R.color.daily_prog_done));
 		slices.add(slice);
 		mHoloCircularProgressBar.setSlices(slices);
-		buildGoogleApiClient();
+		// buildGoogleApiClient();
 		return view;
 	}
 
@@ -415,79 +411,106 @@ public class DashboardLocationFragment extends Fragment implements
 			parentNameBottom.setText("Tap on map to set "
 					+ parent.getParentName() + "'s");
 			getLocation(parent.getParentId());
+
 		}
 	}
 
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		// Provides a simple way of getting a device's location and is well
-		// suited for
-		// applications that do not require a fine-grained location and that do
-		// not need location
-		// updates. Gets the best and most recent location currently available,
-		// which may be null
-		// in rare cases when a location is not available.
-		mLastLocation = LocationServices.FusedLocationApi
-				.getLastLocation(mGoogleApiClient);
-
-		if (mLastLocation != null) {
-			LatLng latLng = new LatLng(mLastLocation.getLatitude(),
-					mLastLocation.getLongitude());
+	private void setLocation(JSONObject obj) {
+		// TODO Auto-generated method stub
+		String longitude = null;
+		String latitude = null;
+		LatLng latLng = null;
+		try {
+			longitude = obj.getString("y");
+			latitude = obj.getString("x");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (longitude != null & latitude != null) {
+			latLng = new LatLng(Double.parseDouble(latitude),
+					Double.parseDouble(longitude));
 
 			View marker = ((LayoutInflater) getActivity().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE)).inflate(
 					R.layout.custom_marker, null);
-
+			RoundedImageView image = (RoundedImageView) marker
+					.findViewById(R.id.parentImage);
+			ImageLoader imageLoader = new ImageLoader(getActivity());
+			if (parent != null) {
+				String imagePath = serverPath + parent.getParentId()
+						+ ".jpeg";
+				Log.d("Image Path", imagePath);
+				imageLoader.DisplayImage(imagePath, R.drawable.ic_launcher, image);
+			}
 			if (googleMarker != null)
 				googleMarker.remove();
-			// googleMarker = googleMap.addMarker(new MarkerOptions()
-			// .position(latLng)
-			// .title("randomlocation")
-			// .icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
-			// getActivity(), marker))));
+			googleMarker = googleMap.addMarker(new MarkerOptions().position(
+					latLng).icon(
+					BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+							getActivity(), marker))));
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 			googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-		} else {
-			Toast.makeText(getActivity(), "No Location Detected",
-					Toast.LENGTH_LONG).show();
 		}
 	}
 
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		// Refer to the javadoc for ConnectionResult to see what error codes
-		// might be returned in
-		// onConnectionFailed.
-		Log.i("Location",
-				"Connection failed: ConnectionResult.getErrorCode() = "
-						+ result.getErrorCode());
-	}
+	// @Override
+	// public void onConnected(Bundle connectionHint) {
+	// // Provides a simple way of getting a device's location and is well
+	// // suited for
+	// // applications that do not require a fine-grained location and that do
+	// // not need location
+	// // updates. Gets the best and most recent location currently available,
+	// // which may be null
+	// // in rare cases when a location is not available.
+	// mLastLocation = LocationServices.FusedLocationApi
+	// .getLastLocation(mGoogleApiClient);
+	//
+	// if (mLastLocation != null) {
+	// LatLng latLng = new LatLng(mLastLocation.getLatitude(),
+	// mLastLocation.getLongitude());
+	//
+	// } else {
+	// Toast.makeText(getActivity(), "No Location Detected",
+	// Toast.LENGTH_LONG).show();
+	// }
+	// }
 
-	@Override
-	public void onConnectionSuspended(int cause) {
-		// The connection to Google Play services was lost for some reason. We
-		// call connect() to
-		// attempt to re-establish the connection.
-		Log.i("Location", "Connection suspended");
-		mGoogleApiClient.connect();
-	}
+	// @Override
+	// public void onConnectionFailed(ConnectionResult result) {
+	// // Refer to the javadoc for ConnectionResult to see what error codes
+	// // might be returned in
+	// // onConnectionFailed.
+	// Log.i("Location",
+	// "Connection failed: ConnectionResult.getErrorCode() = "
+	// + result.getErrorCode());
+	// }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		mGoogleApiClient.connect();
-	}
-
-	/**
-	 * Builds a GoogleApiClient. Uses the addApi() method to request the
-	 * LocationServices API.
-	 */
-	protected synchronized void buildGoogleApiClient() {
-		mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.addApi(LocationServices.API).build();
-	}
+	// @Override
+	// public void onConnectionSuspended(int cause) {
+	// // The connection to Google Play services was lost for some reason. We
+	// // call connect() to
+	// // attempt to re-establish the connection.
+	// Log.i("Location", "Connection suspended");
+	// mGoogleApiClient.connect();
+	// }
+	//
+	// @Override
+	// public void onStart() {
+	// super.onStart();
+	// mGoogleApiClient.connect();
+	// }
+	//
+	// /**
+	// * Builds a GoogleApiClient. Uses the addApi() method to request the
+	// * LocationServices API.
+	// */
+	// protected synchronized void buildGoogleApiClient() {
+	// mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+	// .addConnectionCallbacks(this)
+	// .addOnConnectionFailedListener(this)
+	// .addApi(LocationServices.API).build();
+	// }
 
 	public void getLocation(String id) {
 		Log.d("id ", id);
@@ -499,7 +522,17 @@ public class DashboardLocationFragment extends Fragment implements
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array Location", " " + responseArray);
+						try {
+							if (responseArray.length() > 0) {
+								setLocation(responseArray.getJSONObject(
+										responseArray.length() - 1)
+										.getJSONObject("point"));
 
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 
 				}, new Response.ErrorListener() {
