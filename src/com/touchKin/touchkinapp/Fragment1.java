@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
 import com.touchKin.touchkinapp.model.ParentListModel;
+import com.touchKin.touchkinapp.services.DeviceAcivityService;
 import com.touchKin.touckinapp.R;
 
 public class Fragment1 extends Fragment implements OnClickListener {
@@ -82,6 +83,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		
 	}
 
 	//
