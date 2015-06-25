@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
@@ -57,17 +59,19 @@ public class ImageAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 
 		convertView = mLayoutInflater.inflate(R.layout.image_item, null);
-
+		RelativeLayout lay = (RelativeLayout)convertView.findViewById(R.id.rel_lay);
+		TextView parentname = (TextView)convertView.findViewById(R.id.parentname);
 		RoundedImageView imageView = (RoundedImageView) convertView
 				.findViewById(R.id.parentImage);
 		if (parentList.get(position).getIsSelected()) {
-			convertView.setBackgroundDrawable(mContext.getResources()
+			lay.setBackgroundDrawable(mContext.getResources()
 					.getDrawable(R.drawable.circular_image_selected));
 		} else {
-			convertView.setBackgroundDrawable(mContext.getResources()
+			lay.setBackgroundDrawable(mContext.getResources()
 					.getDrawable(R.drawable.parent_image));
 		}
 		// imageView.setImageResource(R.drawable.mom);
+		parentname.setText(parentList.get(position).getParentName());
 		ImageLoader imageLoader = new ImageLoader(mContext);
 		if (position + 1 != parentList.size()) {
 			imageLoader.DisplayImage(serverPath
