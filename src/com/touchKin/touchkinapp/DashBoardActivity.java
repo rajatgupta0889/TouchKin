@@ -248,21 +248,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 		cal.set(Calendar.MONTH, cur_cal.get(Calendar.MONTH));
 
 		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		if (isMyServiceRunning(DeviceAcivityService.class)) {
-
-			Intent intent1 = new Intent(DashBoardActivity.this,
-					DeviceAcivityService.class);
-			PendingIntent pending = PendingIntent.getService(
-					DashBoardActivity.this, 0, intent1, 0);
-			alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-					10000, pending);
-		} else {
-			Toast.makeText(DashBoardActivity.this, "already running",
-					Toast.LENGTH_SHORT).show();
-		}
-		// alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-		// AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-		// AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending);
+		Intent intent1 = new Intent(DashBoardActivity.this,
+				DeviceAcivityService.class);
+		PendingIntent pending = PendingIntent.getService(
+				DashBoardActivity.this, 0, intent1, 0);
+		// alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+		// 10000, pending);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+				AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending);
 		// startService(intent1);
 	}
 
@@ -294,7 +288,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		notification.setText("5");
 		this.menu = menu;
 		if (selectedParent != null) {
-			setMenuTitle(selectedParent);
+			// setMenuTitle(selectedParent);
 		}
 		return true;
 	}
@@ -467,8 +461,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 									ParentListModel item = new ParentListModel();
 									item.setParentId(obj.getString("id"));
 									if (obj.has("nickname")) {
-										mTitle.setText(obj
-												.getString("nickname"));
+										// mTitle.setText(obj
+										// .getString("nickname"));
 										mTitle.setCompoundDrawablesWithIntrinsicBounds(
 												0, 0,
 												R.drawable.ic_action_down, 0);
@@ -477,7 +471,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setMobilenumber(obj
 												.getString("mobile"));
 									} else {
-										mTitle.setText("maa");
+										// mTitle.setText("maa");
 										item.setParentName("Maa");
 									}
 									// item.setParentUserId(obj.getJSONObject(
@@ -485,7 +479,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 									if (i == 0) {
 										item.setIsSelected(true);
 										selectedParent = item;
-										// setMenuTitle(selectedParent);
+										setMenuTitle(selectedParent);
 									} else {
 										item.setIsSelected(false);
 									}
@@ -582,6 +576,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// MenuItem iconMenu = menu.findItem(R.id.parentIconMenu);
 
 		// }
+		if (item != null) {
+			mTitle.setText(item.getParentName());
+		} else {
+			mTitle.setText("Add");
+		}
+
 	}
 
 	public ParentListModel getSelectedParent() {

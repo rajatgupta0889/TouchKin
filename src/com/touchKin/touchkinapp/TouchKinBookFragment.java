@@ -69,7 +69,7 @@ public class TouchKinBookFragment extends Fragment implements
 		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
 		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		tv = (TextView) v.findViewById(R.id.msg);
-		mTitle.setText("Kinbook");
+//		mTitle.setText();
 		host = ((DashBoardActivity) getActivity()).getTabHost();
 		host.setVisibility(View.GONE);
 
@@ -169,10 +169,10 @@ public class TouchKinBookFragment extends Fragment implements
 						}
 						flipView.setAdapter(flipViewAdapter);
 						flipViewAdapter.notifyDataSetChanged();
-						if (touchKinBook.size() < 2) {
-							tv.setVisibility(View.VISIBLE);
-							tv.setText("You donot have any Kibook messages !!");
-						}
+//						if (touchKinBook.size() < 2) {
+//							tv.setVisibility(View.VISIBLE);
+//							tv.setText("You donot have any Kibook messages !!");
+//						}
 					}
 
 				}, new Response.ErrorListener() {
