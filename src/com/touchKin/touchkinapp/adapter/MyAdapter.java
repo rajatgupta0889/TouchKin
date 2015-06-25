@@ -2,6 +2,7 @@ package com.touchKin.touchkinapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 	private String profile; // int Resource for header view profile picture
 	private String email; // String Resource for header view email
 	Context context;
+	int resID;
 	public static IMyViewHolderClicks mListener;
 
 	// Creating a ViewHolder which extends the RecyclerView View Holder
@@ -195,9 +197,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 		} else {
 			ImageLoader imageLoader = new ImageLoader(context);
+			
+			if (name != null && !name.equals("")) {
+				String cut = name.substring(0, 1).toLowerCase();
+				 resID = context.getResources().getIdentifier(cut , "drawable", context.getPackageName());
+				Log.d("cut", cut + " "+resID);
+			}
 			if (profile != null)
 				imageLoader.DisplayImage(serverPath + profile + ".jpeg",
-						R.drawable.people, holder.profile);
+						resID, holder.profile);
 			else {
 				holder.profile.setImageResource(R.drawable.people);
 			}
