@@ -351,10 +351,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 					// String yob = userYear.getText().toString();
 
-					if (!name.equals(server_name)
-							|| !userAge.equals(server_age)
-							|| !year_spinner.equals(yob_from_server)) {
-						Log.d("here", "come");
+					if (!name.getText().toString().equals(server_name)
+							|| !userAge.getText().toString().equals(server_age)
+							|| !year_spinner.getSelectedItem().toString()
+									.equals(yob_from_server)) {
+						// Log.d("here", "come");
 						updateUser(userName, gender, yob);
 					} else {
 						if (isLoggedIn)
