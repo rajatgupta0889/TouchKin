@@ -3,10 +3,12 @@ package com.touchKin.touchkinapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.widget.Toolbar;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +33,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	TextView sendTouch, getService;
 	PageListener pageListener;
 	ParentListModel parent;
-
+	Vibrator vib;
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
 
@@ -41,6 +43,8 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		vib = (Vibrator) this.getActivity().getSystemService(
+				getActivity().VIBRATOR_SERVICE);
 
 	}
 
@@ -83,7 +87,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
+
 	}
 
 	//
@@ -106,9 +110,13 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.sendTouch:
+			vib.vibrate(500);
+//			v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			sendTouch();
 			break;
 		case R.id.getService:
+			vib.vibrate(500);
+//			v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 
 			if (parent != null) {
@@ -134,6 +142,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		Intent intent = new Intent(getActivity(), SendTouchActivity.class);
 		ParentListModel model = ((DashBoardActivity) getActivity())
 				.getSelectedParent();
+
 		intent.putExtra("userId", model.getParentId());
 		startActivity(intent);
 	}
