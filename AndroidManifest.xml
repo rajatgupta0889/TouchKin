@@ -186,7 +186,7 @@
             </intent-filter>
         </receiver>
         -->
-
+		<service android:name="com.touchKin.touchkinapp.services.DeviceAcivityService" />
         <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.GcmIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.MessageAndCallReadingService" />
