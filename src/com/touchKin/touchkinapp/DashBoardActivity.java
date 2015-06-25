@@ -496,6 +496,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						try {
 							list.add(new ParentListModel(userId, false, "Me",
 									userId, "", userObj.getString("mobile")));
+							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
