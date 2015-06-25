@@ -12,6 +12,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.IBinder;
+import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -47,8 +48,9 @@ public class DeviceAcivityService extends Service {
 		fetchwifi();
 		fetchsignal();
 		fetchMessageCount();
+		FetchCallCount();
 		Toast.makeText(getApplicationContext(),
-				fetchsignal() + " " + battery + " " + fetchwifi()+" "+fetchMessageCount(),
+				fetchsignal() + " " + battery + " " + fetchwifi()+" "+fetchMessageCount()+" "+FetchCallCount(),
 				Toast.LENGTH_SHORT).show();
 	}
 
@@ -129,6 +131,30 @@ public class DeviceAcivityService extends Service {
 		// Log.d("Count Message ", cursor.getColumnCount() + "");
 		Log.d("Count Message ", cursor.getCount() + "");
 		return cursor.getCount();
+	}
+	public int FetchCallCount() {
+
+		Cursor managedCursor = getContentResolver().query(
+				CallLog.Calls.CONTENT_URI, null, null, null, null);
+
+		// if (cursor.moveToFirst()) { // must check the result to prevent
+		// // exception
+		// do {
+		// String msgData = "";
+		// for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
+		// msgData += " " + cursor.getColumnName(idx) + ":"
+		// + cursor.getString(idx);
+		// }
+		//
+		// // use msgData
+		// } while (cursor.moveToNext());
+		// } else {
+		// // empty box, no SMS
+		// }
+		// Log.d("Count Message ", cursor.getColumnCount() + "");
+		Log.d("Count Calll ", managedCursor.getCount() + "");
+
+		return managedCursor.getCount();
 	}
 
 }
