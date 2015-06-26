@@ -1,5 +1,7 @@
 package com.touchKin.touchkinapp.services;
 
+import java.util.Date;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -223,13 +225,16 @@ public class LocationSendingService extends Service implements LocationListener 
 
 	@Override
 	public void onCreate() {
-		Toast.makeText(this, " MyService Created ", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, " MyService Created ",
+		// Toast.LENGTH_LONG).show();
+		Log.d("Location serivce", "Created Time " + new Date().toGMTString());
 	}
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
 		mContext = getApplicationContext();
+		Log.d("Location serivce", "Started Time " + new Date().toGMTString());
 		Location loc = getLocation();
 		JSONObject param = new JSONObject();
 		JSONObject point = new JSONObject();
@@ -296,7 +301,7 @@ public class LocationSendingService extends Service implements LocationListener 
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if (result != null)
-				Log.d("result", result);
+				Log.d("result", "Location Updated SuccessFul");
 		}
 
 		String response = null;

@@ -29,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.aphidmobile.flip.FlipViewController;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.FlipViewAdapter;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.TouchKinBookModel;
 import com.touchKin.touckinapp.R;
@@ -69,7 +70,7 @@ public class TouchKinBookFragment extends Fragment implements
 		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
 		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		tv = (TextView) v.findViewById(R.id.msg);
-//		mTitle.setText();
+		// mTitle.setText();
 		host = ((DashBoardActivity) getActivity()).getTabHost();
 		host.setVisibility(View.GONE);
 
@@ -169,10 +170,10 @@ public class TouchKinBookFragment extends Fragment implements
 						}
 						flipView.setAdapter(flipViewAdapter);
 						flipViewAdapter.notifyDataSetChanged();
-//						if (touchKinBook.size() < 2) {
-//							tv.setVisibility(View.VISIBLE);
-//							tv.setText("You donot have any Kibook messages !!");
-//						}
+						// if (touchKinBook.size() < 2) {
+						// tv.setVisibility(View.VISIBLE);
+						// tv.setText("You donot have any Kibook messages !!");
+						// }
 					}
 
 				}, new Response.ErrorListener() {
@@ -193,7 +194,8 @@ public class TouchKinBookFragment extends Fragment implements
 	void init(View v) {
 		// commentList = new ArrayList<TouchKinComments>();
 		// adapter = new CommentListAdapter(commentList, getActivity());
-		kinbookprogressbar = (ProgressBar)v.findViewById(R.id.kinbookprogressbar);
+		kinbookprogressbar = (ProgressBar) v
+				.findViewById(R.id.kinbookprogressbar);
 		flipView = (FlipViewController) v.findViewById(R.id.flipView);
 		flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
 		flipViewAdapter.setCustomButtonListner(TouchKinBookFragment.this);
@@ -220,8 +222,8 @@ public class TouchKinBookFragment extends Fragment implements
 			e.printStackTrace();
 		}
 		JsonObjectRequest req = new JsonObjectRequest(
-				"http://54.69.183.186:1340/kinbook/message/delete/",
-				params, new Response.Listener<JSONObject>() {
+				"http://54.69.183.186:1340/kinbook/message/delete/", params,
+				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
 						// Display the first 500 characters of the response
@@ -241,6 +243,7 @@ public class TouchKinBookFragment extends Fragment implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	// private List<TouchKinComments> getCommentList(JSONArray comments) {
 	// List<TouchKinComments> list = new ArrayList<TouchKinComments>();
 	// try {
