@@ -19,6 +19,7 @@ import com.touchKin.touckinapp.R;
 public class ImageAdapter extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mLayoutInflater;
+	int resID;
 
 	List<ParentListModel> parentList;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
@@ -59,24 +60,32 @@ public class ImageAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 
 		convertView = mLayoutInflater.inflate(R.layout.image_item, null);
-		RelativeLayout lay = (RelativeLayout)convertView.findViewById(R.id.rel_lay);
-		TextView parentname = (TextView)convertView.findViewById(R.id.parentname);
+		RelativeLayout lay = (RelativeLayout) convertView
+				.findViewById(R.id.rel_lay);
+		TextView parentname = (TextView) convertView
+				.findViewById(R.id.parentname);
 		RoundedImageView imageView = (RoundedImageView) convertView
 				.findViewById(R.id.parentImage);
 		if (parentList.get(position).getIsSelected()) {
-			lay.setBackgroundDrawable(mContext.getResources()
-					.getDrawable(R.drawable.circular_image_selected));
+			lay.setBackgroundDrawable(mContext.getResources().getDrawable(
+					R.drawable.circular_image_selected));
 		} else {
-			lay.setBackgroundDrawable(mContext.getResources()
-					.getDrawable(R.drawable.parent_image));
+			lay.setBackgroundDrawable(mContext.getResources().getDrawable(
+					R.drawable.parent_image));
 		}
 		// imageView.setImageResource(R.drawable.mom);
 		parentname.setText(parentList.get(position).getParentName());
+		String name = parentList.get(position).getParentName();
+		if (!name.equalsIgnoreCase("")) {
+			String cut = name.substring(0, 1).toLowerCase();
+			 resID = mContext.getResources().getIdentifier(cut , "drawable", mContext.getPackageName());
+			Log.d("cut", cut + " "+resID);
+		}
 		ImageLoader imageLoader = new ImageLoader(mContext);
 		if (position + 1 != parentList.size()) {
 			imageLoader.DisplayImage(serverPath
 					+ getItem(position).getParentId() + ".jpeg",
-					R.drawable.ic_user_image, imageView);
+					resID, imageView);
 		} else {
 			convertView = mLayoutInflater
 					.inflate(R.layout.image_add_item, null);

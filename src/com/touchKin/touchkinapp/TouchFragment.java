@@ -44,6 +44,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	ImageView parentImage;
 	TextView parentName;
 	ParentListModel parent;
+	int resID;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -173,9 +174,16 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 		Log.d("Parent", "" + parent);
 		if (parent != null) {
+
 			getCurrent(parent.getParentId());
+
+			String cut = parent.getParentName().substring(0, 1).toLowerCase();
+			resID = getActivity().getResources().getIdentifier(cut, "drawable",
+					getActivity().getPackageName());
+			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + parent.getParentId()
-					+ ".jpeg", R.drawable.ic_user_image, parentImage);
+					+ ".jpeg", resID, parentImage);
+
 			parentName.setText(parent.getParentName() + " last touch ");
 		}
 	}
