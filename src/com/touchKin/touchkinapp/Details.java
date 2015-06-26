@@ -120,7 +120,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	String gender_server;
 	String server_name, server_age;
 	EditText otp;
-	Boolean verified = false;
+	Boolean verified = true;
 	Button enterManually, resendOTP;
 	Boolean isLoggedIn;
 	ArrayAdapter<String> dataAdapter;
@@ -140,6 +140,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			}
 			Log.d("Data ", "Phone " + phone + " mobile_os " + mobile_os + "id "
 					+ deviceId);
+			verified = false;
 		}
 		year_spinner.setEnabled(false);
 		dataAdapter
@@ -197,7 +198,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
 						server_age = userAge.getText().toString();
-						verified = true;
+
 						// if (!isLoggedIn) {
 						// otp.setText(obj
 						// .optString("mobile_verification_code"));

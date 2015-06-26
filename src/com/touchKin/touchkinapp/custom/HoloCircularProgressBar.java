@@ -445,6 +445,21 @@ public class HoloCircularProgressBar extends View {
 
 				currentAngle = currentAngle + getCurrentRotation();
 			}
+			if (isThumbEnabled()) {
+				// draw the thumb square at the correct rotated position
+				canvas.save();
+				canvas.rotate(mSlices.size() * getCurrentRotation() - 90);
+				canvas.drawCircle(mThumbPosX, mThumbPosY, 10, mThumbColorPaint);
+				// rotate the square by 45 degrees
+				// canvas.rotate(45, mThumbPosX, mThumbPosY);
+				// mSquareRect.left = mThumbPosX - mThumbRadius / 3;
+				// mSquareRect.right = mThumbPosX + mThumbRadius / 3;
+				// mSquareRect.top = mThumbPosY - mThumbRadius / 3;
+				// mSquareRect.bottom = mThumbPosY + mThumbRadius / 3;
+
+				// canvas.drawRect(mSquareRect, mThumbColorPaint);
+				canvas.restore();
+			}
 		} else {
 			canvas.drawArc(mCircleBounds, currentAngle, 0, false,
 					mProgressColorPaint);
@@ -472,21 +487,6 @@ public class HoloCircularProgressBar extends View {
 			// canvas.restore();
 		}
 
-		if (isThumbEnabled()) {
-			// draw the thumb square at the correct rotated position
-			canvas.save();
-			canvas.rotate(mSlices.size() * getCurrentRotation() - 90);
-			canvas.drawCircle(mThumbPosX, mThumbPosY, 10, mThumbColorPaint);
-			// rotate the square by 45 degrees
-			// canvas.rotate(45, mThumbPosX, mThumbPosY);
-			// mSquareRect.left = mThumbPosX - mThumbRadius / 3;
-			// mSquareRect.right = mThumbPosX + mThumbRadius / 3;
-			// mSquareRect.top = mThumbPosY - mThumbRadius / 3;
-			// mSquareRect.bottom = mThumbPosY + mThumbRadius / 3;
-
-			// canvas.drawRect(mSquareRect, mThumbColorPaint);
-			canvas.restore();
-		}
 	}
 
 	@Override

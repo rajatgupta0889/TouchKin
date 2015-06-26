@@ -1,25 +1,20 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.BatteryManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,10 +24,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
@@ -40,12 +42,12 @@ public class DashBoardActivityFragment extends Fragment implements
 		FragmentInterface {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
-	TextView battery;
+	TextView batteryTV;
 	ImageView battery5, wifi4, network4;
 	TelephonyManager Tel;
-	MyPhoneStateListener MyListener;
+
 	TextView parentName;
-	ParentListModel parent;
+	ParentListModel parent, lastSelectedParent;
 	AirplaneModeReceiver rec;
 
 	Context context;
@@ -73,93 +75,17 @@ public class DashBoardActivityFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.dashboard_activity_screen,
 				container, false);
-		final Resources resources = getResources();
 
 		parentName = (TextView) view.findViewById(R.id.parentNameTV);
 
-		// final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
-		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
-		PieSlice slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
 
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-
-		mHoloCircularProgressBar.setSlices(slices);
-		battery = (TextView) view.findViewById(R.id.battery);
+		batteryTV = (TextView) view.findViewById(R.id.battery);
 		battery5 = (ImageView) view.findViewById(R.id.battery5);
 		wifi4 = (ImageView) view.findViewById(R.id.wifi4);
 		network4 = (ImageView) view.findViewById(R.id.ImageView05);
 
-		// wifiSignal = (TextView) view.findViewById(R.id.wifi);
-
-		WifiManager wifi = (WifiManager) getActivity().getSystemService(
-				Context.WIFI_SERVICE);
-		onReceive(wifi);
-		// signalStr = (TextView) view.findViewById(R.id.signal);
-		/* Update the listener, and start it */
-		MyListener = new MyPhoneStateListener();
-		Tel = (TelephonyManager) getActivity().getSystemService(
-				Context.TELEPHONY_SERVICE);
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 		return view;
 	}
 
@@ -210,26 +136,32 @@ public class DashBoardActivityFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		super.onResume();
 		mHoloCircularProgressBar.setProgress(0.0f);
-		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
-		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
-		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		Log.d("Parent", parent + "");
+		if (parent != null) {
+			parentName.setText(parent.getParentName() + " activity ");
+			// getConnectivity(parent.getParentId());
+			if (lastSelectedParent == null) {
+				lastSelectedParent = parent;
+				getConnectivity(parent.getParentId());
+			}
+			if (lastSelectedParent != null
+					&& !lastSelectedParent.equals(parent))
+				getConnectivity(parent.getParentId());
+		}
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
+
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		getActivity().registerReceiver(this.mBatInfoReceiver,
-				new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
 	};
 
@@ -238,118 +170,171 @@ public class DashBoardActivityFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		super.onStop();
 
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
-		if (this.mBatInfoReceiver != null)
-			getActivity().unregisterReceiver(this.mBatInfoReceiver);
 	}
 
 	@Override
 	public void fragmentBecameVisible() {
 		// TODO Auto-generated method stub
-		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
-		Log.d("Parent", parent + "");
+
 		if (parent != null) {
-			parentName.setText(parent.getParentName() + " activity ");
+
+			if (lastSelectedParent == null) {
+				lastSelectedParent = parent;
+				getConnectivity(parent.getParentId());
+			}
+			if (!lastSelectedParent.equals(parent))
+				getConnectivity(parent.getParentId());
+			else {
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+			}
 		}
 	}
 
-	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context ctxt, Intent intent) {
-			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-			battery.setText(String.valueOf(level) + "%");
-			Log.d("battery", " " + level);
-			if (level == 100) {
-				battery5.setImageResource(R.drawable.battery100);
-			} else if (level >= 80 && level < 100) {
-				battery5.setImageResource(R.drawable.battery80);
+	public void getConnectivity(String id) {
+		Log.d("id ", id);
+		CustomRequest req = new CustomRequest(
+				"http://54.69.183.186:1340/connectivity/current/" + id,
+				new Listener<JSONObject>() {
 
-			} else if (level >= 60 && level < 80) {
-				battery5.setImageResource(R.drawable.battery60);
+					@Override
+					public void onResponse(JSONObject responseObject) {
+						// TODO Auto-generated method stub
+						Log.d("Response Array Activity",
+								responseObject.toString());
+						try {
+							if (responseObject.has("lastUpdatedConnectivity")) {
 
-			} else if (level >= 40 && level < 60) {
-				battery5.setImageResource(R.drawable.battery40);
-				Log.d("battery", " " + level);
-			} else if (level >= 20 && level < 40) {
-				battery5.setImageResource(R.drawable.battery20);
+								JSONObject lastUpdatedConnectivity = responseObject
+										.getJSONObject("lastUpdatedConnectivity");
+								int battery = Integer
+										.parseInt(lastUpdatedConnectivity
+												.getJSONObject("data")
+												.getString("battery"));
+								int signal = Integer
+										.parseInt(lastUpdatedConnectivity
+												.getJSONObject("data")
+												.getString("3g"));
+								int wifi = Integer
+										.parseInt(lastUpdatedConnectivity
+												.getJSONObject("data")
+												.getString("wifi_strength"));
+								setData(signal, wifi, battery);
+							}
+							setSlices(responseObject.getJSONObject("stats"));
 
-			} else if (level < 20) {
-				battery5.setImageResource(R.drawable.battery0);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						// if (responseArray.length() > 0) {
+						// // setLocation(responseArray.getJSONObject(
+						// // responseArray.length() - 1)
+						// // .getJSONObject("point"));
+						// }
 
-			}
-		}
-	};
+					}
 
-	public void onReceive(WifiManager wifiManager) {
-		int numberOfLevels = 5;
-		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-		int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(),
-				numberOfLevels);
-		float val = ((float) level / numberOfLevels) * 100f;
-		Log.d("wifi", level + " " + val);
-		if (level == 5) {
-			wifi4.setImageResource(R.drawable.wifi4);
-		} else if (level == 4) {
-			wifi4.setImageResource(R.drawable.wifi3);
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(getActivity(), error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 
-		} else if (level == 3) {
-			wifi4.setImageResource(R.drawable.wifi3);
+					}
 
-		} else if (level == 2) {
-			wifi4.setImageResource(R.drawable.wifi2);
+				});
 
-		} else if (level == 1) {
-			wifi4.setImageResource(R.drawable.wifi1);
+		AppController.getInstance().addToRequestQueue(req);
+
+	}
+
+	public void setData(int level, int wifi, int battery) {
+
+		if (level >= 24) {
+			network4.setImageResource(R.drawable.network4);
+
+		} else if (level >= 16 && level < 24) {
+			network4.setImageResource(R.drawable.network3);
+
+		} else if (level >= 8 && level < 16) {
+			network4.setImageResource(R.drawable.network2);
+
+		} else if (level > 0 && level < 8) {
+			network4.setImageResource(R.drawable.network1);
 
 		} else if (level == 0) {
+			network4.setImageResource(R.drawable.network0);
+
+		}
+		if (wifi == 5) {
+			wifi4.setImageResource(R.drawable.wifi4);
+		} else if (wifi == 4) {
+			wifi4.setImageResource(R.drawable.wifi3);
+
+		} else if (wifi == 3) {
+			wifi4.setImageResource(R.drawable.wifi3);
+
+		} else if (wifi == 2) {
+			wifi4.setImageResource(R.drawable.wifi2);
+
+		} else if (wifi == 1) {
+			wifi4.setImageResource(R.drawable.wifi1);
+
+		} else if (wifi == 0) {
 			wifi4.setImageResource(R.drawable.wifi0);
 
 		}
-		// wifiSignal.setText("Wifi " + ' ' + String.valueOf((int) val) + "%");
-	}
+		batteryTV.setText("" + battery + "%");
+		if (battery == 100) {
+			battery5.setImageResource(R.drawable.battery100);
+		} else if (battery >= 80 && battery < 100) {
+			battery5.setImageResource(R.drawable.battery80);
 
-	/* —————————– */
-	/* Start the PhoneState listener */
-	/* —————————– */
-	// @SuppressWarnings("deprecation")
-	// private static boolean isAirplaneModeOn(Context context) {
-	// boolean isEnabled = Settings.System.getInt(
-	// context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON,
-	// 0) == 1;
-	// return isEnabled;
-	//
-	// }
+		} else if (battery >= 60 && battery < 80) {
+			battery5.setImageResource(R.drawable.battery60);
 
-	private class MyPhoneStateListener extends PhoneStateListener {
-		/*
-		 * Get the Signal strength from the provider, each tiome there is an
-		 * update
-		 */
+		} else if (battery >= 40 && battery < 60) {
+			battery5.setImageResource(R.drawable.battery40);
 
-		@Override
-		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-			super.onSignalStrengthsChanged(signalStrength);
-			int level = signalStrength.getGsmSignalStrength();
-			Log.d("signal", "" + level);
+		} else if (battery >= 20 && battery < 40) {
+			battery5.setImageResource(R.drawable.battery20);
 
-			if (level >= 24) {
-				network4.setImageResource(R.drawable.network4);
+		} else if (battery < 20) {
+			battery5.setImageResource(R.drawable.battery0);
 
-			} else if (level >= 16 && level < 24) {
-				network4.setImageResource(R.drawable.network3);
-
-			} else if (level >= 8 && level < 16) {
-				network4.setImageResource(R.drawable.network2);
-
-			} else if (level > 0 && level < 8) {
-				network4.setImageResource(R.drawable.network1);
-
-			} else if (level == 0) {
-				network4.setImageResource(R.drawable.network0);
-
-			}
 		}
 	}
+
+	public void setSlices(JSONObject slicesObject) {
+		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
+		final Resources resources = getResources();
+
+		Iterator<String> iter = slicesObject.keys();
+		while (iter.hasNext()) {
+			String key = iter.next();
+			try {
+				PieSlice slice = new PieSlice();
+				int value = slicesObject.getInt(key);
+
+				if (value == 0) {
+
+					slice.setColor(resources.getColor(R.color.daily_prog_left));
+				} else {
+					slice.setColor(resources.getColor(R.color.daily_prog_done));
+				}
+				slices.add(slice);
+			} catch (JSONException e) {
+				// Something went wrong!
+			}
+
+		}
+
+		mHoloCircularProgressBar.setSlices(slices);
+		mHoloCircularProgressBar.setProgress(0.0f);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+	}
+
 }

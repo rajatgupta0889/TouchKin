@@ -1,8 +1,8 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +39,6 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,11 +51,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.PieSlice;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
-import com.touchKin.touchkinapp.custom.ServiceHelper;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
@@ -66,7 +65,7 @@ public class DashboardLocationFragment extends Fragment implements
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	TextView parentName, parentNameBottom;
-	ParentListModel parent;
+	ParentListModel parent, lastSelectedParent;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	Marker googleMarker = null;
@@ -93,8 +92,7 @@ public class DashboardLocationFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(getActivity()
-				.getApplicationContext());
+
 	}
 
 	@Override
@@ -135,103 +133,10 @@ public class DashboardLocationFragment extends Fragment implements
 			googleMap = ((MapFragment) getActivity().getFragmentManager()
 					.findFragmentById(R.id.map)).getMap();
 		}
-		// if (isGooglePlayServicesAvailable()) {
-		// googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		// googleMap.getUiSettings().setZoomControlsEnabled(false);
-		// LocationManager locationManager = (LocationManager) getActivity()
-		// .getSystemService(Context.LOCATION_SERVICE);
-		// boolean enabledGPS = locationManager
-		// .isProviderEnabled(LocationManager.GPS_PROVIDER);
-		// // Check if enabled and if not send user to the GSP settings
-		// // Better solution would be to display a dialog and suggesting to
-		// // go to the settings
-		// if (!enabledGPS) {
-		// Toast.makeText(getActivity(), "GPS signal not found",
-		// Toast.LENGTH_LONG).show();
-		// Intent intent = new Intent(
-		// Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-		// startActivity(intent);
-		// }
-		// Criteria criteria = new Criteria();
-		// String bestProvider = locationManager.getBestProvider(criteria,
-		// false);
-		// Location location = locationManager
-		// .getLastKnownLocation(bestProvider);
-		// if (location != null) {
-		// onLocationChanged(location);
-		// }
-		//
-		// googleMap.getUiSettings().setScrollGesturesEnabled(false);
-		// googleMap.getUiSettings().setZoomGesturesEnabled(false);
-		//
-		// }
+
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
-		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
-		// final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
-		PieSlice slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
 
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		mHoloCircularProgressBar.setSlices(slices);
-		// buildGoogleApiClient();
 		return view;
 	}
 
@@ -313,6 +218,17 @@ public class DashboardLocationFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		Log.d("Parent", parent + "");
+		if (parent != null) {
+
+			parentName.setText(parent.getParentName() + " is in ");
+			parentNameBottom.setText("Tap on map to set "
+					+ parent.getParentName() + "'s");
+			if (lastSelectedParent != null
+					&& !lastSelectedParent.equals(parent))
+				getLocation(parent.getParentId());
+		}
 		LocationManager lm = null;
 		boolean gps_enabled = false, network_enabled = false;
 		if (lm == null)
@@ -402,17 +318,26 @@ public class DashboardLocationFragment extends Fragment implements
 	@Override
 	public void fragmentBecameVisible() {
 		// TODO Auto-generated method stub
-		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
 		if (parent != null) {
+			if (lastSelectedParent == null) {
+				lastSelectedParent = parent;
+				getLocation(parent.getParentId());
+			}
 			parentName.setText(parent.getParentName() + " is in ");
 			parentNameBottom.setText("Tap on map to set "
 					+ parent.getParentName() + "'s");
-			getLocation(parent.getParentId());
-
+			if (!lastSelectedParent.equals(parent))
+				getLocation(parent.getParentId());
+			else {
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+			}
 		}
+
 	}
 
 	private void setLocation(JSONObject obj) {
@@ -438,10 +363,10 @@ public class DashboardLocationFragment extends Fragment implements
 					.findViewById(R.id.parentImage);
 			ImageLoader imageLoader = new ImageLoader(getActivity());
 			if (parent != null) {
-				String imagePath = serverPath + parent.getParentId()
-						+ ".jpeg";
+				String imagePath = serverPath + parent.getParentId() + ".jpeg";
 				Log.d("Image Path", imagePath);
-				imageLoader.DisplayImage(imagePath, R.drawable.ic_launcher, image);
+				imageLoader.DisplayImage(imagePath, R.drawable.ic_launcher,
+						image);
 			}
 			if (googleMarker != null)
 				googleMarker.remove();
@@ -454,80 +379,23 @@ public class DashboardLocationFragment extends Fragment implements
 		}
 	}
 
-	// @Override
-	// public void onConnected(Bundle connectionHint) {
-	// // Provides a simple way of getting a device's location and is well
-	// // suited for
-	// // applications that do not require a fine-grained location and that do
-	// // not need location
-	// // updates. Gets the best and most recent location currently available,
-	// // which may be null
-	// // in rare cases when a location is not available.
-	// mLastLocation = LocationServices.FusedLocationApi
-	// .getLastLocation(mGoogleApiClient);
-	//
-	// if (mLastLocation != null) {
-	// LatLng latLng = new LatLng(mLastLocation.getLatitude(),
-	// mLastLocation.getLongitude());
-	//
-	// } else {
-	// Toast.makeText(getActivity(), "No Location Detected",
-	// Toast.LENGTH_LONG).show();
-	// }
-	// }
-
-	// @Override
-	// public void onConnectionFailed(ConnectionResult result) {
-	// // Refer to the javadoc for ConnectionResult to see what error codes
-	// // might be returned in
-	// // onConnectionFailed.
-	// Log.i("Location",
-	// "Connection failed: ConnectionResult.getErrorCode() = "
-	// + result.getErrorCode());
-	// }
-
-	// @Override
-	// public void onConnectionSuspended(int cause) {
-	// // The connection to Google Play services was lost for some reason. We
-	// // call connect() to
-	// // attempt to re-establish the connection.
-	// Log.i("Location", "Connection suspended");
-	// mGoogleApiClient.connect();
-	// }
-	//
-	// @Override
-	// public void onStart() {
-	// super.onStart();
-	// mGoogleApiClient.connect();
-	// }
-	//
-	// /**
-	// * Builds a GoogleApiClient. Uses the addApi() method to request the
-	// * LocationServices API.
-	// */
-	// protected synchronized void buildGoogleApiClient() {
-	// mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-	// .addConnectionCallbacks(this)
-	// .addOnConnectionFailedListener(this)
-	// .addApi(LocationServices.API).build();
-	// }
-
 	public void getLocation(String id) {
 		Log.d("id ", id);
-		JsonArrayRequest req = new JsonArrayRequest(
-				"http://54.69.183.186:1340/location/fetch/" + id,
-				new Listener<JSONArray>() {
+		CustomRequest req = new CustomRequest(
+				"http://54.69.183.186:1340/location/current/" + id,
+				new Listener<JSONObject>() {
 
 					@Override
-					public void onResponse(JSONArray responseArray) {
+					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array Location", " " + responseArray);
 						try {
 							if (responseArray.length() > 0) {
 								setLocation(responseArray.getJSONObject(
-										responseArray.length() - 1)
-										.getJSONObject("point"));
-
+										"lastUpdatedLocation").getJSONObject(
+										"point"));
+								setSlices(responseArray
+										.getJSONObject("movements"));
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
@@ -548,6 +416,35 @@ public class DashboardLocationFragment extends Fragment implements
 
 		AppController.getInstance().addToRequestQueue(req);
 
+	}
+
+	public void setSlices(JSONObject slicesObject) {
+		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
+		final Resources resources = getResources();
+
+		Iterator<String> iter = slicesObject.keys();
+		while (iter.hasNext()) {
+			String key = iter.next();
+			try {
+				PieSlice slice = new PieSlice();
+				int value = slicesObject.getInt(key);
+
+				if (value == 0) {
+
+					slice.setColor(resources.getColor(R.color.daily_prog_left));
+				} else {
+					slice.setColor(resources.getColor(R.color.daily_prog_done));
+				}
+				slices.add(slice);
+			} catch (JSONException e) {
+				// Something went wrong!
+			}
+
+		}
+
+		mHoloCircularProgressBar.setSlices(slices);
+		mHoloCircularProgressBar.setProgress(0.0f);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 	}
 
 }

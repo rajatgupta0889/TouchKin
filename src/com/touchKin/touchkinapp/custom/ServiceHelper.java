@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.services.LocationSendingService;
 
 /**
@@ -43,21 +42,7 @@ public class ServiceHelper {
 
 		if (!IsAlreadyRunning) {
 
-			Intent mServiceIntent = new Intent(applicationContext,
-					LocationSendingService.class);
-			applicationContext.startService(mServiceIntent);
-			Log.d("Service run: %s", "Service is started");
-			Calendar cal = Calendar.getInstance();
-			Intent intent = new Intent(applicationContext,
-					DashBoardActivity.class);
-			PendingIntent pintent = PendingIntent.getService(
-					applicationContext, 0, intent, 0);
-
-			AlarmManager alarm = (AlarmManager) applicationContext
-					.getSystemService(Context.ALARM_SERVICE);
-			// Start service every hour
-			alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-					1000, pintent);
+			
 		}
 	}
 
