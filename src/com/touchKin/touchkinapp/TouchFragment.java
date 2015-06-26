@@ -1,6 +1,10 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -16,12 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.Response.Listener;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.PieSlice;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
@@ -58,81 +69,16 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.dashboard_touch_screen,
 				container, false);
-		final Resources resources = getResources();
 		// final PieGraph pg = (PieGraph) view.findViewById(R.id.piegraph);
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
 
-		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
-		PieSlice slice = new PieSlice();
+		// ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
+		// PieSlice slice = new PieSlice();
 		parentName = (TextView) view.findViewById(R.id.parentNameTV);
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_left));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		slice = new PieSlice();
-		slice.setColor(resources.getColor(R.color.daily_prog_done));
-		slices.add(slice);
-		// slice.setValue(15);
-		//
-		// pg.addSlice(slice);
-		mHoloCircularProgressBar.setSlices(slices);
 		return view;
 	}
 
@@ -228,6 +174,9 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 		Log.d("Parent", "" + parent);
 		if (parent != null) {
+
+			getCurrent(parent.getParentId());
+
 			String cut = parent.getParentName().substring(0, 1).toLowerCase();
 			resID = getActivity().getResources().getIdentifier(cut, "drawable",
 					getActivity().getPackageName());
@@ -244,5 +193,64 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
 		SetImage();
+	}
+
+	public void getCurrent(String id) {
+		Log.d("id ", id);
+		CustomRequest req = new CustomRequest(
+				"http://54.69.183.186:1340/activity/current/" + id,
+				new Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject responseArray) {
+						// TODO Auto-generated method stub
+						Log.d("Response Array Current",
+								responseArray.toString());
+
+						setSlices(responseArray);
+
+					}
+
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(getActivity(), error.getMessage(),
+								Toast.LENGTH_SHORT).show();
+
+					}
+
+				});
+
+		AppController.getInstance().addToRequestQueue(req);
+
+	}
+
+	public void setSlices(JSONObject slicesObject) {
+		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
+		final Resources resources = getResources();
+
+		Iterator<String> iter = slicesObject.keys();
+		while (iter.hasNext()) {
+			String key = iter.next();
+			try {
+				PieSlice slice = new PieSlice();
+				int value = slicesObject.getInt(key);
+
+				if (value == 0) {
+
+					slice.setColor(resources.getColor(R.color.daily_prog_left));
+				} else {
+					slice.setColor(resources.getColor(R.color.daily_prog_done));
+				}
+				slices.add(slice);
+			} catch (JSONException e) {
+				// Something went wrong!
+			}
+
+		}
+		mHoloCircularProgressBar.setSlices(slices);
+		mHoloCircularProgressBar.setProgress(0.0f);
+		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 	}
 }

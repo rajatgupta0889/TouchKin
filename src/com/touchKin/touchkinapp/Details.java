@@ -117,9 +117,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	Spinner year_spinner;
 	int[] age_year;
 	int yob_from_server;
+	String gender_server;
 	String server_name, server_age;
 	EditText otp;
-	Boolean verified = false;
+	Boolean verified = true;
 	Button enterManually, resendOTP;
 	Boolean isLoggedIn;
 	ArrayAdapter<String> dataAdapter;
@@ -139,6 +140,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			}
 			Log.d("Data ", "Phone " + phone + " mobile_os " + mobile_os + "id "
 					+ deviceId);
+			verified = false;
 		}
 		year_spinner.setEnabled(false);
 		dataAdapter
@@ -181,6 +183,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						Log.d("YOB", yob);
 						year_spinner.setEnabled(true);
 						yob_from_server = Integer.parseInt(yob);
+						gender_server = obj.getString("gender");
 						Log.d("yob from server", " " + yob_from_server);
 						age_year[0] = Integer.parseInt(yob) - 1;
 						age_year[1] = Integer.parseInt(yob);
@@ -195,7 +198,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
 						server_age = userAge.getText().toString();
-						verified = true;
+
 						// if (!isLoggedIn) {
 						// otp.setText(obj
 						// .optString("mobile_verification_code"));
@@ -352,9 +355,9 @@ public class Details extends ActionBarActivity implements OnClickListener {
 					// String yob = userYear.getText().toString();
 
 					if (!name.getText().toString().equals(server_name)
-							|| !userAge.getText().toString().equals(server_age)
-							|| !year_spinner.getSelectedItem().toString()
-									.equals(yob_from_server)) {
+							|| Integer.parseInt(year_spinner.getSelectedItem()
+									.toString()) != yob_from_server
+							|| !gender_server.equalsIgnoreCase(gender)) {
 						// Log.d("here", "come");
 						updateUser(userName, gender, yob);
 					} else {

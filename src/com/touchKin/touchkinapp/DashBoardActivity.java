@@ -1,9 +1,7 @@
 package com.touchKin.touchkinapp;
 
-import java.nio.channels.AlreadyConnectedException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -64,7 +61,6 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.services.DeviceAcivityService;
 import com.touchKin.touchkinapp.services.LocationSendingService;
-import com.touchKin.touchkinapp.services.MessageAndCallReadingService;
 import com.touchKin.touckinapp.R;
 
 public class DashBoardActivity extends ActionBarActivity implements
@@ -230,50 +226,32 @@ public class DashBoardActivity extends ActionBarActivity implements
 		animSlideUp.setAnimationListener(this);
 		animSlideDown.setAnimationListener(this);
 
-		Intent intent = new Intent(DashBoardActivity.this,
-				MessageAndCallReadingService.class);
-		// startService(intent);
-		Calendar cur_cal = new GregorianCalendar();
-		cur_cal.setTimeInMillis(System.currentTimeMillis());// set the current
-															// time and date for
-															// this calendar
-
-		Calendar cal = new GregorianCalendar();
-		cal.add(Calendar.DAY_OF_YEAR, cur_cal.get(Calendar.DAY_OF_YEAR));
-		cal.set(Calendar.HOUR_OF_DAY, cur_cal.get(Calendar.HOUR_OF_DAY));
-		cal.set(Calendar.MINUTE, cur_cal.get(Calendar.MINUTE));
-		cal.set(Calendar.SECOND, cur_cal.get(Calendar.SECOND));
-		cal.set(Calendar.MILLISECOND, cur_cal.get(Calendar.MILLISECOND));
-		cal.set(Calendar.DATE, cur_cal.get(Calendar.DATE));
-		cal.set(Calendar.MONTH, cur_cal.get(Calendar.MONTH));
-
-		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent intent1 = new Intent(DashBoardActivity.this,
-				DeviceAcivityService.class);
-		PendingIntent pending = PendingIntent.getService(
-				DashBoardActivity.this, 0, intent1, 0);
-		// alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-		// 10000, pending);
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-				AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-				AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending);
+		// AlarmManager alarm = (AlarmManager)
+		// getSystemService(Context.ALARM_SERVICE);
+		// Intent intent1 = new Intent(DashBoardActivity.this,
+		// DeviceAcivityService.class);
+		// PendingIntent pending = PendingIntent.getService(
+		// DashBoardActivity.this, 0, intent1, 0);
+		// // alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+		// // 10000, pending);
+		// alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+		// AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+		// AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending);
+		startLocationService();
+		startActivityService();
 		// startService(intent1);
-	}
-
-	private boolean isMyServiceRunning(Class<DeviceAcivityService> class1) {
-		ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		for (RunningServiceInfo service : manager
-				.getRunningServices(Integer.MAX_VALUE)) {
-			if (class1.getName().equals(service.service.getClassName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (userName == null || userName.isEmpty())
+			try {
+				userName = userObj.getString("first_name");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		mAdapter.notifyDataSetChanged();
 	}
 
@@ -463,9 +441,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 									if (obj.has("nickname")) {
 										// mTitle.setText(obj
 										// .getString("nickname"));
-										mTitle.setCompoundDrawablesWithIntrinsicBounds(
-												0, 0,
-												R.drawable.ic_action_down, 0);
+
 										item.setParentName(obj
 												.getString("nickname"));
 										item.setMobilenumber(obj
@@ -496,7 +472,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						try {
 							list.add(new ParentListModel(userId, false, "Me",
 									userId, "", userObj.getString("mobile")));
-							
+
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -545,7 +521,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				}
 			}
 			setMenuTitle(item);
-			mTitle.setText(list.get(position).getParentName());
+			// mTitle.setText(list.get(position).getParentName());
 			listview.setAdapter(imageAdapter);
 			mTabHost.setCurrentTab(0);
 			mTabHost.setVisibility(View.VISIBLE);
@@ -578,9 +554,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// }
 		if (item != null) {
 			mTitle.setText(item.getParentName());
+
 		} else {
 			mTitle.setText("Add");
 		}
+		mTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+				R.drawable.ic_action_down, 0);
 
 	}
 
@@ -638,5 +617,69 @@ public class DashBoardActivity extends ActionBarActivity implements
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
 		getParentList();
+	}
+
+	public void startLocationService() {
+		Intent mServiceIntent = new Intent(DashBoardActivity.this,
+				LocationSendingService.class);
+		DashBoardActivity.this.startService(mServiceIntent);
+		Log.d("Service run: %s", "Service is started");
+		Calendar cal = Calendar.getInstance();
+		Intent intent = new Intent(DashBoardActivity.this,
+				LocationSendingService.class);
+		// Intent intent = new Intent("com.my.package.MY_UNIQUE_ACTION");
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(
+				DashBoardActivity.this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		// AlarmManager alarmManager = (AlarmManager)
+		// applicationContext.getSystemService(Context.ALARM_SERVICE);
+		// alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+		// cal.getTimeInMillis(), 1000 * 60, pendingIntent);
+		// PendingIntent pintent = PendingIntent.getService(
+		// applicationContext, 0, intent, 0);
+		boolean alarmUp = (PendingIntent.getBroadcast(DashBoardActivity.this,
+				0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+
+		if (alarmUp) {
+			Log.d("myTag", "Alarm is already active");
+		} else {
+			AlarmManager alarm = (AlarmManager) DashBoardActivity.this
+					.getSystemService(Context.ALARM_SERVICE);
+			// Start service every hour
+			alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+					3600 * 1000, pendingIntent);
+		}
+	}
+
+	public void startActivityService() {
+		Intent mServiceIntent = new Intent(DashBoardActivity.this,
+				DeviceAcivityService.class);
+		DashBoardActivity.this.startService(mServiceIntent);
+
+		Calendar cal = Calendar.getInstance();
+		Intent intent = new Intent(DashBoardActivity.this,
+				DeviceAcivityService.class);
+		// Intent intent = new Intent("com.my.package.MY_UNIQUE_ACTION");
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(
+				DashBoardActivity.this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		// AlarmManager alarmManager = (AlarmManager)
+		// applicationContext.getSystemService(Context.ALARM_SERVICE);
+		// alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+		// cal.getTimeInMillis(), 1000 * 60, pendingIntent);
+		// PendingIntent pintent = PendingIntent.getService(
+		// applicationContext, 0, intent, 0);
+		boolean alarmUp = (PendingIntent.getBroadcast(DashBoardActivity.this,
+				0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+
+		if (alarmUp) {
+			Log.d("myTag", "Alarm is already active");
+		} else {
+			AlarmManager alarm = (AlarmManager) DashBoardActivity.this
+					.getSystemService(Context.ALARM_SERVICE);
+			// Start service every hour
+			alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+					3600 * 1000, pendingIntent);
+		}
 	}
 }

@@ -378,14 +378,14 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 	}
 
-	public JSONArray getCheckedParentId() {
-		JSONArray array = new JSONArray();
+	public String getCheckedParentId() {
+		String array = "";
 		for (ParentListModel item : list) {
-			if (item.getIsSelected())
-				array.put(item.getParentId());
-		}
-		if (array.length() < 1) {
-			return null;
+			if (array.isEmpty()) {
+				array = item.getParentId();
+			} else {
+				array = array + "," + item.getParentId();
+			}
 		}
 
 		return array;
