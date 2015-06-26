@@ -34,6 +34,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	public static final int ADD_CR = 2;
 	public static final int ADD_CG = 3;
 	public static final int CONN_REQ = 5;
+	int resID;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
 	/*
@@ -142,9 +143,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								linearLayout, false);
 						final RoundedImageView tv = (RoundedImageView) view1
 								.findViewById(R.id.parentImage);
+						TextView childName = (TextView) view1
+								.findViewById(R.id.parentname);
+						childName.setText(child._listDataChild.get(i)
+								.getParentName());
+						String cut = child._listDataChild.get(i)
+								.getParentName().substring(0, 1).toLowerCase();
+						resID = context.getResources().getIdentifier(cut,
+								"drawable", context.getPackageName());
+						Log.d("cut", cut + " " + resID);
 						imageLoader.DisplayImage(serverPath
 								+ child._listDataChild.get(i).getParentId()
-								+ ".jpeg", R.drawable.ic_user_image, tv);
+								+ ".jpeg", resID, tv);
 
 						linearLayout.addView(view1);
 					}
@@ -154,6 +164,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						linearLayout, false);
 				final RoundedImageView image = (RoundedImageView) view2
 						.findViewById(R.id.parentImage);
+				TextView childName = (TextView) view2
+						.findViewById(R.id.parentname);
+				childName.setVisibility(View.INVISIBLE);
 				image.setImageResource(R.drawable.accept);
 				image.setOnClickListener(new OnClickListener() {
 
@@ -177,9 +190,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								false);
 						final RoundedImageView tv = (RoundedImageView) view1
 								.findViewById(R.id.parentImage);
+						String cut = child.connReq.get(i)
+								.getCare_reciever_name().substring(0, 1)
+								.toLowerCase();
+						resID = context.getResources().getIdentifier(cut,
+								"drawable", context.getPackageName());
+						Log.d("cut", cut + " " + resID);
 						imageLoader.DisplayImage(serverPath
 								+ child.connReq.get(i).getUserId() + ".jpeg",
-								R.drawable.ic_user_image, tv);
+								resID, tv);
 						ImageView accept = (ImageView) view1
 								.findViewById(R.id.accept);
 						ImageView reject = (ImageView) view1
@@ -234,11 +253,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 						View view1 = inflater.inflate(R.layout.image_item,
 								linearLayout, false);
+						TextView childName = (TextView) view1
+								.findViewById(R.id.parentname);
 						final RoundedImageView tv = (RoundedImageView) view1
 								.findViewById(R.id.parentImage);
+						childName.setText(child._listDataChild.get(i)
+								.getParentName());
+						String cut = child._listDataChild.get(i)
+								.getParentName().substring(0, 1).toLowerCase();
+						resID = context.getResources().getIdentifier(cut,
+								"drawable", context.getPackageName());
+						Log.d("cut", cut + " " + resID);
 						imageLoader.DisplayImage(serverPath
 								+ child._listDataChild.get(i).getParentId()
-								+ ".jpeg", R.drawable.ic_user_image, tv);
+								+ ".jpeg", resID, tv);
 
 						linearLayout.addView(view1);
 					}
@@ -347,8 +375,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			 * image and change state if necessary
 			 */
 			ImageLoader imageLoader = new ImageLoader(context);
+
+			String cut = groupMember.getUserName().substring(0, 1)
+					.toLowerCase();
+			resID = context.getResources().getIdentifier(cut, "drawable",
+					context.getPackageName());
+			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
-					+ ".jpeg", R.drawable.ic_user_image, imageview);
+					+ ".jpeg", resID, imageview);
 			name.setText(groupMember.getUserName());
 			if (groupMember.getReqCount() != null
 					&& groupMember.getKinCount() != null) {

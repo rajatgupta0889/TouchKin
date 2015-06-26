@@ -3,6 +3,7 @@ package com.touchKin.touchkinapp.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class SendTouchParentListAdapter extends BaseAdapter {
 	LayoutInflater mLayoutInflater;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	List<ParentListModel> parentList;
+	int resID;
 
 	// int[] mResources = { R.drawable.mom, R.drawable.activity_bg };
 
@@ -72,10 +74,17 @@ public class SendTouchParentListAdapter extends BaseAdapter {
 
 		TextView parentName = (TextView) convertView
 				.findViewById(R.id.parentNameTextView);
+		String name = parentList.get(position).getParentName();
+		if (!name.equalsIgnoreCase("")) {
+			String cut = name.substring(0, 1).toLowerCase();
+			 resID = mContext.getResources().getIdentifier(cut , "drawable", mContext.getPackageName());
+			Log.d("cut", cut + " "+resID);
+		}
+
 		ImageLoader imageLoader = new ImageLoader(mContext);
 
 		imageLoader.DisplayImage(serverPath + item.getParentId() + ".jpeg",
-				R.drawable.ic_user_image, imageView);
+				resID, imageView);
 
 		// imageView.setImageResource(R.drawable.mom);
 		parentName.setText(item.getParentName());
