@@ -82,17 +82,17 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				.getSharedPreferences("userPref", 0);
 
 		user = userPref.getString("user", null);
-		// try {
-		// mySelf = new JSONObject(user);
-		// CareReciever.add(new ExpandableListGroupItem(
-		// mySelf.getString("id"), mySelf.getString("first_name"), "",
-		// "", mySelf.getString("mobile")));
-		// phone = mySelf.getString("mobile");
-		// device_id = mySelf.getString("mobile_device_id");
-		// } catch (JSONException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		try {
+			mySelf = new JSONObject(user);
+			CareReciever.add(new ExpandableListGroupItem(
+					mySelf.getString("id"), mySelf.getString("first_name"), "",
+					"", mySelf.getString("mobile")));
+			phone = mySelf.getString("mobile");
+			device_id = mySelf.getString("mobile_device_id");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if (isFromNotification != null && isFromNotification) {
 			SignUp(phone, device_id);
@@ -310,20 +310,20 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseObject);
 						myfamilyprogressbar.setVisibility(View.INVISIBLE);
-						CareReciever.clear();
+					//	CareReciever.clear();
 						careGiver.clear();
-						try {
-							mySelf = new JSONObject(user);
-							CareReciever.add(new ExpandableListGroupItem(mySelf
-									.getString("id"), mySelf
-									.getString("first_name"), "", "", mySelf
-									.getString("mobile")));
-							phone = mySelf.getString("mobile");
-							device_id = mySelf.getString("mobile_device_id");
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+//						try {
+//							mySelf = new JSONObject(user);
+//							CareReciever.add(new ExpandableListGroupItem(mySelf
+//									.getString("id"), mySelf
+//									.getString("first_name"), "", "", mySelf
+//									.getString("mobile")));
+//							phone = mySelf.getString("mobile");
+//							device_id = mySelf.getString("mobile_device_id");
+//						} catch (JSONException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 						try {
 							JSONArray careGivers = responseObject
 									.getJSONArray("care_givers");

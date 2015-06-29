@@ -272,7 +272,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 									.DisplayImage(serverPath
 											+ child._listDataChild.get(pos)
 													.getParentId() + ".jpeg",
-											resID, tv);
+											resID, image);
 							Button add = (Button) custom
 									.findViewById(R.id.addbutton);
 							add.setOnClickListener(new OnClickListener() {

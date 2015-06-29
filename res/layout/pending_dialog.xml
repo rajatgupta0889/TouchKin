@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="* Make sure the TouchKin app is installed"
+        android:text="* Make sure the TouchKin app is\n   installed"
         android:textColor="#838383"
         android:textSize="15sp" />
 
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="* Check whether there is an active internet connection"
+        android:text="* Check whether there is an \n   active internet connection"
         android:textColor="#838383"
         android:textSize="15sp" />
 
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="* Ensure that the number/name is correct"
+        android:text="* Ensure that the number/name \n   is correct"
         android:textColor="#838383"
         android:textSize="15sp" />
 
