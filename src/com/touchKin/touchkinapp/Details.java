@@ -177,7 +177,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 					name.setText(obj.optString("first_name"));
 					server_name = obj.optString("first_name");
-
+					verified = true;
 					String yob = obj.getString("yob");
 					if (yob != null) {
 						Log.d("YOB", yob);
@@ -198,7 +198,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
 						server_age = userAge.getText().toString();
-
+						
 						// if (!isLoggedIn) {
 						// otp.setText(obj
 						// .optString("mobile_verification_code"));
