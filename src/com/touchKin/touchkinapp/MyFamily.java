@@ -9,12 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -69,6 +67,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 	ProgressBar myfamilyprogressbar;
 	Boolean isFromNotification;
 	String phone, device_id;
+	String user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,18 +81,18 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		SharedPreferences userPref = getApplicationContext()
 				.getSharedPreferences("userPref", 0);
 
-		String user = userPref.getString("user", null);
-		try {
-			mySelf = new JSONObject(user);
-			CareReciever.add(new ExpandableListGroupItem(
-					mySelf.getString("id"), mySelf.getString("first_name"), "",
-					"", mySelf.getString("mobile")));
-			phone = mySelf.getString("mobile");
-			device_id = mySelf.getString("mobile_device_id");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		user = userPref.getString("user", null);
+		// try {
+		// mySelf = new JSONObject(user);
+		// CareReciever.add(new ExpandableListGroupItem(
+		// mySelf.getString("id"), mySelf.getString("first_name"), "",
+		// "", mySelf.getString("mobile")));
+		// phone = mySelf.getString("mobile");
+		// device_id = mySelf.getString("mobile_device_id");
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 		if (isFromNotification != null && isFromNotification) {
 			SignUp(phone, device_id);
@@ -119,12 +118,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 				// TODO Auto-generated method stub
-				// if (groupPosition > 0 && groupPosition < CareReciever.size())
-				// {
-				// ExpandableListGroupItem item = CareReciever
-				// .get(groupPosition);
+				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
+					ExpandableListGroupItem item = CareReciever
+							.get(groupPosition);
+					fetchMyCRFamily(item.getUserId(), groupPosition);
+				}
+				// ExpandableListGroupItem item =
+				// CareReciever.get(groupPosition);
 				// fetchMyCRFamily(item.getUserId(), groupPosition);
-				// }
+
 				return false;
 			}
 		});
@@ -136,11 +138,6 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
 					if (groupPosition != previousGroup)
 						expandListView.collapseGroup(previousGroup);
-
-					ExpandableListGroupItem item = CareReciever
-							.get(groupPosition);
-					fetchMyCRFamily(item.getUserId(), groupPosition);
-
 					previousGroup = groupPosition;
 				} else if(groupPosition != 0) {
 					LayoutInflater li = LayoutInflater
@@ -192,7 +189,9 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					@Override
 					public void onResponse(JSONArray responseArray) {
 						// TODO Auto-generated method stub
+
 						Log.d("Response Array", " " + responseArray);
+						requests.clear();
 						if (responseArray.length() > 0) {
 							for (int i = 0; i < responseArray.length(); i++) {
 								try {
@@ -311,6 +310,20 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseObject);
 						myfamilyprogressbar.setVisibility(View.INVISIBLE);
+						CareReciever.clear();
+						careGiver.clear();
+						try {
+							mySelf = new JSONObject(user);
+							CareReciever.add(new ExpandableListGroupItem(mySelf
+									.getString("id"), mySelf
+									.getString("first_name"), "", "", mySelf
+									.getString("mobile")));
+							phone = mySelf.getString("mobile");
+							device_id = mySelf.getString("mobile_device_id");
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						try {
 							JSONArray careGivers = responseObject
 									.getJSONArray("care_givers");

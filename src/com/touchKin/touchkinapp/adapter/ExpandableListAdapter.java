@@ -52,8 +52,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	ArrayList<Group> groups = new ArrayList<Group>();
 	ArrayList<GroupChild> childGroups = new ArrayList<GroupChild>();
 	ButtonClickListener listener;
-	MyLaoutHolder viewholder;
-	android.support.v4.app.FragmentManager manager;
+
+	ImageHolder viewholder;
 
 	public ExpandableListAdapter(Context context) {
 		this.context = context;
@@ -79,6 +79,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		}
 
 		return type;
+	}
+
+	public static class ImageHolder {
+		RoundedImageView image;
+		TextView name;
+		LinearLayout view;
 	}
 
 	/*
@@ -136,205 +142,172 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 		// if the type is future travel, use the future travel layout
 		if (viewType == Type.CONN) {
-			TypeChild childViewType = child.typeChild;
-			if (childViewType == TypeChild.ME) {
-				// if (view == null) {
-				view = LayoutInflater.from(context).inflate(
-						R.layout.expand_list_first_child, parent, false);
 
-				LayoutInflater inflater = (LayoutInflater) context
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				LinearLayout linearLayout = (LinearLayout) view
-						.findViewById(R.id.futureTravelLineItemLayout);
-				if (child._listDataChild != null) {
+			view = LayoutInflater.from(context).inflate(
+					R.layout.expand_list_first_child, parent, false);
+			LinearLayout linearLayout = (LinearLayout) view
+					.findViewById(R.id.futureTravelLineItemLayout);
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			String cut;
+			if (child._listDataChild != null && child._listDataChild.size() > 0) {
+				int resID;
+				View view1 = null;
+				// if (view1 == null) {
+				// viewholder = new ImageHolder();
+				//
+				// view1 = inflater.inflate(R.layout.image_item, linearLayout,
+				// false);
+				//
+				// viewholder.image = (RoundedImageView) view1
+				// .findViewById(R.id.parentImage);
+				// viewholder.name = (TextView) view1
+				// .findViewById(R.id.parentname);
+				//
+				// viewholder.view = linearLayout;
+				// view1.setTag(viewholder);
+				//
+				// }
+				// viewholder.view.removeAllViews();
+				for (int i = 0; i < child._listDataChild.size(); i++) {
+					viewholder = new ImageHolder();
+					imageLoader = new ImageLoader(context);
+					view1 = inflater.inflate(R.layout.image_item, linearLayout,
+							false);
+
+					viewholder.image = (RoundedImageView) view1
+							.findViewById(R.id.parentImage);
+					viewholder.name = (TextView) view1
+							.findViewById(R.id.parentname);
+
+					viewholder.view = linearLayout;
+					view1.setTag(viewholder);
+					cut = child._listDataChild.get(i).getParentName()
+							.substring(0, 1).toLowerCase();
+					resID = context.getResources().getIdentifier(cut,
+							"drawable", context.getPackageName());
+					Log.d("cut", cut + " " + resID);
+					viewholder.name.setText(child._listDataChild.get(i)
+							.getParentName());
+					imageLoader.DisplayImage(serverPath
+							+ child._listDataChild.get(i).getParentId()
+							+ ".jpeg", resID, viewholder.image);
+					viewholder.view.addView(view1);
+					// linearLayout.addView(view1);
+
+				}
+
+			}
+			View view2 = inflater.inflate(R.layout.image_item, linearLayout,
+					false);
+			final RoundedImageView image = (RoundedImageView) view2
+					.findViewById(R.id.parentImage);
+			TextView childName = (TextView) view2.findViewById(R.id.parentname);
+			childName.setVisibility(View.INVISIBLE);
+			image.setImageResource(R.drawable.accept);
+			image.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					listener.onButtonClickListner(
+							ADD_CG,
+							groups.get(groupPosition).groupMemebr.getMobileNo(),
+							false);
+				}
+			});
+			linearLayout.addView(view2);
+			if (child.connReq != null) {
+				LinearLayout linearLayout1 = (LinearLayout) view
+						.findViewById(R.id.futureTravel);
+				for (int i = 0; i < child.connReq.size(); i++) {
 					int resID;
-					for (int i = 0; i < child._listDataChild.size(); i++) {
-						viewholder = new MyLaoutHolder();
-						View view1 = inflater.inflate(R.layout.image_item,
-								linearLayout, false);
-						RoundedImageView tv = (RoundedImageView) view1
-								.findViewById(R.id.parentImage);
-						TextView childName = (TextView) view1
-								.findViewById(R.id.parentname);
-						String cut = child._listDataChild.get(i)
-								.getParentName().substring(0, 1).toLowerCase();
-						resID = context.getResources().getIdentifier(cut,
-								"drawable", context.getPackageName());
-						Log.d("cut", cut + " " + resID);
-						childName.setText(child._listDataChild.get(i)
-								.getParentName());
-						imageLoader.DisplayImage(serverPath
-								+ child._listDataChild.get(i).getParentId()
-								+ ".jpeg", resID, tv);
+					View view1 = inflater.inflate(R.layout.connection_req_item,
+							linearLayout, false);
+					final RoundedImageView tv = (RoundedImageView) view1
+							.findViewById(R.id.parentImage);
+					cut = child.connReq.get(i).getCare_reciever_name()
+							.substring(0, 1).toLowerCase();
+					resID = context.getResources().getIdentifier(cut,
+							"drawable", context.getPackageName());
+					Log.d("cut", cut + " " + resID);
+					imageLoader.DisplayImage(serverPath
+							+ child.connReq.get(i).getUserId() + ".jpeg",
+							resID, tv);
+					ImageView accept = (ImageView) view1
+							.findViewById(R.id.accept);
+					ImageView reject = (ImageView) view1
+							.findViewById(R.id.reject);
+					TextView textMessage = (TextView) view1
+							.findViewById(R.id.textMessage);
+					textMessage.setText(child.connReq.get(i).getReqMsg());
+					final String id = child.connReq.get(i).getRequestID();
+					final int pos = i;
+					accept.setOnClickListener(new OnClickListener() {
 
-						linearLayout.addView(view1);
-					}
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							ImageLoader imageLoader = new ImageLoader(context);
+							LayoutInflater li = LayoutInflater.from(context);
+							View custom = li.inflate(R.layout.accept_popup,
+									null);
+							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+									context);
 
-				}
-				View view2 = inflater.inflate(R.layout.image_item,
-						linearLayout, false);
-				final RoundedImageView image = (RoundedImageView) view2
-						.findViewById(R.id.parentImage);
-				TextView childName = (TextView) view2
-						.findViewById(R.id.parentname);
-				childName.setVisibility(View.INVISIBLE);
-				image.setImageResource(R.drawable.accept);
-				image.setOnClickListener(new OnClickListener() {
+							alertDialogBuilder.setView(custom);
+							alertDialogBuilder.setCancelable(true);
 
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						listener.onButtonClickListner(ADD_CG, groups
-								.get(groupPosition).groupMemebr.getMobileNo(),
-								false);
-					}
-				});
-				linearLayout.addView(view2);
+							// create alert dialog
+							final AlertDialog alertDialog = alertDialogBuilder
+									.create();
+							RoundedImageView image = (RoundedImageView) custom
+									.findViewById(R.id.parentImage);
+							String cut = child._listDataChild.get(pos)
+									.getParentName().substring(0, 1)
+									.toLowerCase();
+							int resID = context.getResources().getIdentifier(
+									cut, "drawable", context.getPackageName());
+							imageLoader
+									.DisplayImage(serverPath
+											+ child._listDataChild.get(pos)
+													.getParentId() + ".jpeg",
+											resID, tv);
+							Button add = (Button) custom
+									.findViewById(R.id.addbutton);
+							add.setOnClickListener(new OnClickListener() {
 
-				if (child.connReq != null) {
-					LinearLayout linearLayout1 = (LinearLayout) view
-							.findViewById(R.id.futureTravel);
-					for (int i = 0; i < child.connReq.size(); i++) {
-						int resID;
-						View view1 = inflater.inflate(
-								R.layout.connection_req_item, linearLayout,
-								false);
-						final RoundedImageView tv = (RoundedImageView) view1
-								.findViewById(R.id.parentImage);
-						String cut = child.connReq.get(i)
-								.getCare_reciever_name().substring(0, 1)
-								.toLowerCase();
-						resID = context.getResources().getIdentifier(cut,
-								"drawable", context.getPackageName());
-						Log.d("cut", cut + " " + resID);
-						imageLoader.DisplayImage(serverPath
-								+ child.connReq.get(i).getUserId() + ".jpeg",
-								resID, tv);
-						ImageView accept = (ImageView) view1
-								.findViewById(R.id.accept);
-						ImageView reject = (ImageView) view1
-								.findViewById(R.id.reject);
-						TextView textMessage = (TextView) view1
-								.findViewById(R.id.textMessage);
-						textMessage.setText(child.connReq.get(i).getReqMsg());
-						final String id = child.connReq.get(i).getRequestID();
-						final int pos = i;
-						accept.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									// TODO Auto-generated method stub
+									listener.onButtonClickListner(CONN_REQ, id,
+											true);
 
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								ImageLoader imageLoader = new ImageLoader(context);
-								LayoutInflater li = LayoutInflater
-										.from(context);
-								View custom = li.inflate(R.layout.accept_popup,
-										null);
-								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-										context);
+									child.connReq.remove(pos);
+									notifyDataSetChanged();
+									// alertDialog.cancel();
+								}
+							});
 
-								alertDialogBuilder.setView(custom);
-								alertDialogBuilder.setCancelable(true);
+							alertDialog.show();
 
-								// create alert dialog
-								final AlertDialog alertDialog = alertDialogBuilder
-										.create();
-								RoundedImageView image = (RoundedImageView)custom.findViewById(R.id.parentImage);
-								String cut = child._listDataChild.get(pos)
-										.getParentName().substring(0, 1).toLowerCase();
-								int resID = context.getResources().getIdentifier(cut,
-										"drawable", context.getPackageName());
-								imageLoader.DisplayImage(serverPath
-										+ child._listDataChild.get(pos).getParentId()
-										+ ".jpeg", resID, tv);
-								Button add = (Button) custom
-										.findViewById(R.id.addbutton);
-								add.setOnClickListener(new OnClickListener() {
+						}
+					});
+					reject.setOnClickListener(new OnClickListener() {
 
-									@Override
-									public void onClick(View v) {
-										// TODO Auto-generated method stub
-										listener.onButtonClickListner(CONN_REQ,
-												id, true);
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							listener.onButtonClickListner(CONN_REQ, id, false);
+							child.connReq.remove(pos);
+							notifyDataSetChanged();
 
-										child.connReq.remove(pos);
-										notifyDataSetChanged();
-										// alertDialog.cancel();
-									}
-								});
+						}
+					});
 
-								alertDialog.show();
-
-							}
-						});
-						reject.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								listener.onButtonClickListner(CONN_REQ, id,
-										false);
-								child.connReq.remove(pos);
-								notifyDataSetChanged();
-
-							}
-						});
-
-						linearLayout1.addView(view1);
-
-					}
+					linearLayout1.addView(view1);
 
 				}
-
-			} else {
-				// if the type is past, use the past travel layout
-
-				view = LayoutInflater.from(context).inflate(
-						R.layout.expand_list_first_child, parent, false);
-
-				LinearLayout linearLayout = (LinearLayout) view
-						.findViewById(R.id.futureTravelLineItemLayout);
-				LayoutInflater inflater = (LayoutInflater) context
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				if (child._listDataChild != null) {
-					for (int i = 0; i < child._listDataChild.size(); i++) {
-						int resID;
-						View view1 = inflater.inflate(R.layout.image_item,
-								linearLayout, false);
-						TextView childName = (TextView) view1
-								.findViewById(R.id.parentname);
-						final RoundedImageView tv = (RoundedImageView) view1
-								.findViewById(R.id.parentImage);
-						// childName.setText(child._listDataChild.get(i)
-						// .getParentName());
-						// String cut = child._listDataChild.get(i)
-						// .getParentName().substring(0, 1).toLowerCase();
-						// resID = context.getResources().getIdentifier(cut,
-						// "drawable", context.getPackageName());
-						// Log.d("cut", cut + " " + resID);
-						imageLoader.DisplayImage(serverPath
-								+ child._listDataChild.get(i).getParentId()
-								+ ".jpeg", R.drawable.ic_user_image, tv);
-
-						linearLayout.addView(view1);
-					}
-
-				}
-				View view2 = inflater.inflate(R.layout.image_item,
-						linearLayout, false);
-				final RoundedImageView image = (RoundedImageView) view2
-						.findViewById(R.id.parentImage);
-				image.setImageResource(R.drawable.accept);
-				image.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						listener.onButtonClickListner(ADD_CG, groups
-								.get(groupPosition).groupMemebr.getMobileNo(),
-								false);
-					}
-				});
-				linearLayout.addView(view2);
 
 			}
 
@@ -400,20 +373,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			View convertView, ViewGroup parent) {
 
 		View view = convertView;
-		TextView name = null;
-		TextView kinCount = null;
-		ImageView image = null;
-
+		MyLaoutHolder viewHolder;
 		if (view == null) {
+			viewHolder = new MyLaoutHolder();
 			view = LayoutInflater.from(context).inflate(
 					R.layout.expandable_group_item, parent, false);
+			viewHolder.icon = (ImageView) view.findViewById(R.id.drawer);
+			viewHolder.userImage = (RoundedImageView) view
+					.findViewById(R.id.parentImageView);
+			viewHolder.kinCount = (TextView) view.findViewById(R.id.kinInfo);
+			viewHolder.name = (TextView) view.findViewById(R.id.userName);
+			view.setTag(viewHolder);
+		} else {
+			viewHolder = (MyLaoutHolder) view.getTag();
 		}
 		Group grp = groups.get(groupPosition);
-		name = (TextView) view.findViewById(R.id.userName);
-		kinCount = (TextView) view.findViewById(R.id.kinInfo);
-		image = (ImageView) view.findViewById(R.id.drawer);
-		RoundedImageView imageview = (RoundedImageView) view
-				.findViewById(R.id.parentImageView);
+
 		ExpandableListGroupItem groupMember = grp.groupMemebr;
 		if (grp.type == Type.CONN) {
 
@@ -429,21 +404,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					context.getPackageName());
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
-					+ ".jpeg", resID, imageview);
-			name.setText(groupMember.getUserName());
+					+ ".jpeg", resID, viewHolder.userImage);
+			viewHolder.name.setText(groupMember.getUserName());
 			if (groupMember.getReqCount() != null
 					&& groupMember.getKinCount() != null) {
-				kinCount.setText("You have " + groupMember.getKinCount()
-						+ " Kin and " + groupMember.getReqCount() + "requests");
+				viewHolder.kinCount.setText("You have "
+						+ groupMember.getKinCount() + " Kin and "
+						+ groupMember.getReqCount() + "requests");
 			} else if (groupMember.getKinCount() != null) {
-				kinCount.setText(groupMember.getUserName() + " have "
-						+ groupMember.getKinCount() + " Kin");
+				viewHolder.kinCount.setText(groupMember.getUserName()
+						+ " have " + groupMember.getKinCount() + " Kin");
 			} else {
-				kinCount.setText("Click to get details");
+				viewHolder.kinCount.setText("Click to get details");
 			}
 			int imageResourceId = isExpanded ? R.drawable.list_open
 					: R.drawable.list_close;
-			image.setImageResource(imageResourceId);
+			viewHolder.icon.setImageResource(imageResourceId);
 
 		} else {
 			ImageLoader imageLoader = new ImageLoader(context);
@@ -454,11 +430,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					context.getPackageName());
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
-					+ ".jpeg", resID, imageview);
-			name.setText(groupMember.getUserName());
-			kinCount.setVisibility(View.INVISIBLE);
+					+ ".jpeg", resID, viewHolder.userImage);
+			viewHolder.name.setText(groupMember.getUserName());
+			viewHolder.kinCount.setVisibility(View.INVISIBLE);
 			int imageResourceId = R.drawable.info;
-			image.setImageResource(imageResourceId);
+			viewHolder.icon.setImageResource(imageResourceId);
 
 		}
 		return view;
@@ -536,24 +512,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		TextView kinCount;
 		RoundedImageView userImage;
 		ImageView icon;
-		RoundedImageView careGiversImage;
-		ImageView accept, reject;
-		TextView reqText;
-		RoundedImageView reqUserImage;
-		LinearLayout linearLayout, linearLayout2;
-
 	}
 
 	/*
 	 * Holder for the Future view type
 	 */
-	class CRLayoutHolder {
-		TextView title;
-		TextView departure;
-		TextView destination;
-		TextView date;
-		TextView time;
-	}
 
 	/*
 	 * Wrapper for each group that contains the list elements and the type of
@@ -580,4 +543,5 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		private ArrayList<ParentListModel> _listDataChild = null;
 		ArrayList<RequestModel> connReq = null;
 	}
+
 }

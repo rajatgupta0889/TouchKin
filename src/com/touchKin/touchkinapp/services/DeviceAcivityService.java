@@ -4,15 +4,6 @@ import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.touchKin.touchkinapp.model.AppController;
-import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
-
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -20,19 +11,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.touchKin.touchkinapp.model.AppController;
 
 public class DeviceAcivityService extends Service {
 
@@ -60,18 +56,19 @@ public class DeviceAcivityService extends Service {
 		// Toast.LENGTH_LONG).show();
 		Log.d("Device Activity serivce",
 				"Created Time " + new Date().toGMTString());
+		wifi = fetchwifi();
+		battery = fetchBattery();
+		// level = fetchSignal();
 		SharedPreferences userPref = getApplicationContext()
 				.getSharedPreferences("userPref", 0);
-
+		Tel = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String user = userPref.getString("user", null);
 		try {
 			mySelf = new JSONObject(user);
 
 			phone = mySelf.getString("mobile");
 			mobile_device_id = mySelf.getString("mobile_device_id");
-			wifi = fetchwifi();
-			battery = fetchBattery();
-			level = fetchSignal();
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,17 +80,28 @@ public class DeviceAcivityService extends Service {
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
 		super.onStart(intent, startId);
+		MyListener = new MyPhoneStateListener();
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 		Log.d("Device Activity serivce",
 				"Start Time " + new Date().toGMTString());
-		MyListener = new MyPhoneStateListener();
+		
 		msessageCount = fetchMessageCount();
 		FetchCallCount();
-		sendActivityData();
+
 		// Toast.makeText(
 		// getApplicationContext(),
 		// fetchsignal() + " " + battery + " " + fetchwifi() + " "
 		// + fetchMessageCount() + " " + FetchCallCount(),
 		// Toast.LENGTH_SHORT).show();
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				sendActivityData();
+			}
+		}, 2000);
+
 	}
 
 	private int fetchBattery() {
@@ -103,11 +111,12 @@ public class DeviceAcivityService extends Service {
 		return battery;
 	}
 
-	private int fetchSignal() {
-		Tel = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-		return level;
-	}
+	//
+	// private int fetchSignal() {
+	//
+	//
+	// return level;
+	// }
 
 	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
 		@Override
@@ -254,7 +263,7 @@ public class DeviceAcivityService extends Service {
 					@SuppressLint("NewApi")
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.d("Activity Result", "Result updated succesfully");
+						Log.d("Activity Result", response.toString());
 					}
 				}, new Response.ErrorListener() {
 					@Override

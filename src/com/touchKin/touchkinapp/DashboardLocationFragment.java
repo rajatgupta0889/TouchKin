@@ -228,6 +228,12 @@ public class DashboardLocationFragment extends Fragment implements
 			if (lastSelectedParent != null
 					&& !lastSelectedParent.equals(parent))
 				getLocation(parent.getParentId());
+			else {
+
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+			}
 		}
 		LocationManager lm = null;
 		boolean gps_enabled = false, network_enabled = false;
@@ -300,8 +306,7 @@ public class DashboardLocationFragment extends Fragment implements
 				@Override
 				public void onMapClick(LatLng arg0) {
 					// TODO Auto-generated method stub
-					Toast.makeText(getActivity(), "Hi", Toast.LENGTH_LONG)
-							.show();
+
 					Intent intent = new Intent(getActivity(), MapActivity.class);
 					startActivity(intent);
 				}
@@ -310,8 +315,7 @@ public class DashboardLocationFragment extends Fragment implements
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
-		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+
 		super.onResume();
 	}
 
