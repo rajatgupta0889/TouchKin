@@ -149,6 +149,11 @@ public class DashBoardActivityFragment extends Fragment implements
 			if (lastSelectedParent != null
 					&& !lastSelectedParent.equals(parent))
 				getConnectivity(parent.getParentId());
+			else {
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+			}
 		}
 	}
 
@@ -156,6 +161,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		lastSelectedParent = null;
 
 	}
 
@@ -169,13 +175,14 @@ public class DashBoardActivityFragment extends Fragment implements
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+		lastSelectedParent = null;
 
 	}
 
 	@Override
 	public void fragmentBecameVisible() {
 		// TODO Auto-generated method stub
-
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		if (parent != null) {
 
 			if (lastSelectedParent == null) {

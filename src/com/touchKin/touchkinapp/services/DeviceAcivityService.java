@@ -61,6 +61,9 @@ public class DeviceAcivityService extends Service {
 		// Toast.LENGTH_LONG).show();
 		Log.d("Device Activity serivce",
 				"Created Time " + new Date().toGMTString());
+		wifi = fetchwifi();
+		battery = fetchBattery();
+		level = fetchSignal();
 		SharedPreferences userPref = getApplicationContext()
 				.getSharedPreferences("userPref", 0);
 
@@ -70,9 +73,7 @@ public class DeviceAcivityService extends Service {
 
 			phone = mySelf.getString("mobile");
 			mobile_device_id = mySelf.getString("mobile_device_id");
-			wifi = fetchwifi();
-			battery = fetchBattery();
-			level = fetchSignal();
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

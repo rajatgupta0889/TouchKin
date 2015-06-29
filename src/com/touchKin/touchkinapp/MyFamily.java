@@ -9,11 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -124,6 +122,9 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				// .get(groupPosition);
 				// fetchMyCRFamily(item.getUserId(), groupPosition);
 				// }
+				ExpandableListGroupItem item = CareReciever.get(groupPosition);
+				fetchMyCRFamily(item.getUserId(), groupPosition);
+
 				return false;
 			}
 		});
@@ -135,11 +136,6 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
 					if (groupPosition != previousGroup)
 						expandListView.collapseGroup(previousGroup);
-
-					ExpandableListGroupItem item = CareReciever
-							.get(groupPosition);
-					fetchMyCRFamily(item.getUserId(), groupPosition);
-
 					previousGroup = groupPosition;
 				}
 			}
