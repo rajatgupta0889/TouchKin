@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -141,6 +142,31 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					fetchMyCRFamily(item.getUserId(), groupPosition);
 
 					previousGroup = groupPosition;
+				} else if(groupPosition != 0) {
+					LayoutInflater li = LayoutInflater
+							.from(MyFamily.this);
+					View custom = li.inflate(R.layout.pending_dialog, null);
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+							MyFamily.this);
+
+					alertDialogBuilder.setView(custom);
+					alertDialogBuilder.setCancelable(true);
+
+					// create alert dialog
+					final AlertDialog alertDialog = alertDialogBuilder.create();
+					Button add = (Button) custom.findViewById(R.id.addbutton);
+					add.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+
+							alertDialog.cancel();
+						}
+					});
+
+					alertDialog.show();
+
 				}
 			}
 		});
