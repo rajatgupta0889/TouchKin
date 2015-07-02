@@ -16,13 +16,11 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.params.CoreProtocolPNames;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -39,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.provider.MediaStore.MediaColumns;
@@ -66,10 +63,8 @@ import android.widget.Toast;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.broadcastReciever.IncomingSMS;
 import com.touchKin.touchkinapp.custom.ImageLoader;
@@ -198,7 +193,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						int year = calendar.get(Calendar.YEAR);
 						userAge.setText("" + (year - Integer.parseInt(yob)));
 						server_age = userAge.getText().toString();
-						
+
 						// if (!isLoggedIn) {
 						// otp.setText(obj
 						// .optString("mobile_verification_code"));
@@ -395,6 +390,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			break;
 		case R.id.resendOtp:
 			resendOtp();
+			resendOTP.setEnabled(false);
 			break;
 		default:
 			break;
@@ -779,6 +775,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			final String yob) {
 		// TODO Auto-generated method stub
 		showpDialog();
+		pDialog.setMessage("Updating User");
 		JSONObject params = new JSONObject();
 		try {
 			params.put("first_name", name);
@@ -886,6 +883,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	public void sendIntent() {
 		showpDialog();
 		oneTimePass = otp.getText().toString();
+		pDialog.setMessage("Verifying User");
 		JSONObject params = new JSONObject();
 		try {
 			params.put("mobile", phone);

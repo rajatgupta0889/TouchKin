@@ -49,13 +49,12 @@
             android:background="@drawable/edit_text_holo_light"
             android:gravity="center"
             android:hint="Add Name"
-            android:textSize="17sp"
             android:maxEms="10"
-            android:textAlignment="center" >
-
+            android:textAlignment="center"
+            android:textSize="17sp" >
         </EditText>
 
-        <ImageView
+        <com.touchKin.touchkinapp.custom.RoundedImageView
             android:id="@+id/profile_pic"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -82,10 +81,10 @@
         android:layout_below="@+id/relativeLayout1"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
-        android:textSize="17sp"
         android:drawableLeft="@drawable/mobile"
         android:gravity="center"
-        android:text="   Phone Number" />
+        android:text="   Phone Number"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/phn_number_detail"
@@ -108,10 +107,10 @@
         android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="15dp"
-        android:textSize="17sp"
         android:drawableLeft="@drawable/user"
         android:gravity="center"
-        android:text="   Age" />
+        android:text="   Age"
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/userAge"
@@ -137,8 +136,8 @@
         android:layout_alignBottom="@+id/year_spinner"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/year_spinner"
-        android:textSize="17sp"
-        android:text="Year" />
+        android:text="Year"
+        android:textSize="17sp" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -157,8 +156,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_weight="1"
-            android:textSize="17sp"
-            android:text="Male" />
+            android:text="Male"
+            android:textSize="17sp" />
 
         <RadioButton
             android:id="@+id/radioFemale"
@@ -166,8 +165,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
             android:layout_weight="1"
-            android:textSize="17sp"
-            android:text="Female" />
+            android:text="Female"
+            android:textSize="17sp" />
     </RadioGroup>
 
     <EditText
@@ -193,9 +192,9 @@
         android:layout_below="@+id/radioGroup"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:textSize="17sp"
         android:text="Please wait while we verify your phone"
-        android:textColor="#f89c69" />
+        android:textColor="#f89c69"
+        android:textSize="17sp" />
 
     <Button
         android:id="@+id/enter_otp"
