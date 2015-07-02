@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -134,6 +135,31 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					if (groupPosition != previousGroup)
 						expandListView.collapseGroup(previousGroup);
 					previousGroup = groupPosition;
+				} else if(groupPosition != 0) {
+					LayoutInflater li = LayoutInflater
+							.from(MyFamily.this);
+					View custom = li.inflate(R.layout.pending_dialog, null);
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+							MyFamily.this);
+
+					alertDialogBuilder.setView(custom);
+					alertDialogBuilder.setCancelable(true);
+
+					// create alert dialog
+					final AlertDialog alertDialog = alertDialogBuilder.create();
+					Button add = (Button) custom.findViewById(R.id.addbutton);
+					add.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+
+							alertDialog.cancel();
+						}
+					});
+
+					alertDialog.show();
+
 				}
 			}
 		});
@@ -280,20 +306,20 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseObject);
 						myfamilyprogressbar.setVisibility(View.INVISIBLE);
-						CareReciever.clear();
+					//	CareReciever.clear();
 						careGiver.clear();
-						try {
-							mySelf = new JSONObject(user);
-							CareReciever.add(new ExpandableListGroupItem(mySelf
-									.getString("id"), mySelf
-									.getString("first_name"), "", "", mySelf
-									.getString("mobile")));
-							phone = mySelf.getString("mobile");
-							device_id = mySelf.getString("mobile_device_id");
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+//						try {
+//							mySelf = new JSONObject(user);
+//							CareReciever.add(new ExpandableListGroupItem(mySelf
+//									.getString("id"), mySelf
+//									.getString("first_name"), "", "", mySelf
+//									.getString("mobile")));
+//							phone = mySelf.getString("mobile");
+//							device_id = mySelf.getString("mobile_device_id");
+//						} catch (JSONException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 						try {
 							JSONArray careGivers = responseObject
 									.getJSONArray("care_givers");

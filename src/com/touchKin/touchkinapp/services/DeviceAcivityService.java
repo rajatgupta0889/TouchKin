@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;

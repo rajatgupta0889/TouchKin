@@ -3,17 +3,25 @@ package com.touchKin.touchkinapp.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import com.touchKin.touchkinapp.ContactDialogFragment;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.Group.Type;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.GroupChild.TypeChild;
@@ -44,6 +52,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	ArrayList<Group> groups = new ArrayList<Group>();
 	ArrayList<GroupChild> childGroups = new ArrayList<GroupChild>();
 	ButtonClickListener listener;
+
 	ImageHolder viewholder;
 
 	public ExpandableListAdapter(Context context) {
@@ -209,7 +218,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			});
 			linearLayout.addView(view2);
-
 			if (child.connReq != null) {
 				LinearLayout linearLayout1 = (LinearLayout) view
 						.findViewById(R.id.futureTravel);
@@ -242,9 +250,49 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							listener.onButtonClickListner(CONN_REQ, id, true);
-							child.connReq.remove(pos);
-							notifyDataSetChanged();
+							ImageLoader imageLoader = new ImageLoader(context);
+							LayoutInflater li = LayoutInflater.from(context);
+							View custom = li.inflate(R.layout.accept_popup,
+									null);
+							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+									context);
+
+							alertDialogBuilder.setView(custom);
+							alertDialogBuilder.setCancelable(true);
+
+							// create alert dialog
+							final AlertDialog alertDialog = alertDialogBuilder
+									.create();
+							RoundedImageView image = (RoundedImageView) custom
+									.findViewById(R.id.parentImage);
+							String cut = child._listDataChild.get(pos)
+									.getParentName().substring(0, 1)
+									.toLowerCase();
+							int resID = context.getResources().getIdentifier(
+									cut, "drawable", context.getPackageName());
+							imageLoader
+									.DisplayImage(serverPath
+											+ child._listDataChild.get(pos)
+													.getParentId() + ".jpeg",
+											resID, image);
+							Button add = (Button) custom
+									.findViewById(R.id.addbutton);
+							add.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									// TODO Auto-generated method stub
+									listener.onButtonClickListner(CONN_REQ, id,
+											true);
+
+									child.connReq.remove(pos);
+									notifyDataSetChanged();
+									// alertDialog.cancel();
+								}
+							});
+
+							alertDialog.show();
+
 						}
 					});
 					reject.setOnClickListener(new OnClickListener() {
