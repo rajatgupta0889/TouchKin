@@ -8,15 +8,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTabHost;
@@ -56,8 +53,10 @@ import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
 import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
+import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.services.DeviceAcivityService;
 import com.touchKin.touchkinapp.services.LocationSendingService;
@@ -84,7 +83,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	RelativeLayout parentRelativeLayout;
 	HorizontalListView listview;
 	Animation animSlideUp, animSlideDown;
-	List<ParentListModel> list;
+	List<ParentListModel> list, careGiverList;
 	private ParentListModel selectedParent;
 	ActionBarDrawerToggle mDrawerToggle; // Declaring Action Bar Drawer Toggle
 	private ImageAdapter imageAdapter;
@@ -106,7 +105,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
-		getParentList();
+		fetchParentList();
 		setSupportActionBar(toolbar);
 		toolbar.inflateMenu(R.menu.toolbar_menu);
 		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -317,17 +316,21 @@ public class DashBoardActivity extends ActionBarActivity implements
 				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
 				Fragment1.class, b);
 
-		mTabHost.setCurrentTab(0);
-		Resources res = getResources();
+		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
+		// Added tab for mydashboard
+		b = new Bundle();
+		b.putString("key", "MyDashboard");
+		mTabHost.addTab(
+				mTabHost.newTabSpec("MyDashBoard").setIndicator(
+						" My Dash Board"), Fragment2.class, b);
+		mTabHost.getTabWidget().getChildAt(1).setVisibility(View.GONE);
+		mTabHost.setCurrentTab(1);
 		b = new Bundle();
 		b.putString("key", "TouchKin");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("KinBook"),
 						R.color.tab_bg, "Kinbook", R.drawable.kinbook),
 				TouchKinBookFragment.class, b);
-
-		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
-		//
 
 		b = new Bundle();
 		b.putString("key", "Messages");
@@ -419,70 +422,121 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 	}
 
-	public void getParentList() {
+	public void fetchParentList() {
 		list = new ArrayList<ParentListModel>();
-		JsonArrayRequest req = new JsonArrayRequest(
-				"http://54.69.183.186:1340/user/care-receivers",
-				new Listener<JSONArray>() {
+		careGiverList = new ArrayList<ParentListModel>();
+		CustomRequest req = new CustomRequest(
+				"http://54.69.183.186:1340/user/family",
+				new Listener<JSONObject>() {
 
 					@Override
-					public void onResponse(JSONArray responseArray) {
+					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
+						try {
+							list.add(new ParentListModel(userId, true, "Me",
+									userId, "", userObj.getString("mobile")));
+							careGiverList.add(new ParentListModel(userId,
+									false, "Me", userId, "", userObj
+											.getString("mobile")));
+							selectedParent = list.get(0);
+							// for (int i = 0; i < responseArray.length();
+							// i++)
+							// {
+							// try {
+							// JSONObject obj = responseArray
+							// .getJSONObject(i);
+							// Log.d("Response Array", " " + obj);
+							// ParentListModel item = new ParentListModel();
+							// item.setParentId(obj.getString("id"));
+							// if (obj.has("nickname")) {
+							// // mTitle.setText(obj
+							// // .getString("nickname"));
+							//
+							// item.setParentName(obj
+							// .getString("nickname"));
+							// item.setMobilenumber(obj
+							// .getString("mobile"));
+							// } else {
+							// // mTitle.setText("maa");
+							// item.setParentName("Maa");
+							// }
+							// // item.setParentUserId(obj.getJSONObject(
+							// // "user").getString("id"));
+							// if (i == 0) {
+							// item.setIsSelected(true);
+							// selectedParent = item;
+							// setMenuTitle(selectedParent);
+							// } else {
+							// item.setIsSelected(false);
+							// }
+							// list.add(item);
+							// } catch (JSONException e) {
+							// // TODO Auto-generated catch block
+							// e.printStackTrace();
+							// }
+							// }
+							JSONArray careRecievers = responseArray
+									.getJSONArray("care_receivers");
+							int crCount = careRecievers.length();
+							for (int i = 0; i < crCount; i++) {
+								JSONObject cr;
 
-						if (responseArray.length() > 0) {
-							for (int i = 0; i < responseArray.length(); i++) {
-								try {
-									JSONObject obj = responseArray
-											.getJSONObject(i);
-									Log.d("Response Array", " " + obj);
+								cr = careRecievers.getJSONObject(i);
+
+								if (cr != null) {
 									ParentListModel item = new ParentListModel();
-									item.setParentId(obj.getString("id"));
-									if (obj.has("nickname")) {
-										// mTitle.setText(obj
-										// .getString("nickname"));
-
-										item.setParentName(obj
-												.getString("nickname"));
-										item.setMobilenumber(obj
-												.getString("mobile"));
+									item.setParentId(cr.getString("id"));
+									item.setParentName(cr.optString("nickname"));
+									item.setMobilenumber(cr.optString("mobile"));
+									if (cr.has("care_receiver_status")
+											&& cr.getString(
+													"care_receiver_status")
+													.equalsIgnoreCase("pending")) {
+										item.setReqStatus(false);
 									} else {
-										// mTitle.setText("maa");
-										item.setParentName("Maa");
+										item.setReqStatus(true);
 									}
-									// item.setParentUserId(obj.getJSONObject(
-									// "user").getString("id"));
-									if (i == 0) {
-										item.setIsSelected(true);
-										selectedParent = item;
-										setMenuTitle(selectedParent);
-									} else {
-										item.setIsSelected(false);
-									}
+									item.setIsSelected(false);
 									list.add(item);
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
 								}
 							}
-						}
-						// else {
-						// setMenuTitle(null);
-						// }
-						try {
-							list.add(new ParentListModel(userId, false, "Me",
-									userId, "", userObj.getString("mobile")));
-
+							JSONArray careGivers = responseArray
+									.getJSONArray("care_givers");
+							int cgCount = careGivers.length();
+							for (int i = 0; i < cgCount; i++) {
+								JSONObject cg = careGivers.getJSONObject(i);
+								if (cg != null) {
+									ParentListModel item = new ParentListModel();
+									item.setParentId(cg.getString("id"));
+									item.setParentName(cg
+											.optString("first_name"));
+									if (cg.has("care_receiver_status")
+											&& cg.getString(
+													"care_receiver_status")
+													.equalsIgnoreCase("pending")) {
+										item.setReqStatus(false);
+									} else {
+										item.setReqStatus(true);
+									}
+									item.setMobilenumber(cg.optString("mobile"));
+									careGiverList.add(item);
+								}
+							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						// else {
+						// setMenuTitle(null);
+						// }
+
 						list.add(new ParentListModel("", false, "", "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
-						if (selectedParent == null) {
-							selectedParent = list.get(0);
-						}
+						// if (selectedParent == null) {
+						// selectedParent = list.get(0);
+						// }
 						if (listener != null)
 							listener.onButtonClickListner(0, null, false);
 						setMenuTitle(selectedParent);
@@ -511,7 +565,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 
 		ParentListModel item = list.get(position);
+
 		if (!item.getParentId().equals("")) {
+			listview.setAdapter(imageAdapter);
+			selectedParent = item;
+			mTabHost.setVisibility(View.VISIBLE);
 			for (ParentListModel data : list) {
 
 				if (data.equals(item)) {
@@ -521,13 +579,17 @@ public class DashBoardActivity extends ActionBarActivity implements
 				}
 			}
 			setMenuTitle(item);
-			// mTitle.setText(list.get(position).getParentName());
-			listview.setAdapter(imageAdapter);
-			mTabHost.setCurrentTab(0);
-			mTabHost.setVisibility(View.VISIBLE);
-			selectedParent = item;
-			((Fragment1) getSupportFragmentManager().findFragmentByTag(
-					"DashBoard")).notifyFrag();
+			if (item.getParentId().equalsIgnoreCase(userId)) {
+				mTabHost.setCurrentTab(1);
+			} else {
+
+				if (mTabHost.getCurrentTab() == 1) {
+					mTabHost.setCurrentTab(0);
+					getSupportFragmentManager().executePendingTransactions();
+				}
+				((Fragment1) getSupportFragmentManager().findFragmentByTag(
+						"DashBoard")).notifyFrag();
+			}
 
 		} else {
 			DialogFragment newFragment = new ContactDialogFragment();
@@ -544,14 +606,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	public void setMenuTitle(ParentListModel item) {
-		// MenuItem parentMenu = menu.findItem(R.id.parentNameMenu);
-		// if (item != null) {
-		// parentMenu.setTitle(item.getParentName());
-		// } else {
-		// parentMenu.setTitle("Add");
-		// MenuItem iconMenu = menu.findItem(R.id.parentIconMenu);
 
-		// }
 		if (item != null) {
 			mTitle.setText(item.getParentName());
 
@@ -616,7 +671,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public void onButtonClickListner(int position, String value,
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
-		getParentList();
+		fetchParentList();
 	}
 
 	public void startLocationService() {
@@ -681,5 +736,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 			alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
 					3600 * 1000, pendingIntent);
 		}
+	}
+
+	public List<ParentListModel> getParentList() {
+		return careGiverList;
 	}
 }

@@ -161,6 +161,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				// }
 				// viewholder.view.removeAllViews();
 				for (int i = 0; i < child._listDataChild.size(); i++) {
+					imageLoader = new ImageLoader(context);
 					viewholder = new ImageHolder();
 					imageLoader = new ImageLoader(context);
 					view1 = inflater.inflate(R.layout.image_item, linearLayout,
@@ -214,6 +215,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						.findViewById(R.id.futureTravel);
 				for (int i = 0; i < child.connReq.size(); i++) {
 					int resID;
+					imageLoader = new ImageLoader(context);
 					View view1 = inflater.inflate(R.layout.connection_req_item,
 							linearLayout, false);
 					final RoundedImageView tv = (RoundedImageView) view1
@@ -454,6 +456,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		}
 
 		notifyDataSetChanged();
+	}
+
+	public void setupTripsForCR(
+			HashMap<String, ArrayList<ParentListModel>> careGiver, int position) {
+		ExpandableListGroupItem item = groups.get(position).groupMemebr;
+		groups.get(position).child._listDataChild = careGiver.get(item
+				.getUserId());
+		notifyDataSetChanged();
+
 	}
 
 	/*

@@ -81,22 +81,21 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				.getSharedPreferences("userPref", 0);
 
 		user = userPref.getString("user", null);
-		// try {
-		// mySelf = new JSONObject(user);
-		// CareReciever.add(new ExpandableListGroupItem(
-		// mySelf.getString("id"), mySelf.getString("first_name"), "",
-		// "", mySelf.getString("mobile")));
-		// phone = mySelf.getString("mobile");
-		// device_id = mySelf.getString("mobile_device_id");
-		// } catch (JSONException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		try {
+			mySelf = new JSONObject(user);
+			CareReciever.add(new ExpandableListGroupItem(
+					mySelf.getString("id"), mySelf.getString("first_name"), "",
+					"", mySelf.getString("mobile")));
+			phone = mySelf.getString("mobile");
+			device_id = mySelf.getString("mobile_device_id");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if (isFromNotification != null && isFromNotification) {
 			SignUp(phone, device_id);
 		} else {
-
 			getConnectionRequest();
 			fetchMyFamily();
 		}
@@ -120,12 +119,9 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
 					ExpandableListGroupItem item = CareReciever
 							.get(groupPosition);
-					fetchMyCRFamily(item.getUserId(), groupPosition);
+					if (careGiver.get(item.getUserId()) == null)
+						fetchMyCRFamily(item.getUserId(), groupPosition);
 				}
-				// ExpandableListGroupItem item =
-				// CareReciever.get(groupPosition);
-				// fetchMyCRFamily(item.getUserId(), groupPosition);
-
 				return false;
 			}
 		});
@@ -134,7 +130,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 			@Override
 			public void onGroupExpand(int groupPosition) {
-				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
+				if (groupPosition < CareReciever.size()) {
 					if (groupPosition != previousGroup)
 						expandListView.collapseGroup(previousGroup);
 					previousGroup = groupPosition;
@@ -573,8 +569,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 							careGiver.put(CareReciever.get(position)
 									.getUserId(), parents);
-							adapter.setupTrips(careGiver, requests,
-									CareReciever, pendingReq);
+							adapter.setupTripsForCR(careGiver, position);
 
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -196,9 +197,8 @@ public class MapActivity extends ActionBarActivity implements
 	}
 
 	public class MapDialogFragment extends DialogFragment {
-		static final int PICK_CONTACT_CIRCLE = 1;
-		static final int PICK_CONTACT_KIN = 2;
-		EditText nameBox;
+
+		//EditText nameBox;
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -213,33 +213,18 @@ public class MapActivity extends ActionBarActivity implements
 
 			View view = inflater.inflate(R.layout.set_location_dialog, null);
 			Button addLocButton = (Button) view.findViewById(R.id.addButton);
-			nameBox = (EditText) view.findViewById(R.id.customLoc);
+		//	nameBox = (EditText) view.findViewById(R.id.customLoc);
 
 			// nameBox.setText(mArgs.getString("name"));
 			// phoneBox.setText(mArgs.getString("number"));
 
 			// title.setText(mArgs.getString("title"));
-			builder.setCancelable(false);
-			builder.setView(view)
-					// Add action buttons
-					.setIcon(R.drawable.ic_action_uset)
-					.setPositiveButton("Add",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									// sign in the user ...
-								}
-
-							})
-					.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									MapDialogFragment.this.getDialog().cancel();
-								}
-							});
+			builder.setCancelable(true);
+			builder.setView(view);
+			
+			// Add action buttons
 			final AlertDialog dialog = builder.create();
+			dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 			dialog.show();
 			Button positiveButton = (Button) dialog
 					.getButton(Dialog.BUTTON_POSITIVE);
@@ -253,25 +238,25 @@ public class MapActivity extends ActionBarActivity implements
 					if (wantToCloseDialog)
 						dismiss();
 
-					if (Validation.hasText(nameBox)) {
-						text = nameBox.getText().toString();
-						dismiss();
-					}
+//					if (Validation.hasText(nameBox)) {
+//						text = nameBox.getText().toString();
+//						dismiss();
+//					}
 					// else dialog stays open. Make sure you have an obvious
 					// way to close the dialog especially if you set
 					// cancellable to false.
 				}
 			});
 
-			addLocButton.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					dismiss();
-					text = "home";
-				}
-			});
+//			addLocButton.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					// TODO Auto-generated method stub
+//					dismiss();
+//					text = "home";
+//				}
+//			});
 			return dialog;
 		}
 	}
@@ -376,8 +361,7 @@ public class MapActivity extends ActionBarActivity implements
 
 	public void addGeofencesButtonHandler(View view) {
 		if (!mGoogleApiClient.isConnected()) {
-			Toast.makeText(this, "Not Connected", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Not Connected", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
