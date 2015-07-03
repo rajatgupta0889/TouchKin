@@ -2,6 +2,8 @@ package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -44,10 +46,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
 import com.touchKin.touchkinapp.adapter.ImageAdapter;
@@ -56,7 +59,6 @@ import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks
 import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
-import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touchkinapp.services.DeviceAcivityService;
 import com.touchKin.touchkinapp.services.LocationSendingService;
@@ -425,8 +427,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public void fetchParentList() {
 		list = new ArrayList<ParentListModel>();
 		careGiverList = new ArrayList<ParentListModel>();
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/user/family",
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				"http://54.69.183.186:1340/user/family", null,
 				new Listener<JSONObject>() {
 
 					@Override
@@ -436,9 +438,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 						try {
 							list.add(new ParentListModel(userId, true, "Me",
 									userId, "", userObj.getString("mobile")));
+							list.get(0).setReqStatus(true);
 							careGiverList.add(new ParentListModel(userId,
 									false, "Me", userId, "", userObj
 											.getString("mobile")));
+							careGiverList.get(0).setReqStatus(true);
 							selectedParent = list.get(0);
 							// for (int i = 0; i < responseArray.length();
 							// i++)
@@ -530,7 +534,19 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// else {
 						// setMenuTitle(null);
 						// }
-
+						if (list.size() > 1) {
+							Collections.sort(list,
+									new Comparator<ParentListModel>() {
+										@Override
+										public int compare(ParentListModel lhs,
+												ParentListModel rhs) {
+											// TODO Auto-generated method stub
+											return rhs.getReqStatus()
+													.compareTo(
+															lhs.getReqStatus());
+										}
+									});
+						}
 						list.add(new ParentListModel("", false, "", "", "", ""));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
@@ -583,7 +599,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				mTabHost.setCurrentTab(1);
 			} else {
 
-				if (mTabHost.getCurrentTab() == 1) {
+				if (mTabHost.getCurrentTab() != 0) {
 					mTabHost.setCurrentTab(0);
 					getSupportFragmentManager().executePendingTransactions();
 				}
@@ -739,6 +755,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	public List<ParentListModel> getParentList() {
+		if (careGiverList.size() > 1) {
+			Collections.sort(careGiverList, new Comparator<ParentListModel>() {
+				@Override
+				public int compare(ParentListModel lhs, ParentListModel rhs) {
+					// TODO Auto-generated method stub
+					return rhs.getReqStatus().compareTo(lhs.getReqStatus());
+				}
+			});
+		}
 		return careGiverList;
 	}
 }

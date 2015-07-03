@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -40,7 +41,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
-import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ExpandableListGroupItem;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -82,23 +82,11 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				.getSharedPreferences("userPref", 0);
 
 		user = userPref.getString("user", null);
-		try {
-			mySelf = new JSONObject(user);
-			CareReciever.add(new ExpandableListGroupItem(
-					mySelf.getString("id"), mySelf.getString("first_name"), "",
-					"", mySelf.getString("mobile")));
-			phone = mySelf.getString("mobile");
-			device_id = mySelf.getString("mobile_device_id");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		if (isFromNotification != null && isFromNotification) {
 			SignUp(phone, device_id);
 		} else {
-			getConnectionRequest();
-			fetchMyFamily();
+			fetchDataFromServer();
 		}
 		// parents.add(new ParentListModel("", false, "", "", ""));
 		// parents.add(new ParentListModel("", false, "", "", ""));
@@ -118,10 +106,10 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					int groupPosition, long id) {
 				// TODO Auto-generated method stub
 				if (groupPosition > 0 && groupPosition < CareReciever.size()) {
-					ExpandableListGroupItem item = CareReciever
-							.get(groupPosition);
-					if (careGiver.get(item.getUserId()) == null)
-						fetchMyCRFamily(item.getUserId(), groupPosition);
+					// ExpandableListGroupItem item = CareReciever
+					// .get(groupPosition);
+					// if (careGiver.get(item.getUserId()) == null)
+					// fetchMyCRFamily(item.getUserId(), groupPosition);
 				}
 				return false;
 			}
@@ -135,9 +123,8 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					if (groupPosition != previousGroup)
 						expandListView.collapseGroup(previousGroup);
 					previousGroup = groupPosition;
-				} else if(groupPosition != 0) {
-					LayoutInflater li = LayoutInflater
-							.from(MyFamily.this);
+				} else if (groupPosition != 0) {
+					LayoutInflater li = LayoutInflater.from(MyFamily.this);
 					View custom = li.inflate(R.layout.pending_dialog, null);
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 							MyFamily.this);
@@ -175,6 +162,27 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		adapter.setButtonListener(this);
 		expandListView.setAdapter(adapter);
 		next.setOnClickListener(this);
+	}
+
+	private void fetchDataFromServer() {
+		// TODO Auto-generated method stub
+		careGiver.clear();
+		CareReciever.clear();
+		pendingReq.clear();
+		try {
+			mySelf = new JSONObject(user);
+			CareReciever.add(new ExpandableListGroupItem(
+					mySelf.getString("id"), mySelf.getString("first_name"), "",
+					"", mySelf.getString("mobile")));
+			phone = mySelf.getString("mobile");
+			device_id = mySelf.getString("mobile_device_id");
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		getConnectionRequest();
+		fetchMyFamily();
 	}
 
 	private void getConnectionRequest() {
@@ -298,28 +306,16 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 	private void fetchMyFamily() {
 		// TODO Auto-generated method stub
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/user/family",
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				"http://54.69.183.186:1340/user/family", null,
 				new Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject responseObject) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseObject);
 						myfamilyprogressbar.setVisibility(View.INVISIBLE);
-					//	CareReciever.clear();
-						careGiver.clear();
-//						try {
-//							mySelf = new JSONObject(user);
-//							CareReciever.add(new ExpandableListGroupItem(mySelf
-//									.getString("id"), mySelf
-//									.getString("first_name"), "", "", mySelf
-//									.getString("mobile")));
-//							phone = mySelf.getString("mobile");
-//							device_id = mySelf.getString("mobile_device_id");
-//						} catch (JSONException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
+						// CareReciever.clear();
+
 						try {
 							JSONArray careGivers = responseObject
 									.getJSONArray("care_givers");
@@ -363,12 +359,13 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 									}
 								}
 							}
-							CareReciever.get(0).setKinCount(cgCount + "");
+							CareReciever.get(0)
+									.setKinCount(parents.size() + "");
 							Log.d("Care reciever Length",
 									"" + CareReciever.size());
 							careGiver.put(CareReciever.get(0).getUserId(),
 									parents);
-
+							startFecthingCRFamily(CareReciever);
 							adapter.setupTrips(careGiver, requests,
 									CareReciever, pendingReq);
 							expandListView.expandGroup(0);
@@ -378,6 +375,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						}
 
 					}
+
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
@@ -468,7 +466,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 			}
 		}
 		if (position == 1000) {
-			fetchMyFamily();
+			fetchDataFromServer();
 		}
 
 	}
@@ -498,7 +496,6 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 						Log.d("Response", "" + response);
 						// requests.remove(position);
-						adapter.notifyDataSetInvalidated();
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -565,8 +562,8 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 	private void fetchMyCRFamily(String id, final int position) {
 		// TODO Auto-generated method stub
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/user/family/" + id,
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				"http://54.69.183.186:1340/user/family/" + id, null,
 				new Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject responseObject) {
@@ -590,8 +587,8 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 									parents.add(item);
 								}
 							}
-							CareReciever.get(position)
-									.setKinCount(cgCount + "");
+							CareReciever.get(position).setKinCount(
+									parents.size() + "");
 
 							careGiver.put(CareReciever.get(position)
 									.getUserId(), parents);
@@ -638,8 +635,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					@Override
 					public void onResponse(JSONObject response) {
 						Log.d("Response", response.toString());
-						getConnectionRequest();
-						fetchMyFamily();
+						fetchDataFromServer();
 
 					}
 				}, new Response.ErrorListener() {
@@ -657,4 +653,14 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		AppController.getInstance().addToRequestQueue(req);
 	}
 
+	private void startFecthingCRFamily(
+			ArrayList<ExpandableListGroupItem> careReciever) {
+		// TODO Auto-generated method stub
+
+		for (int i = 1; i < careReciever.size(); i++) {
+
+			fetchMyCRFamily(careReciever.get(i).getUserId(), i);
+
+		}
+	}
 }

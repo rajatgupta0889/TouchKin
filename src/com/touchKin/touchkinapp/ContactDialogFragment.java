@@ -191,9 +191,10 @@ public class ContactDialogFragment extends DialogFragment implements
 						Log.d("care receiver added response",
 								"care reveiver added");
 						hidepDialog();
+						listener.onButtonClickListner(1000, "", true);
 						Toast.makeText(getActivity(), "Request is sent",
 								Toast.LENGTH_SHORT).show();
-						listener.onButtonClickListner(1000, "", true);
+
 						ContactDialogFragment.this.getDialog().cancel();
 					}
 				}, new Response.ErrorListener() {

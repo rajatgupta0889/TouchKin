@@ -10,13 +10,16 @@ import android.view.View;
 import com.touchKin.touchkinapp.DashBoardActivityFragment;
 import com.touchKin.touchkinapp.DashboardLocationFragment;
 import com.touchKin.touchkinapp.TouchFragment;
+import com.touchKin.touchkinapp.model.ParentListModel;
 
 public class DashBoardAdapter extends FragmentPagerAdapter {
 	private static int NUM_ITEMS = 3;
 	public static Context context;
+	ParentListModel parent;
 
-	public DashBoardAdapter(FragmentManager fm) {
+	public DashBoardAdapter(FragmentManager fm, ParentListModel parent) {
 		super(fm);
+		this.parent = parent;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,13 +42,17 @@ public class DashBoardAdapter extends FragmentPagerAdapter {
 	// Returns the page title for the top indicator
 	@Override
 	public CharSequence getPageTitle(int position) {
+
 		return "Page " + position;
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return NUM_ITEMS;
+		if (parent != null && parent.getReqStatus())
+			return NUM_ITEMS;
+		else
+			return 1;
 	}
 
 	@Override

@@ -29,24 +29,18 @@ import com.touchKin.touchkinapp.custom.LruBitmapCache;
 
 @SuppressWarnings("deprecation")
 public class AppController extends Application {
-	private static final String SET_COOKIE_KEY = "Set-Cookie";
-	private static final String COOKIE_KEY = "Cookie";
-	private static final String SESSION_COOKIE = "sessionid";
-	private ImageLoader mImageLoader;
+
 	/**
 	 * Log or request TAG
 	 */
 	public static DefaultHttpClient mHttpClient = getThreadSafeClient();
 	public static final String TAG = AppController.class.getSimpleName();
 
-	CookieStore cookieStore = new BasicCookieStore();
-
 	/**
 	 * Global request queue for Volley
 	 */
 	private RequestQueue mRequestQueue;
 
-	private SharedPreferences _preferences;
 	/**
 	 * A singleton instance of the application class for easy access in other
 	 * places
@@ -58,10 +52,7 @@ public class AppController extends Application {
 		super.onCreate();
 		// initialize the singleton
 		mInstance = this;
-		_preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		Log.d("Pref", _preferences.getString(SESSION_COOKIE, ""));
-		CookieHandler.setDefault(new CookieManager(null,
-				CookiePolicy.ACCEPT_ALL));
+
 	}
 
 	/**
@@ -104,6 +95,7 @@ public class AppController extends Application {
 		// set the default tag if tag is empty
 		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 		VolleyLog.d("Adding request to queue: %s", req.getUrl());
+		req.setShouldCache(true);
 		getRequestQueue().add(req);
 	}
 
@@ -117,6 +109,7 @@ public class AppController extends Application {
 	public <T> void addToRequestQueue(Request<T> req) {
 		// set the default tag if tag is empty
 		req.setTag(TAG);
+		req.setShouldCache(true);
 		getRequestQueue().add(req);
 	}
 
@@ -131,58 +124,6 @@ public class AppController extends Application {
 		if (mRequestQueue != null) {
 			mRequestQueue.cancelAll(tag);
 		}
-	}
-
-	/**
-	 * Checks the response headers for session cookie and saves it if it finds
-	 * it.
-	 * 
-	 * @param headers
-	 *            Response Headers.
-	 */
-	public final void checkSessionCookie(Map<String, String> headers) {
-		if (headers.containsKey(SET_COOKIE_KEY)
-				&& headers.get(SET_COOKIE_KEY).startsWith(SESSION_COOKIE)) {
-			String cookie = headers.get(SET_COOKIE_KEY);
-			if (cookie.length() > 0) {
-				String[] splitCookie = cookie.split(";");
-				String[] splitSessionId = splitCookie[0].split("=");
-				cookie = splitSessionId[1];
-				Editor prefEditor = _preferences.edit();
-				prefEditor.putString(SESSION_COOKIE, cookie);
-				prefEditor.commit();
-			}
-		}
-	}
-
-	/**
-	 * Adds session cookie to headers if exists.
-	 * 
-	 * @param headers
-	 */
-	public final void addSessionCookie(Map<String, String> headers) {
-		String sessionId = _preferences.getString(SESSION_COOKIE, "");
-		if (sessionId.length() > 0) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(SESSION_COOKIE);
-			builder.append("=");
-			builder.append(sessionId);
-			if (headers.containsKey(COOKIE_KEY)) {
-				builder.append("; ");
-				builder.append(headers.get(COOKIE_KEY));
-			}
-			headers.put(COOKIE_KEY, builder.toString());
-			Log.d("Pref", _preferences.getString(SESSION_COOKIE, ""));
-		}
-	}
-
-	public ImageLoader getImageLoader() {
-		getRequestQueue();
-		if (mImageLoader == null) {
-			mImageLoader = new ImageLoader(this.mRequestQueue,
-					new LruBitmapCache());
-		}
-		return this.mImageLoader;
 	}
 
 	public static DefaultHttpClient getThreadSafeClient() {

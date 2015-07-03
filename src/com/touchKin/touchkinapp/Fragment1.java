@@ -32,6 +32,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	PageListener pageListener;
 	ParentListModel parent;
 	Vibrator vib;
+
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
 
@@ -72,7 +73,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	}
 
 	public void init(View v) {
-		adapter = new DashBoardAdapter(getChildFragmentManager());
+		adapter = new DashBoardAdapter(getChildFragmentManager(), parent);
 		viewPager = (ViewPager) v.findViewById(R.id.pager);
 
 		// indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
@@ -109,12 +110,12 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.sendTouch:
 			vib.vibrate(500);
-//			v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			sendTouch();
 			break;
 		case R.id.getService:
 			vib.vibrate(500);
-//			v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 
 			if (parent != null) {

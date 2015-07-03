@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.internal.ki;
 import com.touchKin.touchkinapp.ContactDialogFragment;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter.Group.Type;
@@ -149,7 +151,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.futureTravelLineItemLayout);
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			String cut;
+
 			if (child._listDataChild != null && child._listDataChild.size() > 0) {
 				int resID;
 				View view1 = null;
@@ -183,8 +185,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 					viewholder.view = linearLayout;
 					view1.setTag(viewholder);
-					cut = child._listDataChild.get(i).getParentName()
-							.substring(0, 1).toLowerCase();
+					final String cut = child._listDataChild.get(i)
+							.getParentName().substring(0, 1).toLowerCase();
 					resID = context.getResources().getIdentifier(cut,
 							"drawable", context.getPackageName());
 					Log.d("cut", cut + " " + resID);
@@ -228,8 +230,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 							linearLayout, false);
 					final RoundedImageView tv = (RoundedImageView) view1
 							.findViewById(R.id.parentImage);
-					cut = child.connReq.get(i).getCare_reciever_name()
-							.substring(0, 1).toLowerCase();
+					final String cut = child.connReq.get(i)
+							.getCare_reciever_name().substring(0, 1)
+							.toLowerCase();
 					resID = context.getResources().getIdentifier(cut,
 							"drawable", context.getPackageName());
 					Log.d("cut", cut + " " + resID);
@@ -265,16 +268,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 									.create();
 							RoundedImageView image = (RoundedImageView) custom
 									.findViewById(R.id.parentImage);
-							String cut = child._listDataChild.get(pos)
-									.getParentName().substring(0, 1)
-									.toLowerCase();
+							String cut1 = cut;
 							int resID = context.getResources().getIdentifier(
-									cut, "drawable", context.getPackageName());
-							imageLoader
-									.DisplayImage(serverPath
-											+ child._listDataChild.get(pos)
-													.getParentId() + ".jpeg",
-											resID, image);
+									cut1, "drawable", context.getPackageName());
+							imageLoader.DisplayImage(serverPath
+									+ child.connReq.get(pos).getUserId()
+									+ ".jpeg", resID, image);
+							listener.onButtonClickListner(CONN_REQ, id, true);
+							child.connReq.remove(pos);
+							notifyDataSetChanged();
 							Button add = (Button) custom
 									.findViewById(R.id.addbutton);
 							add.setOnClickListener(new OnClickListener() {
@@ -282,12 +284,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 								@Override
 								public void onClick(View v) {
 									// TODO Auto-generated method stub
-									listener.onButtonClickListner(CONN_REQ, id,
-											true);
-
-									child.connReq.remove(pos);
-									notifyDataSetChanged();
-									// alertDialog.cancel();
+									Toast.makeText(context, "Nick name added",
+											Toast.LENGTH_SHORT).show();
+									alertDialog.dismiss();
 								}
 							});
 
@@ -410,12 +409,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			viewHolder.name.setText(groupMember.getUserName());
 			if (groupMember.getReqCount() != null
 					&& groupMember.getKinCount() != null) {
-				viewHolder.kinCount.setText("You have "
-						+ groupMember.getKinCount() + " Kin and "
-						+ groupMember.getReqCount() + "requests");
+				if (groupMember.getKinCount().equals(0)) {
+					viewHolder.kinCount
+							.setText("Invite someone to care for you");
+				} else {
+					if (groupMember.getReqCount().equals(0)) {
+						viewHolder.kinCount.setText("You have "
+								+ groupMember.getKinCount()
+								+ " Kin and no request");
+					} else {
+						viewHolder.kinCount.setText("You have "
+								+ groupMember.getKinCount() + " Kin and "
+								+ groupMember.getReqCount() + "requests");
+					}
+				}
 			} else if (groupMember.getKinCount() != null) {
-				viewHolder.kinCount.setText(groupMember.getUserName()
-						+ " have " + groupMember.getKinCount() + " Kin");
+				viewHolder.kinCount.setText(groupMember.getUserName() + " has "
+						+ groupMember.getKinCount() + " Kin");
 			} else {
 				viewHolder.kinCount.setText("Click to get details");
 			}

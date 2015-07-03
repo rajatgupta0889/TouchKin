@@ -925,7 +925,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						// null));
 						// Log.d("otp", "" + pref.getString("mobile",
 						// null));
-						otptext.setText("Your Phone number is verified");
+						otptext.setText("Your phone number has been verified");
 						verified = true;
 
 						//

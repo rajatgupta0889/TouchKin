@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:text="Care For Some One"
+        android:text="Care for someone"
         android:textSize="20sp" />
 
 </LinearLayout>
