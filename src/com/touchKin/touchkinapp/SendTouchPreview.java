@@ -21,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -35,11 +38,14 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -65,6 +71,9 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.netcompss.ffmpeg4android.GeneralUtils;
+import com.netcompss.ffmpeg4android.Prefs;
+import com.netcompss.loader.LoadJNI;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
 import com.touchKin.touchkinapp.adapter.SendTouchParentListAdapter;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
@@ -84,6 +93,8 @@ public class SendTouchPreview extends ActionBarActivity implements
 	private SendTouchParentListAdapter imageAdapter;
 	Button thumbnailplaybutton;
 	int type;
+	NotificationManager mNotifyManager;
+	Notification.Builder mBuilder;
 	Uri previewFilePath;
 	Boolean keepPrivate = false;
 	public static int imagetype;
@@ -94,6 +105,12 @@ public class SendTouchPreview extends ActionBarActivity implements
 	SendTouchActivity sendtouch;
 	ProgressDialog pDialog;
 	String userId;
+	String workFolder = null;
+	String videoFolder = null;
+	String vkLogPath = null;
+	String videoPath = null;
+	int id = 1;
+	private boolean commandValidationFailedFlag = false;
 
 	// private ParentListModel selectedParent;
 
@@ -105,6 +122,13 @@ public class SendTouchPreview extends ActionBarActivity implements
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		init();
 		Intent intent = getIntent();
+		videoFolder = Environment.getExternalStorageDirectory()
+				.getAbsolutePath();
+		workFolder = getApplicationContext().getFilesDir().getAbsolutePath()
+				+ "/";
+		vkLogPath = workFolder + "vk.log";
+		GeneralUtils.copyLicenseFromAssetsToSDIfNeeded(this, workFolder);
+		Log.d("path", videoFolder);
 		Typeface latofont = Typeface.createFromAsset(getAssets(),
 				"fonts/Lato-LightItalic.ttf");
 		sendmessage.setTypeface(latofont);
@@ -199,7 +223,10 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// true);
 					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
 							thumbnail, 640, 400);
-					// Log.d("thumbnail", thumbnail + " " + extractthumbnail);
+					Log.d("previewFilePath", videoFolder
+							+ previewFilePath.toString().substring(23) + "");
+					videoPath = videoFolder
+							+ previewFilePath.toString().substring(23);
 					// MediaMetadataRetriever retriever = new
 					// MediaMetadataRetriever();
 					// try {
@@ -358,7 +385,13 @@ public class SendTouchPreview extends ActionBarActivity implements
 		// dismiss();
 		// break;
 		case R.id.sendbutton:
-			sendMedia(type);
+			if (GeneralUtils.checkIfFileExistAndNotEmpty(videoPath)) {
+				new TranscdingBackground(SendTouchPreview.this).execute();
+			} else {
+				Toast.makeText(getApplicationContext(),
+						videoPath + " not found", Toast.LENGTH_LONG).show();
+			}
+			// 0sendMedia(type);
 			break;
 		default:
 			break;
@@ -374,7 +407,161 @@ public class SendTouchPreview extends ActionBarActivity implements
 	}
 
 	public void sendMedia(int type) {
+
 		new ImageUploadTask(this).execute();
+
+	}
+
+	public class TranscdingBackground extends
+			AsyncTask<String, Integer, Integer> {
+
+		// ProgressDialog progressDialog;
+
+		Activity _act;
+
+		public TranscdingBackground(Activity act) {
+			_act = act;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// progressDialog = new ProgressDialog(_act);
+			// progressDialog
+			// .setMessage("FFmpeg4Android Transcoding in progress...");
+			// progressDialog.show();
+
+			mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			mBuilder = new Notification.Builder(SendTouchPreview.this);
+			mBuilder.setContentTitle("Touchkin")
+					.setContentText("Wait for a sec")
+					.setSmallIcon(R.drawable.ic_launcher);
+			// Start a lengthy operation in a background thread
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int incr;
+					// Do the "lengthy" operation 20 times
+					// for (incr = 0; incr <= 100; incr += 5) {
+					// Sets the progress indicator to a max value, the
+					// current completion percentage, and "determinate"
+					// state
+					mBuilder.setProgress(0, 0, true);
+					// Displays the progress bar for the first time.
+					mNotifyManager.notify(id, mBuilder.build());
+					// Sleeps the thread, simulating an operation
+					// that takes time
+					try {
+						// Sleep for 5 seconds
+						Thread.sleep(5 * 1000);
+					} catch (InterruptedException e) {
+						// Log.d(TAG, "sleep failure");
+					}
+					// }
+					// When the loop is finished, updates the notification
+					// mBuilder.setContentText("Download complete")
+					// // Removes the progress bar
+					// .setProgress(0, 0, false);
+					// mNotifyManager.notify(id, mBuilder.build());
+				}
+			}
+			// Starts the thread by calling the run() method in its Runnable
+			).start();
+
+		}
+
+		protected Integer doInBackground(String... paths) {
+			Log.i(Prefs.TAG, "doInBackground started...");
+
+			PowerManager powerManager = (PowerManager) _act
+					.getSystemService(Activity.POWER_SERVICE);
+			WakeLock wakeLock = powerManager.newWakeLock(
+					PowerManager.PARTIAL_WAKE_LOCK, "VK_LOCK");
+			Log.d(Prefs.TAG, "Acquire wake lock");
+			wakeLock.acquire();
+
+			String[] commandStr = { "ffmpeg", "-y", "-i", videoPath, "-strict",
+					"experimental", "-r", "30", "-ac", "2", "-ar", "22050",
+					"-b", "800k", "-preset", "ultrafast",
+					videoPath };
+			Log.d("cmd", "");
+
+			LoadJNI vk = new LoadJNI();
+			try {
+
+				// complex command
+				vk.run(commandStr, workFolder, getApplicationContext());
+
+				// vk.run(GeneralUtils.utilConvertToComplex(commandStr),
+				// workFolder, getApplicationContext());
+
+				// running without command validation
+				// vk.run(complexCommand, workFolder, getApplicationContext(),
+				// false);
+
+				// copying vk.log (internal native log) to the videokit folder
+				GeneralUtils.copyFileToFolder(vkLogPath, videoFolder);
+
+				// } catch (CommandValidationException e) {
+				// Log.e(Prefs.TAG, "vk run exeption.", e);
+				// commandValidationFailedFlag = true;
+
+			} catch (Throwable e) {
+				Log.e(Prefs.TAG, "vk run exeption.", e);
+			} finally {
+				if (wakeLock.isHeld())
+					wakeLock.release();
+				else {
+					Log.i(Prefs.TAG,
+							"Wake lock is already released, doing nothing");
+				}
+			}
+			Log.i(Prefs.TAG, "doInBackground finished");
+			return Integer.valueOf(0);
+		}
+
+		protected void onProgressUpdate(Integer... progress) {
+		}
+
+		@Override
+		protected void onCancelled() {
+			Log.i(Prefs.TAG, "onCancelled");
+			// progressDialog.dismiss();
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			Log.i(Prefs.TAG, "onPostExecute");
+			// progressDialog.dismiss();
+			// Removes the progress bar
+			mBuilder.setContentText("").setProgress(0, 0, false);
+
+			mNotifyManager.notify(id, mBuilder.build());
+			sendMedia(type);
+			super.onPostExecute(result);
+
+			// finished Toast
+			String rc = null;
+			if (commandValidationFailedFlag) {
+				rc = "Command Vaidation Failed";
+			} else {
+				rc = GeneralUtils.getReturnCodeFromLog(vkLogPath);
+			}
+			final String status = rc;
+			SendTouchPreview.this.runOnUiThread(new Runnable() {
+				public void run() {
+					Toast.makeText(SendTouchPreview.this, status,
+							Toast.LENGTH_LONG).show();
+					if (status.equals("Transcoding Status: Failed")) {
+						Toast.makeText(
+								SendTouchPreview.this,
+								"Check: " + vkLogPath
+										+ " for more information.",
+								Toast.LENGTH_LONG).show();
+					}
+				}
+			});
+		}
 
 	}
 
@@ -481,7 +668,8 @@ public class SendTouchPreview extends ActionBarActivity implements
 		protected String doInBackground(Void... unsued) {
 			try {
 
-				File file = new File(getPath(previewFilePath));
+				String path = "/storage/sdcard0/videokit/out.mp4";
+				File file = new File(path);
 
 				// this is storage overwritten on each iteration with bytes
 				AppController.mHttpClient.getParams().setParameter(
@@ -545,13 +733,16 @@ public class SendTouchPreview extends ActionBarActivity implements
 			try {
 
 				if (sResponse != null) {
-					hidepDialog();
+					// hidepDialog();
 					Log.d("Response", sResponse);
 					JSONObject JResponse = new JSONObject(sResponse);
 					Log.d("JSON", JResponse.toString());
 
 					Toast.makeText(context, "your message sent",
 							Toast.LENGTH_SHORT).show();
+					mBuilder.setContentText("Sent").setProgress(0, 0, false);
+
+					mNotifyManager.notify(id, mBuilder.build());
 					finish();
 					// int success = JResponse.getInt("SUCCESS");
 					// String message = JResponse.getString("MESSAGE");
@@ -564,7 +755,11 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// // Toast.LENGTH_SHORT).show();
 					// }
 				} else {
-					hidepDialog();
+					// hidepDialog();
+					mBuilder.setContentText("Problem while sending a touch")
+							.setProgress(0, 0, false);
+
+					mNotifyManager.notify(id, mBuilder.build());
 					Toast.makeText(context, "Problem while sending a touch",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -577,7 +772,38 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 		@Override
 		protected void onPreExecute() {
-			showpDialog();
+			// showpDialog();
+			mBuilder.setContentText("sending...");
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int incr;
+					// Do the "lengthy" operation 20 times
+					// for (incr = 0; incr <= 100; incr += 5) {
+					// Sets the progress indicator to a max value, the
+					// current completion percentage, and "determinate"
+					// state
+					mBuilder.setProgress(100, 0, true);
+					// Displays the progress bar for the first time.
+					mNotifyManager.notify(id, mBuilder.build());
+					// Sleeps the thread, simulating an operation
+					// that takes time
+					try {
+						// Sleep for 5 seconds
+						Thread.sleep(5 * 1000);
+					} catch (InterruptedException e) {
+						// Log.d(TAG, "sleep failure");
+					}
+					// }
+					// When the loop is finished, updates the notification
+					// mBuilder.setContentText("Download complete")
+					// // Removes the progress bar
+					// .setProgress(0, 0, false);
+					// mNotifyManager.notify(id, mBuilder.build());
+				}
+			}
+			// Starts the thread by calling the run() method in its Runnable
+			).start();
 		}
 
 	}
