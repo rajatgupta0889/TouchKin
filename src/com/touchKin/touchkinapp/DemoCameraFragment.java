@@ -94,6 +94,7 @@ public class DemoCameraFragment extends CameraFragment {
 			super(_ctxt);
 		}
 
+		
 		@Override
 		public boolean useFrontFacingCamera() {
 			if (getArguments() == null) {
