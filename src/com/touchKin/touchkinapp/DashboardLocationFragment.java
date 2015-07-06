@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,15 +55,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
-import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.PieSlice;
-import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class DashboardLocationFragment extends Fragment implements
-		FragmentInterface {
+		FragmentInterface, OnMarkerClickListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	TextView parentName, parentNameBottom;
@@ -221,7 +221,6 @@ public class DashboardLocationFragment extends Fragment implements
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
 		if (parent != null) {
-
 			parentName.setText(parent.getParentName() + " is in ");
 			parentNameBottom.setText("Tap on map to set "
 					+ parent.getParentName() + "'s");
@@ -276,29 +275,6 @@ public class DashboardLocationFragment extends Fragment implements
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
-			// LocationManager locationManager = (LocationManager) getActivity()
-			// .getSystemService(Context.LOCATION_SERVICE);
-			// boolean enabledGPS = locationManager
-			// .isProviderEnabled(LocationManager.GPS_PROVIDER);
-			// // Check if enabled and if not send user to the GSP settings
-			// // Better solution would be to display a dialog and suggesting to
-			// // go to the settings
-			// if (!enabledGPS) {
-			// Toast.makeText(getActivity(), "GPS signal not found",
-			// Toast.LENGTH_LONG).show();
-			// Intent intent = new Intent(
-			// Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			// startActivity(intent);
-			// }
-			// Criteria criteria = new Criteria();
-			// String bestProvider = locationManager.getBestProvider(criteria,
-			// false);
-			// Location location = locationManager
-			// .getLastKnownLocation(bestProvider);
-			// if (location != null) {
-			// onLocationChanged(location);
-			// }
-
 			googleMap.getUiSettings().setScrollGesturesEnabled(false);
 			googleMap.getUiSettings().setZoomGesturesEnabled(false);
 			googleMap.setOnMapClickListener(new OnMapClickListener() {
@@ -311,6 +287,7 @@ public class DashboardLocationFragment extends Fragment implements
 					startActivity(intent);
 				}
 			});
+
 		}
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
@@ -363,15 +340,15 @@ public class DashboardLocationFragment extends Fragment implements
 			View marker = ((LayoutInflater) getActivity().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE)).inflate(
 					R.layout.custom_marker, null);
-			RoundedImageView image = (RoundedImageView) marker
-					.findViewById(R.id.parentImage);
-			ImageLoader imageLoader = new ImageLoader(getActivity());
-			if (parent != null) {
-				String imagePath = serverPath + parent.getParentId() + ".jpeg";
-				Log.d("Image Path", imagePath);
-				imageLoader.DisplayImage(imagePath, R.drawable.ic_launcher,
-						image);
-			}
+			marker.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(getActivity(), MapActivity.class);
+					startActivity(intent);
+				}
+			});
 			if (googleMarker != null)
 				googleMarker.remove();
 			googleMarker = googleMap.addMarker(new MarkerOptions().position(
@@ -379,7 +356,8 @@ public class DashboardLocationFragment extends Fragment implements
 					BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
 							getActivity(), marker))));
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-			googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+			googleMap.animateCamera(CameraUpdateFactory.zoomTo(8));
+			googleMap.setOnMarkerClickListener(this);
 		}
 	}
 
@@ -449,6 +427,14 @@ public class DashboardLocationFragment extends Fragment implements
 		mHoloCircularProgressBar.setSlices(slices);
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker arg0) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(getActivity(), MapActivity.class);
+		startActivity(intent);
+		return false;
 	}
 
 }

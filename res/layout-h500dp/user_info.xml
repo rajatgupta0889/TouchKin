@@ -54,7 +54,7 @@
 
         </EditText>
 
-        <ImageView
+        <com.touchKin.touchkinapp.custom.RoundedImageView
             android:id="@+id/profile_pic"
             android:layout_width="100dp"
             android:layout_height="100dp"
