@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
 import com.touchKin.touchkinapp.model.ParentListModel;
-import com.touchKin.touchkinapp.services.DeviceAcivityService;
 import com.touchKin.touckinapp.R;
 
 public class Fragment1 extends Fragment implements OnClickListener {
@@ -34,6 +32,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	PageListener pageListener;
 	ParentListModel parent;
 	Vibrator vib;
+
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
 
@@ -74,7 +73,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	}
 
 	public void init(View v) {
-		adapter = new DashBoardAdapter(getChildFragmentManager());
+		adapter = new DashBoardAdapter(getChildFragmentManager(), parent);
 		viewPager = (ViewPager) v.findViewById(R.id.pager);
 
 		// indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
@@ -111,12 +110,12 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.sendTouch:
 			vib.vibrate(500);
-//			v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			sendTouch();
 			break;
 		case R.id.getService:
 			vib.vibrate(500);
-//			v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 
 			if (parent != null) {
