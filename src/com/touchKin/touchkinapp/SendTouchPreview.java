@@ -2,6 +2,8 @@ package com.touchKin.touchkinapp;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -67,14 +69,18 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.Response;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.internal.li;
 import com.netcompss.ffmpeg4android.GeneralUtils;
 import com.netcompss.ffmpeg4android.Prefs;
 import com.netcompss.loader.LoadJNI;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
+import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.SendTouchParentListAdapter;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
@@ -259,7 +265,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 				}
 
-				getParentList();
+				fetchParentList();
 				listview.setOnItemClickListener(this);
 				sendButton.setOnClickListener(this);
 
@@ -481,8 +487,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 			String[] commandStr = { "ffmpeg", "-y", "-i", videoPath, "-strict",
 					"experimental", "-r", "30", "-ac", "2", "-ar", "22050",
-					"-b", "800k", "-preset", "ultrafast",
-					videoPath };
+					"-b", "800k", "-preset", "ultrafast", videoPath };
 			Log.d("cmd", "");
 
 			LoadJNI vk = new LoadJNI();
@@ -579,63 +584,163 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 	}
 
-	public void getParentList() {
+	// public void getParentList() {
+	// list = new ArrayList<ParentListModel>();
+	// JsonArrayRequest req = new JsonArrayRequest(
+	// "http://54.69.183.186:1340/user/care-receivers",
+	// new Listener<JSONArray>() {
+	//
+	// @Override
+	// public void onResponse(JSONArray responseArray) {
+	// // TODO Auto-generated method stub
+	// // Log.d("Response Array", " " + responseArray);
+	//
+	// if (responseArray.length() > 0) {
+	// for (int i = 0; i < responseArray.length(); i++) {
+	// try {
+	// JSONObject obj = responseArray
+	// .getJSONObject(i);
+	// Log.d("Response Array", " " + obj);
+	// ParentListModel item = new ParentListModel();
+	// item.setParentId(obj.getString("id"));
+	// if (obj.has("nickname")) {
+	// item.setParentName(obj
+	// .getString("nickname"));
+	// } else {
+	// item.setParentName("maa");
+	// }
+	// if (item.getParentId().equals(userId)) {
+	// item.setIsSelected(true);
+	// } else {
+	// item.setIsSelected(false);
+	// }
+	// // //
+	// // item.setParentUserId(obj.getJSONObject(
+	// // // "user").getString("id"));
+	// // if (i == 0) {
+	// // item.setIsSelected(true);
+	// // //selectedParent = item;
+	// // } else {
+	// // item.setIsSelected(false);
+	// // }
+	// list.add(item);
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	// } else {
+	// // setMenuTitle(null);
+	// }
+	// // list.add(new ParentListModel("", false, "", "", ""));
+	// imageAdapter = new SendTouchParentListAdapter(
+	// SendTouchPreview.this, list);
+	// // if (list.size() > 1) {
+	// // selectedParent = list.get(0);
+	// // // setMenuTitle(selectedParent);
+	// // }
+	// listview.setAdapter(imageAdapter);
+	// imageAdapter.notifyDataSetChanged();
+	//
+	// }
+	//
+	// }, new Response.ErrorListener() {
+	// @Override
+	// public void onErrorResponse(VolleyError error) {
+	// VolleyLog.e("Error: ", error.getMessage());
+	// Toast.makeText(SendTouchPreview.this,
+	// error.getMessage(), Toast.LENGTH_SHORT).show();
+	//
+	// }
+	//
+	// });
+	//
+	// AppController.getInstance().addToRequestQueue(req);
+	//
+	// }
+	public void fetchParentList() {
 		list = new ArrayList<ParentListModel>();
-		JsonArrayRequest req = new JsonArrayRequest(
-				"http://54.69.183.186:1340/user/care-receivers",
-				new Listener<JSONArray>() {
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				"http://54.69.183.186:1340/user/family", null,
+				new Listener<JSONObject>() {
 
 					@Override
-					public void onResponse(JSONArray responseArray) {
+					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
-						// Log.d("Response Array", " " + responseArray);
+						JSONArray careRecievers;
+						try {
+							careRecievers = responseArray
+									.getJSONArray("care_receivers");
 
-						if (responseArray.length() > 0) {
-							for (int i = 0; i < responseArray.length(); i++) {
-								try {
-									JSONObject obj = responseArray
-											.getJSONObject(i);
-									Log.d("Response Array", " " + obj);
+							int crCount = careRecievers.length();
+							for (int i = 0; i < crCount; i++) {
+								JSONObject cr;
+
+								cr = careRecievers.getJSONObject(i);
+
+								if (cr != null) {
 									ParentListModel item = new ParentListModel();
-									item.setParentId(obj.getString("id"));
-									if (obj.has("nickname")) {
-										item.setParentName(obj
-												.getString("nickname"));
+									item.setParentId(cr.getString("id"));
+									item.setParentName(cr.optString("nickname"));
+									item.setMobilenumber(cr.optString("mobile"));
+									if (cr.has("care_receiver_status")
+											&& cr.getString(
+													"care_receiver_status")
+													.equalsIgnoreCase("pending")) {
+										item.setReqStatus(false);
 									} else {
-										item.setParentName("maa");
+										item.setReqStatus(true);
 									}
-									if (item.getParentId().equals(userId)) {
+									if (item.getParentId().equalsIgnoreCase(
+											userId))
 										item.setIsSelected(true);
-									} else {
+									else {
 										item.setIsSelected(false);
 									}
-									// //
-									// item.setParentUserId(obj.getJSONObject(
-									// // "user").getString("id"));
-									// if (i == 0) {
-									// item.setIsSelected(true);
-									// //selectedParent = item;
-									// } else {
-									// item.setIsSelected(false);
-									// }
 									list.add(item);
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
 								}
 							}
-						} else {
-							// setMenuTitle(null);
+							JSONArray careGivers = responseArray
+									.getJSONArray("care_givers");
+							int cgCount = careGivers.length();
+							for (int i = 0; i < cgCount; i++) {
+								JSONObject cg = careGivers.getJSONObject(i);
+								if (cg != null) {
+									ParentListModel item = new ParentListModel();
+									item.setParentId(cg.getString("id"));
+									item.setParentName(cg
+											.optString("first_name"));
+									if (cg.has("care_receiver_status")
+											&& cg.getString(
+													"care_receiver_status")
+													.equalsIgnoreCase("pending")) {
+										item.setReqStatus(false);
+									} else {
+										item.setReqStatus(true);
+									}
+									item.setMobilenumber(cg.optString("mobile"));
+									if (item.getParentId().equalsIgnoreCase(
+											userId))
+										item.setIsSelected(true);
+									else {
+										item.setIsSelected(false);
+									}
+									if (!containsId(list, item.getParentId())) {
+										list.add(item);
+									}
+								}
+							}
+
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						// list.add(new ParentListModel("", false, "", "", ""));
+						// else {
+						// setMenuTitle(null);
+						// }
 						imageAdapter = new SendTouchParentListAdapter(
 								SendTouchPreview.this, list);
-						// if (list.size() > 1) {
-						// selectedParent = list.get(0);
-						// // setMenuTitle(selectedParent);
-						// }
 						listview.setAdapter(imageAdapter);
-						imageAdapter.notifyDataSetChanged();
 
 					}
 
@@ -878,13 +983,22 @@ public class SendTouchPreview extends ActionBarActivity implements
 		finish();
 	}
 
-	private void showpDialog() {
-		if (!pDialog.isShowing())
-			pDialog.show();
-	}
+	// private void showpDialog() {
+	// if (!pDialog.isShowing())
+	// pDialog.show();
+	// }
+	//
+	// private void hidepDialog() {
+	// if (pDialog.isShowing())
+	// pDialog.dismiss();
+	// }
 
-	private void hidepDialog() {
-		if (pDialog.isShowing())
-			pDialog.dismiss();
+	public static boolean containsId(List<ParentListModel> list, String id) {
+		for (ParentListModel object : list) {
+			if (object.getParentId().equalsIgnoreCase(id)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
