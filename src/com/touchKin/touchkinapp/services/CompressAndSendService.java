@@ -174,8 +174,8 @@ public class CompressAndSendService extends Service {
 			Log.d("value", val);
 
 			String[] commandStr = { "ffmpeg", "-y", "-i", videoPath, "-strict",
-					"experimental", "-r", "30", "-ac", "2", "-ar", "22050",
-					"-b", "800k", "-preset", "ultrafast", val };
+					"experimental", "-r", "24", "-ac", "2", "-ar", "22050",
+					"-b", "1600k", "-preset", "ultrafast", val };
 			Log.d("cmd", "");
 
 			LoadJNI vk = new LoadJNI();
@@ -283,7 +283,7 @@ public class CompressAndSendService extends Service {
 						HttpMultipartMode.BROWSER_COMPATIBLE);
 
 				entity.addPart("shared_with", new StringBody(SendTouchPreview
-						.getCheckedParentId().toString()));
+						.getCheckedParentId()));
 				entity.addPart("message", new StringBody(
 						SendTouchPreview.sendmessage.getText().toString()));
 				ContentBody cbFile = new FileBody(

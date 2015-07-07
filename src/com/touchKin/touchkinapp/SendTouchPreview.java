@@ -112,13 +112,9 @@ public class SendTouchPreview extends ActionBarActivity implements
 	Bitmap thumbnail, bitmap;
 	SendTouchActivity sendtouch;
 	ProgressDialog pDialog;
-	String userId;
-	String workFolder = null;
-	String videoFolder = null;
-	String vkLogPath = null;
+	static String userId;
 	String videoPath = null;
 	int id = 1;
-	private boolean commandValidationFailedFlag = false;
 
 	// private ParentListModel selectedParent;
 
@@ -130,13 +126,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		init();
 		Intent intent = getIntent();
-		videoFolder = Environment.getExternalStorageDirectory()
-				.getAbsolutePath();
-		workFolder = getApplicationContext().getFilesDir().getAbsolutePath()
-				+ "/";
-		vkLogPath = workFolder + "vk.log";
-		GeneralUtils.copyLicenseFromAssetsToSDIfNeeded(this, workFolder);
-		Log.d("path", videoFolder);
+
 		Typeface latofont = Typeface.createFromAsset(getAssets(),
 				"fonts/Lato-LightItalic.ttf");
 		sendmessage.setTypeface(latofont);
@@ -328,68 +318,65 @@ public class SendTouchPreview extends ActionBarActivity implements
 		list = new ArrayList<ParentListModel>();
 	}
 
-	private void setPic(String file) {
-
-		/* There isn't enough memory to open up more than a couple camera photos */
-		/* So pre-scale the target bitmap into which the file is decoded */
-
-		/* Get the size of the ImageView */
-		int targetW = previewImage.getWidth();
-		int targetH = previewImage.getHeight();
-
-		/* Get the size of the image */
-		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-		bmOptions.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(file, bmOptions);
-		int photoW = bmOptions.outWidth;
-		int photoH = bmOptions.outHeight;
-
-		/* Figure out which way needs to be reduced less */
-		int scaleFactor = 1;
-		if ((targetW > 0) || (targetH > 0)) {
-			scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-		}
-
-		/* Set bitmap options to scale the image decode target */
-		bmOptions.inJustDecodeBounds = false;
-		bmOptions.inSampleSize = scaleFactor;
-		bmOptions.inPurgeable = true;
-
-		/* Decode the JPEG file into a Bitmap */
-		final Bitmap bitmap = BitmapFactory.decodeFile(file, bmOptions);
-
-		Matrix matrix = new Matrix();
-		Camera.CameraInfo info;
-		if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-
-			matrix.postRotate(90);
-		} else {
-			// This is an undocumented although widely known feature
-			matrix.postRotate(0);
-		}
-
-		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, photoW,
-				photoH, matrix, true);
-		// TODO Auto-generated method stub
-
-		/* Associate the Bitmap to the ImageView */
-		previewImage.setImageBitmap(rotatedBitmap);
-		previewImage.setVisibility(View.VISIBLE);
-	}
+	// private void setPic(String file) {
+	//
+	// /* There isn't enough memory to open up more than a couple camera photos
+	// */
+	// /* So pre-scale the target bitmap into which the file is decoded */
+	//
+	// /* Get the size of the ImageView */
+	// int targetW = previewImage.getWidth();
+	// int targetH = previewImage.getHeight();
+	//
+	// /* Get the size of the image */
+	// BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+	// bmOptions.inJustDecodeBounds = true;
+	// BitmapFactory.decodeFile(file, bmOptions);
+	// int photoW = bmOptions.outWidth;
+	// int photoH = bmOptions.outHeight;
+	//
+	// /* Figure out which way needs to be reduced less */
+	// int scaleFactor = 1;
+	// if ((targetW > 0) || (targetH > 0)) {
+	// scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+	// }
+	//
+	// /* Set bitmap options to scale the image decode target */
+	// bmOptions.inJustDecodeBounds = false;
+	// bmOptions.inSampleSize = scaleFactor;
+	// bmOptions.inPurgeable = true;
+	//
+	// /* Decode the JPEG file into a Bitmap */
+	// final Bitmap bitmap = BitmapFactory.decodeFile(file, bmOptions);
+	//
+	// Matrix matrix = new Matrix();
+	// Camera.CameraInfo info;
+	// if (this.getResources().getConfiguration().orientation !=
+	// Configuration.ORIENTATION_LANDSCAPE) {
+	//
+	// matrix.postRotate(90);
+	// } else {
+	// // This is an undocumented although widely known feature
+	// matrix.postRotate(0);
+	// }
+	//
+	// Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, photoW,
+	// photoH, matrix, true);
+	// // TODO Auto-generated method stub
+	//
+	// /* Associate the Bitmap to the ImageView */
+	// previewImage.setImageBitmap(rotatedBitmap);
+	// previewImage.setVisibility(View.VISIBLE);
+	// }
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		// case R.id.back_button:
-		// openDiscardDialog();
-		// break;
 		case R.id.yesButton:
 			disCardVideo();
 			break;
-		// case R.id.noButton:
-		// dismiss();
-		// break;
+
 		case R.id.sendbutton:
 			if (GeneralUtils.checkIfFileExistAndNotEmpty(videoPath)) {
 				Intent intent = new Intent(SendTouchPreview.this,
@@ -401,7 +388,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 				Toast.makeText(getApplicationContext(),
 						videoPath + " not found", Toast.LENGTH_LONG).show();
 			}
-			// 0sendMedia(type);
+
 			break;
 		default:
 			break;
@@ -416,19 +403,15 @@ public class SendTouchPreview extends ActionBarActivity implements
 		finish();
 	}
 
-	// public void sendMedia(int type) {
-	//
-	// new ImageUploadTask(this).execute();
-	//
-	// }
-
 	public static String getCheckedParentId() {
 		String array = "";
 		for (ParentListModel item : list) {
-			if (array.isEmpty()) {
-				array = item.getParentId();
-			} else {
-				array = array + "," + item.getParentId();
+			if (item.getIsSelected()) {
+				if (array.isEmpty()) {
+					array = item.getParentId();
+				} else {
+					array = array + "," + item.getParentId();
+				}
 			}
 		}
 
@@ -436,80 +419,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 	}
 
-	// public void getParentList() {
-	// list = new ArrayList<ParentListModel>();
-	// JsonArrayRequest req = new JsonArrayRequest(
-	// "http://54.69.183.186:1340/user/care-receivers",
-	// new Listener<JSONArray>() {
-	//
-	// @Override
-	// public void onResponse(JSONArray responseArray) {
-	// // TODO Auto-generated method stub
-	// // Log.d("Response Array", " " + responseArray);
-	//
-	// if (responseArray.length() > 0) {
-	// for (int i = 0; i < responseArray.length(); i++) {
-	// try {
-	// JSONObject obj = responseArray
-	// .getJSONObject(i);
-	// Log.d("Response Array", " " + obj);
-	// ParentListModel item = new ParentListModel();
-	// item.setParentId(obj.getString("id"));
-	// if (obj.has("nickname")) {
-	// item.setParentName(obj
-	// .getString("nickname"));
-	// } else {
-	// item.setParentName("maa");
-	// }
-	// if (item.getParentId().equals(userId)) {
-	// item.setIsSelected(true);
-	// } else {
-	// item.setIsSelected(false);
-	// }
-	// // //
-	// // item.setParentUserId(obj.getJSONObject(
-	// // // "user").getString("id"));
-	// // if (i == 0) {
-	// // item.setIsSelected(true);
-	// // //selectedParent = item;
-	// // } else {
-	// // item.setIsSelected(false);
-	// // }
-	// list.add(item);
-	// } catch (JSONException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// } else {
-	// // setMenuTitle(null);
-	// }
-	// // list.add(new ParentListModel("", false, "", "", ""));
-	// imageAdapter = new SendTouchParentListAdapter(
-	// SendTouchPreview.this, list);
-	// // if (list.size() > 1) {
-	// // selectedParent = list.get(0);
-	// // // setMenuTitle(selectedParent);
-	// // }
-	// listview.setAdapter(imageAdapter);
-	// imageAdapter.notifyDataSetChanged();
-	//
-	// }
-	//
-	// }, new Response.ErrorListener() {
-	// @Override
-	// public void onErrorResponse(VolleyError error) {
-	// VolleyLog.e("Error: ", error.getMessage());
-	// Toast.makeText(SendTouchPreview.this,
-	// error.getMessage(), Toast.LENGTH_SHORT).show();
-	//
-	// }
-	//
-	// });
-	//
-	// AppController.getInstance().addToRequestQueue(req);
-	//
-	// }
 	public void fetchParentList() {
 		list = new ArrayList<ParentListModel>();
 		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
@@ -639,8 +548,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 			long id) {
 		// TODO Auto-generated method stub
 		ParentListModel item = list.get(position);
-		// Toast.makeText(getApplicationContext(), "touched " + position,
-		// Toast.LENGTH_LONG).show();
 
 		if (item.getIsSelected()) {
 			item.setIsSelected(false);
@@ -651,28 +558,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 		imageAdapter.notifyDataSetChanged();
 	}
 
-	// @Override
-	// public void onConfigurationChanged(Configuration newConfig) {
-	// super.onConfigurationChanged(newConfig);
-	//
-	// if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-	// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-	// getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-	// WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	//
-	// videoPreview.setDimensions(displayHeight, displayWidth);
-	//
-	// videoPreview.getHolder().setFixedSize(displayHeight, displayWidth);
-	//
-	// } else {
-	// getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
-	// WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-	//
-	// videoPreview.setDimensions(displayWidth, smallHeight);
-	// videoPreview.getHolder().setFixedSize(displayWidth, smallHeight);
-	//
-	// }
-	// }
 	@Override
 	public void onBackPressed() {
 		Log.d("CDA", "onBackPressed Called");
@@ -680,16 +565,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 		startActivity(setIntent);
 		finish();
 	}
-
-	// private void showpDialog() {
-	// if (!pDialog.isShowing())
-	// pDialog.show();
-	// }
-	//
-	// private void hidepDialog() {
-	// if (pDialog.isShowing())
-	// pDialog.dismiss();
-	// }
 
 	public static boolean containsId(List<ParentListModel> list, String id) {
 		for (ParentListModel object : list) {
