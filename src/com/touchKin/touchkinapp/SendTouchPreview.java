@@ -231,10 +231,8 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// true);
 					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
 							thumbnail, 640, 400);
-					Log.d("previewFilePath", videoFolder
-							+ previewFilePath.toString().substring(23) + "");
-					videoPath = videoFolder
-							+ previewFilePath.toString().substring(23);
+					Log.d("previewFilePath", previewFilePath.toString());
+					videoPath = previewFilePath.toString().substring(8);
 					// MediaMetadataRetriever retriever = new
 					// MediaMetadataRetriever();
 					// try {
