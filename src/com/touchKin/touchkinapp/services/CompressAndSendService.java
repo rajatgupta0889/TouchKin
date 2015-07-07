@@ -2,6 +2,9 @@ package com.touchKin.touchkinapp.services;
 
 import java.io.File;
 import java.security.PublicKey;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,6 +21,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import android.R.string;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -46,6 +50,7 @@ public class CompressAndSendService extends Service {
 	NotificationManager mNotifyManager;
 	Notification.Builder mBuilder;
 	int id = 1;
+	private File videoDirectory = null;
 	String workFolder = null;
 	String videoFolder = null;
 	String vkLogPath = null;
@@ -66,6 +71,34 @@ public class CompressAndSendService extends Service {
 		super.onCreate();
 	}
 
+	protected File getVideoPath() {
+		File dir = getVideoDirectory();
+
+		dir.mkdirs();
+
+		return (new File(dir, getVideoFilename()));
+	}
+
+	protected File getVideoDirectory() {
+		if (videoDirectory == null) {
+			initVideoDirectory();
+		}
+
+		return (videoDirectory);
+	}
+
+	private void initVideoDirectory() {
+		videoDirectory = Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+	}
+
+	protected String getVideoFilename() {
+		String ts = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+				.format(new Date());
+
+		return ("Video_" + ts + ".mp4");
+	}
+
 	@Override
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
@@ -82,6 +115,7 @@ public class CompressAndSendService extends Service {
 		Log.d("path", videoFolder);
 		new TranscdingBackground(getApplicationContext()).execute();
 	}
+	String val;
 
 	public class TranscdingBackground extends
 			AsyncTask<String, Integer, Integer> {
@@ -136,11 +170,12 @@ public class CompressAndSendService extends Service {
 					PowerManager.PARTIAL_WAKE_LOCK, "VK_LOCK");
 			Log.d(Prefs.TAG, "Acquire wake lock");
 			wakeLock.acquire();
+			val = getVideoPath().toString();
+			Log.d("value", val);
 
 			String[] commandStr = { "ffmpeg", "-y", "-i", videoPath, "-strict",
 					"experimental", "-r", "30", "-ac", "2", "-ar", "22050",
-					"-b", "800k", "-preset", "ultrafast",
-					"/sdcard/videokit/out.mp4" };
+					"-b", "800k", "-preset", "ultrafast", val };
 			Log.d("cmd", "");
 
 			LoadJNI vk = new LoadJNI();
@@ -232,9 +267,7 @@ public class CompressAndSendService extends Service {
 		@Override
 		protected String doInBackground(Void... unsued) {
 			try {
-
-				String path = "/storage/sdcard0/videokit/out.mp4";
-				File file = new File(path);
+				File file = new File(val);
 
 				// this is storage overwritten on each iteration with bytes
 				AppController.mHttpClient.getParams().setParameter(
