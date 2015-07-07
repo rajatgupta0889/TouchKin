@@ -80,20 +80,33 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		case R.id.sendTouch:
 			vib.vibrate(500);
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			sendTouch();
+			if (myPager.getCurrentItem() > 0)
+				sendTouch();
+			else {
+				Toast.makeText(getActivity(),
+						"You can not send touch to yourzself",
+						Toast.LENGTH_SHORT).show();
+			}
 			break;
 		case R.id.getService:
-			vib.vibrate(500);
+
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			if (list != null)
 				parent = list.get(myPager.getCurrentItem());
 
 			if (parent != null) {
-				Intent callIntent = new Intent(Intent.ACTION_DIAL);
-				callIntent
-						.setData(Uri.parse("tel:" + parent.getMobilenumber()));
-				Intent chooser = Intent.createChooser(callIntent, "Call using");
-				startActivity(chooser);
+				if (myPager.getCurrentItem() > 0) {
+
+					Intent callIntent = new Intent(Intent.ACTION_DIAL);
+					callIntent.setData(Uri.parse("tel:"
+							+ parent.getMobilenumber()));
+					Intent chooser = Intent.createChooser(callIntent,
+							"Call using");
+					startActivity(chooser);
+				} else {
+					Toast.makeText(getActivity(), "You can not call yourself",
+							Toast.LENGTH_SHORT).show();
+				}
 			} else {
 				Toast.makeText(getActivity(),
 						"Please Select Your parent to call", Toast.LENGTH_SHORT)
@@ -109,9 +122,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 	private void sendTouch() {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(getActivity(), SendTouchActivity.class);
-		ParentListModel model = ((DashBoardActivity) getActivity())
-				.getSelectedParent();
-
+		ParentListModel model = parent = list.get(myPager.getCurrentItem());
 		intent.putExtra("userId", model.getParentId());
 		startActivity(intent);
 	}

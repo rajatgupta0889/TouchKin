@@ -1,5 +1,6 @@
 package com.touchKin.touchkinapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,8 +42,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		getActivity();
 		vib = (Vibrator) this.getActivity().getSystemService(
-				getActivity().VIBRATOR_SERVICE);
+				Context.VIBRATOR_SERVICE);
 
 	}
 
@@ -55,17 +56,6 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		View v = inflater.inflate(R.layout.dashboard_fragment, null);
 		init(v);
 		DashBoardAdapter.context = getActivity();
-		viewPager.setAdapter(adapter);
-		pageListener = new PageListener();
-		viewPager.setOnPageChangeListener(pageListener);
-
-		// indicator.setViewPager(viewPager);
-		// ((CirclePageIndicator) indicator).setSnap(false);
-		// indicator
-		// .setFillColor(getResources().getColor(R.color.indicator_color));
-		// indicator.setStrokeColor(getResources().getColor(
-		// R.color.indicator_color));
-		// indicator.setOnPageChangeListener(pageListener);
 
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
@@ -73,11 +63,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	}
 
 	public void init(View v) {
-		adapter = new DashBoardAdapter(getChildFragmentManager(), parent);
+		// adapter = new DashBoardAdapter(getChildFragmentManager(), parent);
 		viewPager = (ViewPager) v.findViewById(R.id.pager);
-
 		// indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
-
 		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
 		getService = (TextView) v.findViewById(R.id.getService);
 	}
@@ -114,10 +102,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			sendTouch();
 			break;
 		case R.id.getService:
-			vib.vibrate(500);
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
-
 			if (parent != null) {
 				Intent callIntent = new Intent(Intent.ACTION_DIAL);
 				callIntent
@@ -139,19 +124,13 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	private void sendTouch() {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(getActivity(), SendTouchActivity.class);
-		ParentListModel model = ((DashBoardActivity) getActivity())
-				.getSelectedParent();
-
-		intent.putExtra("userId", model.getParentId());
+		intent.putExtra("userId", parent.getParentId());
 		startActivity(intent);
 	}
 
 	private class PageListener extends SimpleOnPageChangeListener {
 		public void onPageSelected(int position) {
-			Toolbar toolbar = (Toolbar) getActivity().findViewById(
-					R.id.tool_bar);
-			TextView mTitle = (TextView) toolbar
-					.findViewById(R.id.toolbar_title);
+
 			// SharedPreferences pref = getActivity().getSharedPreferences(
 			// "countPref", 0);
 			// if (!pref.getBoolean("count", false)) {
@@ -173,6 +152,11 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	}
 
 	public void notifyFrag() {
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		adapter = new DashBoardAdapter(getChildFragmentManager(), parent);
+		viewPager.setAdapter(adapter);
+		pageListener = new PageListener();
+		viewPager.setOnPageChangeListener(pageListener);
 		adapter.notifyDataSetChanged();
 	}
 

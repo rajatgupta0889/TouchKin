@@ -192,14 +192,13 @@
         <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.GcmIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.MessageAndCallReadingService" />
-        <service android:name="com.touchKin.touchkinapp.services.LocationSendingService" />
-
-        <meta-data
+        <service android:name="com.touchKin.touchkinapp.services.LocationSendingService" /><meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD5e17DLZV06yX244q5qZ8SwGh9FpAHHzw" />
+
     </application>
 
 </manifest>

@@ -444,42 +444,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 											.getString("mobile")));
 							careGiverList.get(0).setReqStatus(true);
 							selectedParent = list.get(0);
-							// for (int i = 0; i < responseArray.length();
-							// i++)
-							// {
-							// try {
-							// JSONObject obj = responseArray
-							// .getJSONObject(i);
-							// Log.d("Response Array", " " + obj);
-							// ParentListModel item = new ParentListModel();
-							// item.setParentId(obj.getString("id"));
-							// if (obj.has("nickname")) {
-							// // mTitle.setText(obj
-							// // .getString("nickname"));
-							//
-							// item.setParentName(obj
-							// .getString("nickname"));
-							// item.setMobilenumber(obj
-							// .getString("mobile"));
-							// } else {
-							// // mTitle.setText("maa");
-							// item.setParentName("Maa");
-							// }
-							// // item.setParentUserId(obj.getJSONObject(
-							// // "user").getString("id"));
-							// if (i == 0) {
-							// item.setIsSelected(true);
-							// selectedParent = item;
-							// setMenuTitle(selectedParent);
-							// } else {
-							// item.setIsSelected(false);
-							// }
-							// list.add(item);
-							// } catch (JSONException e) {
-							// // TODO Auto-generated catch block
-							// e.printStackTrace();
-							// }
-							// }
 							JSONArray careRecievers = responseArray
 									.getJSONArray("care_receivers");
 							int crCount = careRecievers.length();

@@ -81,33 +81,6 @@
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
 
-            
-
-            <ImageView
-                android:id="@+id/battery5"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignLeft="@+id/battery"
-                android:layout_below="@+id/battery"
-                android:src="@drawable/battery100" />
-
-            <ImageView
-                android:id="@+id/ImageView05"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/wifi4"
-                android:layout_toRightOf="@+id/battery"
-                android:src="@drawable/network4" />
-
-            <ImageView
-                android:id="@+id/wifi4"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="31dp"
-                android:layout_toLeftOf="@+id/battery"
-                android:src="@drawable/wifi4" />
-
             <TextView
                 android:id="@+id/battery"
                 android:layout_width="wrap_content"
@@ -118,6 +91,31 @@
                 android:gravity="center"
                 android:text="60%"
                 android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/wifi4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/profile_pic"
+                android:layout_marginTop="46dp"
+                android:layout_toLeftOf="@+id/battery"
+                android:src="@drawable/wifi4" />
+
+            <ImageView
+                android:id="@+id/ImageView05"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/wifi4"
+                android:layout_toRightOf="@+id/battery"
+                android:src="@drawable/network4" />
+
+            <ImageView
+                android:id="@+id/battery5"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignLeft="@+id/battery"
+                android:layout_below="@+id/battery"
+                android:src="@drawable/battery100" />
 
         </RelativeLayout>
     </RelativeLayout>
