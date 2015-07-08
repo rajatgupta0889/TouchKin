@@ -1,6 +1,7 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -252,7 +253,16 @@ public class DashBoardActivityFragment extends Fragment implements
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer "
+						+ ((DashBoardActivity) getActivity()).getToken());
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 

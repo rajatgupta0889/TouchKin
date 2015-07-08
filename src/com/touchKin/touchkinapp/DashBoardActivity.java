@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -89,12 +90,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private ParentListModel selectedParent;
 	ActionBarDrawerToggle mDrawerToggle; // Declaring Action Bar Drawer Toggle
 	private ImageAdapter imageAdapter;
-	private Menu menu;
 	public static Boolean isCancel = true;
 	public String userId, userName, phoneNo;
 	ButtonClickListener listener;
 	JSONObject userObj;
 	static Button notifCount;
+	String token;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,28 +108,23 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
-		fetchParentList();
 		setSupportActionBar(toolbar);
 		toolbar.inflateMenu(R.menu.toolbar_menu);
-		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				// Handle the menu item
-				int id = item.getItemId();
-				// if (id == R.id.parentNameMenu) {
-				//
-				// toggleVissibility();
-				// return true;
-				// }
-				if (id == R.id.parentIconMenu) {
-
-					// toggleVissibility();
-					return true;
-				}
-
-				return true;
-			}
-		});
+		// toolbar.setOnMenuItemClickListener(new
+		// Toolbar.OnMenuItemClickListener() {
+		// @Override
+		// public boolean onMenuItemClick(MenuItem item) {
+		// // Handle the menu item
+		// int id = item.getItemId();
+		// if (id == R.id.parentIconMenu) {
+		//
+		// // toggleVissibility();
+		// return true;
+		// }
+		//
+		// return true;
+		// }
+		// });
 
 		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
@@ -144,10 +140,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 			userId = userObj.getString("id");
 			userName = userObj.getString("first_name");
 			phoneNo = userObj.getString("mobile");
+			token = userObj.optString("token");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
+		fetchParentList();
 		mAdapter = new MyAdapter(TITLES, userName, userId,
 				DashBoardActivity.this); // Creating
 		mRecyclerView.setAdapter(mAdapter); // Setting the adapter to
@@ -265,10 +262,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 		Log.d("count", count + "");
 		TextView notification = (TextView) count.findViewById(R.id.hotlist_hot);
 		notification.setText("5");
-		this.menu = menu;
-		if (selectedParent != null) {
-			// setMenuTitle(selectedParent);
-		}
 		return true;
 	}
 
@@ -277,19 +270,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		Toast.makeText(getApplicationContext(), "HI menu" + id,
-				Toast.LENGTH_SHORT).show();
-		// if (id == R.id.parentNameMenu) {
+		// int id = item.getItemId();
+		// Toast.makeText(getApplicationContext(), "HI menu" + id,
+		// Toast.LENGTH_SHORT).show();
+		//
+		// if (id == R.id.parentIconMenu) {
 		// // Not implemented here
 		//
 		// return true;
 		// }
-		if (id == R.id.parentIconMenu) {
-			// Not implemented here
-
-			return true;
-		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -533,8 +522,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
 
+			};
+		};
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
@@ -577,6 +573,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			Bundle args = new Bundle();
 			args.putInt("num", ExpandableListAdapter.ADD_CR);
 			args.putString("mobile", phoneNo);
+			args.putString("token", token);
 			newFragment.setArguments(args);
 			newFragment.show(getSupportFragmentManager(), "TAG");
 			((ContactDialogFragment) newFragment).SetButtonListener(this);
@@ -657,11 +654,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public void startLocationService() {
 		Intent mServiceIntent = new Intent(DashBoardActivity.this,
 				LocationSendingService.class);
+		mServiceIntent.putExtra("token", token);
 		DashBoardActivity.this.startService(mServiceIntent);
 		Log.d("Service run: %s", "Service is started");
 		Calendar cal = Calendar.getInstance();
 		Intent intent = new Intent(DashBoardActivity.this,
 				LocationSendingService.class);
+		intent.putExtra("token", token);
 		// Intent intent = new Intent("com.my.package.MY_UNIQUE_ACTION");
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(
 				DashBoardActivity.this, 0, intent,
@@ -689,11 +688,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public void startActivityService() {
 		Intent mServiceIntent = new Intent(DashBoardActivity.this,
 				DeviceAcivityService.class);
+		mServiceIntent.putExtra("token", token);
 		DashBoardActivity.this.startService(mServiceIntent);
 
 		Calendar cal = Calendar.getInstance();
 		Intent intent = new Intent(DashBoardActivity.this,
 				DeviceAcivityService.class);
+		intent.putExtra("token", token);
 		// Intent intent = new Intent("com.my.package.MY_UNIQUE_ACTION");
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(
 				DashBoardActivity.this, 0, intent,
@@ -729,5 +730,9 @@ public class DashBoardActivity extends ActionBarActivity implements
 			});
 		}
 		return careGiverList;
+	}
+
+	public String getToken() {
+		return token;
 	}
 }

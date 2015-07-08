@@ -125,6 +125,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(getActivity(), SendTouchActivity.class);
 		intent.putExtra("userId", parent.getParentId());
+		intent.putExtra("token", ((DashBoardActivity) getActivity()).getToken());
 		startActivity(intent);
 	}
 

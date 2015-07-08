@@ -323,7 +323,20 @@ public class SignUpActivity extends ActionBarActivity {
 								.getSharedPreferences("userPref", 0);
 						Editor edit = userPref.edit();
 						edit.putString("user", response.toString());
+
+						SharedPreferences token = getApplicationContext()
+								.getSharedPreferences("token", 0);
 						edit.apply();
+						Editor tokenedit = token.edit();
+						try {
+							tokenedit.putString("token",
+									response.getString("token"));
+							tokenedit.apply();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 						// edit.commit();
 						Log.d(TAG, response.toString());
 
