@@ -14,6 +14,8 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
@@ -247,10 +250,34 @@ public class DashBoardActivityFragment extends Fragment implements
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
-						Toast.makeText(getActivity(), error.getMessage(),
-								Toast.LENGTH_SHORT).show();
+						String json = null;
 
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(getActivity(),
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(getActivity(),
+								error.getMessage(), Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -266,6 +293,32 @@ public class DashBoardActivityFragment extends Fragment implements
 
 		AppController.getInstance().addToRequestQueue(req);
 
+	}
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getActivity(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 
 	public void setData(int level, int wifi, int battery) {
