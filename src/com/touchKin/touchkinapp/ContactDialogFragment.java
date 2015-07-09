@@ -12,9 +12,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -37,6 +40,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.model.AppController;
@@ -203,19 +207,34 @@ public class ContactDialogFragment extends DialogFragment implements
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
 
 						NetworkResponse response = error.networkResponse;
-
-						if (response != null && response.data != null) {
-							int code = response.statusCode;
-							json = new String(response.data);
-							// json = trimMessage(json, "message");
-							// if (json != null)
-							// displayMessage(json, code);
+						if (!InternetAvailable()) {
+							Toast.makeText(getActivity(),
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
 
 						}
 
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(getActivity(),
+								error.getMessage(), Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -230,6 +249,32 @@ public class ContactDialogFragment extends DialogFragment implements
 
 		AppController.getInstance().addToRequestQueue(req);
 
+	}
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getActivity(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 
 	@Override

@@ -6,8 +6,11 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +19,7 @@ import android.view.Menu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -151,7 +155,37 @@ public class SplashActivity extends Activity {
 						@SuppressLint("NewApi")
 						@Override
 						public void onErrorResponse(VolleyError error) {
+
+
+							Log.d("Error", "" + error.networkResponse);
 							VolleyLog.e("Error: ", error.getMessage());
+							String json = null;
+							
+							NetworkResponse response = error.networkResponse;
+							if (!InternetAvailable()) {
+								Toast.makeText(SplashActivity.this,
+										"Please Check your intenet connection",
+										Toast.LENGTH_SHORT).show();
+
+							}
+
+							// Log.d("Response", response.data.toString());
+							if (response != null && response.data != null) {
+								switch (response.statusCode) {
+								case 400:
+									json = new String(response.data);
+									json = trimMessage(json, "message");
+									if (json != null)
+										displayMessage(json, 400);
+
+									Log.d("Response", response.data.toString());
+								}
+							}
+						
+							VolleyLog.e("Error: ", error.getMessage());
+							Toast.makeText(SplashActivity.this,
+									error.getMessage(), Toast.LENGTH_SHORT).show();
+
 							Toast.makeText(getApplicationContext(),
 									error.getMessage(), Toast.LENGTH_SHORT)
 									.show();
@@ -172,7 +206,30 @@ public class SplashActivity extends Activity {
 			AppController.getInstance().addToRequestQueue(req);
 		}
 	}
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
 
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
+	}
 	// private class SendRequest extends AsyncTask<String, Void, Void> {
 	// /**
 	// * The system calls this to perform work in a worker thread and delivers

@@ -11,12 +11,15 @@ import org.json.JSONObject;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +49,7 @@ import android.widget.VideoView;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -443,6 +447,32 @@ public class SendTouchPreview extends ActionBarActivity implements
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
+						
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(SendTouchPreview.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+					
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(SendTouchPreview.this,
 								error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -461,6 +491,30 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 		AppController.getInstance().addToRequestQueue(req);
 
+	}
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 
 	public static String getMimeType(String url) {
