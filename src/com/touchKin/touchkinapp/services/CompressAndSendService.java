@@ -1,6 +1,6 @@
 package com.touchKin.touchkinapp.services;
-
 import java.io.File;
+import java.io.IOException;
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -17,6 +18,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -42,6 +44,8 @@ import com.netcompss.ffmpeg4android.GeneralUtils;
 import com.netcompss.ffmpeg4android.Prefs;
 import com.netcompss.loader.LoadJNI;
 import com.touchKin.touchkinapp.SendTouchPreview;
+import com.touchKin.touchkinapp.custom.AndroidMultiPartEntity;
+import com.touchKin.touchkinapp.custom.AndroidMultiPartEntity.ProgressListener;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touckinapp.R;
 
@@ -58,6 +62,7 @@ public class CompressAndSendService extends Service {
 	private boolean commandValidationFailedFlag = false;
 	Context _act;
 	Intent intent;
+	long totalSize = 0;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -115,6 +120,7 @@ public class CompressAndSendService extends Service {
 		Log.d("path", videoFolder);
 		new TranscdingBackground(getApplicationContext()).execute();
 	}
+
 	String val;
 
 	public class TranscdingBackground extends
@@ -254,7 +260,7 @@ public class CompressAndSendService extends Service {
 
 	}
 
-	class ImageUploadTask extends AsyncTask<Void, Void, String> {
+	class ImageUploadTask extends AsyncTask<String, String, String> {
 
 		Context context;
 
@@ -265,62 +271,133 @@ public class CompressAndSendService extends Service {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		protected String doInBackground(Void... unsued) {
+		protected String doInBackground(String... unsued) {
+			return uploadFile();
+			// try {
+			// File file = new File(val);
+			//
+			// // this is storage overwritten on each iteration with bytes
+			// AppController.mHttpClient.getParams().setParameter(
+			// CoreProtocolPNames.PROTOCOL_VERSION,
+			// HttpVersion.HTTP_1_1);
+			//
+			// HttpClient httpClient = AppController.mHttpClient;
+			//
+			// HttpPost httpPost = new HttpPost(
+			// "http://54.69.183.186:1340/kinbook/message/add");
+			//
+			// MultipartEntity entity = new MultipartEntity(
+			// HttpMultipartMode.BROWSER_COMPATIBLE);
+			//
+			//
+			//
+			// entity.addPart("shared_with",
+			// new StringBody(SendTouchPreview.getCheckedParentId()));
+			// entity.addPart("message", new StringBody(
+			// SendTouchPreview.sendmessage.getText().toString()));
+			// ContentBody cbFile = new FileBody(
+			// file,
+			// ContentType.create(getMimeType(file.getAbsolutePath())),
+			// file.getName());
+			//
+			// entity.addPart("media", cbFile);
+			//
+			// // entity.addPart("media", fileBody);
+			// Log.d("ParentId", SendTouchPreview.getCheckedParentId()
+			// .toString());
+			//
+			// // entity.addPart("photoCaption", new
+			// // StringBody(caption.getText()
+			// // .toString()));
+			// httpPost.setEntity(entity);
+			// Log.d("HttpPost", httpPost.getEntity() + "");
+			// HttpResponse response = httpClient.execute(httpPost);
+			// HttpEntity resEntity = response.getEntity();
+			//
+			// System.out.println(response.getStatusLine());
+			// // if (resEntity != null) {
+			// // System.out.println(EntityUtils.toString(resEntity));
+			// // }
+			// // if (resEntity != null) {
+			// // resEntity.consumeContent();
+			// // }
+			// return EntityUtils.toString(resEntity);
+			// } catch (Exception e) {
+			// Log.e(e.getClass().getName(), e.getMessage(), e);
+			// return null;
+			// }
+		}
+		@SuppressWarnings("deprecation")
+		private String uploadFile() {
+			String responseString = null;
+
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost("http://54.69.183.186:1340/kinbook/message/add");
+
 			try {
-				File file = new File(val);
+				AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
+						new ProgressListener() {
 
-				// this is storage overwritten on each iteration with bytes
-				AppController.mHttpClient.getParams().setParameter(
-						CoreProtocolPNames.PROTOCOL_VERSION,
-						HttpVersion.HTTP_1_1);
+							@Override
+							public void transferred(long num) {
+								publishProgress(""+(int) ((num / (float) totalSize) * 100));
+							}
+						});
 
-				HttpClient httpClient = AppController.mHttpClient;
-
-				HttpPost httpPost = new HttpPost(
-						"http://54.69.183.186:1340/kinbook/message/add");
-
-				MultipartEntity entity = new MultipartEntity(
-						HttpMultipartMode.BROWSER_COMPATIBLE);
-
-				entity.addPart("shared_with", new StringBody(SendTouchPreview
-						.getCheckedParentId()));
+				File sourceFile = new File(val);
+				entity.addPart("shared_with",
+						new StringBody(SendTouchPreview.getCheckedParentId()));
 				entity.addPart("message", new StringBody(
 						SendTouchPreview.sendmessage.getText().toString()));
 				ContentBody cbFile = new FileBody(
-						file,
-						ContentType.create(getMimeType(file.getAbsolutePath())),
-						file.getName());
-
+						sourceFile,
+						ContentType.create(getMimeType(sourceFile.getAbsolutePath())),
+						sourceFile.getName());
 				entity.addPart("media", cbFile);
 
 				// entity.addPart("media", fileBody);
 				Log.d("ParentId", SendTouchPreview.getCheckedParentId()
 						.toString());
 
-				// entity.addPart("photoCaption", new
-				// StringBody(caption.getText()
-				// .toString()));
-				httpPost.setEntity(entity);
-				Log.d("HttpPost", httpPost.getEntity() + "");
-				HttpResponse response = httpClient.execute(httpPost);
-				HttpEntity resEntity = response.getEntity();
 
-				System.out.println(response.getStatusLine());
-				// if (resEntity != null) {
-				// System.out.println(EntityUtils.toString(resEntity));
-				// }
-				// if (resEntity != null) {
-				// resEntity.consumeContent();
-				// }
-				return EntityUtils.toString(resEntity);
-			} catch (Exception e) {
-				Log.e(e.getClass().getName(), e.getMessage(), e);
-				return null;
+//				entity.addPart("media", cbFile);
+//
+//				// Adding file data to http body
+//				entity.addPart("image", new FileBody(sourceFile));
+//
+//				// Extra parameters if you want to pass to server
+//				entity.addPart("website",
+//						new StringBody("www.androidhive.info"));
+//				entity.addPart("email", new StringBody("abc@gmail.com"));
+
+				totalSize = entity.getContentLength();
+				httppost.setEntity(entity);
+
+				// Making server call
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity r_entity = response.getEntity();
+
+				int statusCode = response.getStatusLine().getStatusCode();
+				if (statusCode == 200) {
+					// Server response
+					responseString = EntityUtils.toString(r_entity);
+				} else {
+					responseString = "Error occurred! Http Status Code: "
+							+ statusCode;
+				}
+
+			} catch (ClientProtocolException e) {
+				responseString = e.toString();
+			} catch (IOException e) {
+				responseString = e.toString();
 			}
+
+			return responseString;
+
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... unsued) {
+		protected void onProgressUpdate(String... unsued) {
 		}
 
 		@Override
