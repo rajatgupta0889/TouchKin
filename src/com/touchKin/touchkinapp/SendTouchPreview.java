@@ -1,53 +1,27 @@
 package com.touchKin.touchkinapp;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -69,18 +43,14 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.android.volley.Response;
 import com.android.volley.Request.Method;
+import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.netcompss.ffmpeg4android.GeneralUtils;
-import com.netcompss.ffmpeg4android.Prefs;
-import com.netcompss.loader.LoadJNI;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
-import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.SendTouchParentListAdapter;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
@@ -114,6 +84,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 	static String userId;
 	String videoPath = null;
 	int id = 1;
+	String token;
 
 	// private ParentListModel selectedParent;
 
@@ -133,6 +104,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 		pDialog.setMessage("Sending the touch...");
 		pDialog.setCancelable(false);
 		userId = intent.getExtras().getString("userId");
+		token = intent.getExtras().getString("token");
 		// adding toolbar
 		// Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		// TextView mTitle = (TextView)
@@ -222,34 +194,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 							thumbnail, 640, 400);
 					Log.d("previewFilePath", previewFilePath.toString());
 					videoPath = previewFilePath.toString().substring(8);
-					// MediaMetadataRetriever retriever = new
-					// MediaMetadataRetriever();
-					// try {
-					// Log.i("img_url", getPath(previewFilePath));
-					//
-					// Uri uri = Uri.parse(getPath(previewFilePath));
-					// String scheme = uri.getScheme();
-					// Log.i("uri", "" + uri + " " + scheme);
-					// retriever.setDataSource(getPath(previewFilePath));
-					// bitmap = retriever.getFrameAtTime(20000000,
-					// MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-					// Log.d("bitmappp", " " + bitmap.getWidth() + " "
-					// + bitmap.getHeight());
-					// } catch (IllegalArgumentException ex) {
-					// // Assume this is a corrupt video file
-					// Log.d("IllegalArgumentException", "" + ex.getMessage());
-					// } catch (RuntimeException ex) {
-					// // Assume this is a corrupt video file.
-					// Log.d("RuntimeException", "" + ex.getMessage());
-					// } finally {
-					// try {
-					// retriever.release();
-					// } catch (RuntimeException ex) {
-					// // Ignore failures while cleaning up.
-					// Log.d("RuntimeException", "" + ex.getMessage());
-					// }
-					// }
-
 					previewImage.setImageBitmap(extractthumbnail);
 
 				}
@@ -275,15 +219,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 		});
 
 	}
-
-	// public String getPath(Uri uri, Activity activity) {
-	// String[] projection = { MediaColumns.DATA };
-	// Cursor cursor = activity
-	// .managedQuery(uri, projection, null, null, null);
-	// int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
-	// cursor.moveToFirst();
-	// return cursor.getString(column_index);
-	// }
 
 	public String getPath(Uri uri) {
 		// just some safety built in
@@ -381,6 +316,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 				Intent intent = new Intent(SendTouchPreview.this,
 						CompressAndSendService.class);
 				intent.putExtra("videoPath", videoPath);
+				intent.putExtra("token", token);
 				startService(intent);
 				finish();
 			} else {
@@ -513,7 +449,15 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 

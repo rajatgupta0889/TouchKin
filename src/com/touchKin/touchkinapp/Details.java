@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpVersion;
@@ -120,6 +121,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 	Boolean isLoggedIn;
 	ArrayAdapter<String> dataAdapter;
 	String selectedImagePath;
+	String tokenString;
 	protected static final int CAMERA_REQUEST = 0;
 	protected static final int GALLERY_PICTURE = 1;
 
@@ -676,7 +678,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 				HttpPost httpPost = new HttpPost(
 						"http://54.69.183.186:1340/user/avatar");
-
+				httpPost.setHeader("Authorization", "Bearer " + tokenString);
 				MultipartEntity entity = new MultipartEntity(
 						HttpMultipartMode.BROWSER_COMPATIBLE);
 
@@ -797,8 +799,18 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						SharedPreferences userPref = getApplicationContext()
 								.getSharedPreferences("userPref", 0);
 						Editor edit = userPref.edit();
+						SharedPreferences token = getApplicationContext()
+								.getSharedPreferences("token", 0);
+						try {
+							response.put("token",
+									token.getString("token", null));
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						edit.putString("user", response.toString());
 						edit.apply();
+
 						// Log.d("Response", "" + response);
 						// Log.d("mobile", "" + pref.getString("mobile",
 						// null));
@@ -833,7 +845,15 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						}
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + tokenString);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 	}
@@ -908,6 +928,18 @@ public class Details extends ActionBarActivity implements OnClickListener {
 							try {
 								response.put("code",
 										Integer.parseInt(oneTimePass));
+								SharedPreferences token = getApplicationContext()
+										.getSharedPreferences("token", 0);
+								Editor tokenedit = token.edit();
+								try {
+									tokenedit.putString("token",
+											response.getString("token"));
+									tokenedit.apply();
+									tokenString = response.optString("token");
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							} catch (NumberFormatException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -915,11 +947,11 @@ public class Details extends ActionBarActivity implements OnClickListener {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+
 						}
 						Editor edit = userPref.edit();
 						edit.putString("user", response.toString());
 						edit.apply();
-
 						Log.d("Response", "" + response);
 						// Log.d("mobile", "" + pref.getString("mobile",
 						// null));
@@ -965,8 +997,15 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						}
 						hidepDialog();
 					}
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("token", "Bearer " + tokenString);
+				return headers;
 
-				});
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 	}

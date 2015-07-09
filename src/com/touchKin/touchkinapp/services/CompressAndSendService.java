@@ -1,7 +1,9 @@
 package com.touchKin.touchkinapp.services;
 import java.io.File;
+
 import java.io.IOException;
 import java.security.PublicKey;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,7 +25,6 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import android.R.string;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -31,7 +32,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -62,7 +62,11 @@ public class CompressAndSendService extends Service {
 	private boolean commandValidationFailedFlag = false;
 	Context _act;
 	Intent intent;
+
 	long totalSize = 0;
+
+	String token;
+
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -110,6 +114,7 @@ public class CompressAndSendService extends Service {
 		super.onStart(intent, startId);
 		this.intent = intent;
 		videoPath = intent.getExtras().getString("videoPath");
+		token = intent.getExtras().getString("token");
 		videoFolder = Environment.getExternalStorageDirectory()
 				.getAbsolutePath();
 		workFolder = getApplicationContext().getFilesDir().getAbsolutePath()
@@ -332,8 +337,13 @@ public class CompressAndSendService extends Service {
 			String responseString = null;
 
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost("http://54.69.183.186:1340/kinbook/message/add");
+			AppController.mHttpClient.getParams().setParameter(
+					CoreProtocolPNames.PROTOCOL_VERSION,
+					HttpVersion.HTTP_1_1);
 
+			HttpClient httpClient = AppController.mHttpClient;
+			HttpPost httppost = new HttpPost("http://54.69.183.186:1340/kinbook/message/add");
+			httppost.setHeader("Authorization", "Bearer " + token);
 			try {
 				AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
 						new ProgressListener() {

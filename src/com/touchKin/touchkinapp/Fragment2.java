@@ -124,6 +124,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		Intent intent = new Intent(getActivity(), SendTouchActivity.class);
 		ParentListModel model = parent = list.get(myPager.getCurrentItem());
 		intent.putExtra("userId", model.getParentId());
+		intent.putExtra("token", ((DashBoardActivity) getActivity()).getToken());
 		startActivity(intent);
 	}
 

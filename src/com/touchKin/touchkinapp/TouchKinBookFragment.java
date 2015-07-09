@@ -1,6 +1,7 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -185,7 +186,16 @@ public class TouchKinBookFragment extends Fragment implements
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer "
+						+ ((DashBoardActivity) getActivity()).getToken());
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 
@@ -238,34 +248,19 @@ public class TouchKinBookFragment extends Fragment implements
 					public void onErrorResponse(VolleyError error) {
 
 					}
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer "
+						+ ((DashBoardActivity) getActivity()).getToken());
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
-
-	// private List<TouchKinComments> getCommentList(JSONArray comments) {
-	// List<TouchKinComments> list = new ArrayList<TouchKinComments>();
-	// try {
-	// for (int i = 0; i < comments.length(); i++) {
-	//
-	// JSONObject comment = comments.getJSONObject(i);
-	// TouchKinComments item = new TouchKinComments();
-	// item.setCommentText(comment.getString("text"));
-	// String time = comment.getString("createdAt");
-	// // Date date = new Date(time);
-	// item.setCommentDay("");
-	// item.setCommentTime("");
-	// item.setUserImageUrl("");
-	// item.setUserName("User");
-	// list.add(item);
-	// }
-	// } catch (JSONException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// // TODO Auto-generated method stub
-	// return list;
-	// }
 
 }
