@@ -281,7 +281,7 @@ public class CompressAndSendService extends Service {
 				httpPost.setHeader("Authorization", "Bearer " + token);
 				MultipartEntity entity = new MultipartEntity(
 						HttpMultipartMode.BROWSER_COMPATIBLE);
-
+				
 				entity.addPart("shared_with",
 						new StringBody(SendTouchPreview.getCheckedParentId()));
 				entity.addPart("message", new StringBody(

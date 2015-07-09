@@ -36,7 +36,6 @@ public class SendTouchActivity extends Activity implements
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	ProgressBar progBar;
 	RelativeLayout menuLayout;
-	private Button backButton;
 	private boolean singleShot = true;
 	FrameLayout camerapreview;
 	DemoCameraHost democamerhost = null;
@@ -83,8 +82,6 @@ public class SendTouchActivity extends Activity implements
 		imageMode.setOnClickListener(picturelistener);
 
 		menuLayout = (RelativeLayout) findViewById(R.id.menuLayout);
-		backButton = (Button) findViewById(R.id.back_button);
-		backButton.setOnClickListener(this);
 		// tipContainer = (ToolTipLayout) findViewById(R.id.tooltip_container);
 		myContext = SendTouchActivity.this;
 
@@ -199,9 +196,6 @@ public class SendTouchActivity extends Activity implements
 		// startImageMode();
 		// break;
 
-		case R.id.back_button:
-			openDialog();
-			break;
 		case R.id.yesButton:
 			goBack();
 			break;
