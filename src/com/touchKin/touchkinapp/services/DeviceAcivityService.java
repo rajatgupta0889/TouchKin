@@ -44,7 +44,6 @@ public class DeviceAcivityService extends Service {
 	int msessageCount;
 	JSONObject mySelf;
 	String phone, mobile_device_id;
-	String token;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -85,7 +84,6 @@ public class DeviceAcivityService extends Service {
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
 		super.onStart(intent, startId);
-		token = intent.getExtras().getString("token");
 		MyListener = new MyPhoneStateListener();
 		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 		Log.d("Device Activity serivce",
@@ -278,16 +276,7 @@ public class DeviceAcivityService extends Service {
 
 					}
 
-				}) {
-			public java.util.Map<String, String> getHeaders()
-					throws com.android.volley.AuthFailureError {
-				HashMap<String, String> headers = new HashMap<String, String>();
-				headers.put("Authorization", "Bearer " + token);
-				return headers;
-
-			};
-		};
-
+				});
 		AppController.getInstance().addToRequestQueue(req);
 	}
 

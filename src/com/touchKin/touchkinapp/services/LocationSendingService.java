@@ -53,7 +53,6 @@ public class LocationSendingService extends Service implements LocationListener 
 
 	// Declaring a Location Manager
 	protected LocationManager locationManager;
-	String token;
 
 	public LocationSendingService(Context context) {
 		this.mContext = context;
@@ -235,7 +234,6 @@ public class LocationSendingService extends Service implements LocationListener 
 	public void onStart(Intent intent, int startId) {
 		// Toast.makeText(this, " MyService Started", Toast.LENGTH_LONG).show();
 		mContext = getApplicationContext();
-		token = intent.getExtras().getString("token");
 		Log.d("Location serivce", "Started Time " + new Date().toGMTString());
 		Location loc = getLocation();
 		JSONObject param = new JSONObject();
@@ -322,7 +320,6 @@ public class LocationSendingService extends Service implements LocationListener 
 
 				HttpPost httpPost = new HttpPost(
 						"http://54.69.183.186:1340/location/add");
-				httpPost.setHeader("Authorization", "Bearer " + token);
 				// adding post params
 				if (params != null) {
 					httpPost.setEntity(new StringEntity(params[0].toString()));

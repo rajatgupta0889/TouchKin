@@ -138,6 +138,10 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			Log.d("Data ", "Phone " + phone + " mobile_os " + mobile_os + "id "
 					+ deviceId);
 			verified = false;
+		} else {
+			SharedPreferences token = getApplicationContext()
+					.getSharedPreferences("token", 0);
+			tokenString = token.getString("token", null);
 		}
 		year_spinner.setEnabled(false);
 		dataAdapter
@@ -810,12 +814,6 @@ public class Details extends ActionBarActivity implements OnClickListener {
 						}
 						edit.putString("user", response.toString());
 						edit.apply();
-
-						// Log.d("Response", "" + response);
-						// Log.d("mobile", "" + pref.getString("mobile",
-						// null));
-						// Log.d("otp", "" + pref.getString("mobile",
-						// null));
 						if (!isLoggedIn) {
 							Intent intent = new Intent(Details.this,
 									MyFamily.class);
