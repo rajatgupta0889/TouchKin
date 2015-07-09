@@ -12,11 +12,14 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -161,6 +164,32 @@ public class AddCareActivity extends ActionBarActivity implements
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
+						
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(AddCareActivity.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+					
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(AddCareActivity.this,
 								error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -171,6 +200,30 @@ public class AddCareActivity extends ActionBarActivity implements
 
 		AppController.getInstance().addToRequestQueue(req);
 
+	}
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 
 	@Override

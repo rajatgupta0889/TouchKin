@@ -13,6 +13,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -295,8 +297,34 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
 
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(MyFamily.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MyFamily.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -388,6 +416,36 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(MyFamily.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MyFamily.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
+
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(MyFamily.this, error.getMessage(),
 								Toast.LENGTH_SHORT).show();
@@ -518,19 +576,34 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// String json = null;
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
 
 						NetworkResponse response = error.networkResponse;
-
-						if (response != null && response.data != null) {
-							// int code = response.statusCode;
-							// json = new String(response.data);
-							// json = trimMessage(json, "message");
-							// if (json != null)
-							// displayMessage(json, code);
+						if (!InternetAvailable()) {
+							Toast.makeText(MyFamily.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
 
 						}
-						// hidepDialog();
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MyFamily.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -566,19 +639,34 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// String json = null;
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
 
 						NetworkResponse response = error.networkResponse;
-
-						if (response != null && response.data != null) {
-							// int code = response.statusCode;
-							// json = new String(response.data);
-							// json = trimMessage(json, "message");
-							// if (json != null)
-							// displayMessage(json, code);
+						if (!InternetAvailable()) {
+							Toast.makeText(MyFamily.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
 
 						}
-						// hidepDialog();
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MyFamily.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -637,10 +725,34 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(MyFamily.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(MyFamily.this, error.getMessage(),
 								Toast.LENGTH_SHORT).show();
-
 					}
 
 				}) {
@@ -684,10 +796,33 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						Log.d("Error", "" + error.networkResponse);
-						Toast.makeText(MyFamily.this,
-								"Sorry Unable to fectch request right now",
-								Toast.LENGTH_LONG).show();
-						// Additional cases
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+						if (!InternetAvailable()) {
+							Toast.makeText(MyFamily.this,
+									"Please Check your intenet connection",
+									Toast.LENGTH_SHORT).show();
+
+						}
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MyFamily.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -701,6 +836,33 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		};
 
 		AppController.getInstance().addToRequestQueue(req);
+	}
+
+	private boolean InternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(getApplicationContext(),
+				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
 	}
 
 	private void startFecthingCRFamily(
