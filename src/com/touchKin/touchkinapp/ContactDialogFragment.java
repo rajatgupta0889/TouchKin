@@ -2,6 +2,7 @@ package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONException;
@@ -53,6 +54,7 @@ public class ContactDialogFragment extends DialogFragment implements
 	String phonevalid;
 	int addAs;
 	String phoneNo;
+	String token;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class ContactDialogFragment extends DialogFragment implements
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		addAs = getArguments().getInt("num");
 		phoneNo = getArguments().getString("mobile");
+		token = getArguments().getString("token");
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog
 		// layout
@@ -215,7 +218,15 @@ public class ContactDialogFragment extends DialogFragment implements
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 

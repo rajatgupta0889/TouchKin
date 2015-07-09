@@ -1,9 +1,11 @@
 package com.touchKin.touchkinapp.services;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -28,6 +30,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.model.AppController;
 
 public class DeviceAcivityService extends Service {
@@ -41,6 +44,7 @@ public class DeviceAcivityService extends Service {
 	int msessageCount;
 	JSONObject mySelf;
 	String phone, mobile_device_id;
+	String token;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -56,6 +60,7 @@ public class DeviceAcivityService extends Service {
 		// Toast.LENGTH_LONG).show();
 		Log.d("Device Activity serivce",
 				"Created Time " + new Date().toGMTString());
+
 		wifi = fetchwifi();
 		battery = fetchBattery();
 		// level = fetchSignal();
@@ -80,11 +85,12 @@ public class DeviceAcivityService extends Service {
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
 		super.onStart(intent, startId);
+		token = intent.getExtras().getString("token");
 		MyListener = new MyPhoneStateListener();
 		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 		Log.d("Device Activity serivce",
 				"Start Time " + new Date().toGMTString());
-		
+
 		msessageCount = fetchMessageCount();
 		FetchCallCount();
 
@@ -272,7 +278,15 @@ public class DeviceAcivityService extends Service {
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 	}

@@ -1,7 +1,6 @@
 package com.touchKin.touchkinapp.services;
 
 import java.io.File;
-import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -21,7 +20,6 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import android.R.string;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -29,7 +27,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -58,6 +55,7 @@ public class CompressAndSendService extends Service {
 	private boolean commandValidationFailedFlag = false;
 	Context _act;
 	Intent intent;
+	String token;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -105,6 +103,7 @@ public class CompressAndSendService extends Service {
 		super.onStart(intent, startId);
 		this.intent = intent;
 		videoPath = intent.getExtras().getString("videoPath");
+		token = intent.getExtras().getString("token");
 		videoFolder = Environment.getExternalStorageDirectory()
 				.getAbsolutePath();
 		workFolder = getApplicationContext().getFilesDir().getAbsolutePath()
@@ -115,6 +114,7 @@ public class CompressAndSendService extends Service {
 		Log.d("path", videoFolder);
 		new TranscdingBackground(getApplicationContext()).execute();
 	}
+
 	String val;
 
 	public class TranscdingBackground extends
@@ -278,12 +278,12 @@ public class CompressAndSendService extends Service {
 
 				HttpPost httpPost = new HttpPost(
 						"http://54.69.183.186:1340/kinbook/message/add");
-
+				httpPost.setHeader("Authorization", "Bearer " + token);
 				MultipartEntity entity = new MultipartEntity(
 						HttpMultipartMode.BROWSER_COMPATIBLE);
-
-				entity.addPart("shared_with", new StringBody(SendTouchPreview
-						.getCheckedParentId()));
+				
+				entity.addPart("shared_with",
+						new StringBody(SendTouchPreview.getCheckedParentId()));
 				entity.addPart("message", new StringBody(
 						SendTouchPreview.sendmessage.getText().toString()));
 				ContentBody cbFile = new FileBody(

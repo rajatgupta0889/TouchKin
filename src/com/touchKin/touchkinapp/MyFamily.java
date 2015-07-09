@@ -68,6 +68,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 	Boolean isFromNotification;
 	String phone, device_id;
 	String user;
+	String token;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,19 +111,6 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					// .get(groupPosition);
 					// if (careGiver.get(item.getUserId()) == null)
 					// fetchMyCRFamily(item.getUserId(), groupPosition);
-				}
-				return false;
-			}
-		});
-		expandListView.setOnGroupExpandListener(new OnGroupExpandListener() {
-			int previousGroup = -1;
-
-			@Override
-			public void onGroupExpand(int groupPosition) {
-				if (groupPosition < CareReciever.size()) {
-					if (groupPosition != previousGroup)
-						expandListView.collapseGroup(previousGroup);
-					previousGroup = groupPosition;
 				} else if (groupPosition != 0) {
 					LayoutInflater li = LayoutInflater.from(MyFamily.this);
 					View custom = li.inflate(R.layout.pending_dialog, null);
@@ -147,6 +135,19 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 					alertDialog.show();
 
+				}
+				return false;
+			}
+		});
+		expandListView.setOnGroupExpandListener(new OnGroupExpandListener() {
+			int previousGroup = -1;
+
+			@Override
+			public void onGroupExpand(int groupPosition) {
+				if (groupPosition < CareReciever.size()) {
+					if (groupPosition != previousGroup)
+						expandListView.collapseGroup(previousGroup);
+					previousGroup = groupPosition;
 				}
 			}
 		});
@@ -176,7 +177,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					"", mySelf.getString("mobile")));
 			phone = mySelf.getString("mobile");
 			device_id = mySelf.getString("mobile_device_id");
-
+			token = mySelf.optString("token");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -298,7 +299,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 
@@ -386,7 +395,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 
@@ -477,6 +494,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		Bundle args = new Bundle();
 		args.putInt("num", reqTO);
 		args.putString("mobile", ParentNo);
+		args.putString("token", token);
 		newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "TAG");
 		((ContactDialogFragment) newFragment).SetButtonListener(MyFamily.this);
@@ -515,7 +533,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						// hidepDialog();
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 
@@ -555,7 +581,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						// hidepDialog();
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 	}
@@ -609,7 +643,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 
@@ -648,7 +690,15 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 						// Additional cases
 					}
 
-				});
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
 
 		AppController.getInstance().addToRequestQueue(req);
 	}
