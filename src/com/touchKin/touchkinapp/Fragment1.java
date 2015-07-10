@@ -1,13 +1,21 @@
 package com.touchKin.touchkinapp;
 
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +26,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
@@ -32,6 +45,8 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	PageListener pageListener;
 	ParentListModel parent;
 	Vibrator vib;
+	TextView sendTouchTextview;
+	Boolean withoutMsg = false;
 
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
@@ -68,6 +83,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		// indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
 		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
 		getService = (TextView) v.findViewById(R.id.getService);
+		sendTouchTextview = (TextView) v.findViewById(R.id.textToSendTouch);
 	}
 
 	@Override
@@ -98,6 +114,24 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.sendTouch:
 			vib.vibrate(500);
+			sendTouchTextview.setVisibility(View.VISIBLE);
+			sendTouchTextview.setText("Add a video to the touch?");
+			new Handler().postDelayed(new Runnable() {
+
+				/*
+				 * Showing splash screen with a timer. This will be useful when
+				 * you want to show case your app logo / company
+				 */
+				@Override
+				public void run() {
+					// This method will be executed once the timer is over
+					// Start your app main activity
+					if (!withoutMsg)
+						sendTouchWithoutMessage();
+					sendTouchTextview.setVisibility(View.INVISIBLE);
+
+				}
+			}, 10000);
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			sendTouch();
 			break;
@@ -116,6 +150,11 @@ public class Fragment1 extends Fragment implements OnClickListener {
 			}
 
 			break;
+		case R.id.textToSendTouch:
+
+			withoutMsg = true;
+			sendTouch();
+			break;
 		default:
 			break;
 		}
@@ -127,6 +166,35 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		intent.putExtra("userId", parent.getParentId());
 		intent.putExtra("token", ((DashBoardActivity) getActivity()).getToken());
 		startActivity(intent);
+	}
+
+	private void sendTouchWithoutMessage() {
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/touch/add", null,
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d("Activity Result", response.toString());
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", error.getMessage() + " ");
+
+					}
+
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer "
+						+ ((DashBoardActivity) getActivity()).getToken());
+
+				return headers;
+
+			};
+		};
+		AppController.getInstance().addToRequestQueue(req);
 	}
 
 	private class PageListener extends SimpleOnPageChangeListener {

@@ -1,11 +1,15 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,8 +21,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.MyDashbaordAdapter;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
@@ -29,6 +38,8 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 	ParentListModel parent;
 	Vibrator vib;
 	TextView sendTouch, getService;
+	TextView sendTouchTextview;
+	Boolean withoutMsg = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +54,8 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
 		getService = (TextView) v.findViewById(R.id.getService);
+		sendTouchTextview = (TextView) v.findViewById(R.id.textToSendTouch);
+
 		return v;
 	}
 
@@ -71,6 +84,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		Log.d("pager pos", myPager.getCurrentItem() + "");
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
+		sendTouchTextview.setOnClickListener(this);
 	}
 
 	@Override
@@ -80,17 +94,28 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		case R.id.sendTouch:
 			vib.vibrate(500);
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			if (myPager.getCurrentItem() > 0)
-				sendTouch();
-			else {
-				Toast.makeText(getActivity(),
-						"You can not send touch to yourzself",
-						Toast.LENGTH_SHORT).show();
+			if (myPager.getCurrentItem() > 0) {
+				sendTouchTextview.setVisibility(View.VISIBLE);
+				sendTouchTextview.setText("Add a video to the touch?");
+				new Handler().postDelayed(new Runnable() {
+
+					/*
+					 * Showing splash screen with a timer. This will be useful
+					 * when you want to show case your app logo / company
+					 */
+					@Override
+					public void run() {
+						// This method will be executed once the timer is over
+						// Start your app main activity
+						if (!withoutMsg)
+							sendTouchWithoutMessage();
+						sendTouchTextview.setVisibility(View.INVISIBLE);
+					}
+				}, 10000);
 			}
+
 			break;
 		case R.id.getService:
-
-			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			if (list != null)
 				parent = list.get(myPager.getCurrentItem());
 
@@ -114,6 +139,16 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 			}
 
 			break;
+		case R.id.textToSendTouch:
+			if (myPager.getCurrentItem() > 0) {
+				withoutMsg = true;
+				sendTouch();
+			} else {
+				Toast.makeText(getActivity(),
+						"You can not send touch to yourzself",
+						Toast.LENGTH_SHORT).show();
+			}
+			break;
 		default:
 			break;
 		}
@@ -128,4 +163,32 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		startActivity(intent);
 	}
 
+	private void sendTouchWithoutMessage() {
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/touch/add", null,
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d("Activity Result", response.toString());
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", error.getMessage() + " ");
+
+					}
+
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer "
+						+ ((DashBoardActivity) getActivity()).getToken());
+
+				return headers;
+
+			};
+		};
+		AppController.getInstance().addToRequestQueue(req);
+	}
 }

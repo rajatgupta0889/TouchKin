@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ToucKinApp</string>
+    <string name="app_name">Touchkin</string>
     <string name="app_name_empty"></string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

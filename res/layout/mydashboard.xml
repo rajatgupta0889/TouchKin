@@ -4,6 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <TextView
+        android:id="@+id/textToSendTouch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:text="Add video to touch" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/myPager"
         android:layout_width="match_parent"
@@ -53,5 +61,8 @@
             android:textColor="@color/text_grey"
             android:textSize="15sp" />
     </LinearLayout>
+
+    <TextView>
+    </TextView>
 
 </RelativeLayout>
