@@ -1,10 +1,16 @@
 package com.touchKin.touchkinapp.services;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -77,18 +83,44 @@ public class GcmIntentService extends IntentService {
 		String message = null;
 
 		message = msg;
-		if (resultType.equalsIgnoreCase("touch")) {
-			intent = new Intent(this, DashBoardActivity.class);
-			intent.putExtra("type", resultType);
-		}
-		if (resultType.equalsIgnoreCase("media")) {
-			intent = new Intent(this, DashBoardActivity.class);
-			intent.putExtra("type", resultType);
-		}
 		if (resultType.equalsIgnoreCase("request")) {
 			intent = new Intent(this, MyFamily.class);
-			intent.putExtra("type", resultType);
+
+		} else {
+			intent = new Intent(this, DashBoardActivity.class);
+			SharedPreferences pendingTouch = getApplicationContext()
+					.getSharedPreferences("pendingTouch", 0);
+			Editor tokenedit = pendingTouch.edit();
+			JSONArray touch = null;
+			if (pendingTouch.getString("touch", null) == null) {
+				touch = new JSONArray();
+			} else {
+				String array = pendingTouch.getString("touch", null);
+				if (array != null) {
+					try {
+						touch = new JSONArray(array);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+			JSONObject touchObj = new JSONObject();
+			try {
+				touchObj.put("id", id);
+				touchObj.put("type", resultType);
+				touch.put(touchObj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			tokenedit.putString("touch", touch + "");
+			tokenedit.putString("type", resultType);
+			tokenedit.commit();
 		}
+		intent.putExtra("type", resultType);
 		intent.putExtra("Flag", true);
 		intent.putExtra("id", id);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -110,5 +142,4 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
 	}
-
 }

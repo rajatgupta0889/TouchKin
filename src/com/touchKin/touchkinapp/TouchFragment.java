@@ -17,18 +17,20 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
-import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
@@ -40,8 +42,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class TouchFragment extends Fragment implements FragmentInterface
-		 {
+public class TouchFragment extends Fragment implements FragmentInterface {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
@@ -49,6 +50,7 @@ public class TouchFragment extends Fragment implements FragmentInterface
 	TextView parentName;
 	ParentListModel parent;
 	int resID;
+	Vibrator vib;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -65,6 +67,8 @@ public class TouchFragment extends Fragment implements FragmentInterface
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		vib = (Vibrator) this.getActivity().getSystemService(
+				Context.VIBRATOR_SERVICE);
 	}
 
 	// Inflate the view for the fragment based on layout XML
@@ -81,8 +85,19 @@ public class TouchFragment extends Fragment implements FragmentInterface
 		// PieSlice slice = new PieSlice();
 		parentName = (TextView) view.findViewById(R.id.parentNameTV);
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
-		//((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		parentImage.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (parent != null) {
+					if (parent.getIsPendingTouch()) {
+						vib.vibrate(500);
+					}
+				}
+			}
+		});
 		return view;
 	}
 
@@ -190,14 +205,15 @@ public class TouchFragment extends Fragment implements FragmentInterface
 
 			parentName.setText(parent.getParentName() + " last touch ");
 		}
+
 	}
 
-//	@Override
-//	public void onButtonClickListner(int position, String value,
-//			Boolean isAccept) {
-//		// TODO Auto-generated method stub
-//		SetImage();
-//	}
+	// @Override
+	// public void onButtonClickListner(int position, String value,
+	// Boolean isAccept) {
+	// // TODO Auto-generated method stub
+	// SetImage();
+	// }
 
 	public void getCurrent(String id) {
 		Log.d("id ", id);
@@ -219,11 +235,10 @@ public class TouchFragment extends Fragment implements FragmentInterface
 					@Override
 					public void onErrorResponse(VolleyError error) {
 
-
 						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
-						
+
 						NetworkResponse response = error.networkResponse;
 						if (!InternetAvailable()) {
 							Toast.makeText(getActivity(),
@@ -244,10 +259,10 @@ public class TouchFragment extends Fragment implements FragmentInterface
 								Log.d("Response", response.data.toString());
 							}
 						}
-					
-}
 
-				}){
+					}
+
+				}) {
 			public java.util.Map<String, String> getHeaders()
 					throws com.android.volley.AuthFailureError {
 				HashMap<String, String> headers = new HashMap<String, String>();
@@ -261,16 +276,20 @@ public class TouchFragment extends Fragment implements FragmentInterface
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+
 	public void displayMessage(String toastString, int code) {
-		Toast.makeText(getActivity(),
-				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), toastString + " code error: " + code,
+				Toast.LENGTH_LONG).show();
 	}
+
 	public String trimMessage(String json, String key) {
 		String trimmedString = null;
 

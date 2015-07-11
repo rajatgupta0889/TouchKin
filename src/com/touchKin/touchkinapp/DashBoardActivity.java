@@ -99,6 +99,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 	JSONObject userObj;
 	static Button notifCount;
 	String token;
+	Boolean isFromNotification;
+	JSONArray touchArray = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +113,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			isFromNotification = extras.getBoolean("Flag");
+		}
 		setSupportActionBar(toolbar);
 		toolbar.inflateMenu(R.menu.toolbar_menu);
 		// toolbar.setOnMenuItemClickListener(new
@@ -146,6 +152,17 @@ public class DashBoardActivity extends ActionBarActivity implements
 			token = userObj.optString("token");
 		} catch (JSONException e) {
 			e.printStackTrace();
+		}
+		SharedPreferences pendingTouch = getApplicationContext()
+				.getSharedPreferences("pendingTouch", 0);
+		String array = pendingTouch.getString("touch", null);
+		if (array != null) {
+			try {
+				touchArray = new JSONArray(array);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		fetchParentList();
 		mAdapter = new MyAdapter(TITLES, userName, userId,
@@ -429,11 +446,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 						Log.d("Response Array", " " + responseArray);
 						try {
 							list.add(new ParentListModel(userId, true, "Me",
-									userId, "", userObj.getString("mobile")));
+									userId, "", true, userObj
+											.getString("mobile"), true, false));
 							list.get(0).setReqStatus(true);
 							careGiverList.add(new ParentListModel(userId,
-									false, "Me", userId, "", userObj
-											.getString("mobile")));
+									false, "Me", userId, "", true, userObj
+											.getString("mobile"), false, false));
 							careGiverList.get(0).setReqStatus(true);
 							selectedParent = list.get(0);
 							JSONArray careRecievers = responseArray
@@ -457,6 +475,33 @@ public class DashBoardActivity extends ActionBarActivity implements
 									} else {
 										item.setReqStatus(true);
 									}
+									if (touchArray != null) {
+										for (int j = 0; j < touchArray.length(); j++) {
+											try {
+												JSONObject obj = touchArray
+														.getJSONObject(j);
+												if (obj.getString("id")
+														.equalsIgnoreCase(
+																item.getParentId())) {
+													item.setIsPendingTouch(true);
+													if (obj.getString("type")
+															.equalsIgnoreCase(
+																	"media")) {
+														item.setIsTouchMedia(true);
+													}
+												} else {
+													item.setIsPendingTouch(false);
+												}
+											} catch (JSONException e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											}
+										}
+									} else {
+										item.setIsPendingTouch(false);
+
+									}
 									item.setIsSelected(false);
 									list.add(item);
 								}
@@ -478,6 +523,32 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setReqStatus(false);
 									} else {
 										item.setReqStatus(true);
+									}
+									if (touchArray != null) {
+										for (int j = 0; j < touchArray.length(); j++) {
+											try {
+												JSONObject obj = touchArray
+														.getJSONObject(j);
+												if (obj.getString("id")
+														.equalsIgnoreCase(
+																item.getParentId())) {
+													item.setIsPendingTouch(true);
+													if (obj.getString("type")
+															.equalsIgnoreCase(
+																	"media")) {
+														item.setIsTouchMedia(true);
+													}
+												} else {
+													item.setIsPendingTouch(false);
+												}
+											} catch (JSONException e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											}
+										}
+									} else {
+										item.setIsPendingTouch(false);
 									}
 									item.setMobilenumber(cg.optString("mobile"));
 									careGiverList.add(item);
@@ -502,8 +573,21 @@ public class DashBoardActivity extends ActionBarActivity implements
 															lhs.getReqStatus());
 										}
 									});
+							Collections.sort(list,
+									new Comparator<ParentListModel>() {
+										@Override
+										public int compare(ParentListModel lhs,
+												ParentListModel rhs) {
+											// TODO Auto-generated method stub
+											return rhs
+													.getIsPendingTouch()
+													.compareTo(
+															lhs.getIsPendingTouch());
+										}
+									});
 						}
-						list.add(new ParentListModel("", false, "", "", "", ""));
+						list.add(new ParentListModel("", false, "", "", "",
+								false, "", false, false));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
 						// if (selectedParent == null) {
@@ -523,7 +607,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
-						
+
 						NetworkResponse response = error.networkResponse;
 						if (!InternetAvailable()) {
 							Toast.makeText(DashBoardActivity.this,
@@ -544,7 +628,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 								Log.d("Response", response.data.toString());
 							}
 						}
-					
+
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(DashBoardActivity.this,
 								error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -563,16 +647,19 @@ public class DashBoardActivity extends ActionBarActivity implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+
 	public void displayMessage(String toastString, int code) {
 		Toast.makeText(getApplicationContext(),
 				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
 	}
+
 	public String trimMessage(String json, String key) {
 		String trimmedString = null;
 

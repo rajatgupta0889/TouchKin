@@ -405,7 +405,11 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 							startFecthingCRFamily(CareReciever);
 							adapter.setupTrips(careGiver, requests,
 									CareReciever, pendingReq);
-							expandListView.expandGroup(0);
+							if (isFromNotification != null
+									&& isFromNotification) {
+								expandListView.expandGroup(0);
+							}
+
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

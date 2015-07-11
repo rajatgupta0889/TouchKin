@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,8 +48,9 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		// TODO Auto-generated method stub
 
 		View v = inflater.inflate(R.layout.mydashboard, null);
+		getActivity();
 		vib = (Vibrator) this.getActivity().getSystemService(
-				getActivity().VIBRATOR_SERVICE);
+				Context.VIBRATOR_SERVICE);
 		myPager = (ViewPager) v.findViewById(R.id.myPager);
 		list = new ArrayList<ParentListModel>();
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);

@@ -16,8 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         android:text="Add video to touch"
+        android:textColor="@color/text_orange"
+        android:textSize="20sp"
         android:visibility="invisible" />
     <!--
          <com.viewpagerindicator.CirclePageIndicator

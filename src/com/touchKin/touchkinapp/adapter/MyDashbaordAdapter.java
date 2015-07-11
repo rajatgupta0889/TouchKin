@@ -4,11 +4,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -22,12 +24,14 @@ public class MyDashbaordAdapter extends PagerAdapter {
 	List<ParentListModel> parentList;
 	LayoutInflater inflater;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
+	Vibrator vib;
 
 	public MyDashbaordAdapter(Context context, List<ParentListModel> parentList) {
 		this.parentList = parentList;
 		this.context = context;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		vib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class MyDashbaordAdapter extends PagerAdapter {
 		// TODO Auto-generated method stub
 
 		RoundedImageView imageView;
-		ParentListModel parent = parentList.get(position);
+		final ParentListModel parent = parentList.get(position);
 		View view = inflater.inflate(R.layout.dashboard_touch_screen,
 				container, false);
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
@@ -57,6 +61,16 @@ public class MyDashbaordAdapter extends PagerAdapter {
 		imageLoader.DisplayImage(serverPath + parent.getParentId() + ".jpeg",
 				resID, imageView);
 		((ViewPager) container).addView(view);
+		imageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (parent.getIsPendingTouch()) {
+					vib.vibrate(500);
+				}
+			}
+		});
 		return view;
 
 	}

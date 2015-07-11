@@ -131,7 +131,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 					sendTouchTextview.setVisibility(View.INVISIBLE);
 
 				}
-			}, 10000);
+			}, 100000);
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			sendTouch();
 			break;
