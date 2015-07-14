@@ -68,7 +68,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 	ImageView previewImage;
 	Bitmap bm;
 	VideoView videoPreview;
-	public static EditText sendmessage;
+	//public static EditText sendmessage;
 	Button sendButton;
 	Handler handler;
 	private SendTouchParentListAdapter imageAdapter;
@@ -103,7 +103,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 		Typeface latofont = Typeface.createFromAsset(getAssets(),
 				"fonts/Lato-LightItalic.ttf");
-		sendmessage.setTypeface(latofont);
+	//	sendmessage.setTypeface(latofont);
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Sending the touch...");
 		pDialog.setCancelable(false);
@@ -138,33 +138,33 @@ public class SendTouchPreview extends ActionBarActivity implements
 		//
 		// }
 		// });
-		sendmessage.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				// TODO Auto-generated method stub
-				boolean handled = false;
-				if (actionId == EditorInfo.IME_ACTION_SEND) {
-					// sendMedia(type);
-					handled = true;
-				}
-				return handled;
-			}
-		});
-		sendmessage.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				sendmessage.requestLayout();
-				SendTouchPreview.this
-						.getWindow()
-						.setSoftInputMode(
-								WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
-
-				return false;
-			}
-		});
+//		sendmessage.setOnEditorActionListener(new OnEditorActionListener() {
+//
+//			@Override
+//			public boolean onEditorAction(TextView v, int actionId,
+//					KeyEvent event) {
+//				// TODO Auto-generated method stub
+//				boolean handled = false;
+//				if (actionId == EditorInfo.IME_ACTION_SEND) {
+//					// sendMedia(type);
+//					handled = true;
+//				}
+//				return handled;
+//			}
+//		});
+//		sendmessage.setOnTouchListener(new OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				// TODO Auto-generated method stub
+//				sendmessage.requestLayout();
+//				SendTouchPreview.this
+//						.getWindow()
+//						.setSoftInputMode(
+//								WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+//
+//				return false;
+//			}
+//		});
 
 		if (intent != null) {
 
@@ -249,7 +249,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 		previewImage = (ImageView) findViewById(R.id.imagePreview);
 		videoPreview = (VideoView) findViewById(R.id.videoPreview);
 		sendButton = (Button) findViewById(R.id.sendbutton);
-		sendmessage = (EditText) findViewById(R.id.phone_number_detail);
+	//	sendmessage = (EditText) findViewById(R.id.phone_number_detail);
 		listview = (HorizontalListView) findViewById(R.id.parentListView);
 		thumbnailplaybutton = (Button) findViewById(R.id.play_btn);
 		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayoutDashboard);

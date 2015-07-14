@@ -18,7 +18,7 @@
     <VideoView
         android:id="@+id/videoPreview"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
@@ -61,7 +61,7 @@
         </com.touchKin.touchkinapp.custom.HorizontalListView>
     </RelativeLayout>
 
-    <EditText
+<!--     <EditText
         android:id="@+id/phone_number_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,15 +73,15 @@
         android:padding="10dp"
         android:textColor="@color/white"
         android:textColorHint="@color/text_orange" >
-    </EditText>
+    </EditText> -->
 
-    <Button
+    <!-- <Button
         android:id="@+id/sendButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_below="@+id/imagePreview"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/triangle" />
+        android:background="@drawable/triangle" /> -->
 
     <View
         android:id="@+id/view2"

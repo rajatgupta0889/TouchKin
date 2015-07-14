@@ -67,15 +67,17 @@ public class DeviceAcivityService extends Service {
 				.getSharedPreferences("userPref", 0);
 		Tel = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String user = userPref.getString("user", null);
-		try {
-			mySelf = new JSONObject(user);
+		if (user != null) {
+			try {
+				mySelf = new JSONObject(user);
 
-			phone = mySelf.getString("mobile");
-			mobile_device_id = mySelf.getString("mobile_device_id");
+				phone = mySelf.getString("mobile");
+				mobile_device_id = mySelf.getString("mobile_device_id");
 
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -97,14 +99,16 @@ public class DeviceAcivityService extends Service {
 		// fetchsignal() + " " + battery + " " + fetchwifi() + " "
 		// + fetchMessageCount() + " " + FetchCallCount(),
 		// Toast.LENGTH_SHORT).show();
-		new Handler().postDelayed(new Runnable() {
+		if (mySelf != null) {
+			new Handler().postDelayed(new Runnable() {
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				sendActivityData();
-			}
-		}, 2000);
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					sendActivityData();
+				}
+			}, 2000);
+		}
 
 	}
 

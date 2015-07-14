@@ -246,7 +246,7 @@ public class LocationSendingService extends Service implements LocationListener 
 				.getSharedPreferences("userPref", 0);
 		String user = userPref.getString("user", null);
 
-		if (loc != null) {
+		if (loc != null && user != null) {
 			try {
 				JSONObject mySelf = new JSONObject(user);
 				param.put("y", loc.getLongitude());

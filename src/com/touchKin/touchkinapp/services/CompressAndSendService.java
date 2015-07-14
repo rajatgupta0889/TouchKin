@@ -243,8 +243,8 @@ public class CompressAndSendService extends Service {
 				File sourceFile = new File(val);
 				entity.addPart("shared_with",
 						new StringBody(SendTouchPreview.getCheckedParentId()));
-				entity.addPart("message", new StringBody(
-						SendTouchPreview.sendmessage.getText().toString()));
+//				entity.addPart("message", new StringBody(
+//						SendTouchPreview.sendmessage.getText().toString()));
 				ContentBody cbFile = new FileBody(sourceFile,
 						ContentType.create(getMimeType(sourceFile
 								.getAbsolutePath())), sourceFile.getName());

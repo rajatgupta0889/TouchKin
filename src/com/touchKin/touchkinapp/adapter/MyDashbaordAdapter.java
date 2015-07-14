@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.GpsStatus.Listener;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v4.view.PagerAdapter;
@@ -22,17 +23,22 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.touchKin.touchkinapp.DashBoardActivity;
+import com.touchKin.touchkinapp.Fragment2;
+import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class MyDashbaordAdapter extends PagerAdapter {
+public class MyDashbaordAdapter extends PagerAdapter implements
+		ViewPagerListener {
 	Context context;
 	List<ParentListModel> parentList;
 	LayoutInflater inflater;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	Vibrator vib;
+	Boolean isFirst = false;
 
 	public MyDashbaordAdapter(Context context, List<ParentListModel> parentList) {
 		this.parentList = parentList;
@@ -40,6 +46,7 @@ public class MyDashbaordAdapter extends PagerAdapter {
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		vib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		Fragment2.listener = MyDashbaordAdapter.this;
 	}
 
 	@Override
@@ -59,14 +66,21 @@ public class MyDashbaordAdapter extends PagerAdapter {
 		TextView parenTop = (TextView) view.findViewById(R.id.parentNameTV);
 		TextView parentBottom = (TextView) view
 				.findViewById(R.id.parentBottonTouch);
-		if (parentList.get(1).getIsPendingTouch()) {
+		if (parentList.size() > 1 && parentList.get(1).getIsPendingTouch()) {
 			parenTop.setText(parentList.get(1).getParentName()
 					+ " has sent you a touch");
-			parentBottom.setText("Tap and hold his/her photo to recieve");
+			if (position == 0) {
+				parentBottom.setText("Swipe to get the touch");
+			} else {
+				parentBottom.setText("Tap and hold his/her photo to recieve");
+			}
 		} else {
-
 			parenTop.setText("it's some time in india");
-			parentBottom.setText("Send him/her a touch");
+			if (!isFirst)
+				parentBottom.setText("Send him/her a touch");
+			else {
+				parentBottom.setText("Add a video to touch ?");
+			}
 
 		}
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
@@ -92,6 +106,9 @@ public class MyDashbaordAdapter extends PagerAdapter {
 
 					if (position > 0) {
 						vib.vibrate(500);
+						if (parent.getIsTouchMedia()) {
+							((DashBoardActivity) context).goToKinbook();
+						}
 						SharedPreferences pendingTouch = context
 								.getSharedPreferences("pendingTouch", 0);
 						String array = pendingTouch.getString("touch", null);
@@ -139,6 +156,18 @@ public class MyDashbaordAdapter extends PagerAdapter {
 		// TODO Auto-generated method stub
 		return arg0 == ((LinearLayout) arg1);
 
+	}
+
+	@Override
+	public void sendTouchCLicked(Boolean isFirstTime) {
+		// TODO Auto-generated method stub
+		if (isFirstTime) {
+			isFirstTime = true;
+			notifyDataSetChanged();
+		} else {
+			isFirstTime = false;
+			notifyDataSetChanged();
+		}
 	}
 
 }

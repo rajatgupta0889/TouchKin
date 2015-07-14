@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
+import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.adapter.MyDashbaordAdapter;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -42,6 +43,9 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 	TextView sendTouch, getService;
 	TextView sendTouchTextview;
 	Boolean withoutMsg = false;
+	Boolean isSendTouchAlreadyClicked = false;
+	public static ViewPagerListener listener;
+	MyDashbaordAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +72,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		// TODO Auto-generated method stub
 		list = ((DashBoardActivity) getActivity()).getParentList();
 		Log.d("Parent lIst", list + "");
-		MyDashbaordAdapter adapter = new MyDashbaordAdapter(getActivity(), list);
+		adapter = new MyDashbaordAdapter(getActivity(), list);
 
 		myPager.setAdapter(adapter);
 
@@ -80,8 +84,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		super.onResume();
 		list = ((DashBoardActivity) getActivity()).getParentList();
 		if (list != null && list.size() > 0) {
-			MyDashbaordAdapter adapter = new MyDashbaordAdapter(getActivity(),
-					list);
+			adapter = new MyDashbaordAdapter(getActivity(), list);
 			myPager.setAdapter(adapter);
 		}
 		Log.d("pager pos", myPager.getCurrentItem() + "");
@@ -96,10 +99,12 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		switch (v.getId()) {
 		case R.id.sendTouch:
 			vib.vibrate(500);
-			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			if (myPager.getCurrentItem() > 0) {
-				sendTouchTextview.setVisibility(View.VISIBLE);
-				sendTouchTextview.setText("Add a video to the touch?");
+			if (!isSendTouchAlreadyClicked) {
+				sendTouch.setText("Add a video");
+				sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+						R.drawable.video_cam, 0, 0);
+				listener.sendTouchCLicked(true);
+				isSendTouchAlreadyClicked = true;
 				new Handler().postDelayed(new Runnable() {
 
 					/*
@@ -112,10 +117,21 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 						// Start your app main activity
 						if (!withoutMsg)
 							sendTouchWithoutMessage();
-						sendTouchTextview.setVisibility(View.INVISIBLE);
+						isSendTouchAlreadyClicked = false;
+						sendTouch.setText("Send a Touch");
+						sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+								R.drawable.ic_icon_send_touch, 0, 0);
+						listener.sendTouchCLicked(false);
+
 					}
 				}, 10000);
+			} else {
+				withoutMsg = true;
+				sendTouch();
+
 			}
+
+			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
 			break;
 		case R.id.getService:

@@ -3,9 +3,11 @@ package com.touchKin.touchkinapp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -29,12 +31,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
+import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.ImageLoader;
@@ -43,7 +47,8 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class TouchFragment extends Fragment implements FragmentInterface {
+public class TouchFragment extends Fragment implements FragmentInterface,
+		ViewPagerListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
@@ -52,6 +57,7 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 	ParentListModel parent;
 	int resID;
 	Vibrator vib;
+	String backData;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -70,6 +76,7 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 		super.onCreate(savedInstanceState);
 		vib = (Vibrator) this.getActivity().getSystemService(
 				Context.VIBRATOR_SERVICE);
+		Fragment1.listener = TouchFragment.this;
 	}
 
 	// Inflate the view for the fragment based on layout XML
@@ -99,6 +106,9 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 						vib.vibrate(500);
 						SharedPreferences pendingTouch = getActivity()
 								.getSharedPreferences("pendingTouch", 0);
+						if (parent.getIsTouchMedia()) {
+							((DashBoardActivity) getActivity()).goToKinbook();
+						}
 						String array = pendingTouch.getString("touch", null);
 						try {
 							JSONArray arrayObj = new JSONArray(array);
@@ -364,5 +374,16 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 		mHoloCircularProgressBar.setSlices(slices);
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+	}
+
+	@Override
+	public void sendTouchCLicked(Boolean isFirstTime) {
+		// TODO Auto-generated method stub
+		if (isFirstTime) {
+			backData = parentBotton.getText().toString();
+			parentBotton.setText("Add a video to touch");
+		} else {
+			parentBotton.setText(backData);
+		}
 	}
 }

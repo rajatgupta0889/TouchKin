@@ -885,4 +885,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public String getToken() {
 		return token;
 	}
+
+	public void goToKinbook() {
+		mTabHost.setCurrentTab(2);
+	}
 }

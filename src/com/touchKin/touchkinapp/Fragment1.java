@@ -30,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
+import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -46,6 +47,8 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	Vibrator vib;
 	TextView sendTouchTextview;
 	Boolean withoutMsg = false;
+	Boolean isSendTouchAlreadyClicked = false;
+	public static ViewPagerListener listener;
 
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
@@ -70,7 +73,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		View v = inflater.inflate(R.layout.dashboard_fragment, null);
 		init(v);
 		DashBoardAdapter.context = getActivity();
-
+		
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
 		return v;
@@ -113,26 +116,41 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.sendTouch:
 			vib.vibrate(500);
-			sendTouchTextview.setVisibility(View.VISIBLE);
-			sendTouchTextview.setText("Add a video to the touch?");
-			new Handler().postDelayed(new Runnable() {
+			if (!isSendTouchAlreadyClicked) {
+				viewPager.setCurrentItem(0);
+				sendTouch.setText("Add a video");
+				sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+						R.drawable.video_cam, 0, 0);
+				listener.sendTouchCLicked(true);
+				isSendTouchAlreadyClicked = true;
+				new Handler().postDelayed(new Runnable() {
 
-				/*
-				 * Showing splash screen with a timer. This will be useful when
-				 * you want to show case your app logo / company
-				 */
-				@Override
-				public void run() {
-					// This method will be executed once the timer is over
-					// Start your app main activity
-					if (!withoutMsg)
-						sendTouchWithoutMessage();
-					sendTouchTextview.setVisibility(View.INVISIBLE);
+					/*
+					 * Showing splash screen with a timer. This will be useful
+					 * when you want to show case your app logo / company
+					 */
+					@Override
+					public void run() {
+						// This method will be executed once the timer is over
+						// Start your app main activity
+						if (!withoutMsg)
+							sendTouchWithoutMessage();
+						isSendTouchAlreadyClicked = false;
+						sendTouch.setText("Send a Touch");
+						sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+								R.drawable.ic_icon_send_touch, 0, 0);
+						listener.sendTouchCLicked(false);
 
-				}
-			}, 100000);
+					}
+				}, 10000);
+			} else {
+				withoutMsg = true;
+				sendTouch();
+
+			}
+
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			sendTouch();
+
 			break;
 		case R.id.getService:
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
