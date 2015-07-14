@@ -27,12 +27,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
-import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver;
 import com.touchKin.touchkinapp.custom.CustomRequest;
@@ -50,7 +49,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	ImageView battery5, wifi4, network4;
 	TelephonyManager Tel;
 
-	TextView parentName;
+	TextView parentName, parentNameBottom;
 	ParentListModel parent, lastSelectedParent;
 	AirplaneModeReceiver rec;
 
@@ -81,7 +80,8 @@ public class DashBoardActivityFragment extends Fragment implements
 				container, false);
 
 		parentName = (TextView) view.findViewById(R.id.parentNameTV);
-
+		parentNameBottom = (TextView) view
+				.findViewById(R.id.parentBottonActivity);
 		mHoloCircularProgressBar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
 
@@ -145,6 +145,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		Log.d("Parent", parent + "");
 		if (parent != null) {
 			parentName.setText(parent.getParentName() + " activity ");
+			parentNameBottom.setText(parent.getParentName() + " last updated ");
 			// getConnectivity(parent.getParentId());
 			if (lastSelectedParent == null) {
 				lastSelectedParent = parent;
@@ -276,8 +277,8 @@ public class DashBoardActivityFragment extends Fragment implements
 						}
 
 						VolleyLog.e("Error: ", error.getMessage());
-						Toast.makeText(getActivity(),
-								error.getMessage(), Toast.LENGTH_SHORT).show();
+						Toast.makeText(getActivity(), error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -294,16 +295,18 @@ public class DashBoardActivityFragment extends Fragment implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	public void displayMessage(String toastString, int code) {
-		Toast.makeText(getActivity(),
-				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), toastString + " code error: " + code,
+				Toast.LENGTH_LONG).show();
 	}
 
 	public String trimMessage(String json, String key) {

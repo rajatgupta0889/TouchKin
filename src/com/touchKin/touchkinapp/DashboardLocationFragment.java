@@ -75,8 +75,10 @@ public class DashboardLocationFragment extends Fragment implements
 	TextView parentName, parentNameBottom, parentLocPos;
 	ParentListModel parent, lastSelectedParent;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
-
+	JSONObject obj = null;
 	Marker googleMarker = null;
+	Boolean isTapOnMap = false;
+	String updatedTime;
 	/**
 	 * Provides the entry point to Google Play services.
 	 */
@@ -128,7 +130,8 @@ public class DashboardLocationFragment extends Fragment implements
 					container, false);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 			parentName = (TextView) view.findViewById(R.id.ParentLocTV);
-			parentNameBottom = (TextView) view.findViewById(R.id.textView5);
+			parentNameBottom = (TextView) view
+					.findViewById(R.id.parentBottonLocation);
 			parentLocPos = (TextView) view.findViewById(R.id.parentLocPos);
 			if (parent != null)
 				parentName.setText(parent.getParentName() + " is in ");
@@ -228,59 +231,7 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
-		if (parent != null) {
-			parentName.setText(parent.getParentName() + " is in ");
-			parentNameBottom.setText("Tap on map to set "
-					+ parent.getParentName() + "'s");
-			if (lastSelectedParent != null
-					&& !lastSelectedParent.equals(parent))
-				getLocation(parent.getParentId());
-			else {
-
-				mHoloCircularProgressBar.setProgress(0.0f);
-				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
-						1000);
-
-			}
-		}
-		LocationManager lm = null;
-		boolean gps_enabled = false, network_enabled = false;
-		if (lm == null)
-			lm = (LocationManager) getActivity().getSystemService(
-					Context.LOCATION_SERVICE);
-		try {
-			gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		} catch (Exception ex) {
-		}
-		try {
-			network_enabled = lm
-					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		} catch (Exception ex) {
-		}
-
-		if (!gps_enabled && !network_enabled) {
-			dialog = new AlertDialog.Builder(getActivity());
-			dialog.setMessage("GPS is not enabled");
-			dialog.setPositiveButton(
-					getActivity().getResources().getString(
-							R.string.open_location_settings),
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(
-								DialogInterface paramDialogInterface,
-								int paramInt) {
-							// TODO Auto-generated method stub
-							Intent myIntent = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							getActivity().startActivity(myIntent);
-							// get gps
-						}
-					});
-
-			dialog.show();
-
-		}
+		setText();
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -291,7 +242,7 @@ public class DashboardLocationFragment extends Fragment implements
 				@Override
 				public void onMapClick(LatLng arg0) {
 					// TODO Auto-generated method stub
-
+					isTapOnMap = true;
 					Intent intent = new Intent(getActivity(), MapActivity.class);
 					intent.putExtra("token",
 							((DashBoardActivity) getActivity()).getToken());
@@ -307,6 +258,32 @@ public class DashboardLocationFragment extends Fragment implements
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 
 		super.onResume();
+	}
+
+	private void setText() {
+		// TODO Auto-generated method stub
+		if (parent != null) {
+			parentName.setText(parent.getParentName() + " is in ");
+			if (isTapOnMap) {
+				parentNameBottom.setText("Its been" + 2 + " hours since"
+						+ parent.getParentName() + " last left home");
+			} else {
+				parentNameBottom.setText("Tap on map to set "
+						+ parent.getParentName() + "'s Location");
+			}
+			if (lastSelectedParent != null
+					&& !lastSelectedParent.equals(parent))
+				getLocation(parent.getParentId());
+			else {
+				if (obj != null) {
+					setLocation(obj);
+				}
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+
+			}
+		}
 	}
 
 	@Override
@@ -346,9 +323,10 @@ public class DashboardLocationFragment extends Fragment implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (!obj.optString("name").isEmpty())
+		if (!obj.optString("name").isEmpty()) {
 			parentLocPos.setText(obj.optString("name"));
-		else {
+			isTapOnMap = true;
+		} else {
 			Geocoder geocoder = new Geocoder(getActivity());
 			try {
 				List<Address> addresses = geocoder.getFromLocation(
@@ -395,9 +373,10 @@ public class DashboardLocationFragment extends Fragment implements
 						Log.d("Response Array Location", " " + responseArray);
 						try {
 							if (responseArray.length() > 0) {
-								setLocation(responseArray.getJSONObject(
+								obj = responseArray.getJSONObject(
 										"lastUpdatedLocation").getJSONObject(
-										"point"));
+										"point");
+								setLocation(obj);
 								setSlices(responseArray
 										.getJSONObject("movements"));
 							}
@@ -518,7 +497,9 @@ public class DashboardLocationFragment extends Fragment implements
 		intent.putExtra("token", ((DashBoardActivity) getActivity()).getToken());
 		intent.putExtra("id", ((DashBoardActivity) getActivity())
 				.getSelectedParent().getParentId());
+		isTapOnMap = true;
 		startActivity(intent);
+
 		return false;
 	}
 

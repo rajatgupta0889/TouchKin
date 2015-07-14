@@ -2,7 +2,14 @@ package com.touchKin.touchkinapp.adapter;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v4.view.PagerAdapter;
@@ -13,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
@@ -41,13 +49,26 @@ public class MyDashbaordAdapter extends PagerAdapter {
 	}
 
 	@Override
-	public Object instantiateItem(ViewGroup container, int position) {
+	public Object instantiateItem(ViewGroup container, final int position) {
 		// TODO Auto-generated method stub
 
 		RoundedImageView imageView;
 		final ParentListModel parent = parentList.get(position);
 		View view = inflater.inflate(R.layout.dashboard_touch_screen,
 				container, false);
+		TextView parenTop = (TextView) view.findViewById(R.id.parentNameTV);
+		TextView parentBottom = (TextView) view
+				.findViewById(R.id.parentBottonTouch);
+		if (parentList.get(1).getIsPendingTouch()) {
+			parenTop.setText(parentList.get(1).getParentName()
+					+ " has sent you a touch");
+			parentBottom.setText("Tap and hold his/her photo to recieve");
+		} else {
+
+			parenTop.setText("it's some time in india");
+			parentBottom.setText("Send him/her a touch");
+
+		}
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
 		ImageLoader imageLoader = new ImageLoader(context);
 		String name = parent.getParentName();
@@ -63,11 +84,39 @@ public class MyDashbaordAdapter extends PagerAdapter {
 		((ViewPager) container).addView(view);
 		imageView.setOnClickListener(new OnClickListener() {
 
+			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (parent.getIsPendingTouch()) {
-					vib.vibrate(500);
+
+					if (position > 0) {
+						vib.vibrate(500);
+						SharedPreferences pendingTouch = context
+								.getSharedPreferences("pendingTouch", 0);
+						String array = pendingTouch.getString("touch", null);
+						try {
+							JSONArray arrayObj = new JSONArray(array);
+							if (arrayObj != null && arrayObj.length() > 0) {
+								for (int i = 0; i < arrayObj.length(); i++) {
+									JSONObject obj = arrayObj.getJSONObject(i);
+									if (obj.getString("id").equalsIgnoreCase(
+											parent.getParentId())) {
+										arrayObj.remove(i);
+									}
+								}
+
+							}
+							Editor tokenedit = pendingTouch.edit();
+							tokenedit.putString("touch", arrayObj + "");
+							tokenedit.commit();
+							parent.setIsPendingTouch(false);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
 				}
 			}
 		});

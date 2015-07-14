@@ -27,6 +27,10 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.model.AppController;
 
 public class LocationSendingService extends Service implements LocationListener {
@@ -270,85 +274,28 @@ public class LocationSendingService extends Service implements LocationListener 
 	}
 
 	public void sendLocationToServer(JSONObject param) {
-		// JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-		// "http://54.69.183.186:1340/location/add", param,
-		// new Response.Listener<JSONObject>() {
-		// @Override
-		// public void onResponse(JSONObject response) {
-		//
-		// Log.d("Response", "" + response);
-		// // Log.d("mobile", "" + pref.getString("mobile",
-		// // null));
-		// // Log.d("otp", "" + pref.getString("mobile",
-		// // null));
-		//
-		// }
-		// }, new Response.ErrorListener() {
-		// @Override
-		// public void onErrorResponse(VolleyError error) {
-		// Log.d("Response", "" + error);
-		// }
-		//
-		// });
-		//
-		// AppController.getInstance().addToRequestQueue(req);
-		new SendDataInBG().execute(param);
-	}
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/location/add", param,
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d("result", "Location Updated SuccessFul");
+						Log.d("Response", "" + response);
+						// Log.d("mobile", "" + pref.getString("mobile",
+						// null));
+						// Log.d("otp", "" + pref.getString("mobile",
+						// null));
 
-	public class SendDataInBG extends AsyncTask<JSONObject, Void, String> {
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			if (result != null)
-				Log.d("result", "Location Updated SuccessFul");
-		}
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Response", "" + error);
+					}
 
-		String response = null;
+				});
 
-		@SuppressWarnings("deprecation")
-		@Override
-		protected String doInBackground(JSONObject... params) {
-			// TODO Auto-generated method stub
-			HttpEntity httpEntity = null;
-			HttpResponse httpResponse = null;
-			try {
-
-				// this is storage overwritten on each iteration with bytes
-				Log.d("point", params[0].toString());
-				HttpClient httpClient = AppController.mHttpClient;
-
-				HttpPost httpPost = new HttpPost(
-						"http://54.69.183.186:1340/location/add");
-				// adding post params
-				if (params != null) {
-					httpPost.setEntity(new StringEntity(params[0].toString()));
-				}
-
-				httpResponse = httpClient.execute(httpPost);
-				// entity.addPart("media", fileBody);
-
-				// entity.addPart("photoCaption", new
-				// StringBody(caption.getText()
-				// .toString()));
-
-				httpEntity = httpResponse.getEntity();
-				response = EntityUtils.toString(httpEntity);
-				Log.d("Response", response);
-				// if (resEntity != null) {
-				// System.out.println(EntityUtils.toString(resEntity));
-				// }
-				// if (resEntity != null) {
-				// resEntity.consumeContent();
-				// }
-				return response;
-			} catch (Exception e) {
-				Log.e(e.getClass().getName(), e.getMessage(), e);
-				return response;
-			}
-
-			// (null);
-		}
+		AppController.getInstance().addToRequestQueue(req);
 	}
 
 }

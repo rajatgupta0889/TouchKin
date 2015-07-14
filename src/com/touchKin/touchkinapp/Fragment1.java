@@ -2,10 +2,9 @@ package com.touchKin.touchkinapp;
 
 import java.util.HashMap;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -169,8 +168,17 @@ public class Fragment1 extends Fragment implements OnClickListener {
 	}
 
 	private void sendTouchWithoutMessage() {
+		JSONObject params = new JSONObject();
+		try {
+			params.put("receivingUserId", parent.getParentId());
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-				"http://54.69.183.186:1340/touch/add", null,
+				"http://54.69.183.186:1340/touch/add", params,
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {

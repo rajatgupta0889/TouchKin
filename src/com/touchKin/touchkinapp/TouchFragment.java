@@ -3,16 +3,18 @@ package com.touchKin.touchkinapp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -47,7 +48,7 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	ImageView parentImage;
-	TextView parentName;
+	TextView parentName, parentBotton;
 	ParentListModel parent;
 	int resID;
 	Vibrator vib;
@@ -85,15 +86,40 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 		// PieSlice slice = new PieSlice();
 		parentName = (TextView) view.findViewById(R.id.parentNameTV);
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
+		parentBotton = (TextView) view.findViewById(R.id.parentBottonTouch);
 		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		parentImage.setOnClickListener(new OnClickListener() {
 
+			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (parent != null) {
 					if (parent.getIsPendingTouch()) {
 						vib.vibrate(500);
+						SharedPreferences pendingTouch = getActivity()
+								.getSharedPreferences("pendingTouch", 0);
+						String array = pendingTouch.getString("touch", null);
+						try {
+							JSONArray arrayObj = new JSONArray(array);
+							if (arrayObj != null && arrayObj.length() > 0) {
+								for (int i = 0; i < arrayObj.length(); i++) {
+									JSONObject obj = arrayObj.getJSONObject(i);
+									if (obj.getString("id").equalsIgnoreCase(
+											parent.getParentId())) {
+										arrayObj.remove(i);
+									}
+								}
+
+							}
+							Editor tokenedit = pendingTouch.edit();
+							tokenedit.putString("touch", arrayObj + "");
+							tokenedit.commit();
+							parent.setIsPendingTouch(false);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -202,8 +228,15 @@ public class TouchFragment extends Fragment implements FragmentInterface {
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + parent.getParentId()
 					+ ".jpeg", resID, parentImage);
+			if (parent.getIsPendingTouch()) {
+				parentName.setText(parent.getParentName()
+						+ " has sent you a touch ");
+				parentBotton.setText("Tap and hold his/her photo to receive");
+			} else {
+				parentName.setText(parent.getParentName() + " feeling good ");
+				parentBotton.setText("There last touch was ");
+			}
 
-			parentName.setText(parent.getParentName() + " last touch ");
 		}
 
 	}

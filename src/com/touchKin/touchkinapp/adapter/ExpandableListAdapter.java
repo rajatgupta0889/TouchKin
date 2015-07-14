@@ -404,14 +404,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
 					+ ".jpeg", resID, viewHolder.userImage);
-			viewHolder.name.setText(groupMember.getUserName());
+			if (groupPosition != 0) {
+				viewHolder.name.setText(groupMember.getUserName());
+			} else {
+				viewHolder.name.setText("Me");
+			}
 			if (groupMember.getReqCount() != null
 					&& groupMember.getKinCount() != null) {
-				if (groupMember.getKinCount().equals(0)) {
+				if (groupMember.getKinCount().equals("0")) {
 					viewHolder.kinCount
 							.setText("Invite someone to care for you");
 				} else {
-					if (groupMember.getReqCount().equals(0)) {
+					if (groupMember.getReqCount().equals("0")) {
 						viewHolder.kinCount.setText("You have "
 								+ groupMember.getKinCount()
 								+ " Kin and no request");
@@ -422,8 +426,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					}
 				}
 			} else if (groupMember.getKinCount() != null) {
-				viewHolder.kinCount.setText(groupMember.getUserName() + " has "
-						+ groupMember.getKinCount() + " Kin");
+				if (groupMember.getKinCount().equalsIgnoreCase("1")) {
+					viewHolder.kinCount.setText("Invite someone to care for "
+							+ groupMember.getUserName());
+				} else {
+					viewHolder.kinCount.setText(groupMember.getUserName()
+							+ "'s" + " has " + groupMember.getKinCount()
+							+ " Kin");
+				}
+
 			} else {
 				viewHolder.kinCount.setText("Click to get details");
 			}
@@ -441,7 +452,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
 					+ ".jpeg", resID, viewHolder.userImage);
-			viewHolder.name.setText(groupMember.getUserName());
+			viewHolder.name.setText("Waiting for " + groupMember.getUserName()
+					+ " to accept your request");
 			viewHolder.kinCount.setVisibility(View.INVISIBLE);
 			int imageResourceId = R.drawable.info;
 			viewHolder.icon.setImageResource(imageResourceId);

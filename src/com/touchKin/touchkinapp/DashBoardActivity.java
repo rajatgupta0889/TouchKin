@@ -451,7 +451,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 							list.get(0).setReqStatus(true);
 							careGiverList.add(new ParentListModel(userId,
 									false, "Me", userId, "", true, userObj
-											.getString("mobile"), false, false));
+											.getString("mobile"), true, false));
 							careGiverList.get(0).setReqStatus(true);
 							selectedParent = list.get(0);
 							JSONArray careRecievers = responseArray
@@ -475,7 +475,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 									} else {
 										item.setReqStatus(true);
 									}
-									if (touchArray != null) {
+									if (touchArray != null
+											&& touchArray.length() > 0) {
 										for (int j = 0; j < touchArray.length(); j++) {
 											try {
 												JSONObject obj = touchArray
@@ -524,7 +525,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 									} else {
 										item.setReqStatus(true);
 									}
-									if (touchArray != null) {
+									if (touchArray != null
+											&& touchArray.length() > 0) {
 										for (int j = 0; j < touchArray.length(); j++) {
 											try {
 												JSONObject obj = touchArray
@@ -866,6 +868,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 				public int compare(ParentListModel lhs, ParentListModel rhs) {
 					// TODO Auto-generated method stub
 					return rhs.getReqStatus().compareTo(lhs.getReqStatus());
+				}
+			});
+			Collections.sort(careGiverList, new Comparator<ParentListModel>() {
+				@Override
+				public int compare(ParentListModel lhs, ParentListModel rhs) {
+					// TODO Auto-generated method stub
+					return rhs.getIsPendingTouch().compareTo(
+							lhs.getIsPendingTouch());
 				}
 			});
 		}

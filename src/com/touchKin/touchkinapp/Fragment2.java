@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -166,8 +167,17 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 	}
 
 	private void sendTouchWithoutMessage() {
+		JSONObject params = new JSONObject();
+		try {
+			params.put("receivingUserId", list.get(myPager.getCurrentItem())
+					.getParentId());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-				"http://54.69.183.186:1340/touch/add", null,
+				"http://54.69.183.186:1340/touch/add", params,
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
