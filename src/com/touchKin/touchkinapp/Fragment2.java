@@ -98,39 +98,46 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.sendTouch:
-			vib.vibrate(500);
-			if (!isSendTouchAlreadyClicked) {
-				sendTouch.setText("Add a video");
-				sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
-						R.drawable.video_cam, 0, 0);
-				listener.sendTouchCLicked(true);
-				isSendTouchAlreadyClicked = true;
-				new Handler().postDelayed(new Runnable() {
+			if (myPager.getCurrentItem() > 0) {
+				vib.vibrate(500);
+				if (!isSendTouchAlreadyClicked) {
+					sendTouch.setText("Add a video");
+					sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+							R.drawable.video_cam, 0, 0);
+					listener.sendTouchCLicked(true);
+					isSendTouchAlreadyClicked = true;
+					new Handler().postDelayed(new Runnable() {
 
-					/*
-					 * Showing splash screen with a timer. This will be useful
-					 * when you want to show case your app logo / company
-					 */
-					@Override
-					public void run() {
-						// This method will be executed once the timer is over
-						// Start your app main activity
-						if (!withoutMsg)
-							sendTouchWithoutMessage();
-						isSendTouchAlreadyClicked = false;
-						sendTouch.setText("Send a Touch");
-						sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
-								R.drawable.ic_icon_send_touch, 0, 0);
-						listener.sendTouchCLicked(false);
+						/*
+						 * Showing splash screen with a timer. This will be
+						 * useful when you want to show case your app logo /
+						 * company
+						 */
+						@Override
+						public void run() {
+							// This method will be executed once the timer is
+							// over
+							// Start your app main activity
+							if (!withoutMsg)
+								sendTouchWithoutMessage();
+							isSendTouchAlreadyClicked = false;
+							sendTouch.setText("Send a Touch");
+							sendTouch.setCompoundDrawablesWithIntrinsicBounds(
+									0, R.drawable.ic_icon_send_touch, 0, 0);
+							listener.sendTouchCLicked(false);
 
-					}
-				}, 10000);
+						}
+					}, 10000);
+				} else {
+					withoutMsg = true;
+					sendTouch();
+
+				}
 			} else {
-				withoutMsg = true;
-				sendTouch();
-
+				Toast.makeText(getActivity(),
+						"You can not send touch to yourzself",
+						Toast.LENGTH_SHORT).show();
 			}
-
 			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
 			break;

@@ -120,6 +120,27 @@ public class GcmIntentService extends IntentService {
 			tokenedit.putString("type", resultType);
 			tokenedit.commit();
 		}
+		JSONArray request = null;
+		SharedPreferences pendingReq = getApplicationContext()
+				.getSharedPreferences("pedingReq", 0);
+		Editor tokenedit = pendingReq.edit();
+		if (pendingReq.getString("req", null) == null) {
+			request = new JSONArray();
+		} else {
+			String array = pendingReq.getString("req", null);
+			if (array != null) {
+				try {
+					request = new JSONArray(array);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		request.put(msg);
+		tokenedit.putString("req", request + "");
+		tokenedit.commit();
 		intent.putExtra("type", resultType);
 		intent.putExtra("Flag", true);
 		intent.putExtra("id", id);
