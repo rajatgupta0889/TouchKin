@@ -177,9 +177,9 @@ public class FlipViewAdapter extends BaseAdapter {
 							touchKinBook.getMessageId(), false);
 				}
 			});
-			viewHolder.videoText.setText(touchKinBook.getVideoText());
-			viewHolder.videoTime.setText(touchKinBook.getVideoDate());
-			viewHolder.videoDay.setText(touchKinBook.getVideoDay());
+//			viewHolder.videoText.setText(touchKinBook.getVideoText());
+//			viewHolder.videoTime.setText(touchKinBook.getVideoDate());
+//			viewHolder.videoDay.setText(touchKinBook.getVideoDay());
 			ImageLoader imageloader = new ImageLoader(context);
 			imageloader.DisplayImage(
 					"https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"
