@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -33,8 +32,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.aphidmobile.flip.FlipViewController;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
+import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.adapter.FlipViewAdapter;
-import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.TouchKinBookModel;
 import com.touchKin.touckinapp.R;
@@ -78,41 +77,6 @@ public class TouchKinBookFragment extends Fragment implements
 		// mTitle.setText();
 		host = ((DashBoardActivity) getActivity()).getTabHost();
 		host.setVisibility(View.GONE);
-
-		// commentList.add(new TouchKinComments(
-		// "Mom, watch Mili and shaum playing with there freinds", "6:40",
-		// "Today", "Roy", ""));
-		// commentList.add(new TouchKinComments(
-		// "Mom, watch Mili and shaum playing with there freinds", "6:40",
-		// "Today", "da", ""));
-		// commentList.add(new TouchKinComments(
-		// "Mom, watch Mili and shaum playing with there freinds", "6:40",
-		// "Today", "fsdafasfasd", ""));
-		// commentList.add(new TouchKinComments(
-		// "Mom, watch Mili and shaum playing with there freinds", "6:40",
-		// "Today", "fasdfasdfasdfasdfas", ""));
-		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-		// "12:00 Am", "today", "", "Rajat", "0", "", "", commentList));
-		// touchKinBook.add(new TouchKinBookModel(
-		// "ksnn_compilation_master_the_internet_512kb.mp4",
-		// "Hi this is the video related to server handling", "12:00 Am",
-		// "today", "", "Rajat", "0", ""));
-		// touchKinBook
-		// .add(new TouchKinBookModel(
-		// "ksnn_compilation_master_the_internet.mp4",
-		// "Hi this is the video related to server handling in .mov format",
-		// "12:10 Am", "Monday", "", "Praf", "10", ""));
-		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-		// "12:00 Am", "today", "", "Rajat", "0", ""));
-		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-		// "12:00 Am", "today", "", "Prag", "0", ""));
-		// touchKinBook.add(new TouchKinBookModel("", "Hi this is the video",
-		// "12:00 Am", "today", "", "Rajat", "0", ""));
-
-		// flipViewAdapter = new FlipViewAdapter(touchKinBook, getActivity());
-		// flipView.setAdapter(flipViewAdapter);
-		// flipView.invalidate();
-
 		return v;
 	}
 
@@ -185,11 +149,10 @@ public class TouchKinBookFragment extends Fragment implements
 					@Override
 					public void onErrorResponse(VolleyError error) {
 
-
 						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
-						
+
 						NetworkResponse response = error.networkResponse;
 						if (!InternetAvailable()) {
 							Toast.makeText(getActivity(),
@@ -210,8 +173,8 @@ public class TouchKinBookFragment extends Fragment implements
 								Log.d("Response", response.data.toString());
 							}
 						}
-					
-}
+
+					}
 
 				}) {
 			public java.util.Map<String, String> getHeaders()
@@ -227,16 +190,20 @@ public class TouchKinBookFragment extends Fragment implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+
 	public void displayMessage(String toastString, int code) {
-		Toast.makeText(getActivity(),
-				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), toastString + " code error: " + code,
+				Toast.LENGTH_LONG).show();
 	}
+
 	public String trimMessage(String json, String key) {
 		String trimmedString = null;
 

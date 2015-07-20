@@ -1,8 +1,10 @@
 package com.touchKin.touchkinapp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +23,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -68,11 +72,13 @@ public class DashboardLocationFragment extends Fragment implements
 		FragmentInterface, OnMarkerClickListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
-	TextView parentName, parentNameBottom;
+	TextView parentName, parentNameBottom, parentLocPos;
 	ParentListModel parent, lastSelectedParent;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
-
+	JSONObject obj = null;
 	Marker googleMarker = null;
+	Boolean isTapOnMap = false;
+	String updatedTime;
 	/**
 	 * Provides the entry point to Google Play services.
 	 */
@@ -124,14 +130,15 @@ public class DashboardLocationFragment extends Fragment implements
 					container, false);
 			parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 			parentName = (TextView) view.findViewById(R.id.ParentLocTV);
-			parentNameBottom = (TextView) view.findViewById(R.id.textView5);
+			parentNameBottom = (TextView) view
+					.findViewById(R.id.parentBottonLocation);
+			parentLocPos = (TextView) view.findViewById(R.id.parentLocPos);
 			if (parent != null)
 				parentName.setText(parent.getParentName() + " is in ");
 		} catch (InflateException e) {
 			/* map is already there, just return view as it is */
 		}
 
-		final Resources resources = getResources();
 		if (googleMap == null) {
 
 			googleMap = ((MapFragment) getActivity().getFragmentManager()
@@ -224,58 +231,7 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
-		if (parent != null) {
-			parentName.setText(parent.getParentName() + " is in ");
-			parentNameBottom.setText("Tap on map to set "
-					+ parent.getParentName() + "'s");
-			if (lastSelectedParent != null
-					&& !lastSelectedParent.equals(parent))
-				getLocation(parent.getParentId());
-			else {
-
-				mHoloCircularProgressBar.setProgress(0.0f);
-				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
-						1000);
-			}
-		}
-		LocationManager lm = null;
-		boolean gps_enabled = false, network_enabled = false;
-		if (lm == null)
-			lm = (LocationManager) getActivity().getSystemService(
-					Context.LOCATION_SERVICE);
-		try {
-			gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		} catch (Exception ex) {
-		}
-		try {
-			network_enabled = lm
-					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		} catch (Exception ex) {
-		}
-
-		if (!gps_enabled && !network_enabled) {
-			dialog = new AlertDialog.Builder(getActivity());
-			dialog.setMessage("GPS is not enabled");
-			dialog.setPositiveButton(
-					getActivity().getResources().getString(
-							R.string.open_location_settings),
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(
-								DialogInterface paramDialogInterface,
-								int paramInt) {
-							// TODO Auto-generated method stub
-							Intent myIntent = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							getActivity().startActivity(myIntent);
-							// get gps
-						}
-					});
-
-			dialog.show();
-
-		}
+		setText();
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -286,8 +242,12 @@ public class DashboardLocationFragment extends Fragment implements
 				@Override
 				public void onMapClick(LatLng arg0) {
 					// TODO Auto-generated method stub
-
+					isTapOnMap = true;
 					Intent intent = new Intent(getActivity(), MapActivity.class);
+					intent.putExtra("token",
+							((DashBoardActivity) getActivity()).getToken());
+					intent.putExtra("id", ((DashBoardActivity) getActivity())
+							.getSelectedParent().getParentId());
 					startActivity(intent);
 				}
 			});
@@ -298,6 +258,32 @@ public class DashboardLocationFragment extends Fragment implements
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 
 		super.onResume();
+	}
+
+	private void setText() {
+		// TODO Auto-generated method stub
+		if (parent != null) {
+			parentName.setText(parent.getParentName() + " is in ");
+			if (isTapOnMap) {
+				parentNameBottom.setText("Its been" + 2 + " hours since"
+						+ parent.getParentName() + " last left home");
+			} else {
+				parentNameBottom.setText("Tap on map to set "
+						+ parent.getParentName() + "'s Location");
+			}
+			if (lastSelectedParent != null
+					&& !lastSelectedParent.equals(parent))
+				getLocation(parent.getParentId());
+			else {
+				if (obj != null) {
+					setLocation(obj);
+				}
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+
+			}
+		}
 	}
 
 	@Override
@@ -337,6 +323,24 @@ public class DashboardLocationFragment extends Fragment implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if (!obj.optString("name").isEmpty()) {
+			parentLocPos.setText(obj.optString("name"));
+			isTapOnMap = true;
+		} else {
+			Geocoder geocoder = new Geocoder(getActivity());
+			try {
+				List<Address> addresses = geocoder.getFromLocation(
+						Double.parseDouble(latitude),
+						Double.parseDouble(longitude), 1);
+				parentLocPos.setText(addresses.get(0).getLocality());
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if (longitude != null & latitude != null) {
 			latLng = new LatLng(Double.parseDouble(latitude),
 					Double.parseDouble(longitude));
@@ -344,15 +348,6 @@ public class DashboardLocationFragment extends Fragment implements
 			View marker = ((LayoutInflater) getActivity().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE)).inflate(
 					R.layout.custom_marker, null);
-			marker.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = new Intent(getActivity(), MapActivity.class);
-					startActivity(intent);
-				}
-			});
 			if (googleMarker != null)
 				googleMarker.remove();
 			googleMarker = googleMap.addMarker(new MarkerOptions().position(
@@ -362,6 +357,7 @@ public class DashboardLocationFragment extends Fragment implements
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 			googleMap.animateCamera(CameraUpdateFactory.zoomTo(8));
 			googleMap.setOnMarkerClickListener(this);
+
 		}
 	}
 
@@ -377,9 +373,10 @@ public class DashboardLocationFragment extends Fragment implements
 						Log.d("Response Array Location", " " + responseArray);
 						try {
 							if (responseArray.length() > 0) {
-								setLocation(responseArray.getJSONObject(
+								obj = responseArray.getJSONObject(
 										"lastUpdatedLocation").getJSONObject(
-										"point"));
+										"point");
+								setLocation(obj);
 								setSlices(responseArray
 										.getJSONObject("movements"));
 							}
@@ -418,8 +415,8 @@ public class DashboardLocationFragment extends Fragment implements
 						}
 
 						VolleyLog.e("Error: ", error.getMessage());
-						Toast.makeText(getActivity(),
-								error.getMessage(), Toast.LENGTH_SHORT).show();
+						Toast.makeText(getActivity(), error.getMessage(),
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}) {
@@ -435,16 +432,18 @@ public class DashboardLocationFragment extends Fragment implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	public void displayMessage(String toastString, int code) {
-		Toast.makeText(getActivity(),
-				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), toastString + " code error: " + code,
+				Toast.LENGTH_LONG).show();
 	}
 
 	public String trimMessage(String json, String key) {
@@ -495,7 +494,12 @@ public class DashboardLocationFragment extends Fragment implements
 	public boolean onMarkerClick(Marker arg0) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(getActivity(), MapActivity.class);
+		intent.putExtra("token", ((DashBoardActivity) getActivity()).getToken());
+		intent.putExtra("id", ((DashBoardActivity) getActivity())
+				.getSelectedParent().getParentId());
+		isTapOnMap = true;
 		startActivity(intent);
+
 		return false;
 	}
 

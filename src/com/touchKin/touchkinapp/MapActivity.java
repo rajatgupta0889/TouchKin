@@ -1,8 +1,14 @@
 package com.touchKin.touchkinapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,17 +21,30 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TextView.OnEditorActionListener;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -45,10 +64,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.custom.Constants;
 import com.touchKin.touchkinapp.custom.GeofenceErrorMessages;
+import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService;
 import com.touchKin.touckinapp.R;
 
-public class MapActivity extends ActionBarActivity implements
+public class MapActivity extends AppCompatActivity implements
 		ConnectionCallbacks, OnConnectionFailedListener, OnMarkerClickListener,
 		ResultCallback<Status> {
 	String text = "";
@@ -59,6 +79,8 @@ public class MapActivity extends ActionBarActivity implements
 	protected ArrayList<Geofence> mGeofenceList;
 	private boolean mGeofencesAdded;
 	private PendingIntent mGeofencePendingIntent;
+	String token;
+	String id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +91,12 @@ public class MapActivity extends ActionBarActivity implements
 			googleMap = ((MapFragment) getFragmentManager().findFragmentById(
 					R.id.map)).getMap();
 		}
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			token = extras.getString("token");
+			id = extras.getString("id");
+		}
+		getLocation(id);
 		mGeofenceList = new ArrayList<Geofence>();
 		mGeofencePendingIntent = null;
 		populateGeofenceList();
@@ -91,41 +119,42 @@ public class MapActivity extends ActionBarActivity implements
 		// updates. Gets the best and most recent location currently available,
 		// which may be null
 		// in rare cases when a location is not available.
-		mLastLocation = LocationServices.FusedLocationApi
-				.getLastLocation(mGoogleApiClient);
-		LatLng latLng = new LatLng(mLastLocation.getLatitude(),
-				mLastLocation.getLongitude());
-		if (mLastLocation != null) {
-			View marker = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-					.inflate(R.layout.custom_marker, null);
-
-			if (googleMarker != null)
-				googleMarker.remove();
-			googleMarker = googleMap.addMarker(new MarkerOptions()
-					.position(latLng)
-					.title("randomlocation")
-					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
-							this, marker))));
-			googleMarker = googleMap.addMarker(new MarkerOptions()
-					.position(new LatLng(12.9667d, 77.5667d))
-					.title("randomlocation")
-					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
-							this, marker))));
-
-			googleMarker = googleMap.addMarker(new MarkerOptions()
-					.position(new LatLng(12.9259d, 77.6229d))
-					.title("randomlocation")
-					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
-							this, marker))));
-
-			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-			googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-			googleMap.setOnMarkerClickListener(this);
-
-		} else {
-			Toast.makeText(this, "No Location Detected", Toast.LENGTH_LONG)
-					.show();
-		}
+		// mLastLocation = LocationServices.FusedLocationApi
+		// .getLastLocation(mGoogleApiClient);
+		// LatLng latLng = new LatLng(mLastLocation.getLatitude(),
+		// mLastLocation.getLongitude());
+		// if (mLastLocation != null) {
+		// View marker = ((LayoutInflater)
+		// getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+		// .inflate(R.layout.custom_marker, null);
+		//
+		// if (googleMarker != null)
+		// googleMarker.remove();
+		// googleMarker = googleMap.addMarker(new MarkerOptions()
+		// .position(latLng)
+		// .title("randomlocation")
+		// .icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+		// this, marker))));
+		// googleMarker = googleMap.addMarker(new MarkerOptions()
+		// .position(new LatLng(12.9667d, 77.5667d))
+		// .title("randomlocation")
+		// .icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+		// this, marker))));
+		//
+		// googleMarker = googleMap.addMarker(new MarkerOptions()
+		// .position(new LatLng(12.9259d, 77.6229d))
+		// .title("randomlocation")
+		// .icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+		// this, marker))));
+		//
+		// googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+		// googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+		// googleMap.setOnMarkerClickListener(this);
+		//
+		// } else {
+		// Toast.makeText(this, "No Location Detected", Toast.LENGTH_LONG)
+		// .show();
+		// }
 	}
 
 	@Override
@@ -188,6 +217,10 @@ public class MapActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		DialogFragment newFragment = new MapDialogFragment();
 		newFragment.setCancelable(false);
+		Bundle args = new Bundle();
+		args.putDouble("lat", marker.getPosition().latitude);
+		args.putDouble("long", marker.getPosition().longitude);
+		newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "TAG");
 		if (!text.isEmpty())
 			marker.setTitle(text);
@@ -204,19 +237,52 @@ public class MapActivity extends ActionBarActivity implements
 			// Get the layout inflater
 			LayoutInflater inflater = getActivity().getLayoutInflater();
 			text = "";
-			// Inflate and set the layout for the dialog
-			// Pass null as the parent view because its going in the dialog
-			// layout
-			// Bundle mArgs = getArguments();
+			Bundle arguments = getArguments();
+			Double x = arguments.getDouble("lat");
+			Double y = arguments.getDouble("long");
+			final JSONObject point = new JSONObject();
+			try {
+				point.put("x", x);
+				point.put("y", y);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			View view = inflater.inflate(R.layout.set_location_dialog, null);
-			Button addLocButton = (Button) view.findViewById(R.id.addButton);
-			// nameBox = (EditText) view.findViewById(R.id.customLoc);
+			final Button home = (Button) view.findViewById(R.id.customLoc);
+			ImageView homeIV = (ImageView) view.findViewById(R.id.homeImage);
+			ImageView customIV = (ImageView) view
+					.findViewById(R.id.customImage);
+			final EditText customlocation = (EditText) view
+					.findViewById(R.id.editLoc);
+			homeIV.setOnClickListener(new OnClickListener() {
 
-			// nameBox.setText(mArgs.getString("name"));
-			// phoneBox.setText(mArgs.getString("number"));
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (home.getVisibility() == View.INVISIBLE) {
+						home.setVisibility(View.VISIBLE);
+					}
+					if (customlocation.getVisibility() == View.VISIBLE) {
+						customlocation.setVisibility(View.INVISIBLE);
+					}
+				}
+			});
+			customIV.setOnClickListener(new OnClickListener() {
 
-			// title.setText(mArgs.getString("title"));
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (home.getVisibility() == View.VISIBLE) {
+						home.setVisibility(View.INVISIBLE);
+					}
+					if (customlocation.getVisibility() == View.INVISIBLE) {
+						customlocation.setVisibility(View.VISIBLE);
+					}
+				}
+			});
+
 			builder.setCancelable(true);
 			builder.setView(view);
 
@@ -224,17 +290,49 @@ public class MapActivity extends ActionBarActivity implements
 			final AlertDialog dialog = builder.create();
 			dialog.getWindow().setBackgroundDrawable(
 					new ColorDrawable(android.graphics.Color.TRANSPARENT));
-			dialog.show();
 
-			// addLocButton.setOnClickListener(new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(View v) {
-			// // TODO Auto-generated method stub
-			// dismiss();
-			// text = "home";
-			// }
-			// });
+			home.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					JSONObject place = new JSONObject();
+					try {
+						place.put("home", point);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					setNameToLocation(id, place);
+					dialog.dismiss();
+				}
+			});
+
+			customlocation
+					.setOnEditorActionListener(new OnEditorActionListener() {
+						public boolean onEditorAction(TextView v, int actionId,
+								KeyEvent event) {
+							if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+									|| (actionId == EditorInfo.IME_ACTION_DONE)) {
+								// Toast.makeText(MainActivity.this,
+								// "enter press",
+								// Toast.LENGTH_LONG).show();
+
+								JSONObject place = new JSONObject();
+								try {
+									place.put(customlocation.getText()
+											.toString(), point);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								setNameToLocation(id, place);
+								dialog.dismiss();
+							}
+							return false;
+						}
+					});
+			dialog.show();
 			return dialog;
 		}
 
@@ -257,24 +355,9 @@ public class MapActivity extends ActionBarActivity implements
 		if (status.isSuccess()) {
 			// Update state and save in shared preferences.
 			mGeofencesAdded = !mGeofencesAdded;
-			// // SharedPreferences.Editor editor = mSharedPreferences.edit();
-			// editor.putBoolean(Constants.GEOFENCES_ADDED_KEY,
-			// mGeofencesAdded);
-			// editor.commit();
 
-			// Update the UI. Adding geofences enables the Remove Geofences
-			// button, and removing
-			// geofences enables the Add Geofences button.
-			// setButtonsEnabledState();
-
-			// Toast.makeText(
-			// this,
-			// getString(mGeofencesAdded ? R.string.geofences_added
-			// : R.string.geofences_removed), Toast.LENGTH_SHORT)
-			// .show();
 		} else {
-			// Get the status code for the error and log it using a
-			// user-friendly message.
+
 			String errorMessage = GeofenceErrorMessages.getErrorString(this,
 					status.getStatusCode());
 			Log.e("Error", errorMessage);
@@ -373,6 +456,163 @@ public class MapActivity extends ActionBarActivity implements
 			// ACCESS_FINE_LOCATION permission.
 			// logSecurityException(securityException);
 		}
+	}
+
+	public void getLocation(String id) {
+		Log.d("id ", id);
+		JsonArrayRequest req = new JsonArrayRequest(
+				"http://54.69.183.186:1340/location/fetch/" + id,
+				new Listener<JSONArray>() {
+
+					@Override
+					public void onResponse(JSONArray responseArray) {
+						// TODO Auto-generated method stub
+						Log.d("Response Array Location of user", " "
+								+ responseArray);
+						JSONArray array = new JSONArray();
+						for (int i = 0; i < responseArray.length(); i++) {
+							try {
+								array.put(responseArray.get(i));
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+						}
+						setLoction(array);
+
+					}
+
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", "" + error.networkResponse);
+						VolleyLog.e("Error: ", error.getMessage());
+						String json = null;
+
+						NetworkResponse response = error.networkResponse;
+
+						// Log.d("Response", response.data.toString());
+						if (response != null && response.data != null) {
+							switch (response.statusCode) {
+							case 400:
+								json = new String(response.data);
+								json = trimMessage(json, "message");
+								if (json != null)
+									displayMessage(json, 400);
+
+								Log.d("Response", response.data.toString());
+							}
+						}
+
+						VolleyLog.e("Error: ", error.getMessage());
+						Toast.makeText(MapActivity.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
+					}
+
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
+		AppController.getInstance().addToRequestQueue(req);
+
+	}
+
+	public void displayMessage(String toastString, int code) {
+		Toast.makeText(this, toastString + " code error: " + code,
+				Toast.LENGTH_LONG).show();
+	}
+
+	public String trimMessage(String json, String key) {
+		String trimmedString = null;
+
+		try {
+			JSONObject obj = new JSONObject(json);
+			Log.d("JSOn", " " + obj);
+			trimmedString = obj.getString(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return trimmedString;
+	}
+
+	public void setLoction(JSONArray array) {
+		View marker = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+				.inflate(R.layout.custom_marker, null);
+
+		if (googleMarker != null) {
+			googleMarker.remove();
+		}
+		JSONObject obj;
+		LatLng latLng = null;
+		try {
+			obj = array.getJSONObject(0);
+
+			JSONObject point = obj.getJSONObject("point");
+			latLng = new LatLng(Double.parseDouble(point.getString("x")),
+					Double.parseDouble(point.getString("y")));
+			googleMarker = googleMap.addMarker(new MarkerOptions()
+					.position(latLng)
+					.title("")
+					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
+							this, marker))));
+			Log.d("Length", array.length() + "");
+			for (int i = 1; i < array.length(); i++) {
+				obj = array.getJSONObject(i);
+				point = obj.getJSONObject("point");
+
+				googleMarker = googleMap.addMarker(new MarkerOptions()
+						.position(
+								new LatLng(Double.parseDouble(point
+										.getString("x")), Double
+										.parseDouble(point.getString("y"))))
+						.title("")
+						.icon(BitmapDescriptorFactory
+								.fromBitmap(CustomMarkerView(this, marker))));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+		googleMap.setOnMarkerClickListener(this);
+
+	}
+
+	public void setNameToLocation(String id, JSONObject param) {
+		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+				"http://54.69.183.186:1340/user/add-places/" + id, param,
+				new Response.Listener<JSONObject>() {
+					@SuppressLint("NewApi")
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.d("Activity Result", response.toString());
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.d("Error", error.getMessage() + " ");
+
+					}
+
+				}) {
+			public java.util.Map<String, String> getHeaders()
+					throws com.android.volley.AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + token);
+				return headers;
+
+			};
+		};
+		AppController.getInstance().addToRequestQueue(req);
 	}
 
 }

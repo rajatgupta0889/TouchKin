@@ -19,7 +19,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -56,7 +56,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
 
-public class SignUpActivity extends ActionBarActivity {
+public class SignUpActivity extends AppCompatActivity {
 
 	String[] country;
 	String[] code;
@@ -147,8 +147,9 @@ public class SignUpActivity extends ActionBarActivity {
 					// new LongOperation().execute("");
 					sendIntent();
 				} else {
-					Toast.makeText(SignUpActivity.this, " contains error",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SignUpActivity.this,
+							" Mobile Number is not valid", Toast.LENGTH_LONG)
+							.show();
 				}
 
 			}
@@ -258,7 +259,7 @@ public class SignUpActivity extends ActionBarActivity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		// /int id = item.getItemId();
 		// if (id == R.id.) {
 		// return true;
 		// }
@@ -275,7 +276,6 @@ public class SignUpActivity extends ActionBarActivity {
 			pDialog.dismiss();
 	}
 
-	@SuppressLint("NewApi")
 	public void sendIntent() {
 		// Intent i = new Intent(SignUpActivity.this,
 		// DashBoardActivity.class);
@@ -326,7 +326,6 @@ public class SignUpActivity extends ActionBarActivity {
 						if (response.has("token")) {
 							SharedPreferences token = getApplicationContext()
 									.getSharedPreferences("token", 0);
-							edit.apply();
 							Editor tokenedit = token.edit();
 							try {
 								tokenedit.putString("token",
@@ -338,6 +337,7 @@ public class SignUpActivity extends ActionBarActivity {
 							}
 						}
 						// edit.commit();
+						edit.apply();
 						Log.d(TAG, response.toString());
 
 						hidepDialog();
@@ -529,9 +529,9 @@ public class SignUpActivity extends ActionBarActivity {
 	 * Stores the registration ID and app versionCode in the application's
 	 * shared preferences.
 	 */
-	@SuppressWarnings("unchecked")
+
 	private void registerInBackground() {
-		new AsyncTask() {
+		new AsyncTask<Object, Object, Object>() {
 			@Override
 			protected Object doInBackground(Object... params) {
 				// TODO Auto-generated method stub
