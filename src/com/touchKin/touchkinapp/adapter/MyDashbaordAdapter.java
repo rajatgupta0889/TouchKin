@@ -1,5 +1,6 @@
 package com.touchKin.touchkinapp.adapter;
 
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -10,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.GpsStatus.Listener;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v4.view.PagerAdapter;
@@ -67,11 +67,16 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		TextView parentBottom = (TextView) view
 				.findViewById(R.id.parentBottonTouch);
 		if (parentList.size() > 1 && parentList.get(1).getIsPendingTouch()) {
-			parenTop.setText(parentList.get(1).getParentName()
-					+ " has sent you a touch");
+
 			if (position == 0) {
+				parenTop.setText(parentList.get(1).getParentName()
+						+ " has sent you a touch");
 				parentBottom.setText("Swipe to get the touch");
 			} else {
+				Date d = new Date();
+
+				parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
+						+ " for " + parent.getParentName() + " in india");
 				parentBottom.setText("Tap and hold his/her photo to recieve");
 			}
 		} else {
@@ -82,11 +87,21 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 							+ parentList.get(1).getParentName().substring(1)
 							+ " is thinking of you");
 			} else {
-				parenTop.setText("it's some time in india");
+				Date d = new Date();
+				parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
+						+ " for " + parent.getParentName() + " in india");
 			}
-			if (!isFirst)
-				parentBottom.setText("Send him/her a touch");
-			else {
+			if (!isFirst) {
+				if (parent.getIsMale() != null) {
+					if (parent.getIsMale())
+						parentBottom.setText("Send him a touch");
+					else {
+						parentBottom.setText("Send her a touch");
+					}
+				} else {
+					parentBottom.setText("Send them a touch");
+				}
+			} else {
 				parentBottom.setText("Add a video to touch ?");
 			}
 

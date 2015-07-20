@@ -264,13 +264,23 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 					.toUpperCase()
 					+ parent.getParentName().substring(1)
 					+ " has sent you a touch ");
-			parentBotton.setText("Tap and hold his/her photo to receive");
+			if (parent.getIsMale()) {
+				parentBotton.setText("Tap and hold his photo to receive");
+			} else {
+				parentBotton.setText("Tap and hold her photo to receive");
+			}
 		} else {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1)
 					+ " seems to be feeling good ");
-			parentBotton.setText("Last touch was " + touchTime + " hours ago");
+			if (touchTime != null && touchTime.equalsIgnoreCase("1"))
+				parentBotton.setText("Last touch was " + touchTime
+						+ " hour ago");
+			else {
+				parentBotton.setText("Last touch was " + touchTime
+						+ " hours ago");
+			}
 		}
 	}
 
