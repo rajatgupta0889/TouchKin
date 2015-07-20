@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,34 +35,37 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.Request.Method;
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.adapter.ExpandableListAdapter;
 import com.touchKin.touchkinapp.adapter.ImageAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter;
 import com.touchKin.touchkinapp.adapter.MyAdapter.ViewHolder.IMyViewHolderClicks;
-import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HorizontalListView;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -99,6 +104,10 @@ public class DashBoardActivity extends ActionBarActivity implements
 	JSONObject userObj;
 	static Button notifCount;
 	String token;
+	Boolean isFromNotification;
+	JSONArray touchArray = null;
+	View anchor;
+	List<String> notificationList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,23 +120,29 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// lLayout = new MyLinearLayout(this);
 
 		InitView();
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			isFromNotification = extras.getBoolean("Flag");
+		}
 		setSupportActionBar(toolbar);
 		toolbar.inflateMenu(R.menu.toolbar_menu);
-		// toolbar.setOnMenuItemClickListener(new
-		// Toolbar.OnMenuItemClickListener() {
-		// @Override
-		// public boolean onMenuItemClick(MenuItem item) {
-		// // Handle the menu item
-		// int id = item.getItemId();
-		// if (id == R.id.parentIconMenu) {
-		//
-		// // toggleVissibility();
-		// return true;
-		// }
-		//
-		// return true;
-		// }
-		// });
+		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				// Handle the menu item
+				int id = item.getItemId();
+				if (id == R.id.bell) {
+					Toast.makeText(DashBoardActivity.this, "Menu",
+							Toast.LENGTH_LONG).show();
+					showListPopup();
+					// toggleVissibility();
+					return true;
+				}
+				Toast.makeText(getApplicationContext(), "ifds",
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
+		});
 
 		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
@@ -146,6 +161,35 @@ public class DashBoardActivity extends ActionBarActivity implements
 			token = userObj.optString("token");
 		} catch (JSONException e) {
 			e.printStackTrace();
+		}
+		SharedPreferences pendingTouch = getApplicationContext()
+				.getSharedPreferences("pendingTouch", 0);
+		String array = pendingTouch.getString("touch", null);
+		if (array != null) {
+			try {
+				touchArray = new JSONArray(array);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		notificationList = new ArrayList<String>();
+
+		SharedPreferences pendingReq = getApplicationContext()
+				.getSharedPreferences("pedingReq", 0);
+		String str = pendingReq.getString("req", null);
+		if (str != null) {
+			try {
+				JSONArray notifArray = new JSONArray(str);
+				int count = notifArray.length();
+				for (int i = 0; i < count; i++) {
+					notificationList.add(notifArray.getString(i));
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 		fetchParentList();
 		mAdapter = new MyAdapter(TITLES, userName, userId,
@@ -261,10 +305,35 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 
 		getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-		View count = menu.findItem(R.id.parentIconMenu).getActionView();
-		Log.d("count", count + "");
-		TextView notification = (TextView) count.findViewById(R.id.hotlist_hot);
-		notification.setText("5");
+		anchor = menu.findItem(R.id.bell).getActionView();
+		MenuItem item = menu.getItem(0);
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				// TODO Auto-generated method stub
+				if (item.getItemId() == R.id.bell)
+					showListPopup();
+				return false;
+			}
+		});
+		anchor.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showListPopup();
+			}
+		});
+
+		Log.d("count", anchor + "");
+		TextView notification = (TextView) anchor
+				.findViewById(R.id.hotlist_hot);
+		if (notification != null && notificationList.size() > 0) {
+			notification.setText(notificationList.size() + "");
+		} else {
+			notification.setVisibility(View.INVISIBLE);
+		}
 		return true;
 	}
 
@@ -273,15 +342,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		// int id = item.getItemId();
-		// Toast.makeText(getApplicationContext(), "HI menu" + id,
-		// Toast.LENGTH_SHORT).show();
-		//
-		// if (id == R.id.parentIconMenu) {
-		// // Not implemented here
-		//
-		// return true;
-		// }
+		int id = item.getItemId();
+
+		if (id == R.id.bell) {
+			// Not implemented here
+			Toast.makeText(getApplicationContext(), "ifds", Toast.LENGTH_LONG)
+					.show();
+			showListPopup();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -338,7 +407,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("Settings"),
 						R.color.tab_bg, "Settings", R.drawable.settings),
-				TouchKinBookFragment.class, b);
+						SettingsFragment.class, b);
 
 		b = new Bundle();
 		b.putString("key", "ER Plan");
@@ -358,7 +427,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 			}
 
 		});
-
 		listview = (HorizontalListView) findViewById(R.id.parentListView);
 
 		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayoutDashboard);
@@ -429,11 +497,12 @@ public class DashBoardActivity extends ActionBarActivity implements
 						Log.d("Response Array", " " + responseArray);
 						try {
 							list.add(new ParentListModel(userId, true, "Me",
-									userId, "", userObj.getString("mobile")));
+									userId, "", true, userObj
+											.getString("mobile"), true, false));
 							list.get(0).setReqStatus(true);
 							careGiverList.add(new ParentListModel(userId,
-									false, "Me", userId, "", userObj
-											.getString("mobile")));
+									false, "Me", userId, "", true, userObj
+											.getString("mobile"), true, false));
 							careGiverList.get(0).setReqStatus(true);
 							selectedParent = list.get(0);
 							JSONArray careRecievers = responseArray
@@ -457,6 +526,34 @@ public class DashBoardActivity extends ActionBarActivity implements
 									} else {
 										item.setReqStatus(true);
 									}
+									if (touchArray != null
+											&& touchArray.length() > 0) {
+										for (int j = 0; j < touchArray.length(); j++) {
+											try {
+												JSONObject obj = touchArray
+														.getJSONObject(j);
+												if (obj.getString("id")
+														.equalsIgnoreCase(
+																item.getParentId())) {
+													item.setIsPendingTouch(true);
+													if (obj.getString("type")
+															.equalsIgnoreCase(
+																	"media")) {
+														item.setIsTouchMedia(true);
+													}
+												} else {
+													item.setIsPendingTouch(false);
+												}
+											} catch (JSONException e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											}
+										}
+									} else {
+										item.setIsPendingTouch(false);
+
+									}
 									item.setIsSelected(false);
 									list.add(item);
 								}
@@ -478,6 +575,33 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setReqStatus(false);
 									} else {
 										item.setReqStatus(true);
+									}
+									if (touchArray != null
+											&& touchArray.length() > 0) {
+										for (int j = 0; j < touchArray.length(); j++) {
+											try {
+												JSONObject obj = touchArray
+														.getJSONObject(j);
+												if (obj.getString("id")
+														.equalsIgnoreCase(
+																item.getParentId())) {
+													item.setIsPendingTouch(true);
+													if (obj.getString("type")
+															.equalsIgnoreCase(
+																	"media")) {
+														item.setIsTouchMedia(true);
+													}
+												} else {
+													item.setIsPendingTouch(false);
+												}
+											} catch (JSONException e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											}
+										}
+									} else {
+										item.setIsPendingTouch(false);
 									}
 									item.setMobilenumber(cg.optString("mobile"));
 									careGiverList.add(item);
@@ -502,8 +626,21 @@ public class DashBoardActivity extends ActionBarActivity implements
 															lhs.getReqStatus());
 										}
 									});
+							Collections.sort(list,
+									new Comparator<ParentListModel>() {
+										@Override
+										public int compare(ParentListModel lhs,
+												ParentListModel rhs) {
+											// TODO Auto-generated method stub
+											return rhs
+													.getIsPendingTouch()
+													.compareTo(
+															lhs.getIsPendingTouch());
+										}
+									});
 						}
-						list.add(new ParentListModel("", false, "", "", "", ""));
+						list.add(new ParentListModel("", false, "", "", "",
+								false, "", false, false));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
 						// if (selectedParent == null) {
@@ -523,7 +660,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
-						
+
 						NetworkResponse response = error.networkResponse;
 						if (!InternetAvailable()) {
 							Toast.makeText(DashBoardActivity.this,
@@ -544,7 +681,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 								Log.d("Response", response.data.toString());
 							}
 						}
-					
+
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(DashBoardActivity.this,
 								error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -563,16 +700,19 @@ public class DashBoardActivity extends ActionBarActivity implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+
 	public void displayMessage(String toastString, int code) {
 		Toast.makeText(getApplicationContext(),
 				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
 	}
+
 	public String trimMessage(String json, String key) {
 		String trimmedString = null;
 
@@ -781,11 +921,73 @@ public class DashBoardActivity extends ActionBarActivity implements
 					return rhs.getReqStatus().compareTo(lhs.getReqStatus());
 				}
 			});
+			Collections.sort(careGiverList, new Comparator<ParentListModel>() {
+				@Override
+				public int compare(ParentListModel lhs, ParentListModel rhs) {
+					// TODO Auto-generated method stub
+					return rhs.getIsPendingTouch().compareTo(
+							lhs.getIsPendingTouch());
+				}
+			});
 		}
 		return careGiverList;
 	}
 
 	public String getToken() {
 		return token;
+	}
+
+	public void goToKinbook() {
+		mTabHost.setCurrentTab(2);
+	}
+
+	public void showListPopup() {
+
+		ListPopupWindow popup = new ListPopupWindow(this);
+		popup.setAnchorView(anchor);
+		popup.setWidth(500);
+		ListAdapter adapter = new MyAdapterPopup(this, notificationList);
+		popup.setAdapter(adapter);
+		popup.show();
+	}
+
+	public static class MyAdapterPopup extends BaseAdapter implements
+			ListAdapter {
+		private Activity activity;
+		List<String> notificationList;
+
+		public MyAdapterPopup(Activity activity, List<String> notificationList) {
+			this.activity = activity;
+			this.notificationList = notificationList;
+		}
+
+		@Override
+		public int getCount() {
+			return notificationList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return notificationList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			TextView text = null;
+
+			LayoutInflater inflater = (LayoutInflater) activity
+					.getSystemService(LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.textview, null);
+
+			text = (TextView) convertView.findViewById(R.id.textList);
+
+			text.setText(notificationList.get(position));
+			return convertView;
+		}
 	}
 }

@@ -11,6 +11,12 @@
         android:layout_above="@+id/sendbuttonlayout"
         android:background="#bfbfbf" />
 
+    <ImageView
+        android:id="@+id/imagePreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp" />
+
     <LinearLayout
         android:id="@+id/sendbuttonlayout"
         android:layout_width="wrap_content"
@@ -62,19 +68,11 @@
     <VideoView
         android:id="@+id/videoPreview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="5dp"
         android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/imagePreview"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="5dp" />
 
     <Button
         android:id="@+id/play_btn"
@@ -92,7 +90,7 @@
         android:layout_alignBottom="@+id/imagePreview"
         android:layout_centerHorizontal="true"
         android:background="@drawable/triangle" />
-
+    <!--
     <EditText
          android:id="@+id/phone_number_detail"
         android:layout_width="wrap_content"
@@ -112,5 +110,6 @@
         android:scrollbars="horizontal"
         android:textColor="@color/black"
         android:textColorHint="@color/text_orange" />
+    -->
 
 </RelativeLayout>

@@ -7,15 +7,29 @@
 
     <Button
         android:id="@+id/customLoc"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/homeImage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:background="#c9e0a6"
         android:padding="5dp"
-        android:text="    Set as Home ?   "
-        android:textColor="@color/white" />
+        android:text="Set as Home ? "
+        android:textColor="@color/white"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/editLoc"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homeImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:hint="custom location"
+        android:imeOptions="actionDone"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:visibility="invisible" />
 
     <View
         android:id="@+id/view1"

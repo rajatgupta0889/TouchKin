@@ -5,7 +5,7 @@
     tools:context="com.touchKin.touckinapp.DashBoardActivity" >
 
     <item
-        android:id="@+id/parentIconMenu"
+        android:id="@+id/bell"
         android:icon="@drawable/bell"
         android:title=""
         app:actionLayout="@layout/action_bar_notifitcation_icon"

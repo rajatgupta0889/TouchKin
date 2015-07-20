@@ -1,18 +1,23 @@
 package com.touchKin.touchkinapp.services;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.touchKin.touchkinapp.CircleNotificationActivity;
+import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.MyFamily;
 import com.touchKin.touchkinapp.broadcastReciever.GcmBroadcastReceiver;
 import com.touchKin.touckinapp.R;
@@ -39,7 +44,7 @@ public class GcmIntentService extends IntentService {
 
 		String messageType = gcm.getMessageType(intent);
 		Log.d("Intent", messageType);
-		if (!extras.isEmpty()) {
+		if (extras != null && !extras.isEmpty()) {
 			/*
 			 * filter message based on message Type. Since it is likely that GCM
 			 * will be extended in the future with new message types, just
@@ -48,43 +53,29 @@ public class GcmIntentService extends IntentService {
 			 */
 			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR
 					.equals(messageType)) {
-				sendNotification("Send Error: " + extras.toString(), "");
+				sendNotification("Send Error: " + extras.toString(), "", "");
 				Log.d(TAG, messageType);
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED
 					.equals(messageType)) {
 				sendNotification(
-						"Deleted messagess on server: " + extras.toString(), "");
+						"Deleted messagess on server: " + extras.toString(),
+						"", "");
 				Log.d(TAG, messageType);
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
 					.equals(messageType)) {
-				if (extras.getString("message") != null) {
-					Log.d(TAG, extras.getString("message") + "");
-					// Log.d(TAG, extras.toString());
-					String message = extras.getString("message");
-
-					sendNotification("Message is:" + message, "");
-					for (int i = 0; i < 5; i++) {
-						Log.i(TAG, "Working ... " + (i + 1) + "/5 @"
-								+ SystemClock.elapsedRealtime());
-						try {
-							Thread.sleep(5000);
-
-						} catch (InterruptedException exp) {
-
-						}
-
-					}
-					Log.i(TAG,
-							"Completed work @ " + SystemClock.elapsedRealtime());
-					Log.i(TAG, "Recieved @ " + extras.toString());
+				Log.d("Extras", extras.getString("txt"));
+				if (extras != null) {
+					String message = extras.getString("txt");
+					sendNotification(message, extras.getString("type"),
+							extras.getString("id"));
 				}
-			}
 
+			}
 		}
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
-	private void sendNotification(String msg, String resultType) {
+	private void sendNotification(String msg, String resultType, String id) {
 		// TODO Auto-generated method stub
 		mNotificationManager = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -92,8 +83,67 @@ public class GcmIntentService extends IntentService {
 		String message = null;
 
 		message = msg;
-		intent = new Intent(this, MyFamily.class);
+		if (resultType.equalsIgnoreCase("request")) {
+			intent = new Intent(this, MyFamily.class);
+
+		} else {
+			intent = new Intent(this, DashBoardActivity.class);
+			SharedPreferences pendingTouch = getApplicationContext()
+					.getSharedPreferences("pendingTouch", 0);
+			Editor tokenedit = pendingTouch.edit();
+			JSONArray touch = null;
+			if (pendingTouch.getString("touch", null) == null) {
+				touch = new JSONArray();
+			} else {
+				String array = pendingTouch.getString("touch", null);
+				if (array != null) {
+					try {
+						touch = new JSONArray(array);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+			JSONObject touchObj = new JSONObject();
+			try {
+				touchObj.put("id", id);
+				touchObj.put("type", resultType);
+				touch.put(touchObj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			tokenedit.putString("touch", touch + "");
+			tokenedit.putString("type", resultType);
+			tokenedit.commit();
+		}
+		JSONArray request = null;
+		SharedPreferences pendingReq = getApplicationContext()
+				.getSharedPreferences("pedingReq", 0);
+		Editor tokenedit = pendingReq.edit();
+		if (pendingReq.getString("req", null) == null) {
+			request = new JSONArray();
+		} else {
+			String array = pendingReq.getString("req", null);
+			if (array != null) {
+				try {
+					request = new JSONArray(array);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		request.put(msg);
+		tokenedit.putString("req", request + "");
+		tokenedit.commit();
+		intent.putExtra("type", resultType);
 		intent.putExtra("Flag", true);
+		intent.putExtra("id", id);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -113,5 +163,4 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
 	}
-
 }

@@ -19,7 +19,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true" >
 
-        <TextView
+        <!--
+             <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -27,6 +28,8 @@
             android:layout_weight="1"
             android:text="Send a message"
             android:textSize="17sp" />
+        -->
+
 
         <View
             android:id="@+id/view2"
@@ -62,7 +65,7 @@
     <VideoView
         android:id="@+id/videoPreview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="5dp"
@@ -93,7 +96,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/triangle" />
 
-    <EditText
+  <!--   <EditText
         android:id="@+id/phone_number_detail"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
@@ -111,6 +114,6 @@
         android:padding="10dp"
         android:scrollbars="horizontal"
         android:textColor="@color/black"
-        android:textColorHint="@color/text_orange" />
+        android:textColorHint="@color/text_orange" /> -->
 
 </RelativeLayout>

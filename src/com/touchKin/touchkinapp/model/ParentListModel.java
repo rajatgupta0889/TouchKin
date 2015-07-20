@@ -8,6 +8,40 @@ public class ParentListModel {
 	String parentUserId;
 	Boolean reqStatus;
 	String mobilenumber;
+	Boolean isPendingTouch;
+	Boolean isTouchMedia;
+
+	public ParentListModel(String imageUrl, Boolean isSelected,
+			String parentName, String parentId, String parentUserId,
+			Boolean reqStatus, String mobilenumber, Boolean isPendingTouch,
+			Boolean isTouchMedia) {
+		super();
+		this.imageUrl = imageUrl;
+		this.isSelected = isSelected;
+		this.parentName = parentName;
+		this.parentId = parentId;
+		this.parentUserId = parentUserId;
+		this.reqStatus = reqStatus;
+		this.mobilenumber = mobilenumber;
+		this.isPendingTouch = isPendingTouch;
+		this.isTouchMedia = isTouchMedia;
+	}
+
+	public Boolean getIsPendingTouch() {
+		return isPendingTouch;
+	}
+
+	public void setIsPendingTouch(Boolean isPendingTouch) {
+		this.isPendingTouch = isPendingTouch;
+	}
+
+	public Boolean getIsTouchMedia() {
+		return isTouchMedia;
+	}
+
+	public void setIsTouchMedia(Boolean isTouchMedia) {
+		this.isTouchMedia = isTouchMedia;
+	}
 
 	public String getMobilenumber() {
 		return mobilenumber;
@@ -19,19 +53,6 @@ public class ParentListModel {
 
 	public ParentListModel() {
 		super();
-	}
-
-	public ParentListModel(String imageUrl, Boolean isSelected,
-			String parentName, String parentId, String parentUserId,
-			String mobilenumber) {
-		super();
-		this.imageUrl = imageUrl;
-		this.isSelected = isSelected;
-		this.parentName = parentName;
-		this.parentId = parentId;
-		this.parentUserId = parentUserId;
-		this.mobilenumber = mobilenumber;
-
 	}
 
 	public String getParentUserId() {
