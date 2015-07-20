@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.R.layout;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -185,12 +186,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 					thumbnail = ThumbnailUtils.createVideoThumbnail(
 							getPath(previewFilePath), Thumbnails.MINI_KIND);
 
-					// Matrix matrix = new Matrix();
-					// Bitmap bmThumbnail = Bitmap.createBitmap(thumbnail, 0, 0,
-					// thumbnail.getWidth(), thumbnail.getHeight(), matrix,
-					// true);
-//					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
-//							thumbnail, 640, 400);
 					Log.d("previewFilePath", previewFilePath.toString());
 					videoPath = previewFilePath.toString().substring(8);
 					previewImage.setImageBitmap(thumbnail);

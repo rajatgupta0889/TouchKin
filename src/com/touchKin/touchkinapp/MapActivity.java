@@ -21,7 +21,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -68,7 +68,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService;
 import com.touchKin.touckinapp.R;
 
-public class MapActivity extends AppCompatActivity implements
+public class MapActivity extends ActionBarActivity implements
 		ConnectionCallbacks, OnConnectionFailedListener, OnMarkerClickListener,
 		ResultCallback<Status> {
 	String text = "";
