@@ -84,6 +84,7 @@ public class DashboardLocationFragment extends Fragment implements
 	 */
 	protected GoogleApiClient mGoogleApiClient;
 	protected Location mLastLocation;
+	int staticSince;
 
 	public static DashboardLocationFragment newInstance(int page, String title) {
 		DashboardLocationFragment locationFragment = new DashboardLocationFragment();
@@ -263,13 +264,15 @@ public class DashboardLocationFragment extends Fragment implements
 	private void setText() {
 		// TODO Auto-generated method stub
 		if (parent != null) {
-			parentName.setText(parent.getParentName() + " is in ");
+			parentName.setText(parent.getParentName().substring(0, 1)
+					.toUpperCase()
+					+ parent.getParentName().substring(1) + " is in ");
 			if (isTapOnMap) {
-				parentNameBottom.setText("Its been" + 2 + " hours since"
+				parentNameBottom.setText("Its been " + 2 + " hours since "
 						+ parent.getParentName() + " last left home");
 			} else {
-				parentNameBottom.setText("Tap on map to set "
-						+ parent.getParentName() + "'s Location");
+				parentNameBottom.setText("Its been " + 2 + " hours since "
+						+ parent.getParentName() + " last left home");
 			}
 			if (lastSelectedParent != null
 					&& !lastSelectedParent.equals(parent))
@@ -297,9 +300,11 @@ public class DashboardLocationFragment extends Fragment implements
 				lastSelectedParent = parent;
 				getLocation(parent.getParentId());
 			}
-			parentName.setText(parent.getParentName() + " is in ");
-			parentNameBottom.setText("Tap on map to set "
-					+ parent.getParentName() + "'s");
+//			parentName.setText(parent.getParentName().substring(0, 1)
+//					.toUpperCase()
+//					+ parent.getParentName().substring(1) + " is in ");
+//			parentNameBottom.setText("Its been " + 2 + " hours since "
+//					+ parent.getParentName() + " last left home");
 			if (!lastSelectedParent.equals(parent))
 				getLocation(parent.getParentId());
 			else {
@@ -316,9 +321,11 @@ public class DashboardLocationFragment extends Fragment implements
 		String longitude = null;
 		String latitude = null;
 		LatLng latLng = null;
+
 		try {
-			longitude = obj.getString("y");
-			latitude = obj.getString("x");
+			JSONObject point = obj.getJSONObject("point");
+			longitude = point.getString("y");
+			latitude = point.getString("x");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -326,6 +333,9 @@ public class DashboardLocationFragment extends Fragment implements
 		if (!obj.optString("name").isEmpty()) {
 			parentLocPos.setText(obj.optString("name"));
 			isTapOnMap = true;
+			parentNameBottom.setText("Its been " + staticSince
+					+ " hours since " + parent.getParentName()
+					+ " last left home");
 		} else {
 			Geocoder geocoder = new Geocoder(getActivity());
 			try {
@@ -340,6 +350,8 @@ public class DashboardLocationFragment extends Fragment implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			parentNameBottom.setText("Its been " + staticSince
+					+ " hours since " + parent.getParentName() + " left home");
 		}
 		if (longitude != null & latitude != null) {
 			latLng = new LatLng(Double.parseDouble(latitude),
@@ -373,12 +385,13 @@ public class DashboardLocationFragment extends Fragment implements
 						Log.d("Response Array Location", " " + responseArray);
 						try {
 							if (responseArray.length() > 0) {
-								obj = responseArray.getJSONObject(
-										"lastUpdatedLocation").getJSONObject(
-										"point");
+								obj = responseArray
+										.getJSONObject("lastUpdatedLocation");
 								setLocation(obj);
 								setSlices(responseArray
 										.getJSONObject("movements"));
+								staticSince = responseArray
+										.getInt("static_since");
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

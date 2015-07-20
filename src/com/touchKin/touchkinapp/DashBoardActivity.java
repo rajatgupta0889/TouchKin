@@ -108,6 +108,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 	JSONArray touchArray = null;
 	View anchor;
 	List<String> notificationList;
+	ListPopupWindow popup;
+	Boolean popupIsShowing = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -298,6 +300,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				e.printStackTrace();
 			}
 		mAdapter.notifyDataSetChanged();
+		popup = new ListPopupWindow(this);
 	}
 
 	@Override
@@ -405,16 +408,16 @@ public class DashBoardActivity extends ActionBarActivity implements
 		b = new Bundle();
 		b.putString("key", "Settings");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("Settings"),
-						R.color.tab_bg, "Settings", R.drawable.settings),
-						SettingsFragment.class, b);
+				setIndicator(this, mTabHost.newTabSpec("Live Advisor"),
+						R.color.tab_bg, "Live Advisor",
+						R.drawable.ic_action_live), SettingsFragment.class, b);
 
 		b = new Bundle();
 		b.putString("key", "ER Plan");
 		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("ER"), R.color.tab_bg,
-						"ER Plan", R.drawable.er), TouchKinBookFragment.class,
-				b);
+				setIndicator(this, mTabHost.newTabSpec("More"), R.color.tab_bg,
+						"More", R.drawable.ic_more),
+				TouchKinBookFragment.class, b);
 
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -540,6 +543,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 															.equalsIgnoreCase(
 																	"media")) {
 														item.setIsTouchMedia(true);
+													} else {
+														item.setIsTouchMedia(false);
 													}
 												} else {
 													item.setIsPendingTouch(false);
@@ -590,6 +595,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 															.equalsIgnoreCase(
 																	"media")) {
 														item.setIsTouchMedia(true);
+													} else {
+														item.setIsTouchMedia(false);
 													}
 												} else {
 													item.setIsPendingTouch(false);
@@ -942,13 +949,20 @@ public class DashBoardActivity extends ActionBarActivity implements
 	}
 
 	public void showListPopup() {
+		if (!popupIsShowing) {
+			popup.setAnchorView(anchor);
+			popup.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.notification_popup));
+			popup.setWidth(500);
+			ListAdapter adapter = new MyAdapterPopup(this, notificationList);
+			popup.setAdapter(adapter);
+			popup.show();
+			popupIsShowing = true;
+		} else {
+			popup.dismiss();
+			popupIsShowing = false;
+		}
 
-		ListPopupWindow popup = new ListPopupWindow(this);
-		popup.setAnchorView(anchor);
-		popup.setWidth(500);
-		ListAdapter adapter = new MyAdapterPopup(this, notificationList);
-		popup.setAdapter(adapter);
-		popup.show();
 	}
 
 	public static class MyAdapterPopup extends BaseAdapter implements

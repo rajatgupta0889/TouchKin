@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Ho"
-    android:gravity="center_horizontal" 
-    android:id="@+id/textList">
+    android:background="@color/white" >
 
-</TextView>
+    <TextView
+        android:id="@+id/textList"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Rajat"
+        android:textColor="@color/text_grey" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="300dp"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/textList"
+        android:background="@color/text_grey" />
+
+</RelativeLayout>
