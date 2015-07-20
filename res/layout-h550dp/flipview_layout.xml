@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
@@ -117,4 +117,81 @@
             android:background="@drawable/delete" />
     </RelativeLayout>
 
-</LinearLayout>
+</LinearLayout>-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000" >
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+     <Button
+            android:id="@+id/profile_pic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/play_btn" />
+
+     <RelativeLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="10dp" >
+
+         <com.touchKin.touchkinapp.custom.RoundedImageView
+             android:id="@+id/senderImage"
+             android:layout_width="65dp"
+             android:layout_height="65dp"
+             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+             android:src="@drawable/activity_bg" />
+         <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circular_image_small" />
+
+     </RelativeLayout>
+
+     <RelativeLayout
+         android:id="@+id/relativeLayout1"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentRight="true"
+         android:background="#50000000"
+         android:gravity="center"
+         android:paddingTop="8dp" 
+         android:paddingBottom="8dp">
+
+         <Button
+             android:id="@+id/like_button"
+             android:layout_width="40dp"
+             android:layout_height="40dp"
+             android:layout_alignParentTop="true"
+             android:background="@drawable/like" />
+
+         <Button
+             android:id="@+id/delete"
+             android:layout_width="40dp"
+             android:layout_height="40dp"
+             android:layout_marginLeft="30dp"
+             android:layout_toRightOf="@+id/like_button"
+             android:background="@drawable/delete" />
+     </RelativeLayout>
+
+</RelativeLayout>
