@@ -974,7 +974,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			popup.setAnchorView(anchor);
 			popup.setBackgroundDrawable(getResources().getDrawable(
 					R.drawable.notification_pop));
-//			popup.setWidth(500);
+			popup.setWidth(600);
 			ListAdapter adapter = new MyAdapterPopup(this, notificationList);
 			popup.setAdapter(adapter);
 			popup.show();
