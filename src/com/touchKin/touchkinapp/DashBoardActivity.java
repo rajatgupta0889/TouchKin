@@ -390,7 +390,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				mTabHost.newTabSpec("MyDashBoard").setIndicator(
 						" My Dash Board"), Fragment2.class, b);
 		mTabHost.getTabWidget().getChildAt(1).setVisibility(View.GONE);
-		mTabHost.setCurrentTab(1);
+		mTabHost.setCurrentTab(0);
 		b = new Bundle();
 		b.putString("key", "TouchKin");
 		mTabHost.addTab(
@@ -499,21 +499,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
 						try {
-							list.add(new ParentListModel(userId, true, "Me",
-									userId, "", true, userObj
-											.getString("mobile"), true, false,
-									(userObj.getString("gender")
-											.equalsIgnoreCase("male")) ? true
-											: false));
-							list.get(0).setReqStatus(true);
-							careGiverList.add(new ParentListModel(userId,
-									false, "Me", userId, "", true, userObj
-											.getString("mobile"), true, false,
-									(userObj.getString("gender")
-											.equalsIgnoreCase("male")) ? true
-											: false));
-							careGiverList.get(0).setReqStatus(true);
-							selectedParent = list.get(0);
 							JSONArray careRecievers = responseArray
 									.getJSONArray("care_receivers");
 							int crCount = careRecievers.length();
@@ -573,8 +558,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setIsPendingTouch(false);
 
 									}
-									item.setIsSelected(false);
+									if (i != 0) {
+										item.setIsSelected(false);
+									} else {
+										item.setIsSelected(true);
+									}
 									list.add(item);
+
 								}
 							}
 							JSONArray careGivers = responseArray
@@ -643,6 +633,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// setMenuTitle(null);
 						// }
 						if (list.size() > 1) {
+							selectedParent = list.get(0);
 							Collections.sort(list,
 									new Comparator<ParentListModel>() {
 										@Override
@@ -666,6 +657,25 @@ public class DashBoardActivity extends ActionBarActivity implements
 															lhs.getIsPendingTouch());
 										}
 									});
+							try {
+								list.add(new ParentListModel(
+										userId,
+										false,
+										"Me",
+										userId,
+										"",
+										true,
+										userObj.getString("mobile"),
+										true,
+										false,
+										(userObj.getString("gender")
+												.equalsIgnoreCase("male")) ? true
+												: false));
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
 						}
 						list.add(new ParentListModel("", false, "", "", "",
 								false, "", false, false, false));
@@ -958,6 +968,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				}
 			});
 		}
+
 		return careGiverList;
 	}
 

@@ -42,6 +42,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.custom.CustomRequest;
@@ -53,7 +54,7 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class TouchFragment extends Fragment implements FragmentInterface,
-		ViewPagerListener {
+		ViewPagerListener, ButtonClickListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
@@ -72,6 +73,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		args.putInt("someInt", page);
 		args.putString("someTitle", title);
 		touchFragment.setArguments(args);
+
 		return touchFragment;
 
 	}
@@ -83,6 +85,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		vib = (Vibrator) this.getActivity().getSystemService(
 				Context.VIBRATOR_SERVICE);
 		Fragment1.listener = TouchFragment.this;
+		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 	}
 
 	// Inflate the view for the fragment based on layout XML
@@ -235,7 +238,6 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 		Log.d("Parent", "" + parent);
 		if (parent != null) {
-
 			getCurrent(parent.getParentId());
 
 			String cut = parent.getParentName().substring(0, 1).toLowerCase();
@@ -250,12 +252,12 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 	}
 
-	// @Override
-	// public void onButtonClickListner(int position, String value,
-	// Boolean isAccept) {
-	// // TODO Auto-generated method stub
-	// SetImage();
-	// }
+	@Override
+	public void onButtonClickListner(int position, String value,
+			Boolean isAccept) {
+		// TODO Auto-generated method stub
+		SetImage();
+	}
 
 	private void setText() {
 		// TODO Auto-generated method stub

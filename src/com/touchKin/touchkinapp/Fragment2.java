@@ -35,8 +35,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class Fragment2 extends Fragment implements ButtonClickListener,
-		OnClickListener {
+public class Fragment2 extends Fragment implements OnClickListener {
 	List<ParentListModel> list;
 	ViewPager myPager;
 	ParentListModel parent;
@@ -59,7 +58,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 				Context.VIBRATOR_SERVICE);
 		myPager = (ViewPager) v.findViewById(R.id.myPager);
 		list = new ArrayList<ParentListModel>();
-		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
 		getService = (TextView) v.findViewById(R.id.getService);
 		sendTouchTextview = (TextView) v.findViewById(R.id.textToSendTouch);
@@ -67,17 +66,13 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		return v;
 	}
 
-	@Override
-	public void onButtonClickListner(int position, String value,
-			Boolean isAccept) {
-		// TODO Auto-generated method stub
-		list = ((DashBoardActivity) getActivity()).getParentList();
-		Log.d("Parent lIst", list + "");
-		adapter = new MyDashbaordAdapter(getActivity(), list);
-
-		myPager.setAdapter(adapter);
-
-	}
+	// @Override
+	// public void onButtonClickListner(int position, String value,
+	// Boolean isAccept) {
+	// // TODO Auto-generated method stub
+	//
+	//
+	// }
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -92,7 +87,11 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
 		sendTouchTextview.setOnClickListener(this);
+		list = ((DashBoardActivity) getActivity()).getParentList();
+		Log.d("Parent lIst", list + "");
+		adapter = new MyDashbaordAdapter(getActivity(), list);
 
+		myPager.setAdapter(adapter);
 		myPager.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override

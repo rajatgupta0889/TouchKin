@@ -66,46 +66,12 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		TextView parenTop = (TextView) view.findViewById(R.id.parentNameTV);
 		TextView parentBottom = (TextView) view
 				.findViewById(R.id.parentBottonTouch);
-		if (parentList.size() > 1 && parentList.get(1).getIsPendingTouch()) {
+		Date d = new Date();
 
-			if (position == 0) {
-				parenTop.setText(parentList.get(1).getParentName()
-						+ " has sent you a touch");
-				parentBottom.setText("Swipe to get the touch");
-			} else {
-				Date d = new Date();
+		parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
+				+ " for " + parent.getParentName() + " in india");
+		parentBottom.setText("Tap and hold his/her photo to recieve");
 
-				parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
-						+ " for " + parent.getParentName() + " in india");
-				parentBottom.setText("Tap and hold his/her photo to recieve");
-			}
-		} else {
-			if (position == 0) {
-				if (parentList.size() > 1)
-					parenTop.setText(parentList.get(1).getParentName()
-							.substring(0, 1).toUpperCase()
-							+ parentList.get(1).getParentName().substring(1)
-							+ " is thinking of you");
-			} else {
-				Date d = new Date();
-				parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
-						+ " for " + parent.getParentName() + " in india");
-			}
-			if (!isFirst) {
-				if (parent.getIsMale() != null) {
-					if (parent.getIsMale())
-						parentBottom.setText("Send him a touch");
-					else {
-						parentBottom.setText("Send her a touch");
-					}
-				} else {
-					parentBottom.setText("Send them a touch");
-				}
-			} else {
-				parentBottom.setText("Add a video to touch ?");
-			}
-
-		}
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
 		ImageLoader imageLoader = new ImageLoader(context);
 		String name = parent.getParentName();

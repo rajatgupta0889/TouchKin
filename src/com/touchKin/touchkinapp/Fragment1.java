@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.Interface.ViewPagerListener;
 import com.touchKin.touchkinapp.adapter.DashBoardAdapter;
@@ -36,7 +37,7 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class Fragment1 extends Fragment implements OnClickListener {
+public class Fragment1 extends Fragment implements OnClickListener,ButtonClickListener {
 
 	private ViewPager viewPager;
 	public DashBoardAdapter adapter;
@@ -73,7 +74,7 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		View v = inflater.inflate(R.layout.dashboard_fragment, null);
 		init(v);
 		DashBoardAdapter.context = getActivity();
-
+		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
 		viewPager.setOffscreenPageLimit(2);
@@ -255,6 +256,13 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		pageListener = new PageListener();
 		viewPager.setOnPageChangeListener(pageListener);
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onButtonClickListner(int position, String value,
+			Boolean isAccept) {
+		// TODO Auto-generated method stub
+		notifyFrag();
 	}
 
 }
