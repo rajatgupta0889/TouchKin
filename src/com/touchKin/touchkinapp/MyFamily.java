@@ -86,11 +86,11 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 		user = userPref.getString("user", null);
 
-		if (isFromNotification != null && isFromNotification) {
-			SignUp(phone, device_id);
-		} else {
-			fetchDataFromServer();
-		}
+		// if (isFromNotification != null && isFromNotification) {
+		// SignUp(phone, device_id);
+		// } else {
+		fetchDataFromServer();
+		// }
 		// parents.add(new ParentListModel("", false, "", "", ""));
 		// parents.add(new ParentListModel("", false, "", "", ""));
 		// parents.add(new ParentListModel("", false, "", "", ""));
@@ -773,74 +773,74 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 	}
 
-	public void SignUp(String phone, String device_id) {
-		JSONObject params = new JSONObject();
-		try {
-			params.put("mobile", phone);
-			params.put("mobile_device_id", device_id);
-			params.put("mobile_os", "android");
-			Log.d("reg id ", params.getString("mobile_device_id"));
-
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-				"http://54.69.183.186:1340/user/signup", params,
-				new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						Log.d("Response", response.toString());
-						fetchDataFromServer();
-
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Log.d("Error", "" + error.networkResponse);
-						VolleyLog.e("Error: ", error.getMessage());
-						String json = null;
-
-						NetworkResponse response = error.networkResponse;
-						if (!InternetAvailable()) {
-							Toast.makeText(MyFamily.this,
-									"Please Check your intenet connection",
-									Toast.LENGTH_SHORT).show();
-
-						}
-
-						// Log.d("Response", response.data.toString());
-						if (response != null && response.data != null) {
-							switch (response.statusCode) {
-							case 400:
-								json = new String(response.data);
-								json = trimMessage(json, "message");
-								if (json != null)
-									displayMessage(json, 400);
-
-								Log.d("Response", response.data.toString());
-							}
-						}
-
-						VolleyLog.e("Error: ", error.getMessage());
-						Toast.makeText(MyFamily.this, error.getMessage(),
-								Toast.LENGTH_SHORT).show();
-					}
-
-				}) {
-			public java.util.Map<String, String> getHeaders()
-					throws com.android.volley.AuthFailureError {
-				HashMap<String, String> headers = new HashMap<String, String>();
-				headers.put("Authorization", "Bearer " + token);
-				return headers;
-
-			};
-		};
-
-		AppController.getInstance().addToRequestQueue(req);
-	}
+	// public void SignUp(String phone, String device_id) {
+	// JSONObject params = new JSONObject();
+	// try {
+	// params.put("mobile", phone);
+	// params.put("mobile_device_id", device_id);
+	// params.put("mobile_os", "android");
+	// Log.d("reg id ", params.getString("mobile_device_id"));
+	//
+	// } catch (JSONException e1) {
+	// // TODO Auto-generated catch block
+	// e1.printStackTrace();
+	// }
+	//
+	// JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+	// "http://54.69.183.186:1340/user/signup", params,
+	// new Response.Listener<JSONObject>() {
+	//
+	// @Override
+	// public void onResponse(JSONObject response) {
+	// Log.d("Response", response.toString());
+	// fetchDataFromServer();
+	//
+	// }
+	// }, new Response.ErrorListener() {
+	// @Override
+	// public void onErrorResponse(VolleyError error) {
+	// Log.d("Error", "" + error.networkResponse);
+	// VolleyLog.e("Error: ", error.getMessage());
+	// String json = null;
+	//
+	// NetworkResponse response = error.networkResponse;
+	// if (!InternetAvailable()) {
+	// Toast.makeText(MyFamily.this,
+	// "Please Check your intenet connection",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// }
+	//
+	// // Log.d("Response", response.data.toString());
+	// if (response != null && response.data != null) {
+	// switch (response.statusCode) {
+	// case 400:
+	// json = new String(response.data);
+	// json = trimMessage(json, "message");
+	// if (json != null)
+	// displayMessage(json, 400);
+	//
+	// Log.d("Response", response.data.toString());
+	// }
+	// }
+	//
+	// VolleyLog.e("Error: ", error.getMessage());
+	// Toast.makeText(MyFamily.this, error.getMessage(),
+	// Toast.LENGTH_SHORT).show();
+	// }
+	//
+	// }) {
+	// public java.util.Map<String, String> getHeaders()
+	// throws com.android.volley.AuthFailureError {
+	// HashMap<String, String> headers = new HashMap<String, String>();
+	// headers.put("Authorization", "Bearer " + token);
+	// return headers;
+	//
+	// };
+	// };
+	//
+	// AppController.getInstance().addToRequestQueue(req);
+	// }
 
 	private boolean InternetAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

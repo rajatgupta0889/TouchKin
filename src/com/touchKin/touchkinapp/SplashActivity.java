@@ -121,101 +121,103 @@ public class SplashActivity extends Activity {
 	public void sendIntent(String phone, String otp, String id) {
 		if (phone != null && otp != null) {
 
-			JSONObject params = new JSONObject();
-			try {
-				params.put("mobile", phone);
-				params.put("code", Integer.parseInt(otp));
-				params.put("mobile_device_id", id);
-				params.put("mobile_os", "android");
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
-					"http://54.69.183.186:1340/user/verify-mobile", params,
-					new Response.Listener<JSONObject>() {
-						@SuppressLint("NewApi")
-						@Override
-						public void onResponse(JSONObject response) {
-							Intent i = new Intent(SplashActivity.this,
-									DashBoardActivity.class);
-							Bundle bndlanimation = ActivityOptions
-									.makeCustomAnimation(
-											getApplicationContext(),
-											R.anim.animation, R.anim.animation2)
-									.toBundle();
-							startActivity(i, bndlanimation);
-							finish();
-							// Log.d(TAG, response.toString());
-							// VolleyLog.v("Response:%n %s",
-							// response.toString(4));
-						}
-					}, new Response.ErrorListener() {
-						@SuppressLint("NewApi")
-						@Override
-						public void onErrorResponse(VolleyError error) {
-
-
-							Log.d("Error", "" + error.networkResponse);
-							VolleyLog.e("Error: ", error.getMessage());
-							String json = null;
-							
-							NetworkResponse response = error.networkResponse;
-							if (!InternetAvailable()) {
-								Toast.makeText(SplashActivity.this,
-										"Please Check your intenet connection",
-										Toast.LENGTH_SHORT).show();
-
-							}
-
-							// Log.d("Response", response.data.toString());
-							if (response != null && response.data != null) {
-								switch (response.statusCode) {
-								case 400:
-									json = new String(response.data);
-									json = trimMessage(json, "message");
-									if (json != null)
-										displayMessage(json, 400);
-
-									Log.d("Response", response.data.toString());
-								}
-							}
-						
-							VolleyLog.e("Error: ", error.getMessage());
-							Toast.makeText(SplashActivity.this,
-									error.getMessage(), Toast.LENGTH_SHORT).show();
-
-							Toast.makeText(getApplicationContext(),
-									error.getMessage(), Toast.LENGTH_SHORT)
-									.show();
-							Intent i = new Intent(SplashActivity.this,
-									SignUpActivity.class);
-							Bundle bndlanimation = ActivityOptions
-									.makeCustomAnimation(
-											getApplicationContext(),
-											R.anim.animation, R.anim.animation2)
-									.toBundle();
-
-							startActivity(i, bndlanimation);
-							finish();
-						}
-
-					});
-
-			AppController.getInstance().addToRequestQueue(req);
+			// JSONObject params = new JSONObject();
+			// try {
+			// params.put("mobile", phone);
+			// params.put("code", Integer.parseInt(otp));
+			// params.put("mobile_device_id", id);
+			// params.put("mobile_os", "android");
+			// } catch (JSONException e1) {
+			// // TODO Auto-generated catch block
+			// e1.printStackTrace();
+			// }
+			//
+			// JsonObjectRequest req = new
+			// JsonObjectRequest(Request.Method.POST,
+			// "http://54.69.183.186:1340/user/verify-mobile", params,
+			// new Response.Listener<JSONObject>() {
+			// @SuppressLint("NewApi")
+			// @Override
+			// public void onResponse(JSONObject response) {
+			Intent i = new Intent(SplashActivity.this, DashBoardActivity.class);
+			Bundle bndlanimation = ActivityOptions.makeCustomAnimation(
+					getApplicationContext(), R.anim.animation,
+					R.anim.animation2).toBundle();
+			startActivity(i, bndlanimation);
+			finish();
+			// Log.d(TAG, response.toString());
+			// VolleyLog.v("Response:%n %s",
+			// response.toString(4));
+			// }
+			// }, new Response.ErrorListener() {
+			// @SuppressLint("NewApi")
+			// @Override
+			// public void onErrorResponse(VolleyError error) {
+			//
+			//
+			// Log.d("Error", "" + error.networkResponse);
+			// VolleyLog.e("Error: ", error.getMessage());
+			// String json = null;
+			//
+			// NetworkResponse response = error.networkResponse;
+			// if (!InternetAvailable()) {
+			// Toast.makeText(SplashActivity.this,
+			// "Please Check your intenet connection",
+			// Toast.LENGTH_SHORT).show();
+			//
+			// }
+			//
+			// // Log.d("Response", response.data.toString());
+			// if (response != null && response.data != null) {
+			// switch (response.statusCode) {
+			// case 400:
+			// json = new String(response.data);
+			// json = trimMessage(json, "message");
+			// if (json != null)
+			// displayMessage(json, 400);
+			//
+			// Log.d("Response", response.data.toString());
+			// }
+			// }
+			//
+			// VolleyLog.e("Error: ", error.getMessage());
+			// Toast.makeText(SplashActivity.this,
+			// error.getMessage(), Toast.LENGTH_SHORT).show();
+			//
+			// Toast.makeText(getApplicationContext(),
+			// error.getMessage(), Toast.LENGTH_SHORT)
+			// .show();
+			// Intent i = new Intent(SplashActivity.this,
+			// SignUpActivity.class);
+			// Bundle bndlanimation = ActivityOptions
+			// .makeCustomAnimation(
+			// getApplicationContext(),
+			// R.anim.animation, R.anim.animation2)
+			// .toBundle();
+			//
+			// startActivity(i, bndlanimation);
+			// finish();
+			// }
+			//
+			// });
+			//
+			// AppController.getInstance().addToRequestQueue(req);
+			// }
 		}
 	}
+
 	private boolean InternetAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+
 	public void displayMessage(String toastString, int code) {
 		Toast.makeText(getApplicationContext(),
 				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
 	}
+
 	public String trimMessage(String json, String key) {
 		String trimmedString = null;
 

@@ -144,8 +144,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
 		if (parent != null) {
-			parentName.setText(parent.getParentName() + " activity ");
-			parentNameBottom.setText(parent.getParentName() + " last updated ");
+			parentName.setText("Activity is ");
+			parentNameBottom.setText("Last updated 1 hours ago");
 			// getConnectivity(parent.getParentId());
 			if (lastSelectedParent == null) {
 				lastSelectedParent = parent;

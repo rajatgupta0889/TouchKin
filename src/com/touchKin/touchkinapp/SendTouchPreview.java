@@ -13,9 +13,12 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
 import android.net.ConnectivityManager;
@@ -27,29 +30,22 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
-import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -68,7 +64,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 	ImageView previewImage;
 	Bitmap bm;
 	VideoView videoPreview;
-	//public static EditText sendmessage;
+	// public static EditText sendmessage;
 	Button sendButton;
 	Handler handler;
 	private SendTouchParentListAdapter imageAdapter;
@@ -103,7 +99,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 
 		Typeface latofont = Typeface.createFromAsset(getAssets(),
 				"fonts/Lato-LightItalic.ttf");
-	//	sendmessage.setTypeface(latofont);
+		// sendmessage.setTypeface(latofont);
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Sending the touch...");
 		pDialog.setCancelable(false);
@@ -138,33 +134,33 @@ public class SendTouchPreview extends ActionBarActivity implements
 		//
 		// }
 		// });
-//		sendmessage.setOnEditorActionListener(new OnEditorActionListener() {
-//
-//			@Override
-//			public boolean onEditorAction(TextView v, int actionId,
-//					KeyEvent event) {
-//				// TODO Auto-generated method stub
-//				boolean handled = false;
-//				if (actionId == EditorInfo.IME_ACTION_SEND) {
-//					// sendMedia(type);
-//					handled = true;
-//				}
-//				return handled;
-//			}
-//		});
-//		sendmessage.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				sendmessage.requestLayout();
-//				SendTouchPreview.this
-//						.getWindow()
-//						.setSoftInputMode(
-//								WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
-//
-//				return false;
-//			}
-//		});
+		// sendmessage.setOnEditorActionListener(new OnEditorActionListener() {
+		//
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId,
+		// KeyEvent event) {
+		// // TODO Auto-generated method stub
+		// boolean handled = false;
+		// if (actionId == EditorInfo.IME_ACTION_SEND) {
+		// // sendMedia(type);
+		// handled = true;
+		// }
+		// return handled;
+		// }
+		// });
+		// sendmessage.setOnTouchListener(new OnTouchListener() {
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		// // TODO Auto-generated method stub
+		// sendmessage.requestLayout();
+		// SendTouchPreview.this
+		// .getWindow()
+		// .setSoftInputMode(
+		// WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+		//
+		// return false;
+		// }
+		// });
 
 		if (intent != null) {
 
@@ -184,7 +180,6 @@ public class SendTouchPreview extends ActionBarActivity implements
 				} else {
 					previewImage.setVisibility(View.VISIBLE);
 					videoPreview.setVisibility(View.INVISIBLE);
-
 					previewFilePath = (Uri) bundle.get(MediaStore.EXTRA_OUTPUT);
 
 					thumbnail = ThumbnailUtils.createVideoThumbnail(
@@ -194,11 +189,11 @@ public class SendTouchPreview extends ActionBarActivity implements
 					// Bitmap bmThumbnail = Bitmap.createBitmap(thumbnail, 0, 0,
 					// thumbnail.getWidth(), thumbnail.getHeight(), matrix,
 					// true);
-					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
-							thumbnail, 640, 400);
+//					Bitmap extractthumbnail = ThumbnailUtils.extractThumbnail(
+//							thumbnail, 640, 400);
 					Log.d("previewFilePath", previewFilePath.toString());
 					videoPath = previewFilePath.toString().substring(8);
-					previewImage.setImageBitmap(extractthumbnail);
+					previewImage.setImageBitmap(thumbnail);
 
 				}
 
@@ -249,63 +244,65 @@ public class SendTouchPreview extends ActionBarActivity implements
 		previewImage = (ImageView) findViewById(R.id.imagePreview);
 		videoPreview = (VideoView) findViewById(R.id.videoPreview);
 		sendButton = (Button) findViewById(R.id.sendbutton);
-	//	sendmessage = (EditText) findViewById(R.id.phone_number_detail);
+		// sendmessage = (EditText) findViewById(R.id.phone_number_detail);
 		listview = (HorizontalListView) findViewById(R.id.parentListView);
 		thumbnailplaybutton = (Button) findViewById(R.id.play_btn);
 		parentRelativeLayout = (RelativeLayout) findViewById(R.id.parentListLayoutDashboard);
 		list = new ArrayList<ParentListModel>();
 	}
 
-	// private void setPic(String file) {
-	//
-	// /* There isn't enough memory to open up more than a couple camera photos
-	// */
-	// /* So pre-scale the target bitmap into which the file is decoded */
-	//
-	// /* Get the size of the ImageView */
-	// int targetW = previewImage.getWidth();
-	// int targetH = previewImage.getHeight();
-	//
-	// /* Get the size of the image */
-	// BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-	// bmOptions.inJustDecodeBounds = true;
-	// BitmapFactory.decodeFile(file, bmOptions);
-	// int photoW = bmOptions.outWidth;
-	// int photoH = bmOptions.outHeight;
-	//
-	// /* Figure out which way needs to be reduced less */
-	// int scaleFactor = 1;
-	// if ((targetW > 0) || (targetH > 0)) {
-	// scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-	// }
-	//
-	// /* Set bitmap options to scale the image decode target */
-	// bmOptions.inJustDecodeBounds = false;
-	// bmOptions.inSampleSize = scaleFactor;
-	// bmOptions.inPurgeable = true;
-	//
-	// /* Decode the JPEG file into a Bitmap */
-	// final Bitmap bitmap = BitmapFactory.decodeFile(file, bmOptions);
-	//
-	// Matrix matrix = new Matrix();
-	// Camera.CameraInfo info;
-	// if (this.getResources().getConfiguration().orientation !=
-	// Configuration.ORIENTATION_LANDSCAPE) {
-	//
-	// matrix.postRotate(90);
-	// } else {
-	// // This is an undocumented although widely known feature
-	// matrix.postRotate(0);
-	// }
-	//
-	// Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, photoW,
-	// photoH, matrix, true);
-	// // TODO Auto-generated method stub
-	//
-	// /* Associate the Bitmap to the ImageView */
-	// previewImage.setImageBitmap(rotatedBitmap);
-	// previewImage.setVisibility(View.VISIBLE);
-	// }
+	private void setPic(String file) {
+
+		/*
+		 * There isn't enough memory to open up more than a couple camera photos
+		 */
+		/* So pre-scale the target bitmap into which the file is decoded */
+
+		/* Get the size of the ImageView */
+		int targetW = previewImage.getWidth();
+		int targetH = previewImage.getHeight();
+
+		/* Get the size of the image */
+		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+		bmOptions.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(file, bmOptions);
+		int photoW = bmOptions.outWidth;
+		int photoH = bmOptions.outHeight;
+
+		/* Figure out which way needs to be reduced less */
+		int scaleFactor = 1;
+		if ((targetW > 0) || (targetH > 0)) {
+			scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+		}
+
+		/* Set bitmap options to scale the image decode target */
+		bmOptions.inJustDecodeBounds = false;
+		bmOptions.inSampleSize = scaleFactor;
+		bmOptions.inPurgeable = true;
+
+		/* Decode the JPEG file into a Bitmap */
+		final Bitmap bitmap = BitmapFactory.decodeFile(file, bmOptions);
+
+		// Matrix matrix = new Matrix();
+		// Camera.CameraInfo info;
+		// if (this.getResources().getConfiguration().orientation !=
+		// Configuration.ORIENTATION_LANDSCAPE) {
+		//
+		// matrix.postRotate(90);
+		// } else {
+		// // This is an undocumented although widely known feature
+		// matrix.postRotate(0);
+		// }
+
+		// Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, photoW,
+		// photoH, matrix, true);
+		// // TODO Auto-generated method stub
+		//
+		// /* Associate the Bitmap to the ImageView */
+		// previewImage.setImageBitmap(rotatedBitmap);
+		previewImage.setImageBitmap(bitmap);
+		previewImage.setVisibility(View.VISIBLE);
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -451,7 +448,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 						Log.d("Error", "" + error.networkResponse);
 						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
-						
+
 						NetworkResponse response = error.networkResponse;
 						if (!InternetAvailable()) {
 							Toast.makeText(SendTouchPreview.this,
@@ -472,7 +469,7 @@ public class SendTouchPreview extends ActionBarActivity implements
 								Log.d("Response", response.data.toString());
 							}
 						}
-					
+
 						VolleyLog.e("Error: ", error.getMessage());
 						Toast.makeText(SendTouchPreview.this,
 								error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -492,16 +489,19 @@ public class SendTouchPreview extends ActionBarActivity implements
 		AppController.getInstance().addToRequestQueue(req);
 
 	}
+
 	private boolean InternetAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+
 	public void displayMessage(String toastString, int code) {
 		Toast.makeText(getApplicationContext(),
 				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
 	}
+
 	public String trimMessage(String json, String key) {
 		String trimmedString = null;
 

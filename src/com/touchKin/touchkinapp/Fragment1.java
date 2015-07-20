@@ -73,9 +73,10 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		View v = inflater.inflate(R.layout.dashboard_fragment, null);
 		init(v);
 		DashBoardAdapter.context = getActivity();
-		
+
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
+		viewPager.setOffscreenPageLimit(2);
 		return v;
 	}
 
@@ -115,8 +116,9 @@ public class Fragment1 extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.sendTouch:
-			vib.vibrate(500);
+
 			if (!isSendTouchAlreadyClicked) {
+				vib.vibrate(500);
 				viewPager.setCurrentItem(0);
 				sendTouch.setText("Add a video");
 				sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
