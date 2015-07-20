@@ -1,8 +1,13 @@
 package com.touchKin.touchkinapp;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +63,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	int resID;
 	Vibrator vib;
 	String backData;
+	String touchTime;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -238,14 +244,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + parent.getParentId()
 					+ ".jpeg", resID, parentImage);
-			if (parent.getIsPendingTouch()) {
-				parentName.setText(parent.getParentName()
-						+ " has sent you a touch ");
-				parentBotton.setText("Tap and hold his/her photo to receive");
-			} else {
-				parentName.setText(parent.getParentName() + " feeling good ");
-				parentBotton.setText("There last touch was ");
-			}
+			setText();
 
 		}
 
@@ -257,6 +256,23 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	// // TODO Auto-generated method stub
 	// SetImage();
 	// }
+
+	private void setText() {
+		// TODO Auto-generated method stub
+		if (parent.getIsPendingTouch()) {
+			parentName.setText(parent.getParentName().substring(0, 1)
+					.toUpperCase()
+					+ parent.getParentName().substring(1)
+					+ " has sent you a touch ");
+			parentBotton.setText("Tap and hold his/her photo to receive");
+		} else {
+			parentName.setText(parent.getParentName().substring(0, 1)
+					.toUpperCase()
+					+ parent.getParentName().substring(1)
+					+ " seems to be feeling good ");
+			parentBotton.setText("Last touch was " + touchTime + " hours ago");
+		}
+	}
 
 	public void getCurrent(String id) {
 		Log.d("id ", id);
@@ -348,29 +364,64 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		return trimmedString;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public void setSlices(JSONObject slicesObject) {
 		ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
 		final Resources resources = getResources();
+		try {
+			JSONObject sliceObj = slicesObject
+					.getJSONObject("current_month_activity");
+			JSONObject lastTouchObj = slicesObject.optJSONObject("last_touch");
+			String createdTime = lastTouchObj.optString("createdAt");
 
-		Iterator<String> iter = slicesObject.keys();
-		while (iter.hasNext()) {
-			String key = iter.next();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+			SimpleDateFormat output = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm:ss");
+			Date d = null;
 			try {
-				PieSlice slice = new PieSlice();
-				int value = slicesObject.getInt(key);
-
-				if (value == 0) {
-
-					slice.setColor(resources.getColor(R.color.daily_prog_left));
-				} else {
-					slice.setColor(resources.getColor(R.color.daily_prog_done));
-				}
-				slices.add(slice);
-			} catch (JSONException e) {
-				// Something went wrong!
+				d = sdf.parse(createdTime);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			int updateHour = d.getHours();
+			Date currentDate = new Date();
+			int currentHour = currentDate.getHours();
+			int diff = currentHour - updateHour;
+			if (diff < 1) {
+				touchTime = "1";
+			} else {
+				touchTime = diff + "";
+			}
+			setText();
+			Log.d("SLicce object ", sliceObj.toString());
+			Iterator<String> iter = sliceObj.keys();
+			while (iter.hasNext()) {
+				String key = iter.next();
+				try {
+					PieSlice slice = new PieSlice();
+					int value = sliceObj.getInt(key);
 
+					if (value == 0) {
+
+						slice.setColor(resources
+								.getColor(R.color.daily_prog_left));
+					} else {
+						slice.setColor(resources
+								.getColor(R.color.daily_prog_done));
+					}
+					slices.add(slice);
+				} catch (JSONException e) {
+					// Something went wrong!
+				}
+
+			}
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+
 		mHoloCircularProgressBar.setSlices(slices);
 		mHoloCircularProgressBar.setProgress(0.0f);
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);

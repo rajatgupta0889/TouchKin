@@ -75,7 +75,15 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 				parentBottom.setText("Tap and hold his/her photo to recieve");
 			}
 		} else {
-			parenTop.setText("it's some time in india");
+			if (position == 0) {
+				if (parentList.size() > 1)
+					parenTop.setText(parentList.get(1).getParentName()
+							.substring(0, 1).toUpperCase()
+							+ parentList.get(1).getParentName().substring(1)
+							+ " is thinking of you");
+			} else {
+				parenTop.setText("it's some time in india");
+			}
 			if (!isFirst)
 				parentBottom.setText("Send him/her a touch");
 			else {

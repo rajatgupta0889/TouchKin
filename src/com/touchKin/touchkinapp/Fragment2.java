@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,7 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
@@ -87,10 +89,34 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 			adapter = new MyDashbaordAdapter(getActivity(), list);
 			myPager.setAdapter(adapter);
 		}
-		Log.d("pager pos", myPager.getCurrentItem() + "");
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
 		sendTouchTextview.setOnClickListener(this);
+
+		myPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+			@Override
+			public void onPageSelected(int arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				sendTouch.setText("Send a Touch");
+				sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+						R.drawable.ic_icon_send_touch, 0, 0);
+				isSendTouchAlreadyClicked = false;
+
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 	}
 
 	@Override
@@ -99,8 +125,9 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		switch (v.getId()) {
 		case R.id.sendTouch:
 			if (myPager.getCurrentItem() > 0) {
-				vib.vibrate(500);
+
 				if (!isSendTouchAlreadyClicked) {
+					vib.vibrate(500);
 					sendTouch.setText("Add a video");
 					sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
 							R.drawable.video_cam, 0, 0);
@@ -226,4 +253,5 @@ public class Fragment2 extends Fragment implements ButtonClickListener,
 		};
 		AppController.getInstance().addToRequestQueue(req);
 	}
+
 }

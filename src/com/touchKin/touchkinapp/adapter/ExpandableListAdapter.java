@@ -416,11 +416,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 							.setText("Invite someone to care for you");
 				} else {
 					if (groupMember.getReqCount().equals("0")) {
-						viewHolder.kinCount.setText("You have "
-								+ groupMember.getKinCount()
-								+ " Kin and no request");
+						viewHolder.kinCount.setText("Your circle has "
+								+ groupMember.getKinCount() + " Kin");
 					} else {
-						viewHolder.kinCount.setText("You have "
+						viewHolder.kinCount.setText("Your circle has "
 								+ groupMember.getKinCount() + " Kin and "
 								+ groupMember.getReqCount() + "requests");
 					}
@@ -431,7 +430,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 							+ groupMember.getUserName());
 				} else {
 					viewHolder.kinCount.setText(groupMember.getUserName()
-							+ "'s" + " has " + groupMember.getKinCount()
+							+ "'s circle" + " has " + groupMember.getKinCount()
 							+ " Kin");
 				}
 
