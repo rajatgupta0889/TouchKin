@@ -342,7 +342,8 @@ public class DashboardLocationFragment extends Fragment implements
 				List<Address> addresses = geocoder.getFromLocation(
 						Double.parseDouble(latitude),
 						Double.parseDouble(longitude), 1);
-				parentLocPos.setText(addresses.get(0).getLocality());
+				if(addresses != null && addresses.get(0) != null)
+					parentLocPos.setText(addresses.get(0).getLocality());
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

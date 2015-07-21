@@ -449,7 +449,7 @@ public class HoloCircularProgressBar extends View {
 				// draw the thumb square at the correct rotated position
 				canvas.save();
 				canvas.rotate(mSlices.size() * getCurrentRotation() - 90);
-				canvas.drawCircle(mThumbPosX, mThumbPosY, 10, mThumbColorPaint);
+				canvas.drawCircle(mThumbPosX, mThumbPosY, 20, mThumbColorPaint);
 				// rotate the square by 45 degrees
 				// canvas.rotate(45, mThumbPosX, mThumbPosY);
 				// mSquareRect.left = mThumbPosX - mThumbRadius / 3;

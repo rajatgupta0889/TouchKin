@@ -65,8 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/circular_image" >
+            android:layout_centerHorizontal="true" >
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -76,13 +75,13 @@
                 <fragment
                     android:id="@+id/map"
                     android:name="com.google.android.gms.maps.MapFragment"
-                    android:layout_width="163dp"
-                    android:layout_height="163dp"
+                    android:layout_width="195dp"
+                    android:layout_height="195dp"
                     android:layout_centerInParent="true" />
 
                 <LinearLayout
-                    android:layout_width="210dp"
-                    android:layout_height="210dp"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/untitled"
                     android:orientation="vertical" >
@@ -91,8 +90,8 @@
 
             <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
-                android:layout_width="210dp"
-                android:layout_height="210dp"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
         </RelativeLayout>
@@ -101,7 +100,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
         <TextView

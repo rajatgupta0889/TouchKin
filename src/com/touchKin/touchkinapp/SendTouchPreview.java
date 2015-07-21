@@ -554,6 +554,8 @@ public class SendTouchPreview extends ActionBarActivity implements
 	public void onBackPressed() {
 		Log.d("CDA", "onBackPressed Called");
 		Intent setIntent = new Intent(this, SendTouchActivity.class);
+		setIntent.putExtra("userId", userId);
+		setIntent.putExtra("token", token);
 		startActivity(setIntent);
 		finish();
 	}

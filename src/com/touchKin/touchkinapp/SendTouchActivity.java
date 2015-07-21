@@ -154,7 +154,7 @@ public class SendTouchActivity extends Activity implements
 		public void onClick(View v) {
 			try {
 				if (videoCapture.isChecked()) {
-
+					current.takeSimplePicture();
 					current.record();
 
 				} else {
