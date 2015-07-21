@@ -1,96 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:layout_height="match_parent" >
 
     <ImageView
         android:id="@+id/imagePreview"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:layout_alignParentLeft="true"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:scaleType="fitXY" />
+
+    <RelativeLayout
+        android:id="@+id/parentListLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/activity_bg" />
+        android:background="@color/white" >
+
+        <com.touchKin.touchkinapp.custom.HorizontalListView
+            android:id="@+id/parentListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+        </com.touchKin.touchkinapp.custom.HorizontalListView>
+    </RelativeLayout>
 
     <VideoView
         android:id="@+id/videoPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/activity_bg" />
-
-    <ImageButton
-        android:id="@+id/button1"
-        android:layout_width="40dp"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:background="#ffffff"
-        android:src="@drawable/send" />
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignTop="@+id/button1"
-        android:background="@color/text_grey" />
-
-    <RelativeLayout
-        android:id="@+id/parentListLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_above="@+id/view1"
-        android:visibility="visible" >
-
-        <com.touchKin.touchkinapp.custom.HorizontalListView
-            android:id="@+id/parentListView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="#ffffff" >
-        </com.touchKin.touchkinapp.custom.HorizontalListView>
-    </RelativeLayout>
-
+        android:layout_margin="5dp"
+        android:visibility="gone" />
     <!--
     <EditText
-        android:id="@+id/phone_number_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+         android:id="@+id/phone_number_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
         android:layout_above="@+id/parentListLayout"
-        android:layout_below="@+id/sendButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView1"
         android:background="@color/triangle"
+        android:ems="20"
         android:gravity="top"
-        android:hint="Add a message"
+        android:hint="Type your message here"
+        android:imeOptions="actionSend"
+        android:inputType="textMultiLine"
+        android:maxHeight="120dp"
         android:padding="10dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/text_orange" >
-    </EditText>
+        android:scrollbars="horizontal"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_orange" />
     -->
 
     <Button
-        android:id="@+id/sendButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/imagePreview"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/triangle" />
+        android:id="@+id/play_btn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/play_btn" />
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/view1"
-        android:layout_toLeftOf="@+id/button1"
-        android:background="@color/black" />
+    <Button
+        android:id="@+id/sendbutton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/imagePreview"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/send_message" />
 
 </RelativeLayout>

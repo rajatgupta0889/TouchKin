@@ -97,12 +97,12 @@ public class FlipViewAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			// videoText = (TextView) convertView
 			// .findViewById(R.id.videoCommentTextView);
-			viewHolder.videoText = (TextView) convertView
-					.findViewById(R.id.videoCommentTextView);
-			viewHolder.videoTime = (TextView) convertView
-					.findViewById(R.id.videoTimeTextView);
-			viewHolder.videoDay = (TextView) convertView
-					.findViewById(R.id.videoDayTextView);
+//			viewHolder.videoText = (TextView) convertView
+//					.findViewById(R.id.videoCommentTextView);
+//			viewHolder.videoTime = (TextView) convertView
+//					.findViewById(R.id.videoTimeTextView);
+//			viewHolder.videoDay = (TextView) convertView
+//					.findViewById(R.id.videoDayTextView);
 			viewHolder.imageView = (ImageView) convertView
 					.findViewById(R.id.imageView);
 			// viewHolder.userImage = (RoundedImageView) convertView
