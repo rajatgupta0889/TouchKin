@@ -1044,4 +1044,19 @@ public class DashBoardActivity extends ActionBarActivity implements
 		if (popup != null)
 			popup.dismiss();
 	}
+
+	@Override
+	public void onBackPressed() {
+		if (mTabHost.getCurrentTab() != 0 && mTabHost.getCurrentTab() != 1) {
+			mTabHost.setVisibility(View.VISIBLE);
+			if (mTabHost.getCurrentTab() != 0) {
+				mTabHost.setCurrentTab(0);
+				getSupportFragmentManager().executePendingTransactions();
+			}
+			((Fragment1) getSupportFragmentManager().findFragmentByTag(
+					"DashBoard")).notifyFrag();
+		} else {
+			finish();
+		}
+	}
 }

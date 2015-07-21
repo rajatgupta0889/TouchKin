@@ -27,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tool_bar"
-        android:background="#f8f8f8" >
+        android:background="#f1f1f1" >
 
         <EditText
             android:id="@+id/edit_name"

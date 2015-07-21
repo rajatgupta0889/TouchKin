@@ -18,7 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -70,7 +70,15 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 
 		parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
 				+ " for " + parent.getParentName() + " in india");
-		parentBottom.setText("Tap and hold his/her photo to recieve");
+		if (parent.getIsMale() != null) {
+			if (parent.getIsMale()) {
+				parentBottom.setText("Tap and hold his photo to receive");
+			} else {
+				parentBottom.setText("Tap and hold her photo to receive");
+			}
+		}else{
+			parentBottom.setText("Tap and hold on photo to receive");
+		}
 
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
 		ImageLoader imageLoader = new ImageLoader(context);
@@ -85,11 +93,11 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		imageLoader.DisplayImage(serverPath + parent.getParentId() + ".jpeg",
 				resID, imageView);
 		((ViewPager) container).addView(view);
-		imageView.setOnClickListener(new OnClickListener() {
+		imageView.setOnLongClickListener(new OnLongClickListener() {
 
 			@SuppressLint("NewApi")
 			@Override
-			public void onClick(View v) {
+			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
 				if (parent.getIsPendingTouch()) {
 
@@ -117,6 +125,7 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 							tokenedit.putString("touch", arrayObj + "");
 							tokenedit.commit();
 							parent.setIsPendingTouch(false);
+							notifyDataSetChanged();
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -124,6 +133,7 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 
 					}
 				}
+				return true;
 			}
 		});
 		return view;

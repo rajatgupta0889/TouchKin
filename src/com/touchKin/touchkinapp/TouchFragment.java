@@ -1,6 +1,5 @@
 package com.touchKin.touchkinapp;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,8 +29,9 @@ import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,19 +104,21 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
 		parentBotton = (TextView) view.findViewById(R.id.parentBottonTouch);
 		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
-		parentImage.setOnClickListener(new OnClickListener() {
+		parentImage.setOnTouchListener(new OnTouchListener() {
 
 			@SuppressLint("NewApi")
 			@Override
-			public void onClick(View v) {
+			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				if (parent != null) {
 					if (parent.getIsPendingTouch()) {
 						vib.vibrate(500);
 						SharedPreferences pendingTouch = getActivity()
 								.getSharedPreferences("pendingTouch", 0);
+
 						if (parent.getIsTouchMedia()) {
 							((DashBoardActivity) getActivity()).goToKinbook();
+
 						}
 						String array = pendingTouch.getString("touch", null);
 						try {
@@ -135,12 +137,16 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 							tokenedit.putString("touch", arrayObj + "");
 							tokenedit.commit();
 							parent.setIsPendingTouch(false);
+							setText();
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
 				}
+
+				return false;
+
 			}
 		});
 		return view;
@@ -384,27 +390,30 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			JSONObject sliceObj = slicesObject
 					.getJSONObject("current_month_activity");
 			JSONObject lastTouchObj = slicesObject.optJSONObject("last_touch");
-			String createdTime = lastTouchObj.optString("createdAt");
+			if (lastTouchObj != null) {
+				String createdTime = lastTouchObj.optString("createdAt");
 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-			sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-			SimpleDateFormat output = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
-			Date d = null;
-			try {
-				d = sdf.parse(createdTime);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int updateHour = d.getHours();
-			Date currentDate = new Date();
-			int currentHour = currentDate.getHours();
-			int diff = currentHour - updateHour;
-			if (diff < 1) {
-				touchTime = "1";
-			} else {
-				touchTime = diff + "";
+				SimpleDateFormat sdf = new SimpleDateFormat(
+						"yyyy-MM-dd'T'HH:mm:ss");
+				sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+				SimpleDateFormat output = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss");
+				Date d = null;
+				try {
+					d = sdf.parse(createdTime);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				int updateHour = d.getHours();
+				Date currentDate = new Date();
+				int currentHour = currentDate.getHours();
+				int diff = currentHour - updateHour;
+				if (diff < 1) {
+					touchTime = "1";
+				} else {
+					touchTime = diff + "";
+				}
 			}
 			setText();
 			Log.d("SLicce object ", sliceObj.toString());

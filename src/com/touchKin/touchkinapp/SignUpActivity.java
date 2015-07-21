@@ -52,11 +52,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.touchKin.touchkinapp.custom.ErrorHandlingInformation;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.Validation;
 import com.touchKin.touckinapp.R;
 
-public class SignUpActivity extends ActionBarActivity{
+public class SignUpActivity extends ActionBarActivity {
 
 	String[] country;
 	String[] code;
@@ -84,6 +85,7 @@ public class SignUpActivity extends ActionBarActivity{
 	String regid;
 	GoogleCloudMessaging gcm;
 	AtomicInteger msgId = new AtomicInteger();
+	ErrorHandlingInformation errorHandle;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,6 +109,8 @@ public class SignUpActivity extends ActionBarActivity{
 		}
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		// Error handler
+		errorHandle = new ErrorHandlingInformation(getApplicationContext());
 
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Please wait...");
@@ -145,7 +149,13 @@ public class SignUpActivity extends ActionBarActivity{
 
 				if (checkValidation()) {
 					// new LongOperation().execute("");
-					sendIntent();
+					if (!errorHandle.InternetAvailable())
+						sendIntent();
+					else {
+						Toast.makeText(SignUpActivity.this,
+								" Please Check your connection",
+								Toast.LENGTH_LONG).show();
+					}
 				} else {
 					Toast.makeText(SignUpActivity.this,
 							" Mobile Number is not valid", Toast.LENGTH_LONG)

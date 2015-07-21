@@ -7,8 +7,8 @@
 
     <com.touchKin.touchkinapp.custom.RoundedImageView
         android:id="@+id/parentImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_margin="3dp"
         android:padding="5dp"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/drawer"
         android:layout_toRightOf="@+id/parentImageView"
         android:text="TextView" />
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/parentImageView"
         android:layout_alignLeft="@+id/userName"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="5dp"
         android:layout_toLeftOf="@+id/drawer"
         android:text="TextView" />
 
