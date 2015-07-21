@@ -11,10 +11,9 @@
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="8dp"
         android:background="#cecece"
         android:gravity="center"
         android:text="Request Pending"
@@ -26,28 +25,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView4"
-        android:padding="5dp"
-        android:gravity="center"
         android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="5dp"
         android:text="A message has been sent to "
         android:textColor="#838383"
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/addbutton"
+        android:id="@+id/withDrawBtn"
         android:layout_width="130dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/nameParent"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="14dp"
         android:background="@drawable/round_corner_orange"
         android:text="Withdraw request"
         android:textColor="#ffffff"
-        android:layout_marginBottom="15dp"
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/nameParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
@@ -56,11 +55,11 @@
         android:text="Praful Kumar Rathore" />
 
     <Button
-        android:id="@+id/Button01"
+        android:id="@+id/reSendBtn"
         android:layout_width="130dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/addbutton"
+        android:layout_alignTop="@+id/withDrawBtn"
         android:layout_marginRight="14dp"
         android:background="@drawable/round_corner_orange"
         android:text="Resend request"

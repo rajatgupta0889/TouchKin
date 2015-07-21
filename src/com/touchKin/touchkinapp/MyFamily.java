@@ -124,12 +124,30 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 
 					// create alert dialog
 					final AlertDialog alertDialog = alertDialogBuilder.create();
-					Button add = (Button) custom.findViewById(R.id.addbutton);
-					add.setOnClickListener(new OnClickListener() {
+					Button withdrawbtn = (Button) custom
+							.findViewById(R.id.withDrawBtn);
+					withdrawbtn.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
+
+							alertDialog.cancel();
+						}
+					});
+					Button resendButton = (Button) custom
+							.findViewById(R.id.reSendBtn);
+					resendButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent sendIntent = new Intent();
+							sendIntent.setAction(Intent.ACTION_SEND);
+							sendIntent.putExtra(Intent.EXTRA_TEXT,
+									"This is my text to send.");
+							sendIntent.setType("text/plain");
+							startActivity(sendIntent);
 
 							alertDialog.cancel();
 						}
