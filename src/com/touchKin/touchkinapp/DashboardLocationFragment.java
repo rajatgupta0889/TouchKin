@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,7 @@ public class DashboardLocationFragment extends Fragment implements
 	Marker googleMarker = null;
 	Boolean isTapOnMap = false;
 	String updatedTime;
+	ImageButton next, prev;
 	/**
 	 * Provides the entry point to Google Play services.
 	 */
@@ -134,6 +136,26 @@ public class DashboardLocationFragment extends Fragment implements
 			parentNameBottom = (TextView) view
 					.findViewById(R.id.parentBottonLocation);
 			parentLocPos = (TextView) view.findViewById(R.id.parentLocPos);
+			next = (ImageButton) view.findViewById(R.id.imageButton2);
+			next.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					((Fragment1) getParentFragment()).getNextItem(2);
+
+				}
+			});
+			prev = (ImageButton) view.findViewById(R.id.imageButton1);
+			prev.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					((Fragment1) getParentFragment()).getNextItem(0);
+
+				}
+			});
 			if (parent != null)
 				parentName.setText(parent.getParentName() + " is in ");
 		} catch (InflateException e) {
@@ -230,9 +252,9 @@ public class DashboardLocationFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
-		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
-		Log.d("Parent", parent + "");
-		setText();
+		// parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		// Log.d("Parent", parent + "");
+		// setText();
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -257,16 +279,6 @@ public class DashboardLocationFragment extends Fragment implements
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
-		if (lastSelectedParent != null && !lastSelectedParent.equals(parent))
-			getLocation(parent.getParentId());
-		else {
-			if (obj != null) {
-				setLocation(obj);
-			}
-			mHoloCircularProgressBar.setProgress(0.0f);
-			animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
-
-		}
 
 		super.onResume();
 	}
@@ -342,7 +354,7 @@ public class DashboardLocationFragment extends Fragment implements
 				List<Address> addresses = geocoder.getFromLocation(
 						Double.parseDouble(latitude),
 						Double.parseDouble(longitude), 1);
-				if(addresses != null && addresses.get(0) != null)
+				if (addresses != null && addresses.get(0) != null)
 					parentLocPos.setText(addresses.get(0).getLocality());
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
@@ -389,6 +401,7 @@ public class DashboardLocationFragment extends Fragment implements
 								obj = responseArray
 										.getJSONObject("lastUpdatedLocation");
 								setLocation(obj);
+								setText();
 								setSlices(responseArray
 										.getJSONObject("movements"));
 								staticSince = responseArray

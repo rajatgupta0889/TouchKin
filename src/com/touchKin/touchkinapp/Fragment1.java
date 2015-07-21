@@ -37,7 +37,8 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class Fragment1 extends Fragment implements OnClickListener,ButtonClickListener {
+public class Fragment1 extends Fragment implements OnClickListener,
+		ButtonClickListener {
 
 	private ViewPager viewPager;
 	public DashBoardAdapter adapter;
@@ -263,6 +264,10 @@ public class Fragment1 extends Fragment implements OnClickListener,ButtonClickLi
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
 		notifyFrag();
+	}
+
+	public void getNextItem(int i) {
+		viewPager.setCurrentItem(i);
 	}
 
 }

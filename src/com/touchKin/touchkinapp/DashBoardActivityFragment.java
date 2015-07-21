@@ -23,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +54,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	TextView parentName, parentNameBottom;
 	ParentListModel parent, lastSelectedParent;
 	AirplaneModeReceiver rec;
-
+	ImageButton prev;
 	Context context;
 
 	// newInstance constructor for creating fragment with arguments
@@ -89,7 +91,16 @@ public class DashBoardActivityFragment extends Fragment implements
 		battery5 = (ImageView) view.findViewById(R.id.battery5);
 		wifi4 = (ImageView) view.findViewById(R.id.wifi4);
 		network4 = (ImageView) view.findViewById(R.id.ImageView05);
+		prev = (ImageButton) view.findViewById(R.id.imageButton1);
+		prev.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				((Fragment1) getParentFragment()).getNextItem(1);
+
+			}
+		});
 		return view;
 	}
 

@@ -989,6 +989,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 			ListAdapter adapter = new MyAdapterPopup(this, notificationList);
 			popup.setAdapter(adapter);
 			popup.show();
+			popup.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// TODO Auto-generated method stub
+
+				}
+			});
 			popupIsShowing = true;
 		} else {
 			popup.dismiss();

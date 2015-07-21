@@ -72,11 +72,19 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 				+ " for " + parent.getParentName() + " in india");
 		if (parent.getIsMale() != null) {
 			if (parent.getIsMale()) {
-				parentBottom.setText("Tap and hold his photo to receive");
+				if (parent.getIsPendingTouch()) {
+					parentBottom.setText("Send him a touch");
+				} else {
+					parentBottom.setText("Tap and hold his photo to receive");
+				}
 			} else {
-				parentBottom.setText("Tap and hold her photo to receive");
+				if (parent.getIsPendingTouch()) {
+					parentBottom.setText("Send him a touch");
+				} else {
+					parentBottom.setText("Tap and hold her photo to receive");
+				}
 			}
-		}else{
+		} else {
 			parentBottom.setText("Tap and hold on photo to receive");
 		}
 

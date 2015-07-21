@@ -50,7 +50,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dp"
-            android:background="@drawable/prev_dashboard_arrow" />
+            android:background="@drawable/prev_dashboard_arrow"
+            android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/imageButton2"

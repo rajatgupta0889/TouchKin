@@ -31,8 +31,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +67,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	Vibrator vib;
 	String backData;
 	String touchTime;
+	ImageButton next;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -104,6 +107,16 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
 		parentBotton = (TextView) view.findViewById(R.id.parentBottonTouch);
 		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		next = (ImageButton) view.findViewById(R.id.imageButton2);
+		next.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				((Fragment1) getParentFragment()).getNextItem(1);
+
+			}
+		});
 		parentImage.setOnTouchListener(new OnTouchListener() {
 
 			@SuppressLint("NewApi")
