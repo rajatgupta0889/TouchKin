@@ -4,8 +4,10 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="text_orange">#ea6927</color>
+    <color name="stausbarcolor">#db8f20</color>
+    <color name="menubar">#ffa726</color>
     <color name="text_grey">#8b8c93</color>
-    <color name="tab_bg">#83848b</color>
+    <color name="tab_bg">#272727</color>
     <color name="tab_selected">#f8935a</color>
     <color name="indicator_color">#ffceae</color>
     <color name="daily_prog_left">#cccbcb</color>

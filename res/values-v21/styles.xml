@@ -3,7 +3,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:statusBarColor">@color/text_orange</item>
+        <item name="android:statusBarColor">@color/stausbarcolor</item>
         <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
         <item name="circularProgressBarStyle">@style/CircularProgressBar</item>
         <item name="actionMenuTextColor">@color/text_grey</item>

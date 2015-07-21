@@ -123,12 +123,12 @@ public class DemoCameraFragment extends CameraFragment {
 		public void saveImage(PictureTransaction xact, byte[] image) {
 			// TODO Auto-generated method stub
 			super.saveImage(xact, image);
-			Intent intent = new Intent(getActivity(), SendTouchPreview.class);
-			intent.putExtra("Media_Type", MEDIA_TYPE_IMAGE);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT,
-					Uri.fromFile(getPhotoPath()));
-
-			startActivity(intent);
+//			Intent intent = new Intent(getActivity(), SendTouchPreview.class);
+//			intent.putExtra("Media_Type", MEDIA_TYPE_IMAGE);
+//			intent.putExtra(MediaStore.EXTRA_OUTPUT,
+//					Uri.fromFile(getPhotoPath()));
+//
+//			startActivity(intent);
 		}
 		
 		@Override

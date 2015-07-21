@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -65,29 +65,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/circular_image" >
-
-            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
-                android:id="@+id/holoCircularProgressBar"
-                android:layout_width="210dp"
-                android:layout_height="210dp"
-                android:layout_centerInParent="true"
-                app:stroke_width="10dp" />
+            android:layout_centerHorizontal="true" >
 
             <com.touchKin.touchkinapp.custom.RoundedImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="195dp"
+                android:layout_height="195dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_user_image" />
+
+            <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
+                android:id="@+id/holoCircularProgressBar"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_centerInParent="true"
+                app:stroke_width="10dp" />
         </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
