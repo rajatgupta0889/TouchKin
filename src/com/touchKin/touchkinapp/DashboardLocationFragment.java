@@ -46,7 +46,9 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request.Method;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.google.android.gms.common.ConnectionResult;
@@ -408,9 +410,9 @@ public class DashboardLocationFragment extends Fragment implements
 
 	public void getLocation(String id) {
 		Log.d("id ", id);
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/location/current/" + id,
-				new Listener<JSONObject>() {
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				getResources().getString(R.string.url) + "/location/current/"
+						+ id, null, new Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject responseArray) {

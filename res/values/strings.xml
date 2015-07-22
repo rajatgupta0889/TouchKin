@@ -16,11 +16,13 @@
     <string name="album_name">TouchKin</string>
     <string name="open_location_settings">Start</string>
 
-  <!-- <string-array name="frag_titles">
+    <!--
+    <string-array name="frag_titles">
         <item>TouchKin</item>
         <item>Location</item>
         <item>Activity</item>
-    </string-array>-->
+    </string-array>
+    -->
     <string-array name="list_name">
         <item>Australia</item>
         <item>Austria</item>
@@ -93,5 +95,6 @@
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
+    <string name="url">http://54.69.183.186:1340</string>
 
 </resources>

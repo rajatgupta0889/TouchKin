@@ -31,9 +31,11 @@ import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver;
 import com.touchKin.touchkinapp.custom.CustomRequest;
@@ -219,8 +221,8 @@ public class DashBoardActivityFragment extends Fragment implements
 
 	public void getConnectivity(String id) {
 		Log.d("id ", id);
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/connectivity/current/" + id,
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				"http://54.69.183.186:1340/connectivity/current/" + id,null,
 				new Listener<JSONObject>() {
 
 					@Override

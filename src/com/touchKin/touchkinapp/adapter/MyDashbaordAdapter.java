@@ -68,24 +68,34 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 				.findViewById(R.id.parentBottonTouch);
 		Date d = new Date();
 
-		parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
-				+ " for " + parent.getParentName() + " in india");
 		if (parent.getIsMale() != null) {
 			if (parent.getIsMale()) {
-				if (parent.getIsPendingTouch()) {
+				if (!parent.getIsPendingTouch()) {
+					parenTop.setText("it's " + d.getHours() + ":"
+							+ d.getMinutes() + " for " + parent.getParentName()
+							+ " in india");
 					parentBottom.setText("Send him a touch");
 				} else {
+					parenTop.setText("it's " + d.getHours() + ":"
+							+ d.getMinutes() + " for " + parent.getParentName()
+							+ " in india");
 					parentBottom.setText("Tap and hold his photo to receive");
 				}
 			} else {
-				if (parent.getIsPendingTouch()) {
-					parentBottom.setText("Send him a touch");
+				if (!parent.getIsPendingTouch()) {
+					parenTop.setText("it's " + d.getHours() + ":"
+							+ d.getMinutes() + " for " + parent.getParentName()
+							+ " in india");
+					parentBottom.setText("Send her a touch");
 				} else {
+					parenTop.setText("it's " + d.getHours() + ":"
+							+ d.getMinutes() + " for " + parent.getParentName()
+							+ " in india");
 					parentBottom.setText("Tap and hold her photo to receive");
 				}
 			}
 		} else {
-			parentBottom.setText("Tap and hold on photo to receive");
+			parentBottom.setText("Send them a touch");
 		}
 
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
@@ -108,8 +118,6 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
 				if (parent.getIsPendingTouch()) {
-
-					if (position > 0) {
 						vib.vibrate(500);
 						if (parent.getIsTouchMedia()) {
 							((DashBoardActivity) context).goToKinbook();
@@ -140,7 +148,7 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 						}
 
 					}
-				}
+				
 				return true;
 			}
 		});

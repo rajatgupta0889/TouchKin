@@ -40,10 +40,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.Interface.ViewPagerListener;
@@ -307,9 +309,9 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 	public void getCurrent(String id) {
 		Log.d("id ", id);
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/activity/current/" + id,
-				new Listener<JSONObject>() {
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				getResources().getString(R.string.url) + "/activity/current/"
+						+ id, null, new Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject responseArray) {
@@ -437,11 +439,9 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 				int value = sliceObj.optInt(key, 0);
 
 				if (value == 1) {
-					slice.setColor(resources
-							.getColor(R.color.daily_prog_done));
+					slice.setColor(resources.getColor(R.color.daily_prog_done));
 				} else {
-					slice.setColor(resources
-							.getColor(R.color.daily_prog_left));
+					slice.setColor(resources.getColor(R.color.daily_prog_left));
 				}
 				slices.add(slice);
 

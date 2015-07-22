@@ -666,8 +666,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 							mTabHost.setCurrentTab(1);
 
 						}
-						list.add(new ParentListModel("", false, "Add kin", "", "",
-								false, "", false, false, false));
+						list.add(new ParentListModel("", false, "Add kin", "",
+								"", false, "", false, false, false));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
 						// if (selectedParent == null) {
