@@ -19,9 +19,9 @@
         android:layout_below="@+id/tool_bar"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:text="Touchkin will send a one time sms to verify your phone number"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -31,9 +31,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="15dp"
         android:text="Carrier sms charges may apply."
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:id="@+id/spiner_layout"
@@ -60,7 +60,7 @@
             android:gravity="left"
             android:hint="Enter your mobile number"
             android:inputType="phone"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <Button

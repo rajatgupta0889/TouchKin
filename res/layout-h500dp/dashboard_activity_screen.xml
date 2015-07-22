@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -17,8 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mom&apos;s activity is "
-            android:textColor="@color/text_orange"
-            android:textSize="17sp" />
+            android:textColor="@color/dashboardtextcolor"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/ParentLocTV"
@@ -27,7 +27,7 @@
             android:layout_marginLeft="4dp"
             android:text="very low"
             android:textColor="@color/text_grey"
-            android:textSize="17sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView4"
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text=""
-            android:textColor="@color/text_orange"
-            android:textSize="17sp" />
+            android:textColor="@color/dashboardtextcolor"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <RelativeLayout
@@ -68,15 +68,15 @@
 
             <ImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/centre" />
 
             <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="190dp"
+                android:layout_height="190dp"
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
 
@@ -128,8 +128,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="She has last active "
-            android:textColor="@color/text_orange"
-            android:textSize="17sp" />
+            android:textColor="@color/dashboardtextcolor"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/parentBottonActivity2"
@@ -139,15 +139,15 @@
             android:layout_marginRight="4dp"
             android:text=""
             android:textColor="@color/text_grey"
-            android:textSize="17sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/parentBottonActivity3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/text_orange"
-            android:textSize="17sp" />
+            android:textColor="@color/dashboardtextcolor"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </LinearLayout>
