@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mom&apos;s activity is "
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text=""
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -130,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="She has last active "
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
 
         <TextView
@@ -148,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
     </LinearLayout>
 
