@@ -6,11 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -53,7 +52,6 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
@@ -110,6 +108,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	List<String> notificationList;
 	ListPopupWindow popup;
 	Boolean popupIsShowing = false;
+	TextView notification;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -329,14 +328,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 			}
 		});
 
-		Log.d("count", anchor + "");
-		TextView notification = (TextView) anchor
-				.findViewById(R.id.hotlist_hot);
-		if (notification != null && notificationList.size() > 0) {
-			notification.setText(notificationList.size() + "");
-		} else {
-			notification.setVisibility(View.INVISIBLE);
-		}
+		notification = (TextView) anchor.findViewById(R.id.hotlist_hot);
+		setCount();
 		return true;
 	}
 
@@ -490,6 +483,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	public void fetchParentList() {
 		list = new ArrayList<ParentListModel>();
 		careGiverList = new ArrayList<ParentListModel>();
+
 		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
 				"http://54.69.183.186:1340/user/family", null,
 				new Listener<JSONObject>() {
@@ -501,6 +495,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 						try {
 							JSONArray careRecievers = responseArray
 									.getJSONArray("care_receivers");
+
+							list.add(new ParentListModel(userId, false, "Me",
+									userId, "", true, userObj
+											.getString("mobile"), true, false,
+									(userObj.getString("gender")
+											.equalsIgnoreCase("male")) ? true
+											: false));
+
 							int crCount = careRecievers.length();
 							for (int i = 0; i < crCount; i++) {
 								JSONObject cr;
@@ -633,7 +635,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// setMenuTitle(null);
 						// }
 						if (list.size() > 1) {
-							selectedParent = list.get(0);
 							Collections.sort(list,
 									new Comparator<ParentListModel>() {
 										@Override
@@ -657,27 +658,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 															lhs.getIsPendingTouch());
 										}
 									});
-							try {
-								list.add(new ParentListModel(
-										userId,
-										false,
-										"Me",
-										userId,
-										"",
-										true,
-										userObj.getString("mobile"),
-										true,
-										false,
-										(userObj.getString("gender")
-												.equalsIgnoreCase("male")) ? true
-												: false));
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							selectedParent = list.get(1);
+							list.get(1).setIsSelected(true);
+						} else {
+							selectedParent = list.get(0);
+							list.get(0).setIsSelected(true);
+							mTabHost.setCurrentTab(1);
 
 						}
-						list.add(new ParentListModel("", false, "", "", "",
+						list.add(new ParentListModel("", false, "Add kin", "", "",
 								false, "", false, false, false));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
@@ -986,18 +975,47 @@ public class DashBoardActivity extends ActionBarActivity implements
 			popup.setBackgroundDrawable(getResources().getDrawable(
 					R.drawable.notification_pop));
 			popup.setWidth(600);
-			ListAdapter adapter = new MyAdapterPopup(this, notificationList);
-			popup.setAdapter(adapter);
-			popup.show();
+			final ListAdapter adapter = new MyAdapterPopup(this,
+					notificationList);
 			popup.setOnItemClickListener(new OnItemClickListener() {
 
+				@SuppressLint("NewApi")
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					// TODO Auto-generated method stub
+					if (notificationList.get(position).contains("touch")) {
+						goToKinbook();
+					} else {
+						Intent intent = new Intent(DashBoardActivity.this,
+								MyFamily.class);
+						intent.putExtra("isLoggedIn", true);
+
+						startActivity(intent);
+					}
+					notificationList.remove(position);
+					SharedPreferences pendingReq = getApplicationContext()
+							.getSharedPreferences("pedingReq", 0);
+					String str = pendingReq.getString("req", null);
+
+					try {
+						JSONArray notifArray = new JSONArray(str);
+						notifArray.remove(position);
+						Editor tokenedit = pendingReq.edit();
+						tokenedit.putString("req", notifArray + "");
+						tokenedit.commit();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					popup.dismiss();
+					setCount();
 
 				}
 			});
+
+			popup.setAdapter(adapter);
+			popup.show();
 			popupIsShowing = true;
 		} else {
 			popup.dismiss();
@@ -1031,6 +1049,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			return position;
 		}
 
+		@SuppressLint("ViewHolder")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView text = null;
@@ -1056,16 +1075,32 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (mTabHost.getCurrentTab() != 0 && mTabHost.getCurrentTab() != 1) {
+		if (mTabHost.getCurrentTab() != 1) {
 			mTabHost.setVisibility(View.VISIBLE);
-			if (mTabHost.getCurrentTab() != 0) {
-				mTabHost.setCurrentTab(0);
-				getSupportFragmentManager().executePendingTransactions();
-			}
-			((Fragment1) getSupportFragmentManager().findFragmentByTag(
-					"DashBoard")).notifyFrag();
+			mTabHost.setCurrentTab(1);
+			selectedParent = list.get(0);
+			list.get(0).setIsSelected(true);
+			setMenuTitle(selectedParent);
+			// if (mTabHost.getCurrentTab() != 0) {
+			// mTabHost.setCurrentTab(1);
+			// //getSupportFragmentManager().executePendingTransactions();
+			// }
+			// ((Fragment1) getSupportFragmentManager().findFragmentByTag(
+			// "DashBoard")).notifyFrag();
 		} else {
-			finish();
+			if (!Drawer.isDrawerOpen(Gravity.LEFT))
+				finish();
+			else {
+				Drawer.closeDrawer(Gravity.LEFT);
+			}
+		}
+	}
+
+	public void setCount() {
+		if (notification != null && notificationList.size() > 0) {
+			notification.setText(notificationList.size() + "");
+		} else {
+			notification.setVisibility(View.INVISIBLE);
 		}
 	}
 }

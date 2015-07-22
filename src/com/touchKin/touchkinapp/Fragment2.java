@@ -127,9 +127,9 @@ public class Fragment2 extends Fragment implements OnClickListener {
 
 				if (!isSendTouchAlreadyClicked) {
 					vib.vibrate(500);
-					sendTouch.setText("Add a video");
-					sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
-							R.drawable.video_cam, 0, 0);
+//					sendTouch.setText("Add a video");
+//					sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+//							R.drawable.video_cam, 0, 0);
 					listener.sendTouchCLicked(true);
 					isSendTouchAlreadyClicked = true;
 					new Handler().postDelayed(new Runnable() {
@@ -147,9 +147,9 @@ public class Fragment2 extends Fragment implements OnClickListener {
 							if (!withoutMsg)
 								sendTouchWithoutMessage();
 							isSendTouchAlreadyClicked = false;
-							sendTouch.setText("Send a Touch");
-							sendTouch.setCompoundDrawablesWithIntrinsicBounds(
-									0, R.drawable.ic_icon_send_touch, 0, 0);
+//							sendTouch.setText("Send a Touch");
+//							sendTouch.setCompoundDrawablesWithIntrinsicBounds(
+//									0, R.drawable.ic_icon_send_touch, 0, 0);
 							listener.sendTouchCLicked(false);
 
 						}

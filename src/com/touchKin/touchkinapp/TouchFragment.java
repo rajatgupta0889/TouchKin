@@ -316,8 +316,8 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 						// TODO Auto-generated method stub
 						Log.d("Response Array Current",
 								responseArray.toString());
-
-						setSlices(responseArray);
+						if (getActivity() != null)
+							setSlices(responseArray);
 
 					}
 
@@ -433,22 +433,17 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			Iterator<String> iter = sliceObj.keys();
 			while (iter.hasNext()) {
 				String key = iter.next();
-				try {
-					PieSlice slice = new PieSlice();
-					int value = sliceObj.getInt(key);
+				PieSlice slice = new PieSlice();
+				int value = sliceObj.optInt(key, 0);
 
-					if (value == 0) {
-
-						slice.setColor(resources
-								.getColor(R.color.daily_prog_left));
-					} else {
-						slice.setColor(resources
-								.getColor(R.color.daily_prog_done));
-					}
-					slices.add(slice);
-				} catch (JSONException e) {
-					// Something went wrong!
+				if (value == 1) {
+					slice.setColor(resources
+							.getColor(R.color.daily_prog_done));
+				} else {
+					slice.setColor(resources
+							.getColor(R.color.daily_prog_left));
 				}
+				slices.add(slice);
 
 			}
 		} catch (JSONException e1) {

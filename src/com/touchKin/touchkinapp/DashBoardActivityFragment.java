@@ -401,20 +401,15 @@ public class DashBoardActivityFragment extends Fragment implements
 		Iterator<String> iter = slicesObject.keys();
 		while (iter.hasNext()) {
 			String key = iter.next();
-			try {
-				PieSlice slice = new PieSlice();
-				int value = slicesObject.getInt(key);
+			PieSlice slice = new PieSlice();
+			int value = slicesObject.optInt(key, 0);
 
-				if (value == 0) {
-
-					slice.setColor(resources.getColor(R.color.daily_prog_left));
-				} else {
-					slice.setColor(resources.getColor(R.color.daily_prog_done));
-				}
-				slices.add(slice);
-			} catch (JSONException e) {
-				// Something went wrong!
+			if (value == 1) {
+				slice.setColor(resources.getColor(R.color.daily_prog_done));
+			} else {
+				slice.setColor(resources.getColor(R.color.daily_prog_left));
 			}
+			slices.add(slice);
 
 		}
 

@@ -254,7 +254,7 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		// parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		// Log.d("Parent", parent + "");
-		// setText();
+		setText();
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -275,6 +275,26 @@ public class DashboardLocationFragment extends Fragment implements
 				}
 			});
 
+		}
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
+		Log.d("Parent", parent + "");
+		if (parent != null) {
+			if (lastSelectedParent == null) {
+				lastSelectedParent = parent;
+				getLocation(parent.getParentId());
+			}
+			// parentName.setText(parent.getParentName().substring(0, 1)
+			// .toUpperCase()
+			// + parent.getParentName().substring(1) + " is in ");
+			// parentNameBottom.setText("Its been " + 2 + " hours since "
+			// + parent.getParentName() + " last left home");
+			if (!lastSelectedParent.equals(parent))
+				getLocation(parent.getParentId());
+			else {
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+			}
 		}
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
@@ -495,20 +515,15 @@ public class DashboardLocationFragment extends Fragment implements
 		Iterator<String> iter = slicesObject.keys();
 		while (iter.hasNext()) {
 			String key = iter.next();
-			try {
-				PieSlice slice = new PieSlice();
-				int value = slicesObject.getInt(key);
+			PieSlice slice = new PieSlice();
+			int value = slicesObject.optInt(key, 0);
 
-				if (value == 0) {
-
-					slice.setColor(resources.getColor(R.color.daily_prog_left));
-				} else {
-					slice.setColor(resources.getColor(R.color.daily_prog_done));
-				}
-				slices.add(slice);
-			} catch (JSONException e) {
-				// Something went wrong!
+			if (value == 1) {
+				slice.setColor(resources.getColor(R.color.daily_prog_done));
+			} else {
+				slice.setColor(resources.getColor(R.color.daily_prog_left));
 			}
+			slices.add(slice);
 
 		}
 
