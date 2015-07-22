@@ -11,10 +11,16 @@ import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 
-public class ErrorHandlingInformation extends ActionBarActivity {
+public class ErrorHandlingInformation {
+	Context context;
+
+	public ErrorHandlingInformation(Context context) {
+		super();
+		this.context = context;
+	}
 
 	public boolean InternetAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext()
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
@@ -22,8 +28,8 @@ public class ErrorHandlingInformation extends ActionBarActivity {
 	}
 
 	public void displayMessage(String toastString, int code) {
-		Toast.makeText(getApplicationContext(),
-				toastString + " code error: " + code, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, toastString + " code error: " + code,
+				Toast.LENGTH_LONG).show();
 	}
 
 	public String trimMessage(String json, String key) {

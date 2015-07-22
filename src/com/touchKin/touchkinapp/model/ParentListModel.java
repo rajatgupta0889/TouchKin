@@ -10,11 +10,12 @@ public class ParentListModel {
 	String mobilenumber;
 	Boolean isPendingTouch;
 	Boolean isTouchMedia;
+	Boolean isMale;
 
 	public ParentListModel(String imageUrl, Boolean isSelected,
 			String parentName, String parentId, String parentUserId,
 			Boolean reqStatus, String mobilenumber, Boolean isPendingTouch,
-			Boolean isTouchMedia) {
+			Boolean isTouchMedia, Boolean isMale) {
 		super();
 		this.imageUrl = imageUrl;
 		this.isSelected = isSelected;
@@ -25,6 +26,15 @@ public class ParentListModel {
 		this.mobilenumber = mobilenumber;
 		this.isPendingTouch = isPendingTouch;
 		this.isTouchMedia = isTouchMedia;
+		this.isMale = isMale;
+	}
+
+	public Boolean getIsMale() {
+		return isMale;
+	}
+
+	public void setIsMale(Boolean isMale) {
+		this.isMale = isMale;
 	}
 
 	public Boolean getIsPendingTouch() {

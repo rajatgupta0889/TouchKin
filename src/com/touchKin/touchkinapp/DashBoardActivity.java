@@ -300,7 +300,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				e.printStackTrace();
 			}
 		mAdapter.notifyDataSetChanged();
-		popup = new ListPopupWindow(this);
+		popup = new ListPopupWindow(DashBoardActivity.this);
 	}
 
 	@Override
@@ -390,7 +390,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				mTabHost.newTabSpec("MyDashBoard").setIndicator(
 						" My Dash Board"), Fragment2.class, b);
 		mTabHost.getTabWidget().getChildAt(1).setVisibility(View.GONE);
-		mTabHost.setCurrentTab(1);
+		mTabHost.setCurrentTab(0);
 		b = new Bundle();
 		b.putString("key", "TouchKin");
 		mTabHost.addTab(
@@ -499,15 +499,6 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// TODO Auto-generated method stub
 						Log.d("Response Array", " " + responseArray);
 						try {
-							list.add(new ParentListModel(userId, true, "Me",
-									userId, "", true, userObj
-											.getString("mobile"), true, false));
-							list.get(0).setReqStatus(true);
-							careGiverList.add(new ParentListModel(userId,
-									false, "Me", userId, "", true, userObj
-											.getString("mobile"), true, false));
-							careGiverList.get(0).setReqStatus(true);
-							selectedParent = list.get(0);
 							JSONArray careRecievers = responseArray
 									.getJSONArray("care_receivers");
 							int crCount = careRecievers.length();
@@ -529,6 +520,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 									} else {
 										item.setReqStatus(true);
 									}
+									if (cr.has("gender")) {
+										item.setIsMale((cr.getString("gender")
+												.equalsIgnoreCase("male")) ? true
+												: false);
+									} else {
+										item.setIsMale(null);
+									}
 									if (touchArray != null
 											&& touchArray.length() > 0) {
 										for (int j = 0; j < touchArray.length(); j++) {
@@ -549,6 +547,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 												} else {
 													item.setIsPendingTouch(false);
 												}
+
 											} catch (JSONException e) {
 												// TODO Auto-generated catch
 												// block
@@ -559,8 +558,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setIsPendingTouch(false);
 
 									}
-									item.setIsSelected(false);
+									if (i != 0) {
+										item.setIsSelected(false);
+									} else {
+										item.setIsSelected(true);
+									}
 									list.add(item);
+
 								}
 							}
 							JSONArray careGivers = responseArray
@@ -580,6 +584,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 										item.setReqStatus(false);
 									} else {
 										item.setReqStatus(true);
+									}
+									if (cg.has("gender")) {
+										item.setIsMale((cg.getString("gender")
+												.equalsIgnoreCase("male")) ? true
+												: false);
+									} else {
+										item.setIsMale(null);
 									}
 									if (touchArray != null
 											&& touchArray.length() > 0) {
@@ -622,6 +633,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// setMenuTitle(null);
 						// }
 						if (list.size() > 1) {
+							selectedParent = list.get(0);
 							Collections.sort(list,
 									new Comparator<ParentListModel>() {
 										@Override
@@ -645,9 +657,28 @@ public class DashBoardActivity extends ActionBarActivity implements
 															lhs.getIsPendingTouch());
 										}
 									});
+							try {
+								list.add(new ParentListModel(
+										userId,
+										false,
+										"Me",
+										userId,
+										"",
+										true,
+										userObj.getString("mobile"),
+										true,
+										false,
+										(userObj.getString("gender")
+												.equalsIgnoreCase("male")) ? true
+												: false));
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
 						}
 						list.add(new ParentListModel("", false, "", "", "",
-								false, "", false, false));
+								false, "", false, false, false));
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
 						// if (selectedParent == null) {
@@ -937,6 +968,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 				}
 			});
 		}
+
 		return careGiverList;
 	}
 
@@ -953,7 +985,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 			popup.setAnchorView(anchor);
 			popup.setBackgroundDrawable(getResources().getDrawable(
 					R.drawable.notification_pop));
-//			popup.setWidth(500);
+			popup.setWidth(600);
 			ListAdapter adapter = new MyAdapterPopup(this, notificationList);
 			popup.setAdapter(adapter);
 			popup.show();
@@ -1002,6 +1034,29 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 			text.setText(notificationList.get(position));
 			return convertView;
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		if (popup != null)
+			popup.dismiss();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mTabHost.getCurrentTab() != 0 && mTabHost.getCurrentTab() != 1) {
+			mTabHost.setVisibility(View.VISIBLE);
+			if (mTabHost.getCurrentTab() != 0) {
+				mTabHost.setCurrentTab(0);
+				getSupportFragmentManager().executePendingTransactions();
+			}
+			((Fragment1) getSupportFragmentManager().findFragmentByTag(
+					"DashBoard")).notifyFrag();
+		} else {
+			finish();
 		}
 	}
 }

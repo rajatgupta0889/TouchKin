@@ -118,18 +118,45 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					View custom = li.inflate(R.layout.pending_dialog, null);
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 							MyFamily.this);
-
+					final ExpandableListGroupItem pendingParent = pendingReq
+							.get(groupPosition - CareReciever.size() );
 					alertDialogBuilder.setView(custom);
 					alertDialogBuilder.setCancelable(true);
 
 					// create alert dialog
 					final AlertDialog alertDialog = alertDialogBuilder.create();
-					Button add = (Button) custom.findViewById(R.id.addbutton);
-					add.setOnClickListener(new OnClickListener() {
+					Button withdrawbtn = (Button) custom
+							.findViewById(R.id.withDrawBtn);
+					withdrawbtn.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
+
+							alertDialog.cancel();
+						}
+					});
+					TextView name = (TextView) custom
+							.findViewById(R.id.nameParent);
+					name.setText(pendingParent.getUserName());
+					Button resendButton = (Button) custom
+							.findViewById(R.id.reSendBtn);
+					resendButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent sendIntent = new Intent();
+							sendIntent.setAction(Intent.ACTION_SEND);
+							sendIntent.putExtra(
+									Intent.EXTRA_TEXT,
+									"Hi "
+											+ pendingParent.getUserName()
+											+ ", I would like you to care for mom on Touchkin."
+											+ " Click on the link below to install the app."
+											+ " www.etsdfdfvfs.com");
+							sendIntent.setType("text/plain");
+							startActivity(sendIntent);
 
 							alertDialog.cancel();
 						}

@@ -404,6 +404,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + groupMember.getUserId()
 					+ ".jpeg", resID, viewHolder.userImage);
+
+			if (viewHolder.kinCount.getVisibility() == View.INVISIBLE) {
+				viewHolder.kinCount.setVisibility(View.VISIBLE);
+			}
 			if (groupPosition != 0) {
 				viewHolder.name.setText(groupMember.getUserName());
 			} else {

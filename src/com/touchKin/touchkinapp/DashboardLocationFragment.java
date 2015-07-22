@@ -257,6 +257,16 @@ public class DashboardLocationFragment extends Fragment implements
 		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
+		if (lastSelectedParent != null && !lastSelectedParent.equals(parent))
+			getLocation(parent.getParentId());
+		else {
+			if (obj != null) {
+				setLocation(obj);
+			}
+			mHoloCircularProgressBar.setProgress(0.0f);
+			animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+
+		}
 
 		super.onResume();
 	}
@@ -268,23 +278,13 @@ public class DashboardLocationFragment extends Fragment implements
 					.toUpperCase()
 					+ parent.getParentName().substring(1) + " is in ");
 			if (isTapOnMap) {
-				parentNameBottom.setText("Its been " + 2 + " hours since "
-						+ parent.getParentName() + " last left home");
+				parentNameBottom.setText("It's been " + staticSince
+						+ " hours since " + parent.getParentName()
+						+ " last left home");
 			} else {
-				parentNameBottom.setText("Its been " + 2 + " hours since "
-						+ parent.getParentName() + " last left home");
-			}
-			if (lastSelectedParent != null
-					&& !lastSelectedParent.equals(parent))
-				getLocation(parent.getParentId());
-			else {
-				if (obj != null) {
-					setLocation(obj);
-				}
-				mHoloCircularProgressBar.setProgress(0.0f);
-				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
-						1000);
-
+				parentNameBottom.setText("It's been " + staticSince
+						+ " hours since " + parent.getParentName()
+						+ " last left home");
 			}
 		}
 	}
@@ -300,11 +300,11 @@ public class DashboardLocationFragment extends Fragment implements
 				lastSelectedParent = parent;
 				getLocation(parent.getParentId());
 			}
-//			parentName.setText(parent.getParentName().substring(0, 1)
-//					.toUpperCase()
-//					+ parent.getParentName().substring(1) + " is in ");
-//			parentNameBottom.setText("Its been " + 2 + " hours since "
-//					+ parent.getParentName() + " last left home");
+			// parentName.setText(parent.getParentName().substring(0, 1)
+			// .toUpperCase()
+			// + parent.getParentName().substring(1) + " is in ");
+			// parentNameBottom.setText("Its been " + 2 + " hours since "
+			// + parent.getParentName() + " last left home");
 			if (!lastSelectedParent.equals(parent))
 				getLocation(parent.getParentId());
 			else {
@@ -333,7 +333,7 @@ public class DashboardLocationFragment extends Fragment implements
 		if (!obj.optString("name").isEmpty()) {
 			parentLocPos.setText(obj.optString("name"));
 			isTapOnMap = true;
-			parentNameBottom.setText("Its been " + staticSince
+			parentNameBottom.setText("It's been " + staticSince
 					+ " hours since " + parent.getParentName()
 					+ " last left home");
 		} else {
