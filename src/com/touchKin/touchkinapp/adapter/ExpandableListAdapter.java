@@ -173,7 +173,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					imageLoader = new ImageLoader(context);
 					viewholder = new ImageHolder();
 					imageLoader = new ImageLoader(context);
-					view1 = inflater.inflate(R.layout.image_item, linearLayout,
+					view1 = inflater.inflate(R.layout.image_item_myfamily, linearLayout,
 							false);
 
 					viewholder.image = (RoundedImageView) view1
@@ -199,7 +199,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 
 			}
-			View view2 = inflater.inflate(R.layout.image_item, linearLayout,
+			View view2 = inflater.inflate(R.layout.image_item_myfamily, linearLayout,
 					false);
 			final RoundedImageView image = (RoundedImageView) view2
 					.findViewById(R.id.parentImage);

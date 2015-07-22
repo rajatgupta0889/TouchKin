@@ -14,6 +14,7 @@
     <color name="recycle_seprator">#ebebeb</color>
     <color name="daily_prog_done">#f6985f</color>
     <color name="outer_ring">#f2f2f2</color>
+    <color name="dashboardtextcolor">#2a210e</color>
     <color name="commentButton">#fba778</color>
     <color name="sendButton">#f78646</color>
     <color name="triangle">#f5f4f4</color>

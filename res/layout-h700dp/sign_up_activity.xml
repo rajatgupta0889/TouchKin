@@ -19,9 +19,9 @@
         android:layout_below="@+id/tool_bar"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="70dp"
         android:text="Touchkin will send a one time sms to verify your phone number."
-        android:textSize="30dp" />
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -31,38 +31,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="35dp"
         android:text="Carrier sms charges may apply."
-        android:textSize="30dp" />
-
-    <LinearLayout
-        android:id="@+id/spiner_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignRight="@+id/otp_Genrate_Button"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal" >
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="135dp"
-            android:layout_height="65dp"
-            android:background="@drawable/spinner_background_holo_light"
-            android:spinnerMode="dialog" />
-
-        <EditText
-            android:id="@+id/phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/edit_text_holo_light"
-            android:ems="10"
-            android:gravity="left"
-            android:hint="Enter your mobile number"
-            android:inputType="phone"
-            android:textSize="30dp" />
-    </LinearLayout>
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/previousButton"
@@ -83,5 +54,35 @@
         android:layout_marginBottom="26dp"
         android:layout_marginRight="19dp"
         android:background="@drawable/next_button" />
+
+    <LinearLayout
+        android:id="@+id/spiner_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal" >
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="135dp"
+            android:layout_height="65dp"
+            android:background="@drawable/spinner_background_holo_light"
+            android:spinnerMode="dialog" />
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_text_holo_light"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="Enter your mobile number"
+            android:inputType="phone"
+            android:textSize="30sp" >
+        </EditText>
+    </LinearLayout>
 
 </RelativeLayout>

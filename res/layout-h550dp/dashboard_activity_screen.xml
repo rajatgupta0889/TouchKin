@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mom&apos;s activity is "
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text="very low"
-            android:textColor="@color/text_grey"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text=""
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -69,15 +69,15 @@
 
             <ImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="195dp"
-                android:layout_height="195dp"
+                android:layout_width="175dp"
+                android:layout_height="175dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/centre" />
 
             <com.touchKin.touchkinapp.custom.HoloCircularProgressBar
                 android:id="@+id/holoCircularProgressBar"
-                android:layout_width="240dp"
-                android:layout_height="240dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
                 android:layout_centerInParent="true"
                 app:stroke_width="10dp" />
 
@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="She has last active "
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
 
         <TextView
@@ -142,7 +142,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:text=""
-            android:textColor="@color/text_grey"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
 
         <TextView
@@ -150,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/text_orange"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
     </LinearLayout>
 

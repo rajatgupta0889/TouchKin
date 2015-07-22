@@ -20,6 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
+        android:textSize="20sp"
+        android:textColor="#464545"
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/drawer"
         android:layout_toRightOf="@+id/parentImageView"
@@ -32,6 +34,8 @@
         android:layout_alignBottom="@+id/parentImageView"
         android:layout_alignLeft="@+id/userName"
         android:layout_marginBottom="5dp"
+        android:textSize="17sp"
+        android:textColor="#6c6c6c"
         android:layout_toLeftOf="@+id/drawer"
         android:text="TextView" />
 
