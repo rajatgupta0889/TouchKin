@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.touchKin.touchkinapp.DashBoardActivity;
+import com.touchKin.touchkinapp.Fragment1;
 import com.touchKin.touchkinapp.VideoFullScreen;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.custom.ImageLoader;
@@ -164,11 +165,19 @@ public class FlipViewAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View v) {
-					Toolbar toolbar = (Toolbar)((DashBoardActivity) context).findViewById(R.id.tool_bar);
-					host = ((DashBoardActivity) context).getTabHost();
-					host.setVisibility(View.VISIBLE);
-					toolbar.setVisibility(View.VISIBLE);
-					host.setCurrentTab(0);
+					// Toolbar toolbar = (Toolbar) ((DashBoardActivity) context)
+					// .findViewById(R.id.tool_bar);
+					// host = ((DashBoardActivity) context).getTabHost();
+					// host.setVisibility(View.VISIBLE);
+					// toolbar.setVisibility(View.VISIBLE);
+					// host.setCurrentTab(0);
+					//
+					// context.getSupportFragmentManager().executePendingTransactions();
+					//
+					// ((Fragment1)
+					// getSupportFragmentManager().findFragmentByTag(
+					// "DashBoard")).notifyFrag();
+					customListener.onButtonClickListner(1000, "", false);
 				}
 			});
 

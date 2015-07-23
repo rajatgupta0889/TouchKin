@@ -348,13 +348,13 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		if (id == R.id.bell) {
-			// Not implemented here
-			Toast.makeText(getApplicationContext(), "ifds", Toast.LENGTH_LONG)
-					.show();
-			showListPopup();
-			return true;
-		}
+		// if (id == R.id.bell) {
+		// // Not implemented here
+		// Toast.makeText(getApplicationContext(), "ifds", Toast.LENGTH_LONG)
+		// .show();
+		// showListPopup();
+		// return true;
+		// }
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -371,7 +371,25 @@ public class DashBoardActivity extends ActionBarActivity implements
 				.getChildAt(this.mTabHost.getCurrentTab())
 				.setBackgroundColor(
 						getResources().getColor(R.color.tab_selected));
+		if (this.mTabHost.getCurrentTab() == 0) {
+			if (list.size() > 1) {
+				ParentListModel item = list.get(1);
+				for (ParentListModel data : list) {
 
+					if (data.equals(item)) {
+						data.setIsSelected(true);
+					} else {
+						data.setIsSelected(false);
+					}
+				}
+				setMenuTitle(item);
+				selectedParent = item;
+			}
+
+			getSupportFragmentManager().executePendingTransactions();
+			((Fragment1) getSupportFragmentManager().findFragmentByTag(
+					"DashBoard")).notifyFrag();
+		}
 	}
 
 	private void InitView() {
@@ -380,34 +398,27 @@ public class DashBoardActivity extends ActionBarActivity implements
 		Bundle b = new Bundle();
 		b.putString("key", "Fake");
 		mTabHost.addTab(
-				mTabHost.newTabSpec("DashBoard").setIndicator("Dash Board"),
+				setIndicator(this, mTabHost.newTabSpec("DashBoard"),
+						R.color.tab_bg, "Dashboard", R.drawable.dashboard),
 				Fragment1.class, b);
-
-		mTabHost.getTabWidget().getChildAt(0).setVisibility(View.GONE);
+		mTabHost.setCurrentTab(0);
 		// Added tab for mydashboard
 		b = new Bundle();
 		b.putString("key", "MyDashboard");
 		mTabHost.addTab(
-				mTabHost.newTabSpec("MyDashBoard").setIndicator(
-						" My Dash Board"), Fragment2.class, b);
+				mTabHost.newTabSpec("MyDashBoard").setIndicator(" MyDashBoard"),
+				Fragment2.class, b);
 		mTabHost.getTabWidget().getChildAt(1).setVisibility(View.GONE);
 		mTabHost.setCurrentTab(0);
 		b = new Bundle();
 		b.putString("key", "TouchKin");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("KinBook"),
-						R.color.tab_bg, "Dashboard", R.drawable.dashboard),
+						R.color.tab_bg, "Kinbook", R.drawable.kinbook),
 				TouchKinBookFragment.class, b);
 
 		b = new Bundle();
 		b.putString("key", "Messages");
-		mTabHost.addTab(
-				setIndicator(this, mTabHost.newTabSpec("Message"),
-						R.color.tab_bg, "Kinbook", R.drawable.kinbook),
-				MessagesFragment.class, b);
-
-		b = new Bundle();
-		b.putString("key", "Settings");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("Live Advisor"),
 						R.color.tab_bg, "Live Advisor",
@@ -681,6 +692,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						// if (selectedParent == null) {
 						// selectedParent = list.get(0);
 						// }
+						setTabColor(mTabHost);
 						if (listener != null)
 							listener.onButtonClickListner(0, null, false);
 						setMenuTitle(selectedParent);
@@ -851,7 +863,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 
 			startActivity(intent);
 		}
-
+		Drawer.closeDrawer(Gravity.LEFT);
 	}
 
 	public void setCustomButtonListner(ButtonClickListener listener) {
@@ -866,6 +878,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 		Intent i = new Intent(DashBoardActivity.this, Details.class);
 		i.putExtra("isLoggedin", true);
 		startActivity(i);
+		Drawer.closeDrawer(Gravity.LEFT);
+
 	}
 
 	public FragmentTabHost getTabHost() {
@@ -1087,8 +1101,20 @@ public class DashBoardActivity extends ActionBarActivity implements
 			mTabHost.setVisibility(View.VISIBLE);
 			mTabHost.setCurrentTab(1);
 			selectedParent = list.get(0);
-			list.get(0).setIsSelected(true);
+			ParentListModel item = list.get(0);
+			for (ParentListModel data : list) {
+
+				if (data.equals(item)) {
+					data.setIsSelected(true);
+				} else {
+					data.setIsSelected(false);
+				}
+			}
 			setMenuTitle(selectedParent);
+			if (toolbar.getVisibility() == View.GONE) {
+				toolbar.setVisibility(View.VISIBLE);
+			}
+
 			// if (mTabHost.getCurrentTab() != 0) {
 			// mTabHost.setCurrentTab(1);
 			// //getSupportFragmentManager().executePendingTransactions();
@@ -1110,5 +1136,15 @@ public class DashBoardActivity extends ActionBarActivity implements
 		} else {
 			notification.setVisibility(View.INVISIBLE);
 		}
+	}
+
+	public void gotoTabZero() {
+
+		mTabHost.setCurrentTab(0);
+		getSupportFragmentManager().executePendingTransactions();
+
+		((Fragment1) getSupportFragmentManager().findFragmentByTag("DashBoard"))
+				.notifyFrag();
+
 	}
 }

@@ -70,6 +70,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	String backData;
 	String touchTime = "";
 	ImageButton next;
+	String topData = "";
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -471,7 +472,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	@Override
 	public void sendTouchCLicked(Boolean isFirstTime) {
 		// TODO Auto-generated method stub
-		String topData = "";
+
 		if (isFirstTime) {
 			backData = parentBotton.getText().toString();
 			topData = parentName.getText().toString();
