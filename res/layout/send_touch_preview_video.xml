@@ -15,7 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="120dp"
         android:layout_alignParentTop="true"
-        android:background="@color/white" >
+        android:background="#55000000" >
 
         <com.touchKin.touchkinapp.custom.HorizontalListView
             android:id="@+id/parentListView"

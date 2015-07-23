@@ -34,11 +34,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -63,6 +64,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.custom.Constants;
+import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.GeofenceErrorMessages;
 import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService;
@@ -81,6 +83,7 @@ public class MapActivity extends ActionBarActivity implements
 	private PendingIntent mGeofencePendingIntent;
 	String token;
 	String id;
+	Marker clickedMarker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -222,8 +225,9 @@ public class MapActivity extends ActionBarActivity implements
 		args.putDouble("long", marker.getPosition().longitude);
 		newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "TAG");
-		if (!text.isEmpty())
-			marker.setTitle(text);
+		clickedMarker = marker;
+		marker.showInfoWindow();
+
 		return false;
 	}
 
@@ -256,6 +260,7 @@ public class MapActivity extends ActionBarActivity implements
 					.findViewById(R.id.customImage);
 			final EditText customlocation = (EditText) view
 					.findViewById(R.id.editLoc);
+			customlocation.setImeOptions(EditorInfo.IME_ACTION_DONE);
 			homeIV.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -303,7 +308,7 @@ public class MapActivity extends ActionBarActivity implements
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					setNameToLocation(id, place);
+					setNameToLocation(id, place, "home");
 					dialog.dismiss();
 				}
 			});
@@ -326,7 +331,8 @@ public class MapActivity extends ActionBarActivity implements
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								setNameToLocation(id, place);
+								setNameToLocation(id, place, customlocation
+										.getText().toString());
 								dialog.dismiss();
 							}
 							return false;
@@ -460,8 +466,9 @@ public class MapActivity extends ActionBarActivity implements
 
 	public void getLocation(String id) {
 		Log.d("id ", id);
-		JsonArrayRequest req = new JsonArrayRequest(
-				"http://54.69.183.186:1340/location/fetch/" + id,
+		JsonArrayRequest req = new JsonArrayRequest(getResources().getString(
+				R.string.url)
+				+ "/location/fetch-frequent-locations/" + id,
 				new Listener<JSONArray>() {
 
 					@Override
@@ -555,7 +562,7 @@ public class MapActivity extends ActionBarActivity implements
 		try {
 			obj = array.getJSONObject(0);
 
-			JSONObject point = obj.getJSONObject("point");
+			JSONObject point = obj.getJSONObject("avg");
 			latLng = new LatLng(Double.parseDouble(point.getString("x")),
 					Double.parseDouble(point.getString("y")));
 			googleMarker = googleMap.addMarker(new MarkerOptions()
@@ -566,7 +573,7 @@ public class MapActivity extends ActionBarActivity implements
 			Log.d("Length", array.length() + "");
 			for (int i = 1; i < array.length(); i++) {
 				obj = array.getJSONObject(i);
-				point = obj.getJSONObject("point");
+				point = obj.getJSONObject("avg");
 
 				googleMarker = googleMap.addMarker(new MarkerOptions()
 						.position(
@@ -587,14 +594,15 @@ public class MapActivity extends ActionBarActivity implements
 
 	}
 
-	public void setNameToLocation(String id, JSONObject param) {
-		JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+	public void setNameToLocation(String id, JSONObject param, final String name) {
+		CustomRequest req = new CustomRequest(Method.POST,
 				"http://54.69.183.186:1340/user/add-places/" + id, param,
-				new Response.Listener<JSONObject>() {
+				new Response.Listener<JSONArray>() {
 					@SuppressLint("NewApi")
 					@Override
-					public void onResponse(JSONObject response) {
+					public void onResponse(JSONArray response) {
 						Log.d("Activity Result", response.toString());
+						clickedMarker.setTitle(name);
 					}
 				}, new Response.ErrorListener() {
 					@Override

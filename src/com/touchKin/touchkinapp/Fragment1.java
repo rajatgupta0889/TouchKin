@@ -37,7 +37,8 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class Fragment1 extends Fragment implements OnClickListener,ButtonClickListener {
+public class Fragment1 extends Fragment implements OnClickListener,
+		ButtonClickListener {
 
 	private ViewPager viewPager;
 	public DashBoardAdapter adapter;
@@ -74,10 +75,11 @@ public class Fragment1 extends Fragment implements OnClickListener,ButtonClickLi
 		View v = inflater.inflate(R.layout.dashboard_fragment, null);
 		init(v);
 		DashBoardAdapter.context = getActivity();
+		viewPager.setOffscreenPageLimit(2);
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
-		viewPager.setOffscreenPageLimit(2);
+
 		return v;
 	}
 
@@ -121,9 +123,9 @@ public class Fragment1 extends Fragment implements OnClickListener,ButtonClickLi
 			if (!isSendTouchAlreadyClicked) {
 				vib.vibrate(500);
 				viewPager.setCurrentItem(0);
-				sendTouch.setText("Add a video");
-				sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
-						R.drawable.video_cam, 0, 0);
+				// sendTouch.setText("Add a video");
+				// sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+				// R.drawable.video_cam, 0, 0);
 				listener.sendTouchCLicked(true);
 				isSendTouchAlreadyClicked = true;
 				new Handler().postDelayed(new Runnable() {
@@ -139,9 +141,9 @@ public class Fragment1 extends Fragment implements OnClickListener,ButtonClickLi
 						if (!withoutMsg)
 							sendTouchWithoutMessage();
 						isSendTouchAlreadyClicked = false;
-						sendTouch.setText("Send a Touch");
-						sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
-								R.drawable.ic_icon_send_touch, 0, 0);
+						// sendTouch.setText("Send a Touch");
+						// sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+						// R.drawable.ic_icon_send_touch, 0, 0);
 						listener.sendTouchCLicked(false);
 
 					}
@@ -263,6 +265,10 @@ public class Fragment1 extends Fragment implements OnClickListener,ButtonClickLi
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
 		notifyFrag();
+	}
+
+	public void getNextItem(int i) {
+		viewPager.setCurrentItem(i);
 	}
 
 }

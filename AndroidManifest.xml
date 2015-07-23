@@ -15,7 +15,7 @@
         android:smallScreens="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -117,6 +117,7 @@
             android:name="com.touchKin.touchkinapp.Details"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:theme="@style/_AppTheme"
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
@@ -185,20 +186,21 @@
             <intent-filter>
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
             </intent-filter>
-        </receiver>
+        </receiver>
         -->
-		<service android:name="com.touchKin.touchkinapp.services.DeviceAcivityService" />
-		<service android:name="com.touchKin.touchkinapp.services.CompressAndSendService" />
+        <service android:name="com.touchKin.touchkinapp.services.DeviceAcivityService" />
+        <service android:name="com.touchKin.touchkinapp.services.CompressAndSendService" />
         <service android:name="com.touchKin.touchkinapp.services.GeofenceTransitionsIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.GcmIntentService" />
         <service android:name="com.touchKin.touchkinapp.services.MessageAndCallReadingService" />
-        <service android:name="com.touchKin.touchkinapp.services.LocationSendingService" /><meta-data
+        <service android:name="com.touchKin.touchkinapp.services.LocationSendingService" />
+
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD5e17DLZV06yX244q5qZ8SwGh9FpAHHzw" />
-
     </application>
 
 </manifest>

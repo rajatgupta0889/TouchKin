@@ -123,67 +123,47 @@ public class Fragment2 extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.sendTouch:
-			if (myPager.getCurrentItem() > 0) {
+			if (!isSendTouchAlreadyClicked) {
+				vib.vibrate(500);
+				// sendTouch.setText("Add a video");
+				// sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
+				// R.drawable.video_cam, 0, 0);
+				listener.sendTouchCLicked(true);
+				isSendTouchAlreadyClicked = true;
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						// This method will be executed once the timer is
+						// over
+						// Start your app main activity
+						if (!withoutMsg)
+							sendTouchWithoutMessage();
+						isSendTouchAlreadyClicked = false;
+						// sendTouch.setText("Send a Touch");
+						// sendTouch.setCompoundDrawablesWithIntrinsicBounds(
+						// 0, R.drawable.ic_icon_send_touch, 0, 0);
+						listener.sendTouchCLicked(false);
 
-				if (!isSendTouchAlreadyClicked) {
-					vib.vibrate(500);
-					sendTouch.setText("Add a video");
-					sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
-							R.drawable.video_cam, 0, 0);
-					listener.sendTouchCLicked(true);
-					isSendTouchAlreadyClicked = true;
-					new Handler().postDelayed(new Runnable() {
-
-						/*
-						 * Showing splash screen with a timer. This will be
-						 * useful when you want to show case your app logo /
-						 * company
-						 */
-						@Override
-						public void run() {
-							// This method will be executed once the timer is
-							// over
-							// Start your app main activity
-							if (!withoutMsg)
-								sendTouchWithoutMessage();
-							isSendTouchAlreadyClicked = false;
-							sendTouch.setText("Send a Touch");
-							sendTouch.setCompoundDrawablesWithIntrinsicBounds(
-									0, R.drawable.ic_icon_send_touch, 0, 0);
-							listener.sendTouchCLicked(false);
-
-						}
-					}, 10000);
-				} else {
-					withoutMsg = true;
-					sendTouch();
-
-				}
+					}
+				}, 10000);
 			} else {
-				Toast.makeText(getActivity(),
-						"You can not send touch to yourzself",
-						Toast.LENGTH_SHORT).show();
-			}
-			// v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				withoutMsg = true;
+				sendTouch();
 
+			}
 			break;
 		case R.id.getService:
 			if (list != null)
 				parent = list.get(myPager.getCurrentItem());
 
 			if (parent != null) {
-				if (myPager.getCurrentItem() > 0) {
 
-					Intent callIntent = new Intent(Intent.ACTION_DIAL);
-					callIntent.setData(Uri.parse("tel:"
-							+ parent.getMobilenumber()));
-					Intent chooser = Intent.createChooser(callIntent,
-							"Call using");
-					startActivity(chooser);
-				} else {
-					Toast.makeText(getActivity(), "You can not call yourself",
-							Toast.LENGTH_SHORT).show();
-				}
+				Intent callIntent = new Intent(Intent.ACTION_DIAL);
+				callIntent
+						.setData(Uri.parse("tel:" + parent.getMobilenumber()));
+				Intent chooser = Intent.createChooser(callIntent, "Call using");
+				startActivity(chooser);
+
 			} else {
 				Toast.makeText(getActivity(),
 						"Please Select Your parent to call", Toast.LENGTH_SHORT)
@@ -192,14 +172,8 @@ public class Fragment2 extends Fragment implements OnClickListener {
 
 			break;
 		case R.id.textToSendTouch:
-			if (myPager.getCurrentItem() > 0) {
-				withoutMsg = true;
-				sendTouch();
-			} else {
-				Toast.makeText(getActivity(),
-						"You can not send touch to yourzself",
-						Toast.LENGTH_SHORT).show();
-			}
+			withoutMsg = true;
+			sendTouch();
 			break;
 		default:
 			break;
