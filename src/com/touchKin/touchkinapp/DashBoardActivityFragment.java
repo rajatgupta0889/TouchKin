@@ -159,8 +159,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		if (parent != null) {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
-					+ parent.getParentName().substring(1) + " activity is ");
-			parentNameBottom.setText("Last updated 1 hour ago");
+					+ parent.getParentName().substring(1) + " is connected ");
+			parentNameBottom.setText("Last updated now");
 			// getConnectivity(parent.getParentId());
 			if (lastSelectedParent == null) {
 				lastSelectedParent = parent;
@@ -222,7 +222,8 @@ public class DashBoardActivityFragment extends Fragment implements
 	public void getConnectivity(String id) {
 		Log.d("id ", id);
 		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
-				"http://54.69.183.186:1340/connectivity/current/" + id,null,
+				getResources().getString(R.string.url)
+						+ "/connectivity/current/" + id, null,
 				new Listener<JSONObject>() {
 
 					@Override

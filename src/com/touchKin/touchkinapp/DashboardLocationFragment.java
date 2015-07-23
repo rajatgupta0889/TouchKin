@@ -15,10 +15,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,11 +24,9 @@ import android.graphics.Canvas;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -44,13 +40,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -64,7 +61,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
-import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
 import com.touchKin.touchkinapp.model.AppController;
@@ -89,6 +85,7 @@ public class DashboardLocationFragment extends Fragment implements
 	protected GoogleApiClient mGoogleApiClient;
 	protected Location mLastLocation;
 	int staticSince;
+	String loc = "";
 
 	public static DashboardLocationFragment newInstance(int page, String title) {
 		DashboardLocationFragment locationFragment = new DashboardLocationFragment();
@@ -256,7 +253,6 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		// parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		// Log.d("Parent", parent + "");
-		setText();
 		if (isGooglePlayServicesAvailable()) {
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -281,24 +277,23 @@ public class DashboardLocationFragment extends Fragment implements
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
 		if (parent != null) {
-			if (lastSelectedParent == null) {
-				lastSelectedParent = parent;
-				getLocation(parent.getParentId());
-			}
-			// parentName.setText(parent.getParentName().substring(0, 1)
-			// .toUpperCase()
-			// + parent.getParentName().substring(1) + " is in ");
-			// parentNameBottom.setText("Its been " + 2 + " hours since "
-			// + parent.getParentName() + " last left home");
-			if (!lastSelectedParent.equals(parent))
-				getLocation(parent.getParentId());
-			else {
-				mHoloCircularProgressBar.setProgress(0.0f);
-				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
-						1000);
-			}
+			// if (lastSelectedParent == null) {
+			// lastSelectedParent = parent;
+			// getLocation(parent.getParentId());
+			// }
+			// // parentName.setText(parent.getParentName().substring(0, 1)
+			// // .toUpperCase()
+			// // + parent.getParentName().substring(1) + " is in ");
+			// // parentNameBottom.setText("Its been " + 2 + " hours since "
+			// // + parent.getParentName() + " last left home");
+			// if (!lastSelectedParent.equals(parent))
+			// getLocation(parent.getParentId());
+			// else {
+			setText();
+			mHoloCircularProgressBar.setProgress(0.0f);
+			animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+
 		}
-		mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
 
@@ -307,18 +302,26 @@ public class DashboardLocationFragment extends Fragment implements
 
 	private void setText() {
 		// TODO Auto-generated method stub
+		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		if (parent != null) {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1) + " is in ");
-			if (isTapOnMap) {
-				parentNameBottom.setText("It's been " + staticSince
-						+ " hours since " + parent.getParentName()
-						+ " last left home");
+			if (!loc.isEmpty()) {
+				parentNameBottom.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1)
+						+ " last left home "
+						+ staticSince
+						+ (staticSince > 1 ? " hours" : " hour") + " ago");
 			} else {
-				parentNameBottom.setText("It's been " + staticSince
-						+ " hours since " + parent.getParentName()
-						+ " last left home");
+				parentNameBottom.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1)
+						+ " left home "
+						+ staticSince
+						+ (staticSince > 1 ? " hours" : " hour")
+						+ " ago");
 			}
 		}
 	}
@@ -330,22 +333,19 @@ public class DashboardLocationFragment extends Fragment implements
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
 		if (parent != null) {
-			if (lastSelectedParent == null) {
-				lastSelectedParent = parent;
-				getLocation(parent.getParentId());
-			}
+			// if (lastSelectedParent == null) {
+			// lastSelectedParent = parent;
+			// getLocation(parent.getParentId());
+			// }
 			// parentName.setText(parent.getParentName().substring(0, 1)
 			// .toUpperCase()
 			// + parent.getParentName().substring(1) + " is in ");
 			// parentNameBottom.setText("Its been " + 2 + " hours since "
 			// + parent.getParentName() + " last left home");
-			if (!lastSelectedParent.equals(parent))
-				getLocation(parent.getParentId());
-			else {
-				mHoloCircularProgressBar.setProgress(0.0f);
-				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
-						1000);
-			}
+			getLocation(parent.getParentId());
+			mHoloCircularProgressBar.setProgress(0.0f);
+			animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+			setText();
 		}
 
 	}
@@ -364,12 +364,20 @@ public class DashboardLocationFragment extends Fragment implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (!obj.optString("name").isEmpty()) {
+		loc = obj.optString("name", "");
+		if (!loc.isEmpty()) {
+			parentName.setText(parent.getParentName().substring(0, 1)
+					.toUpperCase()
+					+ parent.getParentName().substring(1) + " is at ");
 			parentLocPos.setText(obj.optString("name"));
 			isTapOnMap = true;
-			parentNameBottom.setText("It's been " + staticSince
-					+ " hours since " + parent.getParentName()
-					+ " last left home");
+			parentNameBottom.setText(parent.getParentName().substring(0, 1)
+					.toUpperCase()
+					+ parent.getParentName().substring(1)
+					+ " last left home "
+					+ staticSince
+					+ (staticSince > 1 ? " hours" : " hour")
+					+ " ago");
 		} else {
 			Geocoder geocoder = new Geocoder(getActivity());
 			try {
@@ -385,8 +393,13 @@ public class DashboardLocationFragment extends Fragment implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			parentNameBottom.setText("Its been " + staticSince
-					+ " hours since " + parent.getParentName() + " left home");
+			parentNameBottom.setText(parent.getParentName().substring(0, 1)
+					.toUpperCase()
+					+ parent.getParentName().substring(1)
+					+ " left home"
+					+ staticSince
+					+ (staticSince > 1 ? " hours" : " hour")
+					+ " ago");
 		}
 		if (longitude != null & latitude != null) {
 			latLng = new LatLng(Double.parseDouble(latitude),
@@ -426,8 +439,8 @@ public class DashboardLocationFragment extends Fragment implements
 								setText();
 								setSlices(responseArray
 										.getJSONObject("movements"));
-								staticSince = responseArray
-										.getInt("static_since");
+								staticSince = responseArray.optInt(
+										"static_since", 1);
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
@@ -438,7 +451,7 @@ public class DashboardLocationFragment extends Fragment implements
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						Log.d("Error", "" + error.networkResponse);
+						Log.d("Error", "" + error + " ");
 						VolleyLog.e("Error: ", error.getMessage());
 						String json = null;
 
@@ -477,7 +490,12 @@ public class DashboardLocationFragment extends Fragment implements
 				return headers;
 
 			};
+
 		};
+
+		req.setRetryPolicy(new DefaultRetryPolicy(0,
+				5,
+				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		AppController.getInstance().addToRequestQueue(req);
 
 	}

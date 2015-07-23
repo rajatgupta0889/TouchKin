@@ -10,7 +10,7 @@
     <color name="tab_bg">#272727</color>
     <color name="tab_selected">#f8935a</color>
     <color name="indicator_color">#ffceae</color>
-    <color name="daily_prog_left">#cccbcb</color>
+    <color name="daily_prog_left">#ffffff</color>
     <color name="recycle_seprator">#ebebeb</color>
     <color name="daily_prog_done">#f6985f</color>
     <color name="outer_ring">#f2f2f2</color>

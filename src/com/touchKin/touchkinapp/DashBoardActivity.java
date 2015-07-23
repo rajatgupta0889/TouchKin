@@ -214,6 +214,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 				}
 			}
 		});
+		parentRelativeLayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				toggleVissibility();
+			}
+		});
 		// object
 		// Assigned
 		// to the
@@ -447,11 +455,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 	private void toggleVissibility() {
 		// TODO Auto-generated method stub
 		if (parentRelativeLayout.getVisibility() == View.VISIBLE) {
-			parentRelativeLayout.startAnimation(animSlideUp);
+			listview.startAnimation(animSlideUp);
 
 		} else {
 			parentRelativeLayout.setVisibility(View.VISIBLE);
-			parentRelativeLayout.startAnimation(animSlideDown);
+			listview.startAnimation(animSlideDown);
 		}
 	}
 

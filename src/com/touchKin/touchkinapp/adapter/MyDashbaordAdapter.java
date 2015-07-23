@@ -17,8 +17,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.Fragment2;
 import com.touchKin.touchkinapp.Interface.ViewPagerListener;
+import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.RoundedImageView;
 import com.touchKin.touchkinapp.model.ParentListModel;
@@ -67,34 +69,46 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		TextView parentBottom = (TextView) view
 				.findViewById(R.id.parentBottonTouch);
 		Date d = new Date();
-
+		HoloCircularProgressBar bar = (HoloCircularProgressBar) view
+				.findViewById(R.id.holoCircularProgressBar);
+		bar.setVisibility(View.INVISIBLE);
 		if (parent.getIsMale() != null) {
 			if (parent.getIsMale()) {
 				if (!parent.getIsPendingTouch()) {
-					parenTop.setText("it's " + d.getHours() + ":"
-							+ d.getMinutes() + " for " + parent.getParentName()
-							+ " in india");
+					parenTop.setText("it is "
+							+ (d.getHours() > 12 ? d.getHours() - 12 : d
+									.getHours())
+							+ ":"
+							+ (d.getMinutes() < 10 ? "0" + d.getMinutes() : d
+									.getMinutes())
+							+ (d.getHours() > 12 ? " pm" : " am") + " for "
+							+ parent.getParentName() + " in india");
 					parentBottom.setText("Send him a touch");
 				} else {
-					parenTop.setText("it's " + d.getHours() + ":"
-							+ d.getMinutes() + " for " + parent.getParentName()
-							+ " in india");
-					parentBottom.setText("Tap and hold his photo to receive");
+					parenTop.setText(parent.getParentName()
+							+ " is thinking of you");
+					parentBottom.setText("Tap above for a touch from him");
 				}
 			} else {
 				if (!parent.getIsPendingTouch()) {
-					parenTop.setText("it's " + d.getHours() + ":"
-							+ d.getMinutes() + " for " + parent.getParentName()
-							+ " in india");
+					parenTop.setText("it is "
+							+ (d.getHours() > 12 ? d.getHours() - 12 : d
+									.getHours())
+							+ ":"
+							+ (d.getMinutes() < 10 ? "0" + d.getMinutes() : d
+									.getMinutes())
+							+ (d.getHours() > 12 ? " pm" : " am") + " for "
+							+ parent.getParentName() + " in india");
 					parentBottom.setText("Send her a touch");
 				} else {
-					parenTop.setText("it's " + d.getHours() + ":"
-							+ d.getMinutes() + " for " + parent.getParentName()
-							+ " in india");
-					parentBottom.setText("Tap and hold her photo to receive");
+					parenTop.setText(parent.getParentName()
+							+ " is thinking of you");
+					parentBottom.setText("Tap above for a touch from her");
 				}
 			}
 		} else {
+			parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
+					+ " for " + parent.getParentName() + " in india");
 			parentBottom.setText("Send them a touch");
 		}
 
@@ -111,44 +125,44 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		imageLoader.DisplayImage(serverPath + parent.getParentId() + ".jpeg",
 				resID, imageView);
 		((ViewPager) container).addView(view);
-		imageView.setOnLongClickListener(new OnLongClickListener() {
+		imageView.setOnTouchListener(new OnTouchListener() {
 
 			@SuppressLint("NewApi")
 			@Override
-			public boolean onLongClick(View v) {
+			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				if (parent.getIsPendingTouch()) {
-						vib.vibrate(500);
-						if (parent.getIsTouchMedia()) {
-							((DashBoardActivity) context).goToKinbook();
-						}
-						SharedPreferences pendingTouch = context
-								.getSharedPreferences("pendingTouch", 0);
-						String array = pendingTouch.getString("touch", null);
-						try {
-							JSONArray arrayObj = new JSONArray(array);
-							if (arrayObj != null && arrayObj.length() > 0) {
-								for (int i = 0; i < arrayObj.length(); i++) {
-									JSONObject obj = arrayObj.getJSONObject(i);
-									if (obj.getString("id").equalsIgnoreCase(
-											parent.getParentId())) {
-										arrayObj.remove(i);
-									}
-								}
-
-							}
-							Editor tokenedit = pendingTouch.edit();
-							tokenedit.putString("touch", arrayObj + "");
-							tokenedit.commit();
-							parent.setIsPendingTouch(false);
-							notifyDataSetChanged();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
+					vib.vibrate(500);
+					if (parent.getIsTouchMedia()) {
+						((DashBoardActivity) context).goToKinbook();
 					}
-				
+					SharedPreferences pendingTouch = context
+							.getSharedPreferences("pendingTouch", 0);
+					String array = pendingTouch.getString("touch", null);
+					try {
+						JSONArray arrayObj = new JSONArray(array);
+						if (arrayObj != null && arrayObj.length() > 0) {
+							for (int i = 0; i < arrayObj.length(); i++) {
+								JSONObject obj = arrayObj.getJSONObject(i);
+								if (obj.getString("id").equalsIgnoreCase(
+										parent.getParentId())) {
+									arrayObj.remove(i);
+								}
+							}
+
+						}
+						Editor tokenedit = pendingTouch.edit();
+						tokenedit.putString("touch", arrayObj + "");
+						tokenedit.commit();
+						parent.setIsPendingTouch(false);
+						notifyDataSetChanged();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
 				return true;
 			}
 		});

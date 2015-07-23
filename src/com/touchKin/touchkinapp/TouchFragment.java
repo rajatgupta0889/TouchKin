@@ -68,7 +68,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	int resID;
 	Vibrator vib;
 	String backData;
-	String touchTime;
+	String touchTime = "";
 	ImageButton next;
 
 	// newInstance constructor for creating fragment with arguments
@@ -286,23 +286,35 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1)
-					+ " has sent you a touch ");
+					+ " is thinking of you");
 			if (parent.getIsMale()) {
-				parentBotton.setText("Tap and hold his photo to receive");
+				parentBotton.setText("Tap above for a touch from him");
 			} else {
-				parentBotton.setText("Tap and hold her photo to receive");
+				parentBotton.setText("Tap above for a touch from her");
 			}
 		} else {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1)
-					+ " seems to be feeling good ");
+					+ " is little low today");
 			if (touchTime != null && touchTime.equalsIgnoreCase("1"))
 				parentBotton.setText("Last touch was " + touchTime
 						+ " hour ago");
 			else {
-				parentBotton.setText("Last touch was " + touchTime
-						+ " hours ago");
+				if (!touchTime.equalsIgnoreCase("")
+						&& !touchTime.equalsIgnoreCase("just now")
+						&& Integer.parseInt(touchTime) > 48) {
+					parentName.setText("You should probably call "
+							+ parent.getParentName());
+					parentBotton.setText("Last kin contact was 2 days ago");
+				} else {
+					if (touchTime.equalsIgnoreCase("just now")) {
+						parentBotton.setText("Last touch was " + touchTime);
+					} else {
+						parentBotton.setText("Last touch was " + touchTime
+								+ " hours ago");
+					}
+				}
 			}
 		}
 	}
@@ -425,7 +437,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 				int currentHour = currentDate.getHours();
 				int diff = currentHour - updateHour;
 				if (diff < 1) {
-					touchTime = "1";
+					touchTime = "just now";
 				} else {
 					touchTime = diff + "";
 				}
@@ -459,11 +471,15 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	@Override
 	public void sendTouchCLicked(Boolean isFirstTime) {
 		// TODO Auto-generated method stub
+		String topData = "";
 		if (isFirstTime) {
 			backData = parentBotton.getText().toString();
-			parentBotton.setText("Add a video to touch");
+			topData = parentName.getText().toString();
+			parentBotton.setText("Share a moment with video?");
+			parentName.setText("Sending a touch...");
 		} else {
 			parentBotton.setText(backData);
+			parentName.setText(topData);
 		}
 	}
 }
