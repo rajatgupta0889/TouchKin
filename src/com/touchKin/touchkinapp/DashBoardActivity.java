@@ -395,14 +395,14 @@ public class DashBoardActivity extends ActionBarActivity implements
 		b.putString("key", "TouchKin");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("KinBook"),
-						R.color.tab_bg, "Kinbook", R.drawable.kinbook),
+						R.color.tab_bg, "Dashboard", R.drawable.dashboard),
 				TouchKinBookFragment.class, b);
 
 		b = new Bundle();
 		b.putString("key", "Messages");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("Message"),
-						R.color.tab_bg, "Messages", R.drawable.message),
+						R.color.tab_bg, "Kinbook", R.drawable.kinbook),
 				MessagesFragment.class, b);
 
 		b = new Bundle();
@@ -416,7 +416,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		b.putString("key", "ER Plan");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("More"), R.color.tab_bg,
-						"More", R.drawable.ic_more),
+						"More", R.drawable.ic_drawer),
 				TouchKinBookFragment.class, b);
 
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);

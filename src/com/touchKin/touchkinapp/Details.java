@@ -81,6 +81,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 
 	final int PIC_CROP = 2;
 	private Uri selectedImageUri;
+	ImageView next_tool_butoon, previous_tool_button;
 	Button next;
 	TextView otptext;
 	TextView phone_detail;
@@ -131,6 +132,7 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_info);
 		init();
+
 		isLoggedIn = getIntent().getExtras().getBoolean("isLoggedin");
 		if (!isLoggedIn) {
 			deviceId = getIntent().getExtras().getString("device_id");
@@ -225,13 +227,14 @@ public class Details extends ActionBarActivity implements OnClickListener {
 			textTv.setVisibility(View.INVISIBLE);
 		}
 
+		name.setImeOptions(EditorInfo.IME_ACTION_DONE);
 		phone_detail.setText(phone);
 		// Image url
 		image_url = serverPath + userID + ".jpeg";
 		mTitle.setText("Profile");
 		// ImageLoader class instance
 		imgLoader = new ImageLoader(getApplicationContext());
-		imgLoader.DisplayImage(image_url, R.drawable.people, imgView);
+		imgLoader.DisplayImage(image_url, R.drawable.ic_user_image, imgView);
 		// new MyTask().execute(image_url);
 		// whenever you want to load an image from url
 		// call DisplayImage function
@@ -240,6 +243,67 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		// image - ImageView
 
 		next.setOnClickListener(this);
+		next_tool_butoon.setVisibility(View.VISIBLE);
+		previous_tool_button.setVisibility(View.VISIBLE);
+		previous_tool_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent backActivity = new Intent(Details.this,
+						SignUpActivity.class);
+				startActivity(backActivity);
+
+			}
+		});
+		next_tool_butoon.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (!name.getText().toString().isEmpty()
+						&& !userAge.getText().toString().isEmpty()) {
+					if (verified) {
+						String userName = name.getText().toString();
+						String gender = "male";
+						if (!male) {
+							gender = "female";
+						}
+
+						// String yob = userYear.getText().toString();
+
+						if (!name.getText().toString().equals(server_name)
+								|| Integer.parseInt(year_spinner
+										.getSelectedItem().toString()) != yob_from_server
+								|| !gender_server.equalsIgnoreCase(gender)) {
+							// Log.d("here", "come");
+							updateUser(userName, gender, yob);
+						} else {
+							if (isLoggedIn)
+								finish();
+							else {
+								Intent intent = new Intent(Details.this,
+										MyFamily.class);
+								intent.putExtra("isLoggedIn", false);
+								startActivity(intent);
+								finish();
+							}
+						}
+					} else {
+						if (!otp.getText().toString().equals(""))
+							sendIntent();
+						Toast.makeText(Details.this,
+								"PLease wait while we verify you",
+								Toast.LENGTH_SHORT).show();
+					}
+				} else {
+					Toast.makeText(Details.this,
+							"PLease Add your Name and age", Toast.LENGTH_SHORT)
+							.show();
+				}
+
+			}
+		});
 		// detail.setOnClickListener(this);
 		// if (userName != null && !userName.isEmpty()) {
 		// detail.setText(userName);
@@ -326,6 +390,8 @@ public class Details extends ActionBarActivity implements OnClickListener {
 		pDialog = new ProgressDialog(this);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		next_tool_butoon = (ImageView) toolbar.findViewById(R.id.next);
+		previous_tool_button = (ImageView) toolbar.findViewById(R.id.previous);
 		requestList = new ArrayList<RequestModel>();
 		userAge = (EditText) findViewById(R.id.userAge);
 		otptext = (TextView) findViewById(R.id.textTv);

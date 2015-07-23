@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -64,12 +65,13 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 	JSONObject mySelf;
 	private Toolbar toolbar;
 	TextView mTitle;
-	Button next;
+//	Button next;
 	Boolean isLoggedIn;
 	ProgressBar myfamilyprogressbar;
 	Boolean isFromNotification;
 	String phone, device_id;
 	String user;
+	ImageView next_tool_button, previous_tool_button;
 	String token;
 
 	@Override
@@ -119,7 +121,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 							MyFamily.this);
 					final ExpandableListGroupItem pendingParent = pendingReq
-							.get(groupPosition - CareReciever.size() );
+							.get(groupPosition - CareReciever.size());
 					alertDialogBuilder.setView(custom);
 					alertDialogBuilder.setCancelable(true);
 
@@ -191,7 +193,18 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		adapter = new ExpandableListAdapter(MyFamily.this);
 		adapter.setButtonListener(this);
 		expandListView.setAdapter(adapter);
-		next.setOnClickListener(this);
+//		next.setOnClickListener(this);
+		next_tool_button.setVisibility(View.VISIBLE);
+		previous_tool_button.setVisibility(View.VISIBLE);
+		next_tool_button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				gotoNextScreen();
+
+			}
+		});
 	}
 
 	private void fetchDataFromServer() {
@@ -509,8 +522,11 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 		me = new ExpandableListGroupItem();
 		myfamilyprogressbar = (ProgressBar) findViewById(R.id.myfamilyprogressbar);
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
+		next_tool_button = (ImageView) toolbar.findViewById(R.id.next);
+		previous_tool_button = (ImageView) toolbar.findViewById(R.id.previous);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-		next = (Button) findViewById(R.id.next);
+
+//		next = (Button) findViewById(R.id.next);
 
 	}
 
