@@ -77,6 +77,7 @@ public class TouchKinBookFragment extends Fragment implements
 		// mTitle.setText();
 		host = ((DashBoardActivity) getActivity()).getTabHost();
 		host.setVisibility(View.GONE);
+		toolbar.setVisibility(View.GONE);
 		return v;
 	}
 

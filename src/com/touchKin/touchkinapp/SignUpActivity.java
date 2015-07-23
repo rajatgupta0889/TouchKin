@@ -37,6 +37,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -71,6 +72,7 @@ public class SignUpActivity extends ActionBarActivity {
 	private static String TAG = SignUpActivity.class.getSimpleName();
 	private Toolbar toolbar;
 	TextView mTitle;
+	ImageView next_tool_button;
 	/**
 	 * Substitute you own sender ID here. This is the project number you got
 	 * from the API Console, as described in "Getting Started."
@@ -109,6 +111,7 @@ public class SignUpActivity extends ActionBarActivity {
 		}
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
 		mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		next_tool_button = (ImageView) toolbar.findViewById(R.id.next);
 		// Error handler
 		errorHandle = new ErrorHandlingInformation(getApplicationContext());
 
@@ -141,6 +144,29 @@ public class SignUpActivity extends ActionBarActivity {
 
 			}
 		});
+		next_tool_button.setVisibility(View.VISIBLE);
+		next_tool_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (checkValidation()) {
+					// new LongOperation().execute("");
+					if (errorHandle.InternetAvailable())
+						sendIntent();
+					else {
+						Toast.makeText(SignUpActivity.this,
+								" Please Check your connection",
+								Toast.LENGTH_LONG).show();
+					}
+				} else {
+					Toast.makeText(SignUpActivity.this,
+							" Mobile Number is not valid", Toast.LENGTH_LONG)
+							.show();
+				}
+
+			}
+		});
 
 		otp_button.setOnClickListener(new OnClickListener() {
 
@@ -149,7 +175,7 @@ public class SignUpActivity extends ActionBarActivity {
 
 				if (checkValidation()) {
 					// new LongOperation().execute("");
-					if (!errorHandle.InternetAvailable())
+					if (errorHandle.InternetAvailable())
 						sendIntent();
 					else {
 						Toast.makeText(SignUpActivity.this,
@@ -187,7 +213,13 @@ public class SignUpActivity extends ActionBarActivity {
 					// Toast.makeText(MainActivity.this, "enter press",
 					// Toast.LENGTH_LONG).show();
 					if (checkValidation()) {
-						sendIntent();
+						if (errorHandle.InternetAvailable())
+							sendIntent();
+						else {
+							Toast.makeText(SignUpActivity.this,
+									" Please Check your connection",
+									Toast.LENGTH_LONG).show();
+						}
 					} else {
 						Toast.makeText(SignUpActivity.this, " contains error",
 								Toast.LENGTH_LONG).show();
