@@ -17,11 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tool_bar"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="60dp"
-        android:text="Touchkin will send a one time sms to verify your phone number."
-        android:textSize="20sp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="35dp"
+        android:text="Enter your phone number below."
+        android:textSize="19sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -29,40 +29,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_name"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="30dp"
-        android:text="Carrier sms charges may apply."
-        android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/previousButton"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_alignBaseline="@+id/otp_Genrate_Button"
-        android:layout_alignBottom="@+id/otp_Genrate_Button"
-        android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
-        android:background="@drawable/previous_button" />
-
-    <Button
-        android:id="@+id/otp_Genrate_Button"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="26dp"
-        android:layout_marginRight="19dp"
-        android:background="@drawable/next_button" />
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:text="Touchkin will send a one time sms to verify your phone number."
+        android:textSize="19sp" />
 
     <LinearLayout
         android:id="@+id/spiner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal" >
 
         <Spinner
@@ -75,14 +55,37 @@
         <EditText
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="45dp"
             android:background="@drawable/edit_text_holo_light"
             android:ems="10"
             android:gravity="left"
-            android:hint="Enter your mobile number"
+            android:paddingLeft="15dp"
+            android:hint="1234567890"
             android:inputType="phone"
-            android:textSize="20sp" >
-        </EditText>
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/dashboardtextcolor"
+            android:textSize="20sp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/previousButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignBaseline="@+id/otp_Genrate_Button"
+        android:layout_alignBottom="@+id/otp_Genrate_Button"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/previous_button"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/otp_Genrate_Button"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/next_button"
+        android:visibility="gone" />
 
 </RelativeLayout>

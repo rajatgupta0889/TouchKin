@@ -5,6 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.app.FragmentTabHost;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touchkinapp.VideoFullScreen;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.custom.ImageLoader;
@@ -37,7 +40,9 @@ public class FlipViewAdapter extends BaseAdapter {
 	// EditText commentEditText;
 	Button profilepic, backbutton, likebutton, delete;
 	VideoView videoView = null;
-	ImageView imageView;
+	ImageView imageView, cancel;
+	FragmentTabHost host;
+
 	Bitmap thumbnail;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 
@@ -75,7 +80,7 @@ public class FlipViewAdapter extends BaseAdapter {
 	private static class ViewHolder {
 		TextView videoText, videoTime, videoDay;
 
-		ImageView imageView;
+		ImageView imageView, cancel;
 		RoundedImageView videoSenderImage;
 		// EditText commentEditText;
 		Button profilepic, likebutton, delete;
@@ -97,14 +102,16 @@ public class FlipViewAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			// videoText = (TextView) convertView
 			// .findViewById(R.id.videoCommentTextView);
-//			viewHolder.videoText = (TextView) convertView
-//					.findViewById(R.id.videoCommentTextView);
-//			viewHolder.videoTime = (TextView) convertView
-//					.findViewById(R.id.videoTimeTextView);
-//			viewHolder.videoDay = (TextView) convertView
-//					.findViewById(R.id.videoDayTextView);
+			// viewHolder.videoText = (TextView) convertView
+			// .findViewById(R.id.videoCommentTextView);
+			// viewHolder.videoTime = (TextView) convertView
+			// .findViewById(R.id.videoTimeTextView);
+			// viewHolder.videoDay = (TextView) convertView
+			// .findViewById(R.id.videoDayTextView);
 			viewHolder.imageView = (ImageView) convertView
 					.findViewById(R.id.imageView);
+			viewHolder.cancel = (ImageView) convertView
+					.findViewById(R.id.cancel);
 			// viewHolder.userImage = (RoundedImageView) convertView
 			// .findViewById(R.id.userImage);
 			// videoSenderName = (TextView) convertView
@@ -153,6 +160,17 @@ public class FlipViewAdapter extends BaseAdapter {
 
 				}
 			});
+			viewHolder.cancel.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Toolbar toolbar = (Toolbar)((DashBoardActivity) context).findViewById(R.id.tool_bar);
+					host = ((DashBoardActivity) context).getTabHost();
+					host.setVisibility(View.VISIBLE);
+					toolbar.setVisibility(View.VISIBLE);
+					host.setCurrentTab(0);
+				}
+			});
 
 			viewHolder.likebutton.setOnClickListener(new OnClickListener() {
 
@@ -177,9 +195,9 @@ public class FlipViewAdapter extends BaseAdapter {
 							touchKinBook.getMessageId(), false);
 				}
 			});
-//			viewHolder.videoText.setText(touchKinBook.getVideoText());
-//			viewHolder.videoTime.setText(touchKinBook.getVideoDate());
-//			viewHolder.videoDay.setText(touchKinBook.getVideoDay());
+			// viewHolder.videoText.setText(touchKinBook.getVideoText());
+			// viewHolder.videoTime.setText(touchKinBook.getVideoDate());
+			// viewHolder.videoDay.setText(touchKinBook.getVideoDay());
 			ImageLoader imageloader = new ImageLoader(context);
 			imageloader.DisplayImage(
 					"https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/"

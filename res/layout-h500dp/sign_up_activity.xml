@@ -17,11 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tool_bar"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="25dp"
-        android:text="Touchkin will send a one time sms to verify your phone number"
-        android:textSize="20sp" />
+        android:text="Enter your phone number below."
+        android:textSize="19sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -29,17 +29,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_name"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
-        android:text="Carrier sms charges may apply."
-        android:textSize="20sp" />
+        android:text="Touchkin will send a one time sms to verify your phone number."
+        android:textSize="19sp" />
 
     <LinearLayout
         android:id="@+id/spiner_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="30dp"
         android:orientation="horizontal" >
@@ -53,13 +54,16 @@
 
         <EditText
             android:id="@+id/phone_number"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
             android:background="@drawable/edit_text_holo_light"
             android:ems="10"
             android:gravity="left"
-            android:hint="Enter your mobile number"
+            android:paddingLeft="15dp"
+            android:hint="1234567890"
             android:inputType="phone"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/dashboardtextcolor"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -71,7 +75,8 @@
         android:layout_alignBottom="@+id/otp_Genrate_Button"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
-        android:background="@drawable/previous_button" />
+        android:background="@drawable/previous_button"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/otp_Genrate_Button"
@@ -80,6 +85,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/textView2"
         android:layout_marginBottom="26dp"
-        android:background="@drawable/next_button" />
+        android:background="@drawable/next_button"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -2,6 +2,8 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:shadowColor="@color/black"
+    android:elevation="2dp"
     android:background="@drawable/toolbar_bottom_background"
     android:theme="@style/ThemeOverlay.AppCompat.Light" >
 
@@ -13,5 +15,23 @@
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="25sp" />
+
+    <ImageView
+        android:id="@+id/previous"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/prev_dashboard_arrow"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="15dp"
+        android:padding="10dp"
+        android:src="@drawable/next_dashboard_arrow"
+        android:visibility="gone" />
 
 </android.support.v7.widget.Toolbar>

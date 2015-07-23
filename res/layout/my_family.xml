@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    
     <include
         android:id="@+id/tool_bar"
         layout="@layout/toolbar" >
     </include>
 
-    <ExpandableListView
+     <ExpandableListView
         android:id="@+id/familyList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,6 +30,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="20dp"
+        android:visibility="gone"
         android:background="@drawable/next_button" />
 
     <ProgressBar
@@ -38,6 +38,6 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-    
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>
