@@ -58,7 +58,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
-            android:background="@drawable/next_dashboard_arrow" />
+            android:background="@drawable/next_dashboard_arrow"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -114,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ImageView05"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:text="60%"
                 android:textColor="@color/white" />

@@ -31,17 +31,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.Interface.ViewPagerListener;
@@ -64,7 +68,9 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	int resID;
 	Vibrator vib;
 	String backData;
-	String touchTime;
+	String touchTime = "";
+	ImageButton next;
+	String topData = "";
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -104,6 +110,16 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		parentImage = (ImageView) view.findViewById(R.id.profile_pic);
 		parentBotton = (TextView) view.findViewById(R.id.parentBottonTouch);
 		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		next = (ImageButton) view.findViewById(R.id.imageButton2);
+		next.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				((Fragment1) getParentFragment()).getNextItem(1);
+
+			}
+		});
 		parentImage.setOnTouchListener(new OnTouchListener() {
 
 			@SuppressLint("NewApi")
@@ -271,40 +287,52 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1)
-					+ " has sent you a touch ");
+					+ " is thinking of you");
 			if (parent.getIsMale()) {
-				parentBotton.setText("Tap and hold his photo to receive");
+				parentBotton.setText("Tap above for a touch from him");
 			} else {
-				parentBotton.setText("Tap and hold her photo to receive");
+				parentBotton.setText("Tap above for a touch from her");
 			}
 		} else {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1)
-					+ " seems to be feeling good ");
+					+ " is little low today");
 			if (touchTime != null && touchTime.equalsIgnoreCase("1"))
 				parentBotton.setText("Last touch was " + touchTime
 						+ " hour ago");
 			else {
-				parentBotton.setText("Last touch was " + touchTime
-						+ " hours ago");
+				if (!touchTime.equalsIgnoreCase("")
+						&& !touchTime.equalsIgnoreCase("just now")
+						&& Integer.parseInt(touchTime) > 48) {
+					parentName.setText("You should probably call "
+							+ parent.getParentName());
+					parentBotton.setText("Last kin contact was 2 days ago");
+				} else {
+					if (touchTime.equalsIgnoreCase("just now")) {
+						parentBotton.setText("Last touch was " + touchTime);
+					} else {
+						parentBotton.setText("Last touch was " + touchTime
+								+ " hours ago");
+					}
+				}
 			}
 		}
 	}
 
 	public void getCurrent(String id) {
 		Log.d("id ", id);
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/activity/current/" + id,
-				new Listener<JSONObject>() {
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				getResources().getString(R.string.url) + "/activity/current/"
+						+ id, null, new Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
 						Log.d("Response Array Current",
 								responseArray.toString());
-
-						setSlices(responseArray);
+						if (getActivity() != null)
+							setSlices(responseArray);
 
 					}
 
@@ -410,7 +438,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 				int currentHour = currentDate.getHours();
 				int diff = currentHour - updateHour;
 				if (diff < 1) {
-					touchTime = "1";
+					touchTime = "just now";
 				} else {
 					touchTime = diff + "";
 				}
@@ -420,22 +448,15 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			Iterator<String> iter = sliceObj.keys();
 			while (iter.hasNext()) {
 				String key = iter.next();
-				try {
-					PieSlice slice = new PieSlice();
-					int value = sliceObj.getInt(key);
+				PieSlice slice = new PieSlice();
+				int value = sliceObj.optInt(key, 0);
 
-					if (value == 0) {
-
-						slice.setColor(resources
-								.getColor(R.color.daily_prog_left));
-					} else {
-						slice.setColor(resources
-								.getColor(R.color.daily_prog_done));
-					}
-					slices.add(slice);
-				} catch (JSONException e) {
-					// Something went wrong!
+				if (value == 1) {
+					slice.setColor(resources.getColor(R.color.daily_prog_done));
+				} else {
+					slice.setColor(resources.getColor(R.color.daily_prog_left));
 				}
+				slices.add(slice);
 
 			}
 		} catch (JSONException e1) {
@@ -451,11 +472,15 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	@Override
 	public void sendTouchCLicked(Boolean isFirstTime) {
 		// TODO Auto-generated method stub
+
 		if (isFirstTime) {
 			backData = parentBotton.getText().toString();
-			parentBotton.setText("Add a video to touch");
+			topData = parentName.getText().toString();
+			parentBotton.setText("Share a moment with video?");
+			parentName.setText("Sending a touch...");
 		} else {
 			parentBotton.setText(backData);
+			parentName.setText(topData);
 		}
 	}
 }

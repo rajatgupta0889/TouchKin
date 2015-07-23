@@ -169,6 +169,7 @@ public class HoloCircularProgressBar extends View {
 	 * The Thumb color paint.
 	 */
 	private Paint mThumbColorPaint = new Paint();
+	private Paint outerCirclePaint = new Paint();
 
 	/**
 	 * The Thumb pos x.
@@ -421,6 +422,7 @@ public class HoloCircularProgressBar extends View {
 		return mIsThumbEnabled;
 	}
 
+	@SuppressLint("ResourceAsColor")
 	@Override
 	protected void onDraw(final Canvas canvas) {
 
@@ -431,6 +433,7 @@ public class HoloCircularProgressBar extends View {
 		float currentAngle = 270;
 
 		// draw the background
+		outerCirclePaint.setColor(getResources().getColor(R.color.white));
 
 		mBackgroundColorPaint.setColor(getResources().getColor(
 				R.color.daily_prog_left));
@@ -449,7 +452,9 @@ public class HoloCircularProgressBar extends View {
 				// draw the thumb square at the correct rotated position
 				canvas.save();
 				canvas.rotate(mSlices.size() * getCurrentRotation() - 90);
+				canvas.drawCircle(mThumbPosX, mThumbPosY, 25, outerCirclePaint);
 				canvas.drawCircle(mThumbPosX, mThumbPosY, 15, mThumbColorPaint);
+
 				// rotate the square by 45 degrees
 				// canvas.rotate(45, mThumbPosX, mThumbPosY);
 				// mSquareRect.left = mThumbPosX - mThumbRadius / 3;
@@ -732,7 +737,7 @@ public class HoloCircularProgressBar extends View {
 		mThumbColorPaint.setColor(getResources().getColor(R.color.green));
 		mThumbColorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mThumbColorPaint.setStrokeWidth(mCircleStrokeWidth / 2);
-
+		
 		invalidate();
 
 	}

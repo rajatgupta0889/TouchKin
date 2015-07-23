@@ -154,7 +154,7 @@ public class MyFamily extends ActionBarActivity implements OnClickListener,
 									Intent.EXTRA_TEXT,
 									"Hi "
 											+ pendingParent.getUserName()
-											+ ", I would like you to care for mom on Touchkin."
+											+ ", I would like you to care for me on Touchkin."
 											+ " Click on the link below to install the app."
 											+ " www.etsdfdfvfs.com");
 							sendIntent.setType("text/plain");

@@ -23,15 +23,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver;
 import com.touchKin.touchkinapp.custom.CustomRequest;
@@ -52,7 +56,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	TextView parentName, parentNameBottom;
 	ParentListModel parent, lastSelectedParent;
 	AirplaneModeReceiver rec;
-
+	ImageButton prev;
 	Context context;
 
 	// newInstance constructor for creating fragment with arguments
@@ -89,7 +93,16 @@ public class DashBoardActivityFragment extends Fragment implements
 		battery5 = (ImageView) view.findViewById(R.id.battery5);
 		wifi4 = (ImageView) view.findViewById(R.id.wifi4);
 		network4 = (ImageView) view.findViewById(R.id.ImageView05);
+		prev = (ImageButton) view.findViewById(R.id.imageButton1);
+		prev.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				((Fragment1) getParentFragment()).getNextItem(1);
+
+			}
+		});
 		return view;
 	}
 
@@ -146,8 +159,8 @@ public class DashBoardActivityFragment extends Fragment implements
 		if (parent != null) {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
-					+ parent.getParentName().substring(1) + " activity is ");
-			parentNameBottom.setText("Last updated 1 hour ago");
+					+ parent.getParentName().substring(1) + " is connected ");
+			parentNameBottom.setText("Last updated now");
 			// getConnectivity(parent.getParentId());
 			if (lastSelectedParent == null) {
 				lastSelectedParent = parent;
@@ -208,8 +221,9 @@ public class DashBoardActivityFragment extends Fragment implements
 
 	public void getConnectivity(String id) {
 		Log.d("id ", id);
-		CustomRequest req = new CustomRequest(
-				"http://54.69.183.186:1340/connectivity/current/" + id,
+		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
+				getResources().getString(R.string.url)
+						+ "/connectivity/current/" + id, null,
 				new Listener<JSONObject>() {
 
 					@Override
@@ -390,20 +404,15 @@ public class DashBoardActivityFragment extends Fragment implements
 		Iterator<String> iter = slicesObject.keys();
 		while (iter.hasNext()) {
 			String key = iter.next();
-			try {
-				PieSlice slice = new PieSlice();
-				int value = slicesObject.getInt(key);
+			PieSlice slice = new PieSlice();
+			int value = slicesObject.optInt(key, 0);
 
-				if (value == 0) {
-
-					slice.setColor(resources.getColor(R.color.daily_prog_left));
-				} else {
-					slice.setColor(resources.getColor(R.color.daily_prog_done));
-				}
-				slices.add(slice);
-			} catch (JSONException e) {
-				// Something went wrong!
+			if (value == 1) {
+				slice.setColor(resources.getColor(R.color.daily_prog_done));
+			} else {
+				slice.setColor(resources.getColor(R.color.daily_prog_left));
 			}
+			slices.add(slice);
 
 		}
 

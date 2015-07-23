@@ -173,9 +173,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					imageLoader = new ImageLoader(context);
 					viewholder = new ImageHolder();
 					imageLoader = new ImageLoader(context);
-					view1 = inflater.inflate(R.layout.image_item_myfamily, linearLayout,
-							false);
-
+					view1 = inflater.inflate(R.layout.image_item_myfamily,
+							linearLayout, false);
 					viewholder.image = (RoundedImageView) view1
 							.findViewById(R.id.parentImage);
 					viewholder.name = (TextView) view1
@@ -199,12 +198,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 
 			}
-			View view2 = inflater.inflate(R.layout.image_item_myfamily, linearLayout,
-					false);
+			View view2 = inflater.inflate(R.layout.image_item_myfamily,
+					linearLayout, false);
 			final RoundedImageView image = (RoundedImageView) view2
 					.findViewById(R.id.parentImage);
 			TextView childName = (TextView) view2.findViewById(R.id.parentname);
-			childName.setVisibility(View.INVISIBLE);
+			childName.setText("Add Kin");
 			image.setImageResource(R.drawable.accept);
 			image.setOnClickListener(new OnClickListener() {
 
@@ -413,6 +412,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			} else {
 				viewHolder.name.setText("Me");
 			}
+			viewHolder.name.setTextSize(20);
 			if (groupMember.getReqCount() != null
 					&& groupMember.getKinCount() != null) {
 				if (groupMember.getKinCount().equals("0")) {
@@ -457,6 +457,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 					+ ".jpeg", resID, viewHolder.userImage);
 			viewHolder.name.setText("Waiting for " + groupMember.getUserName()
 					+ " to accept your request");
+			viewHolder.name.setTextSize(16);
 			viewHolder.kinCount.setVisibility(View.INVISIBLE);
 			int imageResourceId = R.drawable.info;
 			viewHolder.icon.setImageResource(imageResourceId);

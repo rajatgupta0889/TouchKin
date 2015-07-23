@@ -27,6 +27,7 @@
         android:layout_marginTop="25dp"
         android:hint="custom location"
         android:imeOptions="actionDone"
+        android:singleLine="true"
         android:padding="5dp"
         android:textColor="@color/white"
         android:visibility="invisible" />

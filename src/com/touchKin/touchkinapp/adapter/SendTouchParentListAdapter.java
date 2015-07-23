@@ -77,8 +77,9 @@ public class SendTouchParentListAdapter extends BaseAdapter {
 		String name = parentList.get(position).getParentName();
 		if (!name.equalsIgnoreCase("")) {
 			String cut = name.substring(0, 1).toLowerCase();
-			 resID = mContext.getResources().getIdentifier(cut , "drawable", mContext.getPackageName());
-			Log.d("cut", cut + " "+resID);
+			resID = mContext.getResources().getIdentifier(cut, "drawable",
+					mContext.getPackageName());
+			Log.d("cut", cut + " " + resID);
 		}
 
 		ImageLoader imageLoader = new ImageLoader(mContext);
@@ -88,6 +89,7 @@ public class SendTouchParentListAdapter extends BaseAdapter {
 
 		// imageView.setImageResource(R.drawable.mom);
 		parentName.setText(item.getParentName());
+		parentName.setVisibility(View.GONE);
 		// final CheckBox cb = (CheckBox)
 		// convertView.findViewById(R.id.isSelectedCB);
 		// if (item.getIsSelected()) {

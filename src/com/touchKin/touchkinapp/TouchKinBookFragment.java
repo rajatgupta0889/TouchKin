@@ -49,7 +49,7 @@ public class TouchKinBookFragment extends Fragment implements
 	FragmentTabHost host;
 	TextView tv;
 	ProgressBar kinbookprogressbar;
-
+	Toolbar toolbar;
 	String baseImageUrl = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/kinbook-messages";
 
 	@Override
@@ -71,7 +71,7 @@ public class TouchKinBookFragment extends Fragment implements
 
 		init(v);
 
-		Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
+		toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
 		TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 		tv = (TextView) v.findViewById(R.id.msg);
 		// mTitle.setText();
@@ -236,7 +236,13 @@ public class TouchKinBookFragment extends Fragment implements
 			Boolean isAccept) {
 		// TODO Auto-generated method stub
 		if (!isAccept) {
-			deleteKinBook(value, position);
+			if (position == 1000) {
+				toolbar.setVisibility(View.VISIBLE);
+				host.setVisibility(View.VISIBLE);
+				((DashBoardActivity) getActivity()).gotoTabZero();
+			} else {
+				deleteKinBook(value, position);
+			}
 		}
 
 	}
