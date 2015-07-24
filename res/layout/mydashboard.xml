@@ -21,7 +21,6 @@
         android:id="@+id/myPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_layout"
         android:layout_alignParentTop="true" />
 
     <!--
@@ -33,23 +32,33 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:padding="8dip"
-        app:radius="4dp" />
-    -->
+        app:radius="4dp" />-->
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
+       <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="35dp"
+            android:background="#ffffff"
+            android:elevation="10dp" />
+
         <TextView
-            android:id="@+id/sendTouch"
+            android:id="@+id/touch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_icon_send_touch"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:drawableTop="@drawable/touch_glow"
             android:gravity="center"
             android:text="Send a Touch"
             android:textColor="@color/text_grey"
@@ -59,15 +68,25 @@
             android:id="@+id/getService"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="70dp"
             android:drawableTop="@drawable/call_btn"
-            android:gravity="center"
             android:text="Call"
             android:textColor="@color/text_grey"
             android:textSize="15sp" />
-    </LinearLayout>
 
-    <TextView>
-    </TextView>
+        <TextView
+            android:id="@+id/sendTouch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="70dp"
+            android:drawableTop="@drawable/ic_icon_send_touch"
+            android:text="Add a Video"
+            android:textColor="@color/text_grey"
+            android:textSize="15sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

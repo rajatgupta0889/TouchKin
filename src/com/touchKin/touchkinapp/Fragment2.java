@@ -20,6 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,17 +38,19 @@ import com.touchKin.touchkinapp.model.AppController;
 import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
-public class Fragment2 extends Fragment implements OnClickListener {
+public class Fragment2 extends Fragment implements OnClickListener,
+		AnimationListener {
 	List<ParentListModel> list;
 	ViewPager myPager;
 	ParentListModel parent;
 	Vibrator vib;
-	TextView sendTouch, getService;
+	TextView sendTouch, getService, touch1;
 	TextView sendTouchTextview;
 	Boolean withoutMsg = false;
 	Boolean isSendTouchAlreadyClicked = false;
 	public static ViewPagerListener listener;
 	MyDashbaordAdapter adapter;
+	Animation animMove1, animMove2, animMove3, animMove4;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +66,7 @@ public class Fragment2 extends Fragment implements OnClickListener {
 		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
 		getService = (TextView) v.findViewById(R.id.getService);
+		touch1 = (TextView) v.findViewById(R.id.touch);
 		sendTouchTextview = (TextView) v.findViewById(R.id.textToSendTouch);
 
 		return v;
@@ -84,8 +90,19 @@ public class Fragment2 extends Fragment implements OnClickListener {
 			adapter = new MyDashbaordAdapter(getActivity(), list);
 			myPager.setAdapter(adapter);
 		}
+		animMove1 = AnimationUtils.loadAnimation(getActivity(), R.anim.move1);
+		animMove3 = AnimationUtils.loadAnimation(getActivity(), R.anim.move3);
+		animMove2 = AnimationUtils.loadAnimation(getActivity(), R.anim.move2);
+		animMove4 = AnimationUtils.loadAnimation(getActivity(), R.anim.move4);
+		animMove1.setAnimationListener(this);
+		animMove2.setAnimationListener(this);
+		animMove4.setAnimationListener(this);
+		animMove3.setAnimationListener(this);
+		sendTouch.setVisibility(View.GONE);
+		getService.setVisibility(View.GONE);
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
+		touch1.setOnClickListener(this);
 		sendTouchTextview.setOnClickListener(this);
 		list = ((DashBoardActivity) getActivity()).getParentList();
 		Log.d("Parent lIst", list + "");
@@ -122,6 +139,33 @@ public class Fragment2 extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.touch:
+			touch1.startAnimation(animMove1);
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					sendTouch.startAnimation(animMove3);
+				}
+			}, 300);
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+
+					sendTouch.startAnimation(animMove4);
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							touch1.setVisibility(View.INVISIBLE);
+							getService.startAnimation(animMove2);
+						}
+					}, 300);
+
+				}
+			}, 7000);
+
+			break;
 		case R.id.sendTouch:
 			if (!isSendTouchAlreadyClicked) {
 				vib.vibrate(500);
@@ -225,6 +269,44 @@ public class Fragment2 extends Fragment implements OnClickListener {
 			};
 		};
 		AppController.getInstance().addToRequestQueue(req);
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+		if (animation == animMove1) {
+			touch1.setVisibility(View.GONE);
+			sendTouch.setVisibility(View.VISIBLE);
+			getService.setVisibility(View.VISIBLE);
+			Log.d("Animation1", animation.toString());
+		}
+		if (animation == animMove3) {
+			Log.d("Animation3", animation.toString());
+		}
+
+		if (animation == animMove4) {
+			sendTouch.setVisibility(View.GONE);
+			getService.setVisibility(View.GONE);
+			Log.d("Animation4", animation.toString());
+		}
+		if (animation == animMove2) {
+			getService.setVisibility(View.GONE);
+			touch1.setVisibility(View.VISIBLE);
+			Log.d("Animation2", animation.toString());
+		}
+
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

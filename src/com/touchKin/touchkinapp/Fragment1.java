@@ -22,6 +22,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,12 +42,12 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class Fragment1 extends Fragment implements OnClickListener,
-		ButtonClickListener {
+		ButtonClickListener, AnimationListener {
 
 	private ViewPager viewPager;
 	public DashBoardAdapter adapter;
 	// private CirclePageIndicator indicator;
-	TextView sendTouch, getService;
+	TextView sendTouch, getService, touch1;
 	PageListener pageListener;
 	ParentListModel parent;
 	Vibrator vib;
@@ -51,6 +55,7 @@ public class Fragment1 extends Fragment implements OnClickListener,
 	Boolean withoutMsg = false;
 	Boolean isSendTouchAlreadyClicked = false;
 	public static ViewPagerListener listener;
+	Animation animMove1, animMove2, animMove3, animMove4;
 
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
@@ -62,6 +67,7 @@ public class Fragment1 extends Fragment implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		getActivity();
+
 		vib = (Vibrator) this.getActivity().getSystemService(
 				Context.VIBRATOR_SERVICE);
 
@@ -77,6 +83,17 @@ public class Fragment1 extends Fragment implements OnClickListener,
 		DashBoardAdapter.context = getActivity();
 		viewPager.setOffscreenPageLimit(2);
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		touch1.setOnClickListener(this);
+		animMove1 = AnimationUtils.loadAnimation(getActivity(), R.anim.move1);
+		animMove3 = AnimationUtils.loadAnimation(getActivity(), R.anim.move3);
+		animMove2 = AnimationUtils.loadAnimation(getActivity(), R.anim.move2);
+		animMove4 = AnimationUtils.loadAnimation(getActivity(), R.anim.move4);
+		animMove1.setAnimationListener(this);
+		animMove2.setAnimationListener(this);
+		animMove4.setAnimationListener(this);
+		animMove3.setAnimationListener(this);
+		sendTouch.setVisibility(View.GONE);
+		getService.setVisibility(View.GONE);
 		sendTouch.setOnClickListener(this);
 		getService.setOnClickListener(this);
 
@@ -88,6 +105,7 @@ public class Fragment1 extends Fragment implements OnClickListener,
 		viewPager = (ViewPager) v.findViewById(R.id.pager);
 		// indicator = (CirclePageIndicator) v.findViewById(R.id.indicator);
 		sendTouch = (TextView) v.findViewById(R.id.sendTouch);
+		touch1 = (TextView) v.findViewById(R.id.touch);
 		getService = (TextView) v.findViewById(R.id.getService);
 		sendTouchTextview = (TextView) v.findViewById(R.id.textToSendTouch);
 	}
@@ -118,10 +136,38 @@ public class Fragment1 extends Fragment implements OnClickListener,
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.touch:
+			vib.vibrate(500);
+			touch1.startAnimation(animMove1);
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					sendTouch.startAnimation(animMove3);
+				}
+			}, 300);
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+
+					sendTouch.startAnimation(animMove4);
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							touch1.setVisibility(View.INVISIBLE);
+							getService.startAnimation(animMove2);
+						}
+					}, 300);
+
+				}
+			}, 5000);
+
+			break;
 		case R.id.sendTouch:
 
 			if (!isSendTouchAlreadyClicked) {
-				vib.vibrate(500);
+
 				viewPager.setCurrentItem(0);
 				// sendTouch.setText("Add a video");
 				// sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
@@ -269,6 +315,50 @@ public class Fragment1 extends Fragment implements OnClickListener,
 
 	public void getNextItem(int i) {
 		viewPager.setCurrentItem(i);
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+
+		if (animation == animMove1) {
+			touch1.setVisibility(View.GONE);
+			touch1.clearAnimation();
+			sendTouch.setVisibility(View.VISIBLE);
+			getService.setVisibility(View.VISIBLE);
+			Log.d("Animation1", animation.toString());
+		}
+		if (animation == animMove3) {
+			Log.d("Animation3", animation.toString());
+		}
+
+		if (animation == animMove4) {
+			sendTouch.clearAnimation();
+			sendTouch.setVisibility(View.GONE);
+
+			getService.setVisibility(View.GONE);
+			Log.d("Animation4", animation.toString());
+		}
+		if (animation == animMove2) {
+			getService.setVisibility(View.GONE);
+			getService.clearAnimation();
+			touch1.setVisibility(View.VISIBLE);
+
+			Log.d("Animation2", animation.toString());
+		}
+
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
