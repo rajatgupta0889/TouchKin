@@ -44,7 +44,7 @@ public class GcmIntentService extends IntentService {
 
 		String messageType = gcm.getMessageType(intent);
 		Log.d("Intent", messageType);
-		if (extras != null && !extras.isEmpty()) {
+		if (extras != null && !extras.isEmpty() && extras.containsKey("txt")) {
 			/*
 			 * filter message based on message Type. Since it is likely that GCM
 			 * will be extended in the future with new message types, just

@@ -103,6 +103,7 @@ public class DashboardLocationFragment extends Fragment implements
 	// Store instance variables based on arguments passed
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 
 	}

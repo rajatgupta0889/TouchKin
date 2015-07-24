@@ -562,27 +562,29 @@ public class MapActivity extends ActionBarActivity implements
 		try {
 			obj = array.getJSONObject(0);
 
-			JSONObject point = obj.getJSONObject("avg");
+			JSONObject point = obj.getJSONObject("point");
 			latLng = new LatLng(Double.parseDouble(point.getString("x")),
 					Double.parseDouble(point.getString("y")));
 			googleMarker = googleMap.addMarker(new MarkerOptions()
 					.position(latLng)
-					.title("")
+					.title(point.optString("name", ""))
 					.icon(BitmapDescriptorFactory.fromBitmap(CustomMarkerView(
 							this, marker))));
 			Log.d("Length", array.length() + "");
 			for (int i = 1; i < array.length(); i++) {
 				obj = array.getJSONObject(i);
-				point = obj.getJSONObject("avg");
+				point = obj.getJSONObject("point");
 
 				googleMarker = googleMap.addMarker(new MarkerOptions()
 						.position(
 								new LatLng(Double.parseDouble(point
 										.getString("x")), Double
 										.parseDouble(point.getString("y"))))
-						.title("")
+						.title(point.optString("name", ""))
 						.icon(BitmapDescriptorFactory
 								.fromBitmap(CustomMarkerView(this, marker))));
+				if (i == 4)
+					break;
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

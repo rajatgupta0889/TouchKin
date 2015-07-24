@@ -67,122 +67,125 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		View view = inflater.inflate(R.layout.dashboard_touch_screen,
 				container, false);
 		view.setTag(position);
+
 		parentTop = (TextView) view.findViewById(R.id.parentNameTV);
 		parentBottom = (TextView) view.findViewById(R.id.parentBottonTouch);
 		Date d = new Date();
 		HoloCircularProgressBar bar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
 		bar.setVisibility(View.INVISIBLE);
-		if (parent.getIsMale() != null) {
-			if (parent.getIsMale()) {
-				if (!parent.getIsPendingTouch()) {
-					parentTop
-							.setText("It is "
-									+ (d.getHours() > 12 ? d.getHours() - 12
-											: d.getHours())
-									+ ":"
-									+ (d.getMinutes() < 10 ? "0"
-											+ d.getMinutes() : d.getMinutes())
-									+ (d.getHours() > 12 ? " pm" : " am")
-									+ " for "
-									+ parent.getParentName().substring(0, 1)
-											.toUpperCase()
-									+ parent.getParentName().substring(1)
-									+ " in India");
-					parentBottom.setText("Send him a touch now?");
+		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
+		if (position + 1 != parentList.size()) {
+			if (parent.getIsMale() != null) {
+				if (parent.getIsMale()) {
+					if (!parent.getIsPendingTouch()) {
+						parentTop.setText("It is "
+								+ (d.getHours() > 12 ? d.getHours() - 12 : d
+										.getHours())
+								+ ":"
+								+ (d.getMinutes() < 10 ? "0" + d.getMinutes()
+										: d.getMinutes())
+								+ (d.getHours() > 12 ? " pm" : " am")
+								+ " for "
+								+ parent.getParentName().substring(0, 1)
+										.toUpperCase()
+								+ parent.getParentName().substring(1)
+								+ " in India");
+						parentBottom.setText("Send him a touch now?");
+					} else {
+						parentTop.setText(parent.getParentName()
+								.substring(0, 1).toUpperCase()
+								+ parent.getParentName().substring(1)
+								+ " is thinking of you");
+						parentBottom.setText("Tap above for a touch from him.");
+					}
 				} else {
-					parentTop.setText(parent.getParentName().substring(0, 1)
-							.toUpperCase()
-							+ parent.getParentName().substring(1)
-							+ " is thinking of you");
-					parentBottom.setText("Tap above for a touch from him.");
+					if (!parent.getIsPendingTouch()) {
+						parentTop.setText("It is "
+								+ (d.getHours() > 12 ? d.getHours() - 12 : d
+										.getHours())
+								+ ":"
+								+ (d.getMinutes() < 10 ? "0" + d.getMinutes()
+										: d.getMinutes())
+								+ (d.getHours() > 12 ? " pm" : " am")
+								+ " for "
+								+ parent.getParentName().substring(0, 1)
+										.toUpperCase()
+								+ parent.getParentName().substring(1)
+								+ " in India");
+						parentBottom.setText("Send her a touch now?");
+					} else {
+						parentTop.setText(parent.getParentName()
+								.substring(0, 1).toUpperCase()
+								+ parent.getParentName().substring(1)
+								+ " is thinking of you");
+						parentBottom.setText("Tap above for a touch from her.");
+					}
 				}
 			} else {
-				if (!parent.getIsPendingTouch()) {
-					parentTop
-							.setText("It is "
-									+ (d.getHours() > 12 ? d.getHours() - 12
-											: d.getHours())
-									+ ":"
-									+ (d.getMinutes() < 10 ? "0"
-											+ d.getMinutes() : d.getMinutes())
-									+ (d.getHours() > 12 ? " pm" : " am")
-									+ " for "
-									+ parent.getParentName().substring(0, 1)
-											.toUpperCase()
-									+ parent.getParentName().substring(1)
-									+ " in India");
-					parentBottom.setText("Send her a touch now?");
-				} else {
-					parentTop.setText(parent.getParentName().substring(0, 1)
-							.toUpperCase()
-							+ parent.getParentName().substring(1)
-							+ " is thinking of you");
-					parentBottom.setText("Tap above for a touch from her.");
-				}
+				parentTop.setText("It's " + d.getHours() + ":" + d.getMinutes()
+						+ " for "
+						+ parent.getParentName().substring(0, 1).toUpperCase()
+						+ parent.getParentName().substring(1) + " in India");
+				parentBottom.setText("Send them a touch now?");
 			}
-		} else {
-			parentTop.setText("It's " + d.getHours() + ":" + d.getMinutes()
-					+ " for "
-					+ parent.getParentName().substring(0, 1).toUpperCase()
-					+ parent.getParentName().substring(1) + " in India");
-			parentBottom.setText("Send them a touch now?");
-		}
 
-		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);
-		ImageLoader imageLoader = new ImageLoader(context);
-		String name = parent.getParentName();
-		int resID = 0;
-		if (!name.equalsIgnoreCase("")) {
-			String cut = name.substring(0, 1).toLowerCase();
-			resID = context.getResources().getIdentifier(cut, "drawable",
-					context.getPackageName());
-			Log.d("cut", cut + " " + resID);
-		}
-		imageLoader.DisplayImage(serverPath + parent.getParentId() + ".jpeg",
-				resID, imageView);
-		((ViewPager) container).addView(view);
-		imageView.setOnTouchListener(new OnTouchListener() {
+			ImageLoader imageLoader = new ImageLoader(context);
+			String name = parent.getParentName();
+			int resID = 0;
+			if (!name.equalsIgnoreCase("")) {
+				String cut = name.substring(0, 1).toLowerCase();
+				resID = context.getResources().getIdentifier(cut, "drawable",
+						context.getPackageName());
+				Log.d("cut", cut + " " + resID);
+			}
+			imageLoader.DisplayImage(serverPath + parent.getParentId()
+					+ ".jpeg", resID, imageView);
+			((ViewPager) container).addView(view);
+			imageView.setOnTouchListener(new OnTouchListener() {
 
-			@SuppressLint("NewApi")
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				if (parent.getIsPendingTouch()) {
-					vib.vibrate(500);
-					if (parent.getIsTouchMedia()) {
-						((DashBoardActivity) context).goToKinbook();
-					}
-					SharedPreferences pendingTouch = context
-							.getSharedPreferences("pendingTouch", 0);
-					String array = pendingTouch.getString("touch", null);
-					try {
-						JSONArray arrayObj = new JSONArray(array);
-						if (arrayObj != null && arrayObj.length() > 0) {
-							for (int i = 0; i < arrayObj.length(); i++) {
-								JSONObject obj = arrayObj.getJSONObject(i);
-								if (obj.getString("id").equalsIgnoreCase(
-										parent.getParentId())) {
-									arrayObj.remove(i);
-								}
-							}
-
+				@SuppressLint("NewApi")
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					// TODO Auto-generated method stub
+					if (parent.getIsPendingTouch()) {
+						vib.vibrate(500);
+						if (parent.getIsTouchMedia()) {
+							((DashBoardActivity) context).goToKinbook();
 						}
-						Editor tokenedit = pendingTouch.edit();
-						tokenedit.putString("touch", arrayObj + "");
-						tokenedit.commit();
-						parent.setIsPendingTouch(false);
-						notifyDataSetChanged();
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						SharedPreferences pendingTouch = context
+								.getSharedPreferences("pendingTouch", 0);
+						String array = pendingTouch.getString("touch", null);
+						try {
+							JSONArray arrayObj = new JSONArray(array);
+							if (arrayObj != null && arrayObj.length() > 0) {
+								for (int i = 0; i < arrayObj.length(); i++) {
+									JSONObject obj = arrayObj.getJSONObject(i);
+									if (obj.getString("id").equalsIgnoreCase(
+											parent.getParentId())) {
+										arrayObj.remove(i);
+									}
+								}
+
+							}
+							Editor tokenedit = pendingTouch.edit();
+							tokenedit.putString("touch", arrayObj + "");
+							tokenedit.commit();
+							parent.setIsPendingTouch(false);
+							notifyDataSetChanged();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 					}
 
+					return true;
 				}
-
-				return true;
-			}
-		});
+			});
+		} else {
+			imageView.setImageResource(R.drawable.add_kin);
+		}
 		return view;
 
 	}

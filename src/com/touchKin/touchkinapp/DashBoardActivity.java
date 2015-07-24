@@ -687,6 +687,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 						}
 						list.add(new ParentListModel("", false, "Add kin", "",
 								"", false, "", false, false, false));
+
 						imageAdapter = new ImageAdapter(DashBoardActivity.this,
 								list);
 						// if (selectedParent == null) {

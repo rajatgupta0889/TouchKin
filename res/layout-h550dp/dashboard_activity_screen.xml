@@ -69,8 +69,8 @@
 
             <ImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="175dp"
-                android:layout_height="175dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/centre" />
 

@@ -78,6 +78,8 @@ public class DashBoardActivityFragment extends Fragment implements
 	// Store instance variables based on arguments passed
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// savedInstanceState.putString("WORKAROUND_FOR_BUG_19917_KEY",
+		// "WORKAROUND_FOR_BUG_19917_VALUE");
 		super.onCreate(savedInstanceState);
 
 	}
