@@ -428,7 +428,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 		b.putString("key", "ER Plan");
 		mTabHost.addTab(
 				setIndicator(this, mTabHost.newTabSpec("More"), R.color.tab_bg,
-						"More", R.drawable.ic_drawer),
+						"More", R.drawable.ic_action_more),
 				TouchKinBookFragment.class, b);
 
 		toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -515,8 +515,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 							JSONArray careRecievers = responseArray
 									.getJSONArray("care_receivers");
 
-							list.add(new ParentListModel(userId, false, "Me",
-									userId, "", true, userObj
+							list.add(new ParentListModel(userId, false,
+									"My Circle", userId, "", true, userObj
 											.getString("mobile"), true, false,
 									(userObj.getString("gender")
 											.equalsIgnoreCase("male")) ? true
@@ -1100,21 +1100,25 @@ public class DashBoardActivity extends ActionBarActivity implements
 		if (mTabHost.getCurrentTab() != 1) {
 			mTabHost.setVisibility(View.VISIBLE);
 			mTabHost.setCurrentTab(1);
-			selectedParent = list.get(0);
-			ParentListModel item = list.get(0);
-			for (ParentListModel data : list) {
+			if (list.size() > 0) {
+				selectedParent = list.get(0);
+				ParentListModel item = list.get(0);
+				for (ParentListModel data : list) {
 
-				if (data.equals(item)) {
-					data.setIsSelected(true);
-				} else {
-					data.setIsSelected(false);
+					if (data.equals(item)) {
+						data.setIsSelected(true);
+					} else {
+						data.setIsSelected(false);
+					}
 				}
-			}
-			setMenuTitle(selectedParent);
-			if (toolbar.getVisibility() == View.GONE) {
-				toolbar.setVisibility(View.VISIBLE);
-			}
+				setMenuTitle(selectedParent);
+				if (toolbar.getVisibility() == View.GONE) {
+					toolbar.setVisibility(View.VISIBLE);
+				}
 
+			} else {
+				finish();
+			}
 			// if (mTabHost.getCurrentTab() != 0) {
 			// mTabHost.setCurrentTab(1);
 			// //getSupportFragmentManager().executePendingTransactions();

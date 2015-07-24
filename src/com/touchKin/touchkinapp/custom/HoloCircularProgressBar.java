@@ -436,7 +436,7 @@ public class HoloCircularProgressBar extends View {
 		outerCirclePaint.setColor(getResources().getColor(R.color.white));
 
 		mBackgroundColorPaint.setColor(getResources().getColor(
-				R.color.daily_prog_left));
+				R.color.white));
 		canvas.drawArc(mCircleBounds, 270, 360, false, mBackgroundColorPaint);
 		// for (int i = 0; i < 10; i++) {
 

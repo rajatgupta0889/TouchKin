@@ -46,6 +46,7 @@ public class Fragment2 extends Fragment implements OnClickListener {
 	Boolean isSendTouchAlreadyClicked = false;
 	public static ViewPagerListener listener;
 	MyDashbaordAdapter adapter;
+	String prevtop, prevBottom;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,6 +129,17 @@ public class Fragment2 extends Fragment implements OnClickListener {
 				// sendTouch.setText("Add a video");
 				// sendTouch.setCompoundDrawablesWithIntrinsicBounds(0,
 				// R.drawable.video_cam, 0, 0);
+				TextView top = ((TextView) myPager.findViewWithTag(
+						myPager.getCurrentItem()).findViewById(
+						R.id.parentNameTV));
+				prevtop = top.getText().toString();
+				top.setText("Sending a touch...");
+				TextView bottom = ((TextView) myPager.findViewWithTag(
+						myPager.getCurrentItem()).findViewById(
+						R.id.parentBottonTouch));
+				prevBottom = bottom.getText().toString();
+				bottom.setText("Share a moment with video?");
+
 				listener.sendTouchCLicked(true);
 				isSendTouchAlreadyClicked = true;
 				new Handler().postDelayed(new Runnable() {
@@ -139,6 +151,12 @@ public class Fragment2 extends Fragment implements OnClickListener {
 						if (!withoutMsg)
 							sendTouchWithoutMessage();
 						isSendTouchAlreadyClicked = false;
+						((TextView) myPager.findViewWithTag(
+								myPager.getCurrentItem()).findViewById(
+								R.id.parentBottonTouch)).setText(prevBottom);
+						((TextView) myPager.findViewWithTag(
+								myPager.getCurrentItem()).findViewById(
+								R.id.parentNameTV)).setText(prevtop);
 						// sendTouch.setText("Send a Touch");
 						// sendTouch.setCompoundDrawablesWithIntrinsicBounds(
 						// 0, R.drawable.ic_icon_send_touch, 0, 0);
@@ -149,7 +167,11 @@ public class Fragment2 extends Fragment implements OnClickListener {
 			} else {
 				withoutMsg = true;
 				sendTouch();
-
+				((TextView) myPager.findViewWithTag(myPager.getCurrentItem())
+						.findViewById(R.id.parentBottonTouch))
+						.setText(prevBottom);
+				((TextView) myPager.findViewWithTag(myPager.getCurrentItem())
+						.findViewById(R.id.parentNameTV)).setText(prevtop);
 			}
 			break;
 		case R.id.getService:

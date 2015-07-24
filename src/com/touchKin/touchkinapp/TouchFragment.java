@@ -71,6 +71,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	String touchTime = "";
 	ImageButton next;
 	String topData = "";
+	int lastDAta = 0;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -294,10 +295,16 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 				parentBotton.setText("Tap above for a touch from her");
 			}
 		} else {
-			parentName.setText(parent.getParentName().substring(0, 1)
-					.toUpperCase()
-					+ parent.getParentName().substring(1)
-					+ " is little low today");
+			if (lastDAta > 1) {
+				parentName.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1) + " is ok today");
+			} else {
+				parentName.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1)
+						+ " is little low today");
+			}
 			if (touchTime != null && touchTime.equalsIgnoreCase("1"))
 				parentBotton.setText("Last touch was " + touchTime
 						+ " hour ago");
@@ -331,9 +338,9 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 						// TODO Auto-generated method stub
 						Log.d("Response Array Current",
 								responseArray.toString());
-						if (getActivity() != null)
+						if (getActivity() != null) {
 							setSlices(responseArray);
-
+						}
 					}
 
 				}, new Response.ErrorListener() {
@@ -443,14 +450,14 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 					touchTime = diff + "";
 				}
 			}
-			setText();
+
 			Log.d("SLicce object ", sliceObj.toString());
 			Iterator<String> iter = sliceObj.keys();
+			String key = "";
 			while (iter.hasNext()) {
-				String key = iter.next();
+				key = iter.next();
 				PieSlice slice = new PieSlice();
 				int value = sliceObj.optInt(key, 0);
-
 				if (value == 1) {
 					slice.setColor(resources.getColor(R.color.daily_prog_done));
 				} else {
@@ -459,6 +466,8 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 				slices.add(slice);
 
 			}
+			lastDAta = sliceObj.optInt(key, 0);
+			setText();
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

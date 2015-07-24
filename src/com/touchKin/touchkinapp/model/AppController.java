@@ -80,6 +80,7 @@ public class AppController extends Application {
 			mRequestQueue = Volley.newRequestQueue(this, new HttpClientStack(
 					mHttpClient));
 		}
+		mRequestQueue.getCache().clear();
 		return mRequestQueue;
 	}
 
@@ -109,7 +110,7 @@ public class AppController extends Application {
 	public <T> void addToRequestQueue(Request<T> req) {
 		// set the default tag if tag is empty
 		req.setTag(TAG);
-		req.setShouldCache(true);
+		req.setShouldCache(false);
 		getRequestQueue().add(req);
 	}
 

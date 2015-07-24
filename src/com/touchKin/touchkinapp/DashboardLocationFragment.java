@@ -111,7 +111,8 @@ public class DashboardLocationFragment extends Fragment implements
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		googleMap.clear();
+		if (googleMap != null)
+			googleMap.clear();
 		// if (mGoogleApiClient.isConnected()) {
 		// mGoogleApiClient.disconnect();
 		// }
@@ -304,10 +305,11 @@ public class DashboardLocationFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		if (parent != null) {
-			parentName.setText(parent.getParentName().substring(0, 1)
-					.toUpperCase()
-					+ parent.getParentName().substring(1) + " is in ");
+
 			if (!loc.isEmpty()) {
+				parentName.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1) + " is at ");
 				parentNameBottom.setText(parent.getParentName().substring(0, 1)
 						.toUpperCase()
 						+ parent.getParentName().substring(1)
@@ -315,6 +317,9 @@ public class DashboardLocationFragment extends Fragment implements
 						+ staticSince
 						+ (staticSince > 1 ? " hours" : " hour") + " ago");
 			} else {
+				parentName.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1) + " is in ");
 				parentNameBottom.setText(parent.getParentName().substring(0, 1)
 						.toUpperCase()
 						+ parent.getParentName().substring(1)
@@ -365,7 +370,7 @@ public class DashboardLocationFragment extends Fragment implements
 			e.printStackTrace();
 		}
 		loc = obj.optString("name", "");
-		if (!loc.isEmpty()) {
+		if (!loc.equalsIgnoreCase("")) {
 			parentName.setText(parent.getParentName().substring(0, 1)
 					.toUpperCase()
 					+ parent.getParentName().substring(1) + " is at ");
@@ -493,8 +498,7 @@ public class DashboardLocationFragment extends Fragment implements
 
 		};
 
-		req.setRetryPolicy(new DefaultRetryPolicy(0,
-				5,
+		req.setRetryPolicy(new DefaultRetryPolicy(0, 5,
 				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		AppController.getInstance().addToRequestQueue(req);
 

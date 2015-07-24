@@ -1,8 +1,14 @@
 package com.touchKin.touchkinapp;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,23 +28,22 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
-import com.android.volley.Response;
 import com.android.volley.Request.Method;
+import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.broadcastReciever.AirplaneModeReceiver;
-import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.PieSlice;
 import com.touchKin.touchkinapp.model.AppController;
@@ -58,6 +63,7 @@ public class DashBoardActivityFragment extends Fragment implements
 	AirplaneModeReceiver rec;
 	ImageButton prev;
 	Context context;
+	String LastUpdateTime = "0";
 
 	// newInstance constructor for creating fragment with arguments
 	public static DashBoardActivityFragment newInstance(int page, String title) {
@@ -156,25 +162,7 @@ public class DashBoardActivityFragment extends Fragment implements
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 		parent = ((DashBoardActivity) getActivity()).getSelectedParent();
 		Log.d("Parent", parent + "");
-		if (parent != null) {
-			parentName.setText(parent.getParentName().substring(0, 1)
-					.toUpperCase()
-					+ parent.getParentName().substring(1) + " is connected ");
-			parentNameBottom.setText("Last updated now");
-			// getConnectivity(parent.getParentId());
-			if (lastSelectedParent == null) {
-				lastSelectedParent = parent;
-				getConnectivity(parent.getParentId());
-			}
-			if (lastSelectedParent != null
-					&& !lastSelectedParent.equals(parent))
-				getConnectivity(parent.getParentId());
-			else {
-				mHoloCircularProgressBar.setProgress(0.0f);
-				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
-						1000);
-			}
-		}
+		setText();
 	}
 
 	@Override
@@ -248,7 +236,24 @@ public class DashBoardActivityFragment extends Fragment implements
 										.parseInt(lastUpdatedConnectivity
 												.getJSONObject("data")
 												.getString("wifi_strength"));
+								String updateTime = lastUpdatedConnectivity
+										.getString("updatedAt");
+								DateFormat df1 = new SimpleDateFormat(
+										"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+								try {
+									Date result1 = df1.parse(updateTime);
+									Log.d("time ", result1 + " ");
+									int myHours = result1.getHours();
+									Date currentDate = new Date();
+									int curHour = currentDate.getHours();
+									LastUpdateTime = (curHour - myHours) + "";
+
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								setData(signal, wifi, battery);
+								setText();
 							}
 							setSlices(responseObject.getJSONObject("stats"));
 
@@ -421,4 +426,38 @@ public class DashBoardActivityFragment extends Fragment implements
 		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 	}
 
+	public void setText() {
+		// parentName.setText(text);
+		if (parent != null) {
+			if (Integer.parseInt(LastUpdateTime) < 1) {
+				parentName.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1)
+						+ " is connected ");
+				parentNameBottom.setText("Last updated now");
+			} else {
+				parentName.setText(parent.getParentName().substring(0, 1)
+						.toUpperCase()
+						+ parent.getParentName().substring(1)
+						+ " is not connected ");
+				parentNameBottom.setText("Last updated "
+						+ LastUpdateTime
+						+ (LastUpdateTime.equalsIgnoreCase("1") ? "  hour"
+								: " hours"));
+			}
+			// getConnectivity(parent.getParentId());
+			if (lastSelectedParent == null) {
+				lastSelectedParent = parent;
+				getConnectivity(parent.getParentId());
+			}
+			if (lastSelectedParent != null
+					&& !lastSelectedParent.equals(parent))
+				getConnectivity(parent.getParentId());
+			else {
+				mHoloCircularProgressBar.setProgress(0.0f);
+				animate(mHoloCircularProgressBar, null, (float) (1.0f / 30),
+						1000);
+			}
+		}
+	}
 }

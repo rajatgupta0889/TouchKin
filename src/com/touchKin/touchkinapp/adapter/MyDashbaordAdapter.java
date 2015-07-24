@@ -41,6 +41,7 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
 	Vibrator vib;
 	Boolean isFirst = false;
+	TextView parentTop, parentBottom;
 
 	public MyDashbaordAdapter(Context context, List<ParentListModel> parentList) {
 		this.parentList = parentList;
@@ -65,9 +66,9 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		final ParentListModel parent = parentList.get(position);
 		View view = inflater.inflate(R.layout.dashboard_touch_screen,
 				container, false);
-		TextView parenTop = (TextView) view.findViewById(R.id.parentNameTV);
-		TextView parentBottom = (TextView) view
-				.findViewById(R.id.parentBottonTouch);
+		view.setTag(position);
+		parentTop = (TextView) view.findViewById(R.id.parentNameTV);
+		parentBottom = (TextView) view.findViewById(R.id.parentBottonTouch);
 		Date d = new Date();
 		HoloCircularProgressBar bar = (HoloCircularProgressBar) view
 				.findViewById(R.id.holoCircularProgressBar);
@@ -75,41 +76,57 @@ public class MyDashbaordAdapter extends PagerAdapter implements
 		if (parent.getIsMale() != null) {
 			if (parent.getIsMale()) {
 				if (!parent.getIsPendingTouch()) {
-					parenTop.setText("it is "
-							+ (d.getHours() > 12 ? d.getHours() - 12 : d
-									.getHours())
-							+ ":"
-							+ (d.getMinutes() < 10 ? "0" + d.getMinutes() : d
-									.getMinutes())
-							+ (d.getHours() > 12 ? " pm" : " am") + " for "
-							+ parent.getParentName() + " in india");
-					parentBottom.setText("Send him a touch");
+					parentTop
+							.setText("It is "
+									+ (d.getHours() > 12 ? d.getHours() - 12
+											: d.getHours())
+									+ ":"
+									+ (d.getMinutes() < 10 ? "0"
+											+ d.getMinutes() : d.getMinutes())
+									+ (d.getHours() > 12 ? " pm" : " am")
+									+ " for "
+									+ parent.getParentName().substring(0, 1)
+											.toUpperCase()
+									+ parent.getParentName().substring(1)
+									+ " in India");
+					parentBottom.setText("Send him a touch now?");
 				} else {
-					parenTop.setText(parent.getParentName()
+					parentTop.setText(parent.getParentName().substring(0, 1)
+							.toUpperCase()
+							+ parent.getParentName().substring(1)
 							+ " is thinking of you");
-					parentBottom.setText("Tap above for a touch from him");
+					parentBottom.setText("Tap above for a touch from him.");
 				}
 			} else {
 				if (!parent.getIsPendingTouch()) {
-					parenTop.setText("it is "
-							+ (d.getHours() > 12 ? d.getHours() - 12 : d
-									.getHours())
-							+ ":"
-							+ (d.getMinutes() < 10 ? "0" + d.getMinutes() : d
-									.getMinutes())
-							+ (d.getHours() > 12 ? " pm" : " am") + " for "
-							+ parent.getParentName() + " in india");
-					parentBottom.setText("Send her a touch");
+					parentTop
+							.setText("It is "
+									+ (d.getHours() > 12 ? d.getHours() - 12
+											: d.getHours())
+									+ ":"
+									+ (d.getMinutes() < 10 ? "0"
+											+ d.getMinutes() : d.getMinutes())
+									+ (d.getHours() > 12 ? " pm" : " am")
+									+ " for "
+									+ parent.getParentName().substring(0, 1)
+											.toUpperCase()
+									+ parent.getParentName().substring(1)
+									+ " in India");
+					parentBottom.setText("Send her a touch now?");
 				} else {
-					parenTop.setText(parent.getParentName()
+					parentTop.setText(parent.getParentName().substring(0, 1)
+							.toUpperCase()
+							+ parent.getParentName().substring(1)
 							+ " is thinking of you");
-					parentBottom.setText("Tap above for a touch from her");
+					parentBottom.setText("Tap above for a touch from her.");
 				}
 			}
 		} else {
-			parenTop.setText("it's " + d.getHours() + ":" + d.getMinutes()
-					+ " for " + parent.getParentName() + " in india");
-			parentBottom.setText("Send them a touch");
+			parentTop.setText("It's " + d.getHours() + ":" + d.getMinutes()
+					+ " for "
+					+ parent.getParentName().substring(0, 1).toUpperCase()
+					+ parent.getParentName().substring(1) + " in India");
+			parentBottom.setText("Send them a touch now?");
 		}
 
 		imageView = (RoundedImageView) view.findViewById(R.id.profile_pic);

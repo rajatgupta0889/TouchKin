@@ -74,18 +74,23 @@ public class ImageAdapter extends BaseAdapter {
 					R.drawable.parent_image));
 		}
 		// imageView.setImageResource(R.drawable.mom);
-		parentname.setText(parentList.get(position).getParentName());
+		if (position != 0) {
+			parentname.setText(parentList.get(position).getParentName());
+		} else {
+			parentname.setText("Me");
+		}
 		String name = parentList.get(position).getParentName();
 		if (!name.equalsIgnoreCase("")) {
 			String cut = name.substring(0, 1).toLowerCase();
-			 resID = mContext.getResources().getIdentifier(cut , "drawable", mContext.getPackageName());
-			Log.d("cut", cut + " "+resID);
+			resID = mContext.getResources().getIdentifier(cut, "drawable",
+					mContext.getPackageName());
+			Log.d("cut", cut + " " + resID);
 		}
 		ImageLoader imageLoader = new ImageLoader(mContext);
 		if (position + 1 != parentList.size()) {
 			imageLoader.DisplayImage(serverPath
-					+ getItem(position).getParentId() + ".jpeg",
-					resID, imageView);
+					+ getItem(position).getParentId() + ".jpeg", resID,
+					imageView);
 		} else {
 			convertView = mLayoutInflater
 					.inflate(R.layout.image_add_item, null);
