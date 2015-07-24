@@ -13,9 +13,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
+import com.touchKin.touchkinapp.DashBoardActivity;
 import com.touchKin.touckinapp.R;
 
 /**
@@ -451,9 +455,37 @@ public class HoloCircularProgressBar extends View {
 			if (isThumbEnabled()) {
 				// draw the thumb square at the correct rotated position
 				canvas.save();
+				
+
 				canvas.rotate(mSlices.size() * getCurrentRotation() - 90);
-				canvas.drawCircle(mThumbPosX, mThumbPosY, 25, outerCirclePaint);
-				canvas.drawCircle(mThumbPosX, mThumbPosY, 15, mThumbColorPaint);
+				if (DashBoardActivity.height < 600) {
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 15,
+							outerCirclePaint);
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 7,
+							mThumbColorPaint);
+				}
+				if (DashBoardActivity.height >= 600
+						&& DashBoardActivity.height < 1000) {
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 15,
+							outerCirclePaint);
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 8,
+							mThumbColorPaint);
+					Log.d("dis", DashBoardActivity.width + " "
+							+ DashBoardActivity.height);
+				}
+				if (DashBoardActivity.height >= 1000
+						&& DashBoardActivity.height < 1400) {
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 25,
+							outerCirclePaint);
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 15,
+							mThumbColorPaint);
+				}
+				if (DashBoardActivity.height > 1400) {
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 35,
+							outerCirclePaint);
+					canvas.drawCircle(mThumbPosX, mThumbPosY, 25,
+							mThumbColorPaint);
+				}
 
 				// rotate the square by 45 degrees
 				// canvas.rotate(45, mThumbPosX, mThumbPosY);
@@ -737,7 +769,7 @@ public class HoloCircularProgressBar extends View {
 		mThumbColorPaint.setColor(getResources().getColor(R.color.green));
 		mThumbColorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mThumbColorPaint.setStrokeWidth(mCircleStrokeWidth / 2);
-		
+
 		invalidate();
 
 	}
