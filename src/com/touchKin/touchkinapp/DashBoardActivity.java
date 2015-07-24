@@ -1,14 +1,17 @@
 package com.touchKin.touchkinapp;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -29,6 +32,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -52,6 +56,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
@@ -81,7 +86,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	String TITLES[] = { "My Family", "My Accounts", "Upgrade", "Terms of Use",
 			"Contact Us", "Sign out" };
 	private Toolbar toolbar; // Declaring the Toolbar Object
-
+	
 	RecyclerView mRecyclerView; // Declaring RecyclerView
 	RecyclerView.Adapter<MyAdapter.ViewHolder> mAdapter; // Declaring Adapte
 	// For Recycler View
@@ -109,6 +114,7 @@ public class DashBoardActivity extends ActionBarActivity implements
 	ListPopupWindow popup;
 	Boolean popupIsShowing = false;
 	TextView notification;
+	public static int width, height;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +125,11 @@ public class DashBoardActivity extends ActionBarActivity implements
 		// mTabHost.setup(this, getSupportFragmentManager(),
 		// R.id.menu_settings);
 		// lLayout = new MyLinearLayout(this);
+		DisplayMetrics metrics = DashBoardActivity.this.getResources().getDisplayMetrics();
+		width = metrics.widthPixels;
+		height = metrics.heightPixels;
+		
+		
 
 		InitView();
 		Bundle extras = getIntent().getExtras();

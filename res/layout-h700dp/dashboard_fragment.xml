@@ -24,8 +24,7 @@
         android:layout_above="@+id/bottom_layout"
         android:layout_alignParentTop="true" />
 
-    <!--
-         <com.viewpagerindicator.CirclePageIndicator
+    <!--<com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,24 +33,33 @@
         android:layout_marginTop="5dp"
         android:padding="8dip"
         app:radius="4dp" />
-    -->
-
-    <LinearLayout
+         -->
+     <RelativeLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
+        android:layout_marginBottom="15dp"
+        android:background="#ffffff"
         android:orientation="horizontal" >
 
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/line" />
+
         <TextView
-            android:id="@+id/sendTouch"
+            android:id="@+id/touch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_icon_send_touch"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/touch_glow"
             android:gravity="center"
-            android:text="Send a Touch"
             android:textColor="@color/text_grey"
             android:textSize="15sp" />
 
@@ -59,15 +67,24 @@
             android:id="@+id/getService"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:drawableTop="@drawable/call_btn"
-            android:gravity="center"
-            android:text="Call"
-            android:textColor="@color/text_grey"
-            android:textSize="15sp" />
-    </LinearLayout>
-    <!--
-    <FrameLayout
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="100dp"
+            android:background="@drawable/call_btn"
+            android:textColor="@color/text_grey" />
+
+        <TextView
+            android:id="@+id/sendTouch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="100dp"
+            android:background="@drawable/ic_icon_send_touch"
+            android:textColor="@color/text_grey" />
+    </RelativeLayout>
+
+    <!--   <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp" 
@@ -101,7 +118,5 @@
             android:layout_marginLeft="80dp"
             android:src="@drawable/send_touch" />
 
-    </FrameLayout>
-    -->
-
+    </FrameLayout>-->
 </RelativeLayout>
