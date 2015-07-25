@@ -33,7 +33,8 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:padding="8dip"
-        app:radius="4dp" />  -->
+        app:radius="4dp" />
+    -->
 
     <RelativeLayout
         android:id="@+id/bottom_layout"
@@ -69,7 +70,7 @@
             android:layout_height="70dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="100dp"
+            android:layout_marginRight="80dp"
             android:background="@drawable/call_btn"
             android:textColor="@color/text_grey" />
 
@@ -77,9 +78,9 @@
             android:id="@+id/sendTouch"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="100dp"
+            android:layout_marginLeft="74dp"
             android:background="@drawable/ic_icon_send_touch"
             android:textColor="@color/text_grey" />
     </RelativeLayout>
@@ -119,6 +120,7 @@
             android:layout_marginLeft="80dp"
             android:src="@drawable/send_touch" />
 
-    </FrameLayout>    -->
+    </FrameLayout>
+    -->
 
 </RelativeLayout>
