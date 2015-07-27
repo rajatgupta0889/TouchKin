@@ -24,7 +24,14 @@
         android:layout_above="@+id/bottom_layout"
         android:layout_alignParentTop="true" />
 
-    <!--<com.viewpagerindicator.CirclePageIndicator
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <!--
+        <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +40,8 @@
         android:layout_marginTop="5dp"
         android:padding="8dip"
         app:radius="4dp" />
-         -->
+    -->
+
     <RelativeLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
@@ -91,39 +99,4 @@
             android:textSize="15sp" />
     </RelativeLayout>
 
-    <!--   <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp" 
-        android:layout_alignParentBottom="true">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54dp"
-            android:src="@drawable/send_touch" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="22dp"
-            android:text="Get a Service" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Send a Touch" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
-            android:src="@drawable/send_touch" />
-
-    </FrameLayout>-->
 </RelativeLayout>

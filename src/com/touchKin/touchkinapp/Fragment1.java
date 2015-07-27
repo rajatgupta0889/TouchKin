@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class Fragment1 extends Fragment implements OnClickListener,
 	Boolean isSendTouchAlreadyClicked = false;
 	public static ViewPagerListener listener;
 	Animation animMove1, animMove2, animMove3, animMove4;
+	ProgressBar progress;
 
 	public Fragment1() {
 		// TODO Auto-generated constructor stub
@@ -84,6 +86,7 @@ public class Fragment1 extends Fragment implements OnClickListener,
 		viewPager.setOffscreenPageLimit(2);
 		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 		touch1.setOnClickListener(this);
+		progress = (ProgressBar) v.findViewById(R.id.progress);
 		animMove1 = AnimationUtils.loadAnimation(getActivity(), R.anim.move1);
 		animMove3 = AnimationUtils.loadAnimation(getActivity(), R.anim.move3);
 		animMove2 = AnimationUtils.loadAnimation(getActivity(), R.anim.move2);
@@ -290,6 +293,7 @@ public class Fragment1 extends Fragment implements OnClickListener,
 			FragmentInterface fragment = (FragmentInterface) adapter
 					.instantiateItem(viewPager, position);
 			if (fragment != null) {
+
 				fragment.fragmentBecameVisible();
 
 			}
@@ -303,7 +307,8 @@ public class Fragment1 extends Fragment implements OnClickListener,
 		viewPager.setAdapter(adapter);
 		pageListener = new PageListener();
 		viewPager.setOnPageChangeListener(pageListener);
-		adapter.notifyDataSetChanged();
+		progress.setVisibility(View.GONE);
+		// adapter.notifyDataSetChanged();
 	}
 
 	@Override

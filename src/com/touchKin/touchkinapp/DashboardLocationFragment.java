@@ -291,6 +291,7 @@ public class DashboardLocationFragment extends Fragment implements
 			// if (!lastSelectedParent.equals(parent))
 			// getLocation(parent.getParentId());
 			// else {
+			getLocation(parent.getParentId());
 			setText();
 			mHoloCircularProgressBar.setProgress(0.0f);
 			animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
@@ -348,7 +349,7 @@ public class DashboardLocationFragment extends Fragment implements
 			// + parent.getParentName().substring(1) + " is in ");
 			// parentNameBottom.setText("Its been " + 2 + " hours since "
 			// + parent.getParentName() + " last left home");
-			getLocation(parent.getParentId());
+
 			mHoloCircularProgressBar.setProgress(0.0f);
 			animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 			setText();
@@ -439,14 +440,16 @@ public class DashboardLocationFragment extends Fragment implements
 						Log.d("Response Array Location", " " + responseArray);
 						try {
 							if (responseArray.length() > 0) {
-								obj = responseArray
-										.getJSONObject("lastUpdatedLocation");
-								setLocation(obj);
-								setText();
-								setSlices(responseArray
-										.getJSONObject("movements"));
-								staticSince = responseArray.optInt(
-										"static_since", 1);
+								if (getActivity() != null) {
+									obj = responseArray
+											.getJSONObject("lastUpdatedLocation");
+									setLocation(obj);
+									setText();
+									setSlices(responseArray
+											.getJSONObject("movements"));
+									staticSince = responseArray.optInt(
+											"static_since", 1);
+								}
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

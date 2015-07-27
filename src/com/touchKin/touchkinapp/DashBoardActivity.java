@@ -885,8 +885,8 @@ public class DashBoardActivity extends ActionBarActivity implements
 	@Override
 	public void onImageTouch() {
 		// TODO Auto-generated method stub
-		Toast.makeText(DashBoardActivity.this, "View image ",
-				Toast.LENGTH_SHORT).show();
+		// Toast.makeText(DashBoardActivity.this, "View image ",
+		// Toast.LENGTH_SHORT).show();
 		Intent i = new Intent(DashBoardActivity.this, Details.class);
 		i.putExtra("isLoggedin", true);
 		startActivity(i);

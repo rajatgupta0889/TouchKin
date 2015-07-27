@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
@@ -46,10 +47,8 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.touchKin.touchkinapp.Interface.ButtonClickListener;
 import com.touchKin.touchkinapp.Interface.FragmentInterface;
 import com.touchKin.touchkinapp.Interface.ViewPagerListener;
-import com.touchKin.touchkinapp.custom.CustomRequest;
 import com.touchKin.touchkinapp.custom.HoloCircularProgressBar;
 import com.touchKin.touchkinapp.custom.ImageLoader;
 import com.touchKin.touchkinapp.custom.PieSlice;
@@ -58,7 +57,7 @@ import com.touchKin.touchkinapp.model.ParentListModel;
 import com.touchKin.touckinapp.R;
 
 public class TouchFragment extends Fragment implements FragmentInterface,
-		ViewPagerListener, ButtonClickListener {
+		ViewPagerListener {
 	private HoloCircularProgressBar mHoloCircularProgressBar;
 	private ObjectAnimator mProgressBarAnimator;
 	String serverPath = "https://s3-ap-southeast-1.amazonaws.com/touchkin-dev/avatars/";
@@ -72,6 +71,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	ImageButton next;
 	String topData = "";
 	int lastDAta = 0;
+	int count = 0;
 
 	// newInstance constructor for creating fragment with arguments
 	public static TouchFragment newInstance(int page, String title) {
@@ -92,7 +92,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 		vib = (Vibrator) this.getActivity().getSystemService(
 				Context.VIBRATOR_SERVICE);
 		Fragment1.listener = TouchFragment.this;
-		((DashBoardActivity) getActivity()).setCustomButtonListner(this);
+		// ((DashBoardActivity) getActivity()).setCustomButtonListner(this);
 	}
 
 	// Inflate the view for the fragment based on layout XML
@@ -230,12 +230,13 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		mHoloCircularProgressBar.setProgress(0.0f);
+		// mHoloCircularProgressBar.setProgress(0.0f);
 		// animate(mHoloCircularProgressBar, null, 0.05f, 3000);
 		// Toast.makeText(getActivity(), "Resume", Toast.LENGTH_SHORT).show();
-		mHoloCircularProgressBar.setProgress(0.0f);
-		animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
+		// mHoloCircularProgressBar.setProgress(0.0f);
+		// animate(mHoloCircularProgressBar, null, (float) (1.0f / 30), 1000);
 		SetImage();
+		Log.d("Resume call", "Call ");
 		//
 		// ImageLoader imageLoader = new ImageLoader(getActivity());
 		// parent = ((DashBoardActivity) getActivity()).getSelectedParent();
@@ -261,6 +262,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 		Log.d("Parent", "" + parent);
 		if (parent != null) {
+
 			getCurrent(parent.getParentId());
 
 			String cut = parent.getParentName().substring(0, 1).toLowerCase();
@@ -269,18 +271,18 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 			Log.d("cut", cut + " " + resID);
 			imageLoader.DisplayImage(serverPath + parent.getParentId()
 					+ ".jpeg", resID, parentImage);
-			setText();
+			// setText();
 
 		}
 
 	}
 
-	@Override
-	public void onButtonClickListner(int position, String value,
-			Boolean isAccept) {
-		// TODO Auto-generated method stub
-		SetImage();
-	}
+	// @Override
+	// public void onButtonClickListner(int position, String value,
+	// Boolean isAccept) {
+	// // TODO Auto-generated method stub
+	// SetImage();
+	// }
 
 	private void setText() {
 		// TODO Auto-generated method stub
@@ -329,10 +331,10 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 	public void getCurrent(String id) {
 		Log.d("id ", id);
+
 		JsonObjectRequest req = new JsonObjectRequest(Method.GET,
 				getResources().getString(R.string.url) + "/activity/current/"
 						+ id, null, new Listener<JSONObject>() {
-
 					@Override
 					public void onResponse(JSONObject responseArray) {
 						// TODO Auto-generated method stub
@@ -384,7 +386,7 @@ public class TouchFragment extends Fragment implements FragmentInterface,
 
 			};
 		};
-
+		req.setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
 		AppController.getInstance().addToRequestQueue(req);
 
 	}

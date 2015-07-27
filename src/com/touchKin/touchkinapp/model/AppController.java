@@ -96,7 +96,7 @@ public class AppController extends Application {
 		// set the default tag if tag is empty
 		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 		VolleyLog.d("Adding request to queue: %s", req.getUrl());
-		req.setShouldCache(true);
+
 		getRequestQueue().add(req);
 	}
 
